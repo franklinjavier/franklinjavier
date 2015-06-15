@@ -4,7 +4,7 @@
 ## How to install
 
 - Node [install link](http://nodejs.org/)
-- ```git clone https://github.com/franklinjavier/franklinjavier.com.git```
+- ```git clone https://github.com/franklinjavier/franklinjavier.git```
 - ```npm install -g gulp-cli && npm install```
 - ```gulp```
 - Open http://localhost:3000
