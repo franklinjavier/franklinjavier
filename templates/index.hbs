@@ -1,37 +1,6 @@
 {{> header}}
 
-{{#each pagination.files}}
-<article class="article intro">
-
-  <header>
-
-    <h2>
-      <a href="{{baseUrl}}/{{this.path}}/index.html">{{title}}</a>
-    </h2>
-
-    <time datetime="{{ dateFormat this.date }}">{{ dateFormat this.date }}</time>
-
-    {{> tags}}
-
-  </header>
-
-  <section class="content">
-    <div class="excerpt">{{{ excerpt }}}</div>
-    {{#if hasMore}}
-    <p class="more"><a href="{{url}}">more</a></p>
-    {{/if}}
-  </section>
-</article>
-{{/each}}
-
-<nav class="pagination">
-    {{#if pagination.previous}}
-    <a href="{{baseUrl}}/{{pagination.previous.path}}" class="btn -large">Anterior</a>
-    {{/if}}
-
-    {{#if pagination.next}}
-    <a href="{{baseUrl}}/{{pagination.next.path}}" class="btn -large">Próxima</a>
-    {{/if}}
-</nav>
+{{!-- Liste of posts --}}
+{{> pagination}}
 
 {{> footer}}

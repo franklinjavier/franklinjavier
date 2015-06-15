@@ -6,8 +6,7 @@ var gulp = require('gulp'),
     concat = require('gulp-concat');
 
 function puts(error, stdout, stderr) { 
-    sys.puts(stdout); 
-    console.log('mudou');
+    //console.log(stdout); 
     sync.reload();
 }
 

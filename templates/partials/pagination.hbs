@@ -1,0 +1,32 @@
+{{!-- Liste of posts --}}
+{{#each pagination.files}}
+<article class="intro">
+
+  <header>
+    <h2>
+      <a href="/{{this.path}}/index.html">{{title}}</a>
+    </h2>
+    <time datetime="{{ dateFormat this.date }}">{{ dateFormat this.date }}</time>
+    {{> tags}}
+  </header>
+
+  <section>
+    <div class="excerpt">{{{ excerpt }}}</div>
+  </section>
+
+</article>
+{{/each}}
+
+{{!-- Pagination --}}
+{{#if pagination.next }}
+<nav class="pagination">
+    {{#if pagination.previous}}
+    <a href="/{{pagination.previous.path}}" class="btn -large">Anterior</a>
+    {{/if}}
+
+    {{#if pagination.next}}
+    <a href="/{{pagination.next.path}}" class="btn -large">Próxima</a>
+    {{/if}}
+</nav>
+{{/if}}
+

@@ -1,5 +1,4 @@
 var Metalsmith  = require('metalsmith'),
-    path        = require('path'),
     markdown    = require('metalsmith-markdown'),
     templates   = require('metalsmith-templates'),
     collections = require('metalsmith-collections'),
@@ -12,16 +11,16 @@ var Metalsmith  = require('metalsmith'),
     excerpts    = require('metalsmith-excerpts'),
     browserSync = require('metalsmith-browser-sync'),
 
+    path        = require('path'),
+    exec        = require('child_process').exec,
     Handlebars  = require('handlebars'),
     moment      = require('moment'),
     fs          = require('fs'),
-    config      = require('./config.json'),
-
-    baseUrl     = '';
+    config      = require('./config.json');
 
 Metalsmith(__dirname)
 
-    .metadata(config.metadata)
+    .metadata(config)
 
     .use(partials({
         directory: 'templates/partials/'
@@ -55,7 +54,7 @@ Metalsmith(__dirname)
             perPage: 5,
             template: 'index.hbs',
             first: 'index.html',
-            path: ':num/index.html'
+            path: 'posts/:num/index.html'
         }
     }))
 
@@ -63,10 +62,10 @@ Metalsmith(__dirname)
     
     .use(tags({
         handle: 'tags',
-        template: 'tags.hbs',
         path: 'tags/:tag.html',
+        template: 'tags.hbs',
         pathPage: 'tags/:tag/:num/index.html',
-        perPage: 1,
+        perPage: 2,
         sortBy: 'title',
         reverse: true
     }))
@@ -76,6 +75,7 @@ Metalsmith(__dirname)
     }))
 
     .use(excerpts())
+
 
     .use(templates('handlebars'))
 
@@ -110,8 +110,18 @@ Handlebars.registerHelper('dateGMT', function( context ) {
   return context.toGMTString();
 });
 
-Handlebars.registerHelper('currentPage', function( current, page ) {
+Handlebars.registerHelper('currentPage', function( path ) {
+  console.log(path);
   return current === page ? 'current' : '';
+});
+
+Handlebars.registerHelper('debug', function( node ) {
+  console.log(node);
+  return;
+});
+
+Handlebars.registerHelper('isHome', function( path ) {
+  return path === 'index.html' ? 'home' : '';
 });
 
 function findTemplate(config) {
@@ -140,6 +150,7 @@ function partials(options) {
                 var _path = path.resolve(options.directory, file);
                 var partialContents = fs.readFileSync(_path).toString('utf8');
                 Handlebars.registerPartial(templateName, partialContents);
+                return file.type ? _.extend(file,{template:file.type+".hbs"},_.object(["is"+file.type],[true])) : file;
             });
             done();
         });

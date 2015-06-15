@@ -1,8 +1,6 @@
 ---
 title: Home
-template: index.hbt
+template: index.hbi
+ishome: true
 ---
 
-Hi, this is my start page; neat ain't it? ;)
-
-###Some info!

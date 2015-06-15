@@ -1,13 +1,36 @@
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <title>{{#if title}}{{ title }} - {{/if}}{{ metadata.name }}, {{ metadata.description }}</title>
+
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width">
-    <title>{{name}}</title>
 
-    <link rel="alternate" href="{{url}}/rss.xml" type="application/rss+xml" title="{{title}}">
+    <!-- Google -->
+    <link rel="author" href="https://plus.google.com/+FranklinJavier/">
+    <meta name="robots" content="index, follow">
+
+    <!-- DNS prefetch -->
+    <link rel="dns-prefetch" href="http://www.google-analytics.com">
+
+    <!-- Facebook Meta Tags -->
+    <meta property="og:title" content="{{#if title}}{{ title }}{{else}}{{ metadata.name }}, {{ metadata.description }}{{/if}}" />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="{{#if path}}{{ metadata.url }}{{ path }}{{else}}{{ metadata.url }}{{/if}}" />
+    <meta property="og:image" content="{{ page_image }}" />
+    <meta property="og:description" content="{{#if description}}{{ description }}{{else}}{{ metadata.description }}{{/if}}" />
+    <meta property="og:site_name" content="{{ metadata.name }}">
+    <meta property="og:locale" content="pt_BR">
+    <meta property="fb:profile_id" content="677553975">
+
+    <!-- RSS -->
+    <link rel="alternate" href="{{ metadata.url }}rss.xml" type="application/rss+xml" title="Feed">
+
+    <!-- Style -->
     <link rel="stylesheet" href="/css/main.css">
+
     <script>
         (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
         (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -19,14 +42,14 @@
     </script>
 
   </head>
-<body class="{{bodyClass}}">
+  <body class="{{isHome path}}">
 
-  <div id="content">
-    <div class="content__wrap">
+  <div class="content">
 
-      <header class="header">
-        <div class="header__logo">
-          <a href="/" title="{{name}} - {{description}}" class="logo">f<span>j</span></a>
-        </div>
-      </header>
+    <header class="header">
+      <div class="header__logo">
+        <a href="/" title="{{ metadata.name }} - {{ metadata.description }}" class="logo">f<span>j</span></a>
+      </div>
+    </header>
+
 
