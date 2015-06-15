@@ -1,6 +1,8 @@
 ---
-title: Home
-template: index.hbi
-ishome: true
+title: Franklin Javier, front-end developer
+Description: Minha descricao
+template: index.hbs
+home: true
 ---
+
 
