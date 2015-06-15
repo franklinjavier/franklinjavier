@@ -1,0 +1,28 @@
+/* 
+ * Posts 
+ */
+
+@import "colors";
+
+.post {
+
+  margin: 3em 0 8em;
+
+  h1, h2, h3 {
+    color: $text-h-color;
+  }
+
+  h1 { 
+    margin: 0.4em 0 0;
+  }
+
+}
+
+.post__body {
+  margin-top: 2em;
+}
+
+.post__body img {
+  display: block;
+  width: 100%;
+}        

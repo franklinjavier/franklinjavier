@@ -1,0 +1,10 @@
+---
+template: rss.hbt
+untemplatized: 1
+base: http://franklinjavier.com/blog/
+name: Franklin Javier
+title: Front-end engineer
+description: A blog about *
+image: http:/franklinjavier.com/blog/thumb.jpg
+---
+

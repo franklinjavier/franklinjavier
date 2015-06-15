@@ -1,0 +1,39 @@
+/* 
+ * Footer
+ */
+@import "colors";
+
+footer {
+  border-top: 1px solid $border-color;
+  padding: 3em 0;
+  margin-top: 5em;
+
+  nav {
+    text-align: center;
+    margin-top: 5em;
+    margin-bottom: 3.5em;
+  }
+
+  nav a {
+    padding: 0 0.5em;
+    font-size: 1.2em;
+    text-decoration: none;
+  }
+
+  .about {
+      text-align: center;
+  }
+
+  .copy {
+    text-align: center;
+    font-size: 0.7em;
+    font-style: italic;
+    margin-top: 1em;
+  }
+
+  .copy, .copy a {
+    color: #8e8e8e;
+  }
+
+}
+

@@ -1,0 +1,32 @@
+@import "colors";
+
+.intro {
+
+  margin: 3em 0;
+
+  h2 {
+    font-weight: bold;
+    margin: 0.4em 0;
+    a {
+      color: $text-h-color;
+      font-size: 1.5em;
+    }
+
+    a:hover { 
+      text-decoration: none; 
+      color: $primary-color;
+    }
+  }                  
+
+
+  .excerpt {
+    margin-top: 1.2em;
+  }
+
+  time {
+    margin-bottom: 0.3em;
+    display: block;
+  }
+
+}
+

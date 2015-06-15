@@ -1,0 +1,32 @@
+/* media queries */
+
+@media (min-width: 1600px) {
+/*body { font-size: 26px; }*/
+}
+
+@media (max-width: 900px) {
+  body { font-size: 18px; }
+}
+
+@media (max-width: 690px) {
+
+  .content__wrap {
+    width: auto;
+    padding: 0 1em;
+  }
+
+  .intro h2 {
+    line-height: 1.2;
+    font-size: 0.9em;
+  }
+
+  h1 {
+    line-height: 1.2;
+    font-size: 1.7em;
+  }
+
+  .tags a { 
+    margin-right: 2px;
+  }
+
+}

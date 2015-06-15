@@ -1,0 +1,71 @@
+/* page header */
+
+@import "colors";
+
+.header {
+  margin: 1em 0;
+
+  h1 {
+    font-size: 2.6em;
+    text-align: center;
+    font-weight: 700;
+    margin: 0;
+  }
+
+  a, a:hover {
+    text-decoration: none;
+    color: $text-color;
+  }
+
+  a:hover { opacity: 0.8; }
+
+  .author {
+    //font-family: 'Merriweather', serif;
+    font-variant: small-caps;
+    text-transform: lowercase;
+    text-rendering: auto;
+    text-align: center;
+    font-weight: 400;
+    letter-spacing: 1px;
+  }
+
+  .description {
+    font-size: 1.2em;
+    font-style: italic;
+    text-align: center;
+    margin-top: -0.3em;
+  }
+
+}
+
+.header__logo {
+  text-align: center;
+
+  a, a:hover {
+    text-decoration: none;
+    color: $text-h-color;
+    position: relative;
+    width: 80px;
+    height: 100px;
+
+    &:after {
+      position: absolute;
+      content: '';
+      font-size: 1em;
+      left: 7px;
+      bottom: 0px;
+      width: 11px;
+      height: 8px;
+      background-color: $text-h-color;
+    }
+
+  }
+
+  .logo {
+    font-family: arial;
+    font-size: 4.2em;
+    font-weight: bold;
+  }
+
+}
+

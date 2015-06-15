@@ -1,0 +1,16 @@
+{{> header}}
+
+  <article class="post">
+
+    <h1>{{this.title}}</h1>
+    <time datetime="{{ dateFormat this.date }}">{{ dateFormat this.date }}</time>
+
+    {{> tags}}
+
+    <div class="post__body">
+      {{{contents}}}
+    </div>
+
+  </article>
+
+{{> footer}}
