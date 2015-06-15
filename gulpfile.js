@@ -12,8 +12,8 @@ function puts(error, stdout, stderr) {
 }
 
 gulp.task('default', ['sync'], function () {
-    gulp.watch('src/js/**/*', ['js']);
-    gulp.watch('src/css/**/*', ['sass']);
+    gulp.watch('src/js/**/*.js', ['js']);
+    gulp.watch('src/css/**/*.{scss,css}', ['sass']);
     gulp.watch('{src/content,templates}/**/*', ['templates']);
 });
 
@@ -23,7 +23,7 @@ gulp.task('templates', function() {
 
 gulp.task('js', function() {
 
-  gulp.src('./src/js/*.js')
+  gulp.src('./src/js/**/*.js')
     .pipe(concat('main.js'))
 
     // Specify the output destination

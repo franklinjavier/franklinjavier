@@ -12,7 +12,7 @@ Todos eles têm suas vantagens e desvantagens.
 
 O [Windows](/tags/windows.html) é o mais popular, em grande parte devido 
 à acessibilidade das máquinas. 
-Uma das desvantagens é que as máquinas Windows 
+Uma das **desvantagens é que as máquinas Windows** 
 são enormes alvos de vírus e são mais propensas à pirataria, 
 mas isso pode ser evitado com um bom antivírus e antimalware. 
 Windows é uma escolha ideal se você faz edição de vídeo, joga, etc.

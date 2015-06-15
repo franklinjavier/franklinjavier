@@ -81,10 +81,10 @@ Metalsmith(__dirname)
 
     .destination('./build')
 
-    .use(browserSync({
-      server : "./build/",
-      files  : ["src/**/*.md", "templates/**/*.hbs"]
-    }))
+    //.use(browserSync({
+      //server : "./build/",
+      //files  : ["src/**/*.md", "templates/**/*.hbs"]
+    //}))
 
 
     .build(function(err, files) {

@@ -1,7 +1,10 @@
 /*
  * Main 
  */
-;(function() {
+
+(function() {
+
+  'use strict';
 
   // Set _blank on links that are in different domains
   var links = document.links;
