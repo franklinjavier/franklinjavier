@@ -16,7 +16,6 @@ var Metalsmith  = require('metalsmith'),
     fs          = require('fs'),
     config      = require('./config.json'),
 
-    // Posso setar ambiente dev ou prod
     baseUrl     = '';
 
 Metalsmith(__dirname)
@@ -51,11 +50,11 @@ Metalsmith(__dirname)
     }))
 
     .use(pagination({
-        'collections.posts': {  // aqui vai o nome da collection, no nosso caso, collections.posts
-            perPage: 5, // por página
-            template: 'index.hbt', // o template
-            first: 'index.html', // ele cria um index.html na raiz com a primeira página
-            path: ':num/index.html' // modelo de como quer que sejam criadas as demais páginas
+        'collections.posts': {
+            perPage: 5,
+            template: 'index.hbt',
+            first: 'index.html',
+            path: ':num/index.html'
         }
     }))
 
@@ -84,7 +83,6 @@ Metalsmith(__dirname)
     .build(function(err, files) {
         var message = err ? err : 'Build complete';
         console.log(message);
-        //callback();
     });
 
 
