@@ -11,7 +11,7 @@ function puts(error, stdout, stderr) {
 }
 
 gulp.task('default', ['sync'], function () {
-    gulp.watch('src/styles/**/*', ['styles']);
+    gulp.watch('src/css/**/*', ['sass']);
     gulp.watch('{src/content,templates}/**/*', ['templates']);
 });
 
@@ -19,14 +19,14 @@ gulp.task('templates', function() {
     exec('node index.js', puts);
 });
 
-gulp.task('styles', function() {
-    gulp.src('./src/styles/**/*.scss')
+gulp.task('sass', function() {
+    gulp.src('./src/css/**/*.scss')
     .pipe(sass({
-        includePaths: ['scss']
+        //includePaths: ['scss']
     }))
 
     // Specify the output destination
-    .pipe(gulp.dest('./build/styles/'))
+    .pipe(gulp.dest('./build/css/'))
 
     // Reload the browser-sync
     .pipe(sync.reload({stream:true}));
