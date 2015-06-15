@@ -1,4 +1,7 @@
-(function() {
+/*
+ * Main 
+ */
+;(function() {
 
   // Set _blank on links that are in different domains
   var links = document.links;
@@ -7,7 +10,5 @@
         links[i].target = '_blank';
     } 
   }
-
-
 
 }());

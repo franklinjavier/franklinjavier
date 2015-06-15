@@ -1,5 +1,5 @@
 ---
-template: rss.hbt
+template: rss.hbs
 untemplatized: 1
 base: http://franklinjavier.com/blog/
 name: Franklin Javier

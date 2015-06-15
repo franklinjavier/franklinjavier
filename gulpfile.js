@@ -2,7 +2,8 @@ var gulp = require('gulp'),
     sync = require('browser-sync'),
     sass = require('gulp-sass'),
     sys = require('sys'),
-    exec = require('child_process').exec;
+    exec = require('child_process').exec,
+    concat = require('gulp-concat');
 
 function puts(error, stdout, stderr) { 
     sys.puts(stdout); 
@@ -11,12 +12,25 @@ function puts(error, stdout, stderr) {
 }
 
 gulp.task('default', ['sync'], function () {
+    gulp.watch('src/js/**/*', ['js']);
     gulp.watch('src/css/**/*', ['sass']);
     gulp.watch('{src/content,templates}/**/*', ['templates']);
 });
 
 gulp.task('templates', function() {
     exec('node index.js', puts);
+});
+
+gulp.task('js', function() {
+
+  gulp.src('./src/js/*.js')
+    .pipe(concat('main.js'))
+
+    // Specify the output destination
+    .pipe(gulp.dest('./build/js/'))
+
+    // Reload the browser-sync
+    .pipe(sync.reload({stream:true}));
 });
 
 gulp.task('sass', function() {

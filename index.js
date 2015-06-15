@@ -40,7 +40,7 @@ Metalsmith(__dirname)
 
     .use(findTemplate({
         pattern: 'posts',
-        templateName: 'post.hbt'
+        templateName: 'post.hbs'
     }))
 
     .use(markdown())
@@ -52,7 +52,7 @@ Metalsmith(__dirname)
     .use(pagination({
         'collections.posts': {
             perPage: 5,
-            template: 'index.hbt',
+            template: 'index.hbs',
             first: 'index.html',
             path: ':num/index.html'
         }
@@ -62,7 +62,7 @@ Metalsmith(__dirname)
     
     .use(tags({
         handle: 'tags',
-        template: 'tags.hbt',
+        template: 'tags.hbs',
         path: 'tags/:tag.html',
         pathPage: 'tags/:tag/:num/index.html',
         perPage: 1,
@@ -103,7 +103,6 @@ Handlebars.registerHelper('dateGMT', function( context ) {
   return context.toGMTString();
 });
 
-// helpers para marcar a página corrente
 Handlebars.registerHelper('currentPage', function( current, page ) {
   return current === page ? 'current' : '';
 });
