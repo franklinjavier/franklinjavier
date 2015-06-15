@@ -22,7 +22,7 @@
     <meta property="og:title" content="{{#if title}}{{ title }}{{else}}{{ metadata.name }}, {{ metadata.description }}{{/if}}" />
     <meta property="og:type" content="article" />
     <meta property="og:url" content="{{#if path}}{{ metadata.url }}{{ path }}{{else}}{{ metadata.url }}{{/if}}" />
-    <meta property="og:image" content="/img/favicon.png" />
+    <meta property="og:image" content="{{ metadata.url }}img/favicon.png" />
     <meta property="og:description" content="{{#if description}}{{ description }}{{else}}{{ metadata.description }}{{/if}}" />
     <meta property="og:site_name" content="{{ metadata.name }}">
     <meta property="og:locale" content="pt_BR">
