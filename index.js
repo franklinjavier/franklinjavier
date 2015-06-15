@@ -10,6 +10,7 @@ var Metalsmith  = require('metalsmith'),
     sass        = require('metalsmith-sass'),
     pagination  = require('metalsmith-pagination'),
     excerpts    = require('metalsmith-excerpts'),
+    browserSync = require('metalsmith-browser-sync'),
 
     Handlebars  = require('handlebars'),
     moment      = require('moment'),
@@ -79,6 +80,12 @@ Metalsmith(__dirname)
     .use(templates('handlebars'))
 
     .destination('./build')
+
+    .use(browserSync({
+      server : "./build/",
+      files  : ["src/**/*.md", "templates/**/*.hbs"]
+    }))
+
 
     .build(function(err, files) {
         var message = err ? err : 'Build complete';
