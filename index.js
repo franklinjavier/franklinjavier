@@ -27,6 +27,13 @@ Metalsmith(__dirname)
     }))
 
     .use(drafts())
+
+    .use(function (files, metalsmith, done) {
+        var metadata = metalsmith.metadata();
+        delete metadata.posts;
+        done();
+    })
+
     .use(collections({
         //pages: {
             //pattern: 'content/pages/*.md'
@@ -80,21 +87,21 @@ Metalsmith(__dirname)
 
     .destination('./build')
 
-   // .use(browserSync({
-   //   server: './build/',
-   //   open: false,
-   //   ghostMode: {
-   //       clicks: true,
-   //       location: true,
-   //       forms: true,
-   //       scroll: true
-   //   },
-   //   files: [
-   //       'src/**/*.md', 
-   //       'src/**/*.scss', 
-   //       'templates/**/*.hbs'
-   //   ]
-   // }))
+    .use(browserSync({
+      server: './build/',
+      open: false,
+      ghostMode: {
+          clicks: true,
+          location: true,
+          forms: true,
+          scroll: true
+      },
+      files: [
+          'src/**/*.md', 
+          'src/**/*.scss', 
+          'templates/**/*.hbs'
+      ]
+    }))
 
     .build(function(err, files) {
         var message = err ? err : 'Build complete';
