@@ -23,7 +23,7 @@
     "gulp-sass": "^2.0.1",
     "handlebars": "^2.0.0-alpha.2",
     "metalsmith": "^0.6.0",
-    "metalsmith-browser-sync": "^1.0.0",
+    "metalsmith-browser-sync": "git://github.com/claycarpenter/metalsmith-browser-sync.git#active-check",
     "metalsmith-collections": "^0.4.0",
     "metalsmith-drafts": "0.0.1",
     "metalsmith-excerpts": "^1.0.0",
