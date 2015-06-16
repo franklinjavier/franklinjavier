@@ -6,8 +6,7 @@ author: Franklin Javier
 tags: os, linux, osx, windows
 ---
 
-Síntese clichê: Não existe **o melhor** sistema operacional. 
-Todos eles têm suas vantagens e desvantagens. 
+Síntese clichê: Não existe o melhor [sistema operacional](https://pt.wikipedia.org/wiki/Sistema_operativo). 
 É tudo uma questão de preferência.
 
 O [Windows](/tags/windows.html) é o mais popular, em grande parte devido 
@@ -25,10 +24,9 @@ fora que o OS é minimalista e muito bonito.
 
 Finalmente, o [Linux](/tags/linux.html) é um dos menos populares (para usuários finais), 
 em contrapartida é o mais popular para servidores. 
-Desenvolvido por um programador chamado Linus Torvalds, 
+Desenvolvido pelo programador finlandês chamado Linus Torvalds, 
 o Linux é um sistema operacional de código aberto, 
-com muitas distribuições diferentes, evoluindo constantemente. 
-Para usuários mais novos, sugiro utilizar a distribuição Ubuntu. 
+com muitas distribuições, evoluindo constantemente. 
 
 Há muitos outros sistemas operacionais, mas acabei de 
 descrever os três principais. Em última análise, o melhor 
@@ -36,7 +34,12 @@ nesse caso se resume a preferência do usuário.
 
 ---
 
-Utilizo no meu trabalho a distro Arch, i3 como window manager, 
+## Minha stack
+
+Em casa uso [Arch](https://www.archlinux.org/) (na empresa [Mint](http://linuxmint.com/)), i3 como window manager, 
 Vim como editor e VMware c/ win7 para rodar programas como Photoshop, etc.
 
-[Veja meu Stack completo](http://stackshare.io/franklinjavier)
+A quem interessar:
+1. [Stack completo](http://stackshare.io/franklinjavier)
+2. [dotFiles](https://github.com/franklinjavier/dotFiles)
+

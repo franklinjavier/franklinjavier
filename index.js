@@ -76,16 +76,25 @@ Metalsmith(__dirname)
 
     .use(excerpts())
 
-
     .use(templates('handlebars'))
 
     .destination('./build')
 
-    //.use(browserSync({
-      //server : "./build/",
-      //files  : ["src/**/*.md", "templates/**/*.hbs"]
-    //}))
-
+   // .use(browserSync({
+   //   server: './build/',
+   //   open: false,
+   //   ghostMode: {
+   //       clicks: true,
+   //       location: true,
+   //       forms: true,
+   //       scroll: true
+   //   },
+   //   files: [
+   //       'src/**/*.md', 
+   //       'src/**/*.scss', 
+   //       'templates/**/*.hbs'
+   //   ]
+   // }))
 
     .build(function(err, files) {
         var message = err ? err : 'Build complete';
@@ -121,6 +130,9 @@ Handlebars.registerHelper('debug', function( node ) {
 });
 
 Handlebars.registerHelper('isHome', function( path ) {
+  if ( path === 'index.html' ) 
+      this.home = true;
+
   return path === 'index.html' ? 'home' : '';
 });
 

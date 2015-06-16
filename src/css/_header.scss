@@ -41,27 +41,11 @@
 .header__logo {
   text-align: center;
 
-  a, a:hover {
-    text-decoration: none;
-    color: $text-h-color;
-    position: relative;
-    width: 80px;
-    height: 100px;
-
-    &:after {
-      position: absolute;
-      content: '';
-      font-size: 1em;
-      left: 7px;
-      bottom: 0px;
-      width: 11px;
-      height: 8px;
-      background-color: $text-h-color;
-    }
-
-  }
-
   .logo {
+    display: inline-block;
+    background: url(/img/favicon.png) no-repeat center center;
+    width: 100px;
+    height: 100px;
     font-family: arial;
     font-size: 4.2em;
     font-weight: bold;
