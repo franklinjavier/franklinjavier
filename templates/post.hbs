@@ -2,21 +2,16 @@
 
   <article class="post">
 
-
-    <div class="share">
-      <a href="https://twitter.com/intent/tweet?url={{#if path}}{{ metadata.url }}{{ path }}{{else}}{{ metadata.url }}{{/if}}&text={{#if description}}{{ description }}{{else}}{{ metadata.description }}{{/if}}"><img src="https://cdn1.iconfinder.com/data/icons/social-networks-3/512/twitter-16.png"></a>
-      <a href="https://facebook.com/sharer.php?u={{#if path}}{{ metadata.url }}{{ path }}{{else}}{{ metadata.url }}{{/if}}"><img src="https://cdn1.iconfinder.com/data/icons/social-networks-3/512/facebook-16.png"></a>
-      <a href="https://plus.google.com/share?url={{#if path}}{{ metadata.url }}{{ path }}{{else}}{{ metadata.url }}{{/if}}"><img src="https://cdn1.iconfinder.com/data/icons/social-networks-3/512/google_plus-16.png"></a>
-    </div>
-
     <h1>{{ title }}</h1>
     <time datetime="{{ dateFormat date }}">{{ dateFormat date }}</time>
 
     {{> tags}}
+    {{> share}}
 
     <div class="post__body">
       {{{contents}}}
     </div>
+
 
   </article>
 

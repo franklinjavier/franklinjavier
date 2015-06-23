@@ -7,6 +7,7 @@
 @import "header";
 @import "footer";
 @import "about";
+@import "variables";
 
 body {
   font-family: arial, serif;
@@ -18,22 +19,8 @@ body {
   color: $text-color;
 }
 
-//::selection {
-  //color: #fff;
-  //background: #4732FE;
-//}
-
-.share {
-    margin-top: 20px;
-
-   a[target="_blank"]:after {
-       content: '';
-       margin: 0;
-   }
-}
-
 .content {
-  max-width: 34em;
+  max-width: $content-width;
   margin: 0 auto;
 }
 
@@ -145,6 +132,15 @@ article a[target="_blank"]:after {
     //content: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAVklEQVR4Xn3PgQkAMQhDUXfqTu7kTtkpd5RA8AInfArtQ2iRXFWT2QedAfttj2FsPIOE1eCOlEuoWWjgzYaB/IkeGOrxXhqB+uA9Bfcm0lAZuh+YIeAD+cAqSz4kCMUAAAAASUVORK5CYII=");
     content: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAgElEQVQYV5XQMQpCQQxF0fNX4G60stFGdyBYuSE3InwQBG20URDclPKKkSAfxXST3FxepvO9nm3c/QDHOGAU8IxZWXhggkB7bHAMGP0clwI3aN36DawRAvVY4VYzxljBHba444pp4CFjve8t+Rtc4vTxVYtc22LFmEeaQ5XlSLwAJVAaAqoDe/cAAAAASUVORK5CYII=");
     margin: 0 0 0 5px;
+}
+
+.share {
+    margin-top: 0.5em;
+
+   a[target="_blank"]:after {
+       content: '';
+       margin: 0;
+   }
 }
 
 
