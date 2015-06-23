@@ -5,8 +5,9 @@
 
 footer {
   border-top: 1px solid $border-color;
-  padding: 3em 0;
+  padding: 2em 0;
   margin-top: 5em;
+  text-align: center;
 
   nav {
     text-align: center;
@@ -18,10 +19,6 @@ footer {
     padding: 0 0.5em;
     font-size: 1.2em;
     text-decoration: none;
-  }
-
-  .about {
-      text-align: center;
   }
 
   .copy {

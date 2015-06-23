@@ -27,6 +27,31 @@
     margin-right: 2px;
   }
 
+  .header {
+
+    .avatar { 
+      width: 60px;
+      height: 60px;
+    }
+
+    .header__title {
+      font-size: 1.6em;
+    }
+
+    .header__description {
+      font-size: 1em;
+    }
+
+    .header__contact {
+      font-size: 0.8em;
+    }
+
+    .header__location {
+      font-size: 0.7em;
+    }
+  }
+
+
 }
 
 

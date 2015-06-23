@@ -3,39 +3,44 @@
 @import "colors";
 
 .header {
-  margin: 1em 0;
+  background-color: #F9F8F7;
+  text-align: center;
+  padding: 4em 0 3em 0;
+  margin-top: 50px;
 
-  h1 {
-    font-size: 2.6em;
-    text-align: center;
+  .header__title {
+    font-size: 2.0em;
     font-weight: 700;
     margin: 0;
-  }
-
-  a, a:hover {
-    text-decoration: none;
-    color: $text-color;
+    a { color: $text-color; }
+    a:hover { 
+      text-decoration: none; 
+      opacity: 0.9;
+    }
   }
 
   a:hover { opacity: 0.8; }
 
-  .author {
-    //font-family: 'Merriweather', serif;
-    font-variant: small-caps;
-    text-transform: lowercase;
-    text-rendering: auto;
-    text-align: center;
-    font-weight: 400;
-    letter-spacing: 1px;
+  .avatar {
+    width: 80px;
+    height: 80px;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    left: 50%;
+    margin: 0 -40px;
+    img { 
+      border-radius: 50%;
+      width: 100%;
+    }
   }
 
-  .description {
-    font-size: 1.2em;
-    font-style: italic;
-    text-align: center;
-    margin-top: -0.3em;
-  }
 
+}
+
+.header__description {
+  font-size: 20px;
+  margin-bottom: 10px;
 }
 
 .header__logo {
