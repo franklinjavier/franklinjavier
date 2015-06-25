@@ -106,6 +106,8 @@ Metalsmith(__dirname)
  * Handlebars helpers
  */
     
+moment.locale('pt');
+
 Handlebars.registerHelper('baseUrl', function() {
   return baseUrl;
 });

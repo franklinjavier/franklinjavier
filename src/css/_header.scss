@@ -4,10 +4,37 @@
 @import "variables";
 
 .header {
-  background-color: #F9F8F7;
-  text-align: center;
-  padding: 5em 0;
   position: relative;
+  background-color: #F9F8F7;
+
+  nav {
+    background: -webkit-linear-gradient(90deg, #6D6DB3 10%, #3069D0 90%); /* Chrome 10+, Saf5.1+ */
+    background:    -moz-linear-gradient(90deg, #6D6DB3 10%, #3069D0 90%); /* FF3.6+ */
+    background:     -ms-linear-gradient(90deg, #6D6DB3 10%, #3069D0 90%); /* IE10 */
+    background:      -o-linear-gradient(90deg, #6D6DB3 10%, #3069D0 90%); /* Opera 11.10+ */
+    background:         linear-gradient(90deg, #6D6DB3 10%, #3069D0 90%); /* W3C */
+
+    padding: 10px 0;
+    text-align: center;
+    //position: fixed;
+    //top: 0;
+    //width: 100%;
+    //z-index: 1;
+    a {
+      color: #FFF;
+      opacity: 0.8;
+      font: 100 16px sans-serif, arial;
+      padding-right: 20px;
+      text-transform: lowercase;
+    }
+    a:hover { opacity: 1; }
+  }
+        
+  .header__info {
+    text-align: center;
+    position: relative;
+    padding: 5em 0;
+  }
 
   .header__title {
     font-size: 2.0em;
