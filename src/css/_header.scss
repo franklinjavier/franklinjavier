@@ -7,16 +7,7 @@
   background-color: #F9F8F7;
   text-align: center;
   padding: 5em 0;
-  //margin-top: 50px;
   position: relative;
-
-  hr {
-    position: absolute;
-    border-bottom: 1px solid $primary-color;
-    bottom: 0;
-    width: $content-width;
-    margin: 0;
-  }
 
   .header__title {
     font-size: 2.0em;
@@ -34,11 +25,6 @@
   .avatar {
     width: 80px;
     height: 80px;
-    //position: absolute;
-    //right: 10px;
-    //top: 10px;
-    //left: 50%;
-    //margin: 0 -40px;
     display: inline-block;
     img { 
       border-radius: 50%;

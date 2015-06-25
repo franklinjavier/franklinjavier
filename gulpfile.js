@@ -3,7 +3,8 @@ var gulp = require('gulp'),
     sass = require('gulp-sass'),
     sys = require('sys'),
     exec = require('child_process').exec,
-    concat = require('gulp-concat');
+    concat = require('gulp-concat'),
+    rsync  = require('gulp-rsync');
 
 function puts(error, stdout, stderr) { 
     //console.log(stdout); 
@@ -62,3 +63,23 @@ gulp.task('sync', function() {
     });
 
 });
+
+gulp.task('deploy', function() {
+  return gulp.src('./build/**')
+  .pipe(rsync({
+    destination: '/var/www/franklinjavier/',
+    root: 'build',
+    hostname: 'franklinjavier.com',
+    username: 'site',
+    incremental: true,
+    progress: true,
+    relative: true,
+    emptyDirectories: true,
+    recursive: true,
+    exclude: ['.DS_Store', 'node_modules'],
+    include: []
+  }));
+
+});
+
+
