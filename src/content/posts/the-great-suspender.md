@@ -25,6 +25,8 @@ sejam suspensas.
 Outra feature bacana é o histórico de páginas suspensas. Cada entrada inclui um marcador de tempo de quando 
 ocorreu a suspensão. Se quiser, você pode voltar a suspender ou recarregar todas as páginas de um dia anterior. 
 
+E você, já encontrou alguma extensão que facilitou a sua vida? Comente.
+
 Para saber mais:
 
 - [Webstore](https://chrome.google.com/webstore/detail/the-great-suspender/klbibkeccnjlkjkiokjodocebajanakg).

@@ -96,6 +96,7 @@ gulp.task('deploy', ['minify:html', 'minify:js'], function() {
     root: 'build',
     hostname: 'franklinjavier.com',
     username: 'site',
+    port: 21,
     incremental: true,
     progress: true,
     relative: true,
