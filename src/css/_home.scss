@@ -1,3 +1,7 @@
+/* 
+ * Home
+ */
+
 @import "colors";
 
 .intro {
@@ -6,10 +10,11 @@
 
   h2 {
     font-weight: bold;
-    margin: 0.4em 0;
+    margin: 0.1em 0;
+
     a {
       color: $text-h-color;
-      font-size: 1.5em;
+      font-size: 1.25em;
     }
 
     a:hover { 

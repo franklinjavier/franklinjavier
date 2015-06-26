@@ -11,7 +11,7 @@
 
 body {
   font-family: arial, serif;
-  font-size: 1.13em;
+  font-size: 1.05em;
   font-weight: 300;
   line-height: 1.52;
   background-color: $background-color;
@@ -101,8 +101,9 @@ hr {
   text-transform: lowercase;
   border-radius: 2px;
   border: 1px solid #eee;
-  padding: 2px 8px;
+  padding: 0 8px;
   margin: 0 5px 5px 0;
+  line-height: 2em;
 
   &:hover { 
     text-decoration: none;
