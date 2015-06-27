@@ -6,12 +6,34 @@
 
   'use strict';
 
-  // Set _blank on links that are in different domains
-  var links = document.links;
-  for ( var i = 0, linksLength = links.length; i < linksLength; i++ ) {
-    if ( links[i].hostname != window.location.hostname ) {
-        links[i].target = '_blank';
-    } 
+  var forEach = Function.prototype.call.bind(Array.prototype.forEach);
+  var links = document.querySelectorAll('a');
+
+  forEach(links, function(a) { 
+
+    // Links externos
+    if ( a.hostname !== window.location.hostname ) {
+
+        a.target = '_blank';
+        a.onclick = function() {
+          track('external', this.href);
+        };
+    } else {
+
+      a.onclick = function() {
+        track('post', this.href);
+      };
+    }
+
+  });
+
+
+  /*
+   * Track user
+   * ga('send', 'event', 'category', 'action', 'label');
+   */
+  function track(cat, url) {
+    ga('send', 'event', cat, 'click', url);
   }
 
 }());
