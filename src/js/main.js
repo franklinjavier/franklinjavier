@@ -23,25 +23,19 @@
 
       a.onclick = function( e ) {
         track('post', this.href);
-        animate( e );
+        animate( e, this.href );
       };
     }
 
   });
 
 
-  function animate( e ) {
+  function animate( e, url ) {
     e.preventDefault();
-
-    var el = e.target || e.srcElement;
-
     document.body.className += ' animated fadeOut';
-
     setTimeout(function() {
-      window.location = el.href;
+      window.location = url;
     }, 200);
-
-
   }
 
 

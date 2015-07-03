@@ -10,8 +10,12 @@
 @import "variables";
 @import "animate";
 
+html {
+  animation: fadeIn 0.4s;
+}
+
 body {
-  -webkit-animation: fadeIn 1s;
+  animation-duration: 0.4s;
   font-family: arial, serif;
   font-size: 1.05em;
   font-weight: 300;
@@ -51,6 +55,8 @@ pre {
   margin-bottom: 1.8em;
   padding: 1em;
 }
+
+h1, h2 { font-weight: 400; }
 
 h1 {
   font-size: 2em;

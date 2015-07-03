@@ -35,7 +35,7 @@
   .avatar {
     width: 80px;
     height: 80px;
-    -webkit-animation: zoomInUp 1s;
+    //-webkit-animation: pulse 1s;
     display: inline-block;
     img { 
       border-radius: 50%;
@@ -47,14 +47,14 @@
     text-align: center;
     position: relative;
     padding: 5em 0;
-    -webkit-animation: zoomInDown 1s;
+    //-webkit-animation: pulse 1s;
   }
 
   .title {
     font-size: 2.0em;
     font-weight: 700;
     margin: 0;
-    -webkit-animation: zoomInUp 1s;
+    //-webkit-animation: pulse 1s;
     a { color: $text-color; }
     a:hover { 
       text-decoration: none; 
