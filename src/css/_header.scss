@@ -7,51 +7,35 @@
   position: relative;
   background-color: #F9F8F7;
 
-  nav {
-    background: -webkit-linear-gradient(90deg, #6D6DB3 10%, #3069D0 90%); /* Chrome 10+, Saf5.1+ */
-    background:    -moz-linear-gradient(90deg, #6D6DB3 10%, #3069D0 90%); /* FF3.6+ */
-    background:     -ms-linear-gradient(90deg, #6D6DB3 10%, #3069D0 90%); /* IE10 */
-    background:      -o-linear-gradient(90deg, #6D6DB3 10%, #3069D0 90%); /* Opera 11.10+ */
-    background:         linear-gradient(90deg, #6D6DB3 10%, #3069D0 90%); /* W3C */
 
-    padding: 10px 0;
+  nav {
+    -webkit-animation: fadeInDown 1s;
+    padding: 3px 0;
     text-align: center;
-    //position: fixed;
-    //top: 0;
-    //width: 100%;
-    //z-index: 1;
+
     a {
+      display: inline-block;
       color: #FFF;
-      opacity: 0.8;
       font: 100 16px sans-serif, arial;
-      padding-right: 20px;
+      margin-right: 20px;
       text-transform: lowercase;
+      padding-bottom: -1px;
     }
-    a:hover { opacity: 1; }
+
+    a:hover { 
+      text-decoration: none;
+      opacity: 0.8; 
+      border-bottom: 1px solid #fff;
+      padding-bottom: 2px;
+    }
   }
         
-  .header__info {
-    text-align: center;
-    position: relative;
-    padding: 5em 0;
-  }
-
-  .header__title {
-    font-size: 2.0em;
-    font-weight: 700;
-    margin: 0;
-    a { color: $text-color; }
-    a:hover { 
-      text-decoration: none; 
-      opacity: 0.9;
-    }
-  }
-
   a:hover { opacity: 0.8; }
 
   .avatar {
     width: 80px;
     height: 80px;
+    -webkit-animation: zoomInUp 1s;
     display: inline-block;
     img { 
       border-radius: 50%;
@@ -59,16 +43,29 @@
     }
   }
 
+  .info {
+    text-align: center;
+    position: relative;
+    padding: 5em 0;
+    -webkit-animation: zoomInDown 1s;
+  }
 
-}
+  .title {
+    font-size: 2.0em;
+    font-weight: 700;
+    margin: 0;
+    -webkit-animation: zoomInUp 1s;
+    a { color: $text-color; }
+    a:hover { 
+      text-decoration: none; 
+      opacity: 0.9;
+    }
+  }
 
-.header__description {
-  font-size: 20px;
-  margin-bottom: 10px;
-}
-
-.header__logo {
-  text-align: center;
+  .description {
+    font-size: 20px;
+    margin-bottom: 10px;
+  }
 
   .logo {
     display: inline-block;
@@ -81,4 +78,5 @@
   }
 
 }
+
 

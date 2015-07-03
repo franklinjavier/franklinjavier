@@ -8,8 +8,10 @@
 @import "footer";
 @import "about";
 @import "variables";
+@import "animate";
 
 body {
+  -webkit-animation: fadeIn 1s;
   font-family: arial, serif;
   font-size: 1.05em;
   font-weight: 300;
@@ -36,8 +38,8 @@ a:hover {
 }
 
 p {
-  line-height: 1.5em;
   margin-bottom: 1.52em;
+  text-rendering: optimizeLegibility;
 }
 
 pre {
@@ -97,7 +99,7 @@ hr {
   background: rgba($background-color, 0.35);
   display: inline-block;
   color: rgba(0,0,0,0.44);
-  font-size: 0.7em;
+  font-size: 0.8em;
   text-transform: lowercase;
   border-radius: 2px;
   border: 1px solid #eee;
@@ -125,7 +127,7 @@ hr {
 }
 
 time {
-  font-size: 0.8em;
+  font-size: 0.9em;
   opacity: 0.7;
 }
 
@@ -140,12 +142,30 @@ article a[target="_blank"]:after {
 
   p {
     margin-bottom: 0.5em;
+    font-size: 20px;
   }
 
   a[target="_blank"]:after {
     content: '';
     margin: 0;
   }
+
+}
+
+@-webkit-keyframes hue {
+  from { -webkit-filter: hue-rotate(0deg); }
+  to { -webkit-filter: hue-rotate(-360deg); }
+}
+
+.gradient {
+  background: linear-gradient(92deg,$secondary-color,$primary-color);
+  animation: hue 5s infinite linear!important;
+
+  //background:    -moz-linear-gradient(90deg, $secondary-color 10%, $primary-color 90%); /* FF3.6+ */
+  //background: -webkit-linear-gradient(90deg, $secondary-color 10%, $primary-color 90%); /* Chrome 10+, Saf5.1+ */
+  //background:     -ms-linear-gradient(90deg, $secondary-color 10%, $primary-color 90%); /* IE10 */
+  //background:      -o-linear-gradient(90deg, $secondary-color 10%, $primary-color 90%); /* Opera 11.10+ */
+  //background:         linear-gradient(90deg, $secondary-color 10%, $primary-color 90%); /* W3C */
 }
 
 
