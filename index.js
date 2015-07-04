@@ -28,9 +28,9 @@ Metalsmith(__dirname)
 
     .use(drafts())
     .use(collections({
-        //pages: {
-            //pattern: 'content/pages/*.md'
-        //},
+        pages: {
+            pattern: 'content/pages/*.md'
+        },
         posts: {
             pattern: 'content/posts/*.md',
             sortBy: 'date',
@@ -43,7 +43,14 @@ Metalsmith(__dirname)
         templateName: 'post.hbs'
     }))
 
-    .use(markdown())
+    .use(markdown({
+      smartypants: true,
+      gfm: true,
+      tables: true,
+      highlight: function(code) {
+        return require('highlight.js').highlightAuto(code).value;
+      }
+    }))
 
     .use(permalinks({
         pattern: ':collection/:title'
@@ -65,10 +72,29 @@ Metalsmith(__dirname)
         path: 'tags/:tag.html',
         template: 'tags.hbs',
         pathPage: 'tags/:tag/:num/index.html',
-        perPage: 2,
-        sortBy: 'title',
-        reverse: true
+        perPage: 10,
+        sortBy: 'date'
+        //reverse: true
     }))
+
+    /*
+    .use(tags({
+      // yaml key for tag list in you pages
+      handle: 'tags',
+      // path for result pages
+      path:'topics/:tag.html',
+      // template to use for tag listing
+      template:'/partials/tag.hbt',
+      // provide posts sorted by 'date' (optional)
+      sortBy: 'date',
+      // sort direction (optional)
+      reverse: true,
+      // skip updating metalsmith's metadata object.
+      // useful for improving performance on large blogs
+      // (optional)
+      skipMetadata: false
+    })
+    */
 
     .use(sass({
         outputStyle: 'compressed'
@@ -131,11 +157,14 @@ Handlebars.registerHelper('debug', function( node ) {
   return;
 });
 
-Handlebars.registerHelper('isHome', function( path ) {
-  if ( path === 'index.html' ) 
-      this.home = true;
+Handlebars.registerHelper('isPost', function( val ) {
+  var rule = val === 'posts' || val === 'pages';
+  
+  if ( rule ) {
+    this.post = true;
+  }
 
-  return path === 'index.html' ? 'home' : '';
+  return rule ? '' : 'home';
 });
 
 function findTemplate(config) {

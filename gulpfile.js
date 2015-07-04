@@ -109,3 +109,6 @@ gulp.task('deploy', ['minify:html', 'minify:js'], function() {
 });
 
 
+gulp.task('build', ['sass', 'js', 'templates', 'minify:html', 'minify:js'], function() {
+  console.log('Build ok');
+});

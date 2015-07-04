@@ -32,10 +32,10 @@
 
   function animate( e, url ) {
     e.preventDefault();
-    document.body.className += ' animated fadeOut';
-    setTimeout(function() {
+    document.body.className += ' animated out';
+    //setTimeout(function() {
       window.location = url;
-    }, 200);
+    //}, 100);
   }
 
 

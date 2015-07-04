@@ -1,22 +1,24 @@
 {
-  "name": "metalsmith-tutorial",
+  "name": "blog",
   "version": "0.0.1",
   "description": "Blog",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "deploy": "rsync -acrv --delete-after build/ franklinjavier.com:/var/www/franklinjavier/"
+    "server": "node index.js && gulp",
+    "deploy": "gulp deploy",
+    "build": "node index.js && gulp build",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/RobinThrift/metalsmith-tutorial.git"
   },
-  "author": "Robin Thrift <thrift.d.robin@googlemail.com>",
+  "author": "Franklin Jaiver <franklinjalves@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/RobinThrift/metalsmith-tutorial/issues"
+    "url": "https://github.com/franklinjavier/franklinjavier/issues"
   },
-  "homepage": "https://github.com/RobinThrift/metalsmith-tutorial",
+  "homepage": "https://github.com/franklinjavier/franklinjavier/",
   "devDependencies": {
     "browser-sync": "^2.7.10",
     "gulp": "^3.9.0",
@@ -26,6 +28,8 @@
     "gulp-sass": "^2.0.1",
     "gulp-uglify": "^1.2.0",
     "handlebars": "^2.0.0-alpha.2",
+    "highlight": "^0.2.3",
+    "highlight.js": "^8.6.0",
     "metalsmith": "^0.6.0",
     "metalsmith-browser-sync": "git://github.com/claycarpenter/metalsmith-browser-sync.git#active-check",
     "metalsmith-collections": "^0.4.0",

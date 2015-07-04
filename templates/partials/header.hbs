@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -54,50 +53,77 @@
     <link rel="stylesheet" href="/css/main.css">
 
     <script>
-        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
         (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-        ga('create', 'UA-30021850-1', 'auto');
-        ga('send', 'pageview');
+      ga('create', 'UA-30021850-1', 'auto');
+      ga('send', 'pageview');
     </script>
 
   </head>
-  <body class="{{isHome path}}">
+  <body class="{{isPost collection}}">
 
-      <header class="header">
+    <header class="header">
 
-        <nav class="gradient">
-          <!--<div class="content">
-            <a href="">Home</a>
-            <a href="">Blog</a>
-            <a href="">Portifolio</a>
-            <a href="">Sobre</a>
-            <a href="">Contatos</a>
-          </div>-->
-        </nav>
+      <nav class="gradient">
+        <!--<div class="content">
+          <a href="/">Home</a>
+          <a href="/blog/">Blog</a>
+          <a href="">Portifolio</a>
+          <a href="/pages/about/">Sobre</a>
+          <a href="">Contatos</a>
+        </div>-->
+      </nav>
 
-          <div class="info content">
-              <div class="avatar">
-                  <a href="{{ metadata.url }}">
-                      <img src="{{ metadata.url }}img/avatar2.jpg" alt="{{ metadata.name }}">
-                  </a>
-              </div>
-              <div class="container">
-                  <h1 class="title">
-                      <a href="{{ metadata.url }}">{{ metadata.name }}</a>
-                  </h1>
-                  <h2 class="description">
-                      I'm a <a href="http://stackshare.io/franklinjavier" target="_blank" title="See my full stack">Front-end</a> developer (currently at <a href="http://www.uol.com.br" title="Is the leading Brazilian company for Web content and services">UOL</a>). 
-                  </h2>
-                  <div class="location">
-                      São Paulo, Brazil
-                  </div>
-              </div>
+      {{#if post}}
+      <div class="info  content">
+        <div class="avatar">
+          <a href="/">
+            <img src="/img/avatar2.jpg" alt="{{ metadata.name }}">
+          </a>
+        </div>
+      </div>
+      {{else}}
+      <div class="info -full content">
+        <div class="avatar">
+          <a href="/">
+            <img src="/img/avatar2.jpg" alt="{{ metadata.name }}">
+          </a>
+        </div>
+        <div class="container">
+          <h1 class="title">
+            <a href="{{ metadata.url }}">{{ metadata.name }}</a>
+          </h1>
+          <h2 class="description">
+            I'm a <a href="http://stackshare.io/franklinjavier" target="_blank" title="See my full stack">Front-end</a> developer
+          </h2>
+          <div class="location">
+            São Paulo, Brazil
           </div>
-      </header>
 
-  <div class="content">
+          <div class="about">
+            <a href="/pages/about/">About</a>
+          </div>
+
+        </div>
+      </div>
+      {{/if}}
+    </header>
+
+    <!--
+    <form class="js-search search-form search-form--modal is-visible" method="get" action="http://thoughts-theme.pixelrevel.com" role="search">
+      <div class="search-form__inner">
+        <div>
+          <p class="micro mb-">Use the field below to search the site...</p>
+          <i class="fa fa-search"></i>
+          <input class="text-input" type="search" name="s" placeholder="Enter keyword...">
+        </div>
+      </div>
+    </form>
+    -->
+
+    <div class="content">
 
 

@@ -11,11 +11,10 @@
 @import "animate";
 
 html {
-  animation: fadeIn 0.4s;
+  animation: fadeIn 0.15s;
 }
 
 body {
-  animation-duration: 0.4s;
   font-family: arial, serif;
   font-size: 1.05em;
   font-weight: 300;
@@ -23,6 +22,10 @@ body {
   background-color: $background-color;
   text-rendering: optimizeLegibility;
   color: $text-color;
+}
+
+.out {
+  animation: fadeOut 0.25s;
 }
 
 .content {
@@ -46,17 +49,8 @@ p {
   text-rendering: optimizeLegibility;
 }
 
-pre {
-  font-size: 0.7em;
-  overflow: auto;
-  background: #fff;
-  border: 1px solid $border-color;
-  border-radius: 0.25em;
-  margin-bottom: 1.8em;
-  padding: 1em;
-}
 
-h1, h2 { font-weight: 400; }
+//h1, h2 { font-weight: 400; }
 
 h1 {
   font-size: 2em;
@@ -97,6 +91,17 @@ hr {
   border-top: 1px solid $border-color;
   height: 0;
   margin: 1.6em 0;
+  &:after {
+    content: '';
+    position: absolute;
+    background-color: #eee;
+    padding: 3px;
+    width: 2px;
+    height: 2px;
+    margin-left: 26%;
+    margin-top: -4px;
+    border-radius: 50%;
+  }
 }
 
 .btn {
@@ -164,16 +169,42 @@ article a[target="_blank"]:after {
 }
 
 .gradient {
-  background: linear-gradient(92deg,$secondary-color,$primary-color);
-  animation: hue 5s infinite linear!important;
+  //background: linear-gradient(90deg,$secondary-color,$primary-color);
+  //animation: hue 5s infinite linear!important;
 
-  //background:    -moz-linear-gradient(90deg, $secondary-color 10%, $primary-color 90%); /* FF3.6+ */
-  //background: -webkit-linear-gradient(90deg, $secondary-color 10%, $primary-color 90%); /* Chrome 10+, Saf5.1+ */
-  //background:     -ms-linear-gradient(90deg, $secondary-color 10%, $primary-color 90%); /* IE10 */
-  //background:      -o-linear-gradient(90deg, $secondary-color 10%, $primary-color 90%); /* Opera 11.10+ */
-  //background:         linear-gradient(90deg, $secondary-color 10%, $primary-color 90%); /* W3C */
+  background:    -moz-linear-gradient(90deg, $secondary-color 5%, $primary-color 95%); /* FF3.6+ */
+  background: -webkit-linear-gradient(90deg, $secondary-color 5%, $primary-color 95%); /* Chrome 10+, Saf5.1+ */
+  background:     -ms-linear-gradient(90deg, $secondary-color 5%, $primary-color 95%); /* IE10 */
+  background:      -o-linear-gradient(90deg, $secondary-color 5%, $primary-color 95%); /* Opera 11.10+ */
+  background:         linear-gradient(90deg, $secondary-color 5%, $primary-color 95%); /* W3C */
 }
 
+.comments {
+  border-top: 1px solid $border-color;
+  //background-color: #F9F8F7;
+  padding: 3em 0;
+  position: relative;
+
+  &:after, &:before {
+    content: '';
+    position: absolute;
+    background-color: $border-color;
+    padding: 4px;
+    left: 48%;
+    border-radius: 50%;
+    border: 15px solid $background-color;
+  } 
+
+  &:before {
+    top: -20px;
+  }
+
+  &:after {
+    bottom: -20px;
+  }
+
+}
 
 @import "mediaqueries";
+
 

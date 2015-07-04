@@ -1,6 +1,6 @@
 {{!-- Liste of posts --}}
 {{#each pagination.files}}
-<article class="intro">
+<article class="home">
 
   <header>
     <h2>
@@ -18,7 +18,6 @@
 {{/each}}
 
 {{!-- Pagination --}}
-{{#if pagination.next }}
 <nav class="pagination">
     {{#if pagination.previous}}
     <a href="/{{pagination.previous.path}}" class="btn -large">Anterior</a>
@@ -28,5 +27,3 @@
     <a href="/{{pagination.next.path}}" class="btn -large">Próxima</a>
     {{/if}}
 </nav>
-{{/if}}
-

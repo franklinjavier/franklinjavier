@@ -4,11 +4,11 @@
 
 @import "colors";
 
-.intro {
+article.home { margin: 0 0 3em 0; }
 
-  margin: 3em 0;
+.home {
 
-  h2 {
+  article h2 {
     font-weight: bold;
     margin: 0.1em 0;
 
@@ -25,7 +25,7 @@
 
 
   .excerpt {
-    margin-top: 1.2em;
+    margin-top: 0.7em;
   }
 
   time {
