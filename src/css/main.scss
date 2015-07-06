@@ -2,6 +2,7 @@
 @import "colors";
 @import "code";
 @import "home";
+//@import "menu";
 @import "post";
 @import "archive";
 @import "header";
@@ -11,13 +12,13 @@
 @import "animate";
 
 html {
-  animation: fadeIn 0.15s;
+  animation: fadeIn 0.25s;
 }
 
 body {
   font-family: arial, serif;
   font-size: 1.05em;
-  font-weight: 300;
+  font-weight: 400;
   line-height: 1.52;
   background-color: $background-color;
   text-rendering: optimizeLegibility;
@@ -52,6 +53,7 @@ p {
 h1 {
   font-size: 2em;
   margin-bottom: 1em;
+  font-weight: bold;
 }
 
 h2 {
@@ -134,7 +136,7 @@ hr {
   text-align: center;
 }
 
-time {
+small {
   font-size: 0.9em;
   opacity: 0.7;
 }
@@ -167,7 +169,6 @@ article a[target="_blank"]:after {
 
 .gradient {
   //background: linear-gradient(90deg,$secondary-color,$primary-color);
-  //animation: hue 5s infinite linear!important;
 
   background:    -moz-linear-gradient(90deg, $secondary-color 5%, $primary-color 95%); /* FF3.6+ */
   background: -webkit-linear-gradient(90deg, $secondary-color 5%, $primary-color 95%); /* Chrome 10+, Saf5.1+ */

@@ -13,6 +13,18 @@
 
     {{> share}}
 
+    <nav class="pagination">
+      {{#if next.path}}
+      <a href="/{{next.path}}" class="btn -large prev" title="{{next.title}} (J)">Anterior</a>
+      {{/if}}
+
+      {{#if previous}}
+      <a href="/{{previous.path}}" class="btn -large next" title="{{previous.title}} (K)">Próximo</a>
+      {{/if}}
+    </nav>
+
+    {{debug previous.title}}
+
   </article>
 
 {{> footer}}

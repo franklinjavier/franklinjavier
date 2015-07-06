@@ -6,28 +6,28 @@
 .header {
   position: relative;
   background-color: $background-header-color;
-  margin-bottom: 3em;
+  margin-bottom: 2em;
   overflow: hidden;
 
   nav {
     padding: 3px 0;
     text-align: center;
 
-    a {
-      display: inline-block;
-      color: #FFF;
-      font: 100 16px sans-serif, arial;
-      margin-right: 20px;
-      text-transform: lowercase;
-      padding-bottom: -1px;
-    }
+    //a {
+      //display: inline-block;
+      //color: #FFF;
+      //font: 100 16px sans-serif, arial;
+      //margin-right: 20px;
+      //text-transform: lowercase;
+      //padding-bottom: -1px;
+    //}
 
-    a:hover { 
-      text-decoration: none;
-      opacity: 0.8; 
-      border-bottom: 1px solid #fff;
-      padding-bottom: 2px;
-    }
+    //a:hover { 
+      //text-decoration: none;
+      //opacity: 0.8; 
+      //border-bottom: 1px solid #fff;
+      //padding-bottom: 2px;
+    //}
   }
         
   a:hover { opacity: 0.8; }
@@ -35,7 +35,7 @@
   .avatar {
     width: 100px;
     display: inline-block;
-    animation: fadeInDown 1s;
+    animation: fadeInDown 0.5s;
     img { 
       border-radius: 50%;
       width: 100%;
@@ -57,7 +57,7 @@
     font-weight: 700;
     margin: 0;
 
-    a { color: $text-color; }
+    a { color: #444; }
     a:hover { 
       text-decoration: none; 
       opacity: 0.9;
@@ -65,18 +65,8 @@
   }
 
   .description {
-    font-size: 20px;
-    margin-bottom: 10px;
-  }
-
-  .logo {
-    display: inline-block;
-    background: url(/img/favicon.png) no-repeat center center;
-    width: 100px;
-    height: 100px;
-    font-family: arial;
-    font-size: 4.2em;
-    font-weight: bold;
+    font-size: 1.18em;
+    margin-bottom: 0.25em;
   }
 
   .about {
@@ -85,10 +75,5 @@
   }
 
 
-}
-
-.location {
-  font-size: 0.8em;
-  color: #A2A2AD;
 }
 

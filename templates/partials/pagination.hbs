@@ -1,12 +1,12 @@
 {{!-- List of posts --}}
 {{#each pagination.files}}
-<article class="home">
+<article class="home-post">
 
   <header>
     <h2>
       <a href="/{{path}}/index.html">{{title}}</a>
     </h2>
-    <time datetime="{{ dateFormat this.date }}">{{ dateFormat this.date }}</time>
+    <time datetime="{{ dateFormat this.date }}"><small>{{ dateFormat this.date }}</small></time>
     {{> tags}}
   </header>
 
@@ -20,10 +20,10 @@
 {{!-- Pagination --}}
 <nav class="pagination">
     {{#if pagination.previous}}
-    <a href="/{{pagination.previous.path}}" class="btn -large">Anterior</a>
+    <a href="/{{pagination.previous.path}}" class="btn -large prev">Anterior</a>
     {{/if}}
 
     {{#if pagination.next}}
-    <a href="/{{pagination.next.path}}" class="btn -large">Próxima</a>
+    <a href="/{{pagination.next.path}}" class="btn -large next">Próxima</a>
     {{/if}}
 </nav>

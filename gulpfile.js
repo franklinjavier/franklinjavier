@@ -89,7 +89,7 @@ gulp.task('minify:js', function() {
 /**
  * Deploy to server build files
  */
-gulp.task('deploy', ['minify:html', 'minify:js'], function() {
+gulp.task('deploy', ['js', 'sass', 'minify:html', 'minify:js'], function() {
   return gulp.src('./build/**')
   .pipe(rsync({
     destination: '/var/www/franklinjavier/',

@@ -23,19 +23,20 @@
 
       a.onclick = function( e ) {
         track('post', this.href);
-        animate( e, this.href );
+        //animate( e, this.href );
       };
     }
 
   });
 
 
+  /*
+   * Transition before redirect
+   */
   function animate( e, url ) {
     e.preventDefault();
-    document.body.className += ' animated out';
-    //setTimeout(function() {
-      window.location = url;
-    //}, 100);
+    document.body.className += ' animated fadeOut';
+    window.location = url;
   }
 
 
@@ -46,5 +47,28 @@
   function track(cat, url) {
     ga('send', 'event', cat, 'click', url);
   }
+
+
+  /* 
+   * Navigate through posts with J-K 
+   */
+  window.onkeypress = function( e ) {
+
+    // J - 106
+    // K - 107
+
+    var keyCode = e.charCode || e.which,
+      prev = document.querySelector('.pagination .prev'),
+      next = document.querySelector('.pagination .next');
+
+    if ( keyCode === 106 && prev ) {
+      prev.click();
+    }
+
+    if ( keyCode === 107 && next ) {
+      next.click();
+    }
+  };
+
 
 }());
