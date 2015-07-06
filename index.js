@@ -148,7 +148,6 @@ Handlebars.registerHelper('dateGMT', function( context ) {
 });
 
 Handlebars.registerHelper('currentPage', function( path ) {
-  console.log(path);
   return current === page ? 'current' : '';
 });
 
