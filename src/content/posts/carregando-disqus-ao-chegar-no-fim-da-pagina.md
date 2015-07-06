@@ -43,7 +43,7 @@ var disqus_shortname = 'franklinjavier',
 
   'use strict';
 
-  function preloadDisqus() {
+  function load() {
     var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
     dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
     (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
@@ -55,7 +55,7 @@ var disqus_shortname = 'franklinjavier',
   window.onscroll = function() {
     // Ao chegar próximo ao fim da página, carrega o Disqus
     if ((window.innerHeight + window.scrollY) >= (document.body.offsetHeight - 500)) {
-      preloadDisqus();
+      load();
     }
   };
 
