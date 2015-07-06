@@ -30,25 +30,25 @@
   .header {
 
     .avatar { 
-      width: 60px;
-      height: 60px;
+      width: 80px;
     }
 
-    .header__title {
-      font-size: 1.6em;
+    .title {
+      font-size: 1.8em;
     }
 
-    .header__description {
+    .description {
       font-size: 1em;
     }
 
-    .header__contact {
+    .contact {
       font-size: 0.8em;
     }
 
-    .header__location {
-      font-size: 0.7em;
-    }
+  }
+
+  pre {
+    font-size: 0.7em;
   }
 
 

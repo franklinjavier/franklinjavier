@@ -49,9 +49,6 @@ p {
   text-rendering: optimizeLegibility;
 }
 
-
-//h1, h2 { font-weight: 400; }
-
 h1 {
   font-size: 2em;
   margin-bottom: 1em;
@@ -115,7 +112,7 @@ hr {
   border-radius: 2px;
   border: 1px solid #eee;
   padding: 0 8px;
-  margin: 0 5px 5px 0;
+  margin: 0 3px 3px 0;
   line-height: 2em;
 
   &:hover { 

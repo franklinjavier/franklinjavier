@@ -2,10 +2,10 @@
 
   <article class="post">
 
+    {{> tags}}
+
     <h1>{{ title }}</h1>
     <time datetime="{{ dateFormat date }}">{{ dateFormat date }}</time>
-
-    {{> tags}}
 
     <div class="post-body">
       {{{contents}}}

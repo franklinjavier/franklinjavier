@@ -139,7 +139,7 @@ Handlebars.registerHelper('baseUrl', function() {
 });
 
 Handlebars.registerHelper('dateFormat', function( context ) {
-  return moment(context).format("MMMM DD, YYYY");
+  return moment(context).format("L");
 });
 
 Handlebars.registerHelper('dateGMT', function( context ) {
