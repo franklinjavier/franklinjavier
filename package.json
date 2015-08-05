@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "server": "node index.js && gulp",
-    "deploy": "gulp deploy",
+    "deploy": "node index.js && gulp deploy",
     "build": "node index.js && gulp build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

@@ -23,7 +23,7 @@ Sistemas unix-like, Vim, zsh, i3wm, Vagrant e VirtualBox.
 ** Interesses/habilidades: **
 Arquitetura front-end, automatização (task runners), HTML, CSS (e seus preprocessadores), JavaScript isomórfico (NodeJS, BackboneJS, AngularJS, CasperJS/PhantomJS), testes unitários, webstandards, Vim, Python, Shell script, Unix, versionamento e Dataviz.
 
-Você pode entrar em contato comigo pelos no fim da página, ou se preferir, via e-mail: [franklinjalves@gmail.com](mailto:franklinjalves@gmail.com)
+Você pode entrar em contato comigo pelos contatos que estão no rodapé página, ou se preferir, via e-mail: [franklinjalves@gmail.com](mailto:franklinjalves@gmail.com)
 
 [Leia os últimos posts](/)
 

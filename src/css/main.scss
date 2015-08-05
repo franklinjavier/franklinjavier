@@ -50,6 +50,14 @@ p {
   text-rendering: optimizeLegibility;
 }
 
+p strong {
+  font-weight: 600;
+}
+
+p em {
+  font-style: italic;
+}
+
 h1 {
   font-size: 2em;
   margin-bottom: 1em;

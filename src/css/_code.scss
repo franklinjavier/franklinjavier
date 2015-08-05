@@ -14,9 +14,10 @@ pre {
 
 p code {
   padding: 2px 4px;
-  font-size: 1.2em;
+  font-size: 1em;
   background: $background-header-color;
-  color: $secondary-color;
+  color: darken($text-color, 20%);
+  font-family: monospace;
 }
 
 code.lang-markdown {
