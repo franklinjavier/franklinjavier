@@ -3,7 +3,7 @@
 .header {
   position: relative;
   background-color: $background-header-color;
-  margin-bottom: 2em;
+  // margin-bottom: 2em;
 
   .gradient {
     padding: 3px 0;
@@ -53,6 +53,7 @@
 }
 
 .gradient {
+  top: 0;
   background:    -moz-linear-gradient(90deg, $secondary-color 5%, $primary-color 95%); /* FF3.6+ */
   background: -webkit-linear-gradient(90deg, $secondary-color 5%, $primary-color 95%); /* Chrome 10+, Saf5.1+ */
   background:     -ms-linear-gradient(90deg, $secondary-color 5%, $primary-color 95%); /* IE10 */

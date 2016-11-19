@@ -1,6 +1,13 @@
-<header class="header">
+<header class="header {{#if post}}toolbar{{/if}}">
 
   <div class="gradient"></div>
+
+  {{#if post}}
+    <div class="content">
+      <a href="/" class="close icon" title="Página Inicial"></a>&nbsp;
+      {{> share}}
+    </div>
+  {{/if}}
 
   {{#unless post}}
   <div class="info content">
@@ -29,9 +36,3 @@
   {{/unless}}
   
 </header>
-
-{{#if post}}
-<div class="content">
-  <a href="/" class="close icon" title="Página Inicial"></a>&nbsp;
-</div>
-{{/if}}

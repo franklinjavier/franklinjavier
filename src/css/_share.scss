@@ -1,14 +1,7 @@
 .share {
-  text-align: center;
-
-  p {
-    margin-bottom: 0.5em;
-    font-size: 20px;
-  }
-
+  float: right;
   a[target="_blank"]:after {
     content: '';
     margin: 0;
   }
-
 }

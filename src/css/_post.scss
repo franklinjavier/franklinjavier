@@ -21,7 +21,7 @@
 
   time { 
     display: block; 
-    margin-top: -20px; 
+    margin-top: -1.5em; 
   }
 
 }
@@ -36,8 +36,10 @@
   margin: 3em -4em;
 }        
 
-.page-post .header {
-  margin-bottom: 1em;
+.page-post { 
+  main.content {
+    margin-top: 5em;
+  }
 }
 
 article a[target="_blank"]:after {

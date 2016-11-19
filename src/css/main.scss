@@ -13,6 +13,7 @@
 @import "comment";
 @import "form";
 @import "pagination";
+@import "toolbar";
 
 body {
   font-family: arial, serif;
@@ -34,6 +35,10 @@ body {
   border-radius: 50%;
 }
 
+.fixed {
+  position: fixed;
+}
+
 .close.icon {
   color: #000;
   position: absolute;
@@ -41,7 +46,7 @@ body {
   margin-left: 0;
   width: 31px;
   height: 21px;
-  right: 10px;
+  left: 0;
 }
 
 .close.icon:before {
@@ -65,7 +70,6 @@ body {
   -webkit-transform: rotate(45deg);
           transform: rotate(45deg);
 }
-
 
 
 @import "mediaqueries";
