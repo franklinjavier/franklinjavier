@@ -33,6 +33,8 @@ article.home-post { margin: 0 0 4em 0; }
 
   .excerpt {
     margin-top: 0.7em;
+    color: $text-h-color;
+    &:hover { text-decoration: none; }
   }
 
   time {
