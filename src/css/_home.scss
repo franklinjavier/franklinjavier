@@ -10,10 +10,10 @@ article.home-post { margin: 0 0 4em 0; }
 
   & > .content { margin-bottom: 4em; }
 
-  //article p { cursor: pointer; }
-  //article:hover h2 a {
-    //color: $primary-color;
-  //}
+  article p { cursor: pointer; }
+  article:hover h2 a {
+    color: $primary-color;
+  }
 
   article h2 {
     font-weight: bold;

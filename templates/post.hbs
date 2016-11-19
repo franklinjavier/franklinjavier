@@ -1,8 +1,7 @@
+{{> head}}
 {{> header}}
-
+<main class="content">
   <article class="post">
-
-    {{> tags}}
 
     <h1>{{ title }}</h1>
     <time datetime="{{ dateFormat date }}">{{ dateFormat date }}</time>
@@ -11,18 +10,20 @@
       {{{contents}}}
     </div>
 
-    {{> share}}
-
-    <nav class="pagination">
-      {{#if next.path}}
-      <a href="/{{next.path}}" class="btn -large prev" title="{{next.title}} (J)">Anterior</a>
-      {{/if}}
-
-      {{#if previous}}
-      <a href="/{{previous.path}}" class="btn -large next" title="{{previous.title}} (K)">Próximo</a>
-      {{/if}}
-    </nav>
-
   </article>
+</main>
 
+{{> share}}
+
+<nav class="pagination">
+  {{#if next.path}}
+  <a href="/{{next.path}}" class="btn -large prev" title="{{next.title}} (J)">Anterior</a>
+  {{/if}}
+
+  {{#if previous}}
+  <a href="/{{previous.path}}" class="btn -large next" title="{{previous.title}} (K)">Próximo</a>
+  {{/if}}
+</nav>
+
+{{> comment}}
 {{> footer}}

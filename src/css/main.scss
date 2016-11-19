@@ -1,19 +1,18 @@
 @import "reset";
+@import "variables";
 @import "colors";
+@import "base";
 @import "code";
 @import "home";
-//@import "menu";
 @import "post";
 @import "archive";
 @import "header";
 @import "footer";
 @import "about";
-@import "variables";
-@import "animate";
-
-html {
-  animation: fadeIn 0.25s;
-}
+@import "share";
+@import "comment";
+@import "form";
+@import "pagination";
 
 body {
   font-family: arial, serif;
@@ -25,192 +24,10 @@ body {
   color: $text-color;
 }
 
-.out {
-  animation: fadeOut 0.25s;
-}
-
 .content {
   max-width: $content-width;
   margin: 0 auto;
 }
 
-a {
-  color: $primary-color;
-  text-decoration: none;
-  transition: all .1s linear;
-}
-
-a:hover {
-  color: $primary-color;
-  text-decoration: underline;
-}
-
-p {
-  margin-bottom: 1.52em;
-  text-rendering: optimizeLegibility;
-}
-
-p strong {
-  font-weight: 600;
-}
-
-p em {
-  font-style: italic;
-}
-
-h1 {
-  font-size: 2em;
-  margin-bottom: 1em;
-  font-weight: bold;
-}
-
-h2 {
-  font-size: 1.2em;
-  font-weight: 400;
-  line-height: 1.43;
-  margin-bottom: 1.35em;
-}
-
-h3 {
-  text-align: center;
-  font-weight: 400;
-  font-size: 1.4em;
-  margin-top: 1.8em;
-  margin-bottom: 0.8em;
-}
-
-ol, ul {
-  margin: 0 1.4em 1.4em 4em;
-}
-
-li {
-  margin-bottom: 0.5em;
-}
-
-blockquote {
-  margin: 1.2em 3em;
-  padding-left: 1em;
-  font-style: italic;
-}
-
-hr {
-  border: 0;
-  border-top: 1px solid $border-color;
-  height: 0;
-  margin: 1.6em 0;
-  &:after {
-    content: '';
-    position: absolute;
-    background-color: #eee;
-    padding: 3px;
-    width: 2px;
-    height: 2px;
-    margin-left: 26%;
-    margin-top: -4px;
-    border-radius: 50%;
-  }
-}
-
-.btn {
-  font-family: arial, serif;
-  letter-spacing: 0.03em;
-  background: rgba($background-color, 0.35);
-  display: inline-block;
-  color: rgba(0,0,0,0.44);
-  font-size: 0.8em;
-  text-transform: lowercase;
-  border-radius: 2px;
-  border: 1px solid #eee;
-  padding: 0 8px;
-  margin: 0 3px 3px 0;
-  line-height: 2em;
-
-  &:hover { 
-    text-decoration: none;
-    color: lighten($primary-color, 10%);
-    border-color: lighten($primary-color, 30%);
-    background: rgba($primary-color, 0.1);
-  }
-
-  &.-large {
-    padding: 4px 10px;
-    font-size: 1em;
-  }
-
-
-}
-
-.pagination { 
-  text-align: center;
-}
-
-small {
-  font-size: 0.9em;
-  opacity: 0.7;
-}
-
-article a[target="_blank"]:after {
-  //content: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAVklEQVR4Xn3PgQkAMQhDUXfqTu7kTtkpd5RA8AInfArtQ2iRXFWT2QedAfttj2FsPIOE1eCOlEuoWWjgzYaB/IkeGOrxXhqB+uA9Bfcm0lAZuh+YIeAD+cAqSz4kCMUAAAAASUVORK5CYII=");
-  content: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAgElEQVQYV5XQMQpCQQxF0fNX4G60stFGdyBYuSE3InwQBG20URDclPKKkSAfxXST3FxepvO9nm3c/QDHOGAU8IxZWXhggkB7bHAMGP0clwI3aN36DawRAvVY4VYzxljBHba444pp4CFjve8t+Rtc4vTxVYtc22LFmEeaQ5XlSLwAJVAaAqoDe/cAAAAASUVORK5CYII=");
-  margin: 0 0 0 5px;
-}
-
-.share {
-  text-align: center;
-
-  p {
-    margin-bottom: 0.5em;
-    font-size: 20px;
-  }
-
-  a[target="_blank"]:after {
-    content: '';
-    margin: 0;
-  }
-
-}
-
-@-webkit-keyframes hue {
-  from { -webkit-filter: hue-rotate(0deg); }
-  to { -webkit-filter: hue-rotate(-360deg); }
-}
-
-.gradient {
-  //background: linear-gradient(90deg,$secondary-color,$primary-color);
-
-  background:    -moz-linear-gradient(90deg, $secondary-color 5%, $primary-color 95%); /* FF3.6+ */
-  background: -webkit-linear-gradient(90deg, $secondary-color 5%, $primary-color 95%); /* Chrome 10+, Saf5.1+ */
-  background:     -ms-linear-gradient(90deg, $secondary-color 5%, $primary-color 95%); /* IE10 */
-  background:      -o-linear-gradient(90deg, $secondary-color 5%, $primary-color 95%); /* Opera 11.10+ */
-  background:         linear-gradient(90deg, $secondary-color 5%, $primary-color 95%); /* W3C */
-}
-
-.comments {
-  border-top: 1px solid $border-color;
-  //background-color: #F9F8F7;
-  padding: 3em 0;
-  position: relative;
-
-  &:after, &:before {
-    content: '';
-    position: absolute;
-    background-color: $border-color;
-    padding: 4px;
-    left: 48%;
-    border-radius: 50%;
-    border: 15px solid $background-color;
-  } 
-
-  &:before {
-    top: -20px;
-  }
-
-  &:after {
-    bottom: -20px;
-  }
-
-}
-
 @import "mediaqueries";
-
 

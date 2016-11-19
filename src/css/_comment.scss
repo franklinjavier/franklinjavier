@@ -1,0 +1,27 @@
+.comment {
+  border-top: 1px solid $border-color;
+  //background-color: #F9F8F7;
+  padding: 3em 0;
+  margin-top: 3em;
+  position: relative;
+
+  &:after, 
+  &:before {
+    content: '';
+    position: absolute;
+    background-color: $border-color;
+    padding: 4px;
+    left: 48%;
+    border-radius: 50%;
+    border: 15px solid $background-color;
+  } 
+
+  &:before {
+    top: -20px;
+  }
+
+  &:after {
+    bottom: -20px;
+  }
+
+}

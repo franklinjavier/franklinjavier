@@ -1,0 +1,28 @@
+
+.btn {
+  font-family: arial, serif;
+  letter-spacing: 0.03em;
+  background: rgba($background-color, 0.35);
+  display: inline-block;
+  color: rgba(0,0,0,0.44);
+  font-size: 0.8em;
+  text-transform: lowercase;
+  border-radius: 2px;
+  border: 1px solid #eee;
+  padding: 0 8px;
+  margin: 0 3px 3px 0;
+  line-height: 2em;
+
+  &:hover { 
+    text-decoration: none;
+    color: lighten($primary-color, 10%);
+    border-color: lighten($primary-color, 30%);
+    background: rgba($primary-color, 0.1);
+  }
+
+  &.-large {
+    padding: 4px 10px;
+    font-size: 1em;
+  }
+
+}

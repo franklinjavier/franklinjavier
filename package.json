@@ -4,7 +4,7 @@
   "description": "Blog",
   "main": "index.js",
   "scripts": {
-    "server": "node index.js && gulp",
+    "start": "node index.js && gulp",
     "deploy": "node index.js && gulp deploy",
     "build": "node index.js && gulp build",
     "test": "echo \"Error: no test specified\" && exit 1"

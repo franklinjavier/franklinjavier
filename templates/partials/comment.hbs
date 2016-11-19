@@ -1,18 +1,17 @@
 {{#if post}}
-<div class="comments">
+<div class="comment">
   <!--<hr>-->
   <div class="content">
     <div id="disqus_thread"></div>
   </div>
   <script type="text/javascript">
 
-    /*
-    * Load Disqus dinamically when scroll reach bottom of the pages
-    */
-
     var disqus_shortname = 'franklinjavier',
       disqus_url = "{{ metadata.url}}{{ path }}";
 
+    /*
+    * Load Disqus dinamically when scroll reach bottom of the pages
+    */
     (function() {
 
       function preloadDisqus() {
@@ -39,4 +38,3 @@
   <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
 </div>
 {{/if}}
-

@@ -23,21 +23,10 @@
 
       a.onclick = function( e ) {
         track('post', this.href);
-        //animate( e, this.href );
       };
     }
 
   });
-
-
-  /*
-   * Transition before redirect
-   */
-  function animate( e, url ) {
-    e.preventDefault();
-    document.body.className += ' animated fadeOut';
-    window.location = url;
-  }
 
 
   /*
