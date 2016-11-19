@@ -6,21 +6,17 @@
 
   'use strict';
 
-  var forEach = Function.prototype.call.bind(Array.prototype.forEach);
-  var links = document.querySelectorAll('a');
+  var links = [].slice.call(document.querySelectorAll('a'), 0);
 
-  forEach(links, function(a) { 
+  links.forEach(function(a) { 
 
-    // Links externos
-    if ( a.hostname !== window.location.hostname ) {
-
-        a.target = '_blank';
-        a.onclick = function( e ) {
-          track('external', this.href);
-        };
-
+    // External links
+    if (a.hostname !== window.location.hostname) {
+      a.target = '_blank';
+      a.onclick = function( e ) {
+        track('external', this.href);
+      };
     } else {
-
       a.onclick = function( e ) {
         track('post', this.href);
       };
@@ -40,24 +36,21 @@
 
   /* 
    * Navigate through posts with J-K 
+   * J - 106
+   * K - 107
    */
-  window.onkeypress = function( e ) {
+  eventListener('keypress', function(e) {
+    var keyCode = e.charCode || e.which;
+    var prev = document.querySelector('.pagination .prev');
+    var next = document.querySelector('.pagination .next');
 
-    // J - 106
-    // K - 107
-
-    var keyCode = e.charCode || e.which,
-      prev = document.querySelector('.pagination .prev'),
-      next = document.querySelector('.pagination .next');
-
-    if ( keyCode === 106 && prev ) {
+    if (keyCode === 106 && prev) {
       prev.click();
     }
 
-    if ( keyCode === 107 && next ) {
+    if (keyCode === 107 && next) {
       next.click();
     }
-  };
-
+  });
 
 }());
