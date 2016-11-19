@@ -4,7 +4,6 @@
   position: relative;
   background-color: $background-header-color;
   margin-bottom: 2em;
-  overflow: hidden;
 
   .gradient {
     padding: 3px 0;
@@ -18,8 +17,7 @@
     height: 106px;
     display: inline-block;
     animation: fadeInDown 0.5s;
-    img { 
-      border-radius: 50%;
+    img {
       width: 100%;
     }
   }
@@ -28,10 +26,6 @@
     text-align: center;
     position: relative;
     padding: 2em 0;
-  }
-
-  .info.-full {
-    padding: 5em 0;
   }
 
   .title {

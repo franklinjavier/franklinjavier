@@ -1,6 +1,9 @@
 {{> head}}
 {{> header}}
+
 <main class="content">
+  <a href="/" class="close icon" title="Página Inicial"></a>&nbsp;
+
   <article class="post">
 
     <h1>{{ title }}</h1>
@@ -16,6 +19,8 @@
 {{> share}}
 
 <nav class="pagination">
+  <a href="/" class="btn -large prev" title="{{next.title}} (J)">Início</a>
+
   {{#if next.path}}
   <a href="/{{next.path}}" class="btn -large prev" title="{{next.title}} (J)">Anterior</a>
   {{/if}}

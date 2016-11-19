@@ -36,7 +36,12 @@
   margin: 3em -4em;
 }        
 
+.page-post .header {
+  margin-bottom: 1em;
+}
+
 article a[target="_blank"]:after {
   content: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAgElEQVQYV5XQMQpCQQxF0fNX4G60stFGdyBYuSE3InwQBG20URDclPKKkSAfxXST3FxepvO9nm3c/QDHOGAU8IxZWXhggkB7bHAMGP0clwI3aN36DawRAvVY4VYzxljBHba444pp4CFjve8t+Rtc4vTxVYtc22LFmEeaQ5XlSLwAJVAaAqoDe/cAAAAASUVORK5CYII=");
   margin-left: 5px;
 }
+

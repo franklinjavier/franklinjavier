@@ -27,7 +27,46 @@ body {
 .content {
   max-width: $content-width;
   margin: 0 auto;
+  position: relative;
 }
+
+.radius {
+  border-radius: 50%;
+}
+
+.close.icon {
+  color: #000;
+  position: absolute;
+  margin-top: 0;
+  margin-left: 0;
+  width: 31px;
+  height: 21px;
+  right: 10px;
+}
+
+.close.icon:before {
+  content: '';
+  position: absolute;
+  top: 10px;
+  width: 31px;
+  height: 1px;
+  background-color: currentColor;
+  -webkit-transform: rotate(-45deg);
+          transform: rotate(-45deg);
+}
+
+.close.icon:after {
+  content: '';
+  position: absolute;
+  top: 10px;
+  width: 31px;
+  height: 1px;
+  background-color: currentColor;
+  -webkit-transform: rotate(45deg);
+          transform: rotate(45deg);
+}
+
+
 
 @import "mediaqueries";
 

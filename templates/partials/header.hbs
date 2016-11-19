@@ -2,19 +2,11 @@
 
   <div class="gradient"></div>
 
-  {{#if post}}
+  {{#unless post}}
   <div class="info content">
     <div class="avatar">
       <a href="/">
-        <img src="/img/avatar2.jpg" alt="{{ metadata.name }}">
-      </a>
-    </div>
-  </div>
-  {{else}}
-  <div class="info -full content">
-    <div class="avatar">
-      <a href="/">
-        <img src="/img/avatar2.jpg" alt="{{ metadata.name }}">
+        <img src="/img/avatar2.jpg" alt="{{ metadata.name }}" class="radius">
       </a>
     </div>
     <div class="container">
@@ -34,5 +26,6 @@
 
     </div>
   </div>
-  {{/if}}
+  {{/unless}}
+  
 </header>

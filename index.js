@@ -58,7 +58,7 @@ Metalsmith(__dirname)
 
     .use(pagination({
         'collections.posts': {
-            perPage: 5,
+            perPage: 10,
             template: 'index.hbs',
             first: 'index.html',
             path: 'posts/:num/index.html'
@@ -163,7 +163,7 @@ Handlebars.registerHelper('isPost', function( val ) {
     this.post = true;
   }
 
-  return rule ? '' : 'home';
+  return rule ? 'post' : 'home';
 });
 
 function findTemplate(config) {

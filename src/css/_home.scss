@@ -6,7 +6,7 @@
 
 article.home-post { margin: 0 0 4em 0; }
 
-.home {
+.page-home {
 
   & > .content { margin-bottom: 4em; }
 
@@ -33,7 +33,7 @@ article.home-post { margin: 0 0 4em 0; }
 
   .excerpt {
     margin-top: 0.7em;
-    color: $text-h-color;
+    color: $text-color;
     &:hover { text-decoration: none; }
   }
 
