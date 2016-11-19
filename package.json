@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js && gulp",
-    "deploy": "node index.js && gulp deploy",
+    "_deploy": "node index.js && gulp deploy",
+    "rsync": "rsync -azP --rsh='ssh -p21' build/ site@franklinjavier.com:/var/www/franklinjavier/",
+    "deploy": "rm -rf build && npm run build && npm run rsync",
     "build": "node index.js && gulp build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
