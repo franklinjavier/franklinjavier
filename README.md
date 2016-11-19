@@ -6,8 +6,11 @@
 - Node [install link](http://nodejs.org/)
 - ```git clone https://github.com/franklinjavier/franklinjavier.git```
 - ```npm install -g gulp-cli && npm install```
-- ```gulp```
+- ```npm start```
 - Open http://localhost:3000
+
+## Deploy
+npm run deploy
 
 ## License
 
