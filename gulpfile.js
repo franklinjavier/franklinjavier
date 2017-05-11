@@ -81,7 +81,7 @@ gulp.task('minify:html', function() {
  */
 gulp.task('minify:js', function() {
   return gulp.src('./build/**/*.js')
-    .pipe(uglify())
+    // .pipe(uglify())
     .pipe(gulp.dest('./build/'));
 });
 
@@ -91,7 +91,7 @@ gulp.task('minify:js', function() {
  */
 gulp.task('copy', function() {
   return gulp.src('./src/sw.js')
-    .pipe(uglify())
+    // .pipe(uglify())
     .pipe(gulp.dest('./build/'));
 });
 
