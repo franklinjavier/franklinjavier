@@ -13,6 +13,7 @@
     // External links
     if (a.hostname !== window.location.hostname) {
       a.target = '_blank';
+      a.rel = 'noopener';
       a.onclick = function( e ) {
         track('external', this.href);
       };
@@ -67,7 +68,7 @@
     var dsq = document.createElement('script'); 
     dsq.type = 'text/javascript'; 
     dsq.async = true;
-    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
     (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
 
     // remove event

@@ -87,9 +87,19 @@ gulp.task('minify:js', function() {
 
 
 /**
+ * Copy files
+ */
+gulp.task('copy', function() {
+  return gulp.src('./src/sw.js')
+    .pipe(uglify())
+    .pipe(gulp.dest('./build/'));
+});
+
+
+/**
  * Deploy to server build files
  */
-gulp.task('deploy', ['js', 'sass', 'minify:html', 'minify:js'], function() {
+gulp.task('deploy', ['js', 'sass', 'minify:html', 'minify:js', 'copy'], function() {
   return gulp.src('./build/**')
   .pipe(rsync({
     destination: '/var/www/franklinjavier/',
@@ -109,6 +119,6 @@ gulp.task('deploy', ['js', 'sass', 'minify:html', 'minify:js'], function() {
 });
 
 
-gulp.task('build', ['sass', 'js', 'templates', 'minify:html', 'minify:js'], function() {
+gulp.task('build', ['sass', 'js', 'templates', 'minify:html', 'minify:js', 'copy'], function() {
   console.log('Build ok');
 });

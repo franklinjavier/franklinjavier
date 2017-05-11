@@ -11,22 +11,22 @@
     <meta name="author" content="Frankin Javier">
 
     <!-- Icons -->
-    <link rel="apple-touch-icon" sizes="57x57" href="{{ metadata.url }}img/apple-icon-57x57.png">
-    <link rel="apple-touch-icon" sizes="60x60" href="{{ metadata.url }}img/apple-icon-60x60.png">
-    <link rel="apple-touch-icon" sizes="72x72" href="{{ metadata.url }}img/apple-icon-72x72.png">
-    <link rel="apple-touch-icon" sizes="76x76" href="{{ metadata.url }}img/apple-icon-76x76.png">
-    <link rel="apple-touch-icon" sizes="114x114" href="{{ metadata.url }}img/apple-icon-114x114.png">
-    <link rel="apple-touch-icon" sizes="120x120" href="{{ metadata.url }}img/apple-icon-120x120.png">
-    <link rel="apple-touch-icon" sizes="144x144" href="{{ metadata.url }}img/apple-icon-144x144.png">
-    <link rel="apple-touch-icon" sizes="152x152" href="{{ metadata.url }}img/apple-icon-152x152.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ metadata.url }}img/apple-icon-180x180.png">
-    <link rel="icon" type="image/png" sizes="192x192"  href="{{ metadata.url }}img/android-icon-192x192.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ metadata.url }}img/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="96x96" href="{{ metadata.url }}img/favicon-96x96.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="{{ metadata.url }}img/favicon-16x16.png">
-    <link rel="manifest" href="{{ metadata.url }}img/manifest.json">
+    <link rel="apple-touch-icon" sizes="57x57" href="/img/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/img/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/img/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/img/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/img/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/img/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/img/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/img/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="/img/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/img/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon-16x16.png">
+    <link rel="manifest" href="/manifest.json">
     <meta name="msapplication-TileColor" content="#ffffff">
-    <meta name="msapplication-TileImage" content="{{ metadata.url }}img/ms-icon-144x144.png">
+    <meta name="msapplication-TileImage" content="/img/ms-icon-144x144.png">
     <meta name="theme-color" content="#ffffff">
 
     <!-- Google -->
@@ -34,23 +34,36 @@
     <meta name="robots" content="index, follow">
 
     <!-- DNS prefetch -->
-    <link rel="dns-prefetch" href="http://www.google-analytics.com">
+    <link rel="dns-prefetch" href="https://www.google-analytics.com">
 
     <!-- Facebook Meta Tags -->
     <meta property="og:title" content="{{#if title}}{{ title }}{{else}}{{ metadata.name }}, {{ metadata.description }}{{/if}}" />
     <meta property="og:type" content="article" />
-    <meta property="og:url" content="{{#if path}}{{ metadata.url }}{{ path }}{{else}}{{ metadata.url }}{{/if}}" />
-    <meta property="og:image" content="{{ metadata.url }}img/favicon.png" />
+    <meta property="og:url" content="{{#if path}}/{{ path }}{{else}}/{{/if}}" />
+    <meta property="og:image" content="/img/favicon.png" />
     <meta property="og:description" content="{{#if description}}{{ description }}{{else}}{{ metadata.description }}{{/if}}" />
     <meta property="og:site_name" content="{{ metadata.name }}">
     <meta property="og:locale" content="pt_BR">
     <meta property="fb:profile_id" content="677553975">
 
     <!-- RSS -->
-    <link rel="alternate" href="{{ metadata.url }}rss.xml" type="application/rss+xml" title="Feed">
+    <link rel="alternate" href="/rss.xml" type="application/rss+xml" title="Feed">
 
     <!-- Style -->
     <link rel="stylesheet" href="/css/main.css">
+
+    <script>
+      if('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js', { scope: '/' })
+          .then(function(registration) {
+                console.log('Service Worker Registered');
+          });
+
+        navigator.serviceWorker.ready.then(function(registration) {
+           console.log('Service Worker Ready');
+        });
+      }
+      </script>
 
     {{> scripts }}
 
