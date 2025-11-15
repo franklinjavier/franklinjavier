@@ -106,6 +106,13 @@ Set `draft: true` in frontmatter to exclude from build.
 - Permalink structure: `/blog/{slug}/index.html`
 - RSS feed at `/rss.xml`
 
+## Git Commit Guidelines
+
+When creating git commits:
+- **DO NOT** include "Generated with Claude Code" or "Co-Authored-By: Claude" in commit messages
+- Use concise, descriptive commit messages
+- Use bullet points for multiple changes
+
 ## Notes
 
 - All blog content is in Portuguese
