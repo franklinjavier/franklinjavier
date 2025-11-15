@@ -1,49 +1,28 @@
 {
-  "name": "blog",
-  "version": "0.0.1",
-  "description": "Blog",
-  "main": "index.js",
+  "name": "franklinjavier-blog",
+  "version": "2.0.0",
+  "description": "Franklin Javier's Personal Blog - Built with Astro + Tailwind",
+  "type": "module",
   "scripts": {
-    "start": "node index.js && gulp",
-    "_deploy": "node index.js && gulp deploy",
-    "rsync": "rsync -azP --rsh='ssh -p21' build/ site@franklinjavier.com:/var/www/franklinjavier/",
-    "deploy": "rm -rf build && npm run build && npm run rsync",
-    "build": "node index.js && gulp build",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "astro dev",
+    "build": "astro check && astro build",
+    "preview": "astro preview",
+    "updatedeps": "pnpm upgrade -i --latest"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/RobinThrift/metalsmith-tutorial.git"
-  },
-  "author": "Franklin Jaiver <franklinjalves@gmail.com>",
+  "author": "Franklin Javier <franklinjalves@gmail.com>",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/franklinjavier/franklinjavier/issues"
+  "dependencies": {
+    "@astrojs/check": "^0.9.5",
+    "@astrojs/rss": "^4.0.13",
+    "@astrojs/tailwind": "^5.1.2",
+    "@tailwindcss/typography": "^0.5.19",
+    "astro": "^5.15.8",
+    "tailwindcss": "^3.4.17",
+    "typescript": "^5.9.3"
   },
-  "homepage": "https://github.com/franklinjavier/franklinjavier/",
   "devDependencies": {
-    "browser-sync": "^2.7.10",
-    "gulp": "^3.9.0",
-    "gulp-concat": "^2.5.2",
-    "gulp-htmlmin": "^1.1.3",
-    "gulp-rsync": "0.0.5",
-    "gulp-sass": "^2.0.1",
-    "gulp-uglify": "^1.2.0",
-    "handlebars": "^4.7.6",
-    "highlight": "^0.2.3",
-    "highlight.js": "^8.6.0",
-    "metalsmith": "^0.6.0",
-    "metalsmith-browser-sync": "git://github.com/claycarpenter/metalsmith-browser-sync.git#active-check",
-    "metalsmith-collections": "^0.4.0",
-    "metalsmith-drafts": "0.0.1",
-    "metalsmith-excerpts": "^1.0.0",
-    "metalsmith-gist": "^0.3.0",
-    "metalsmith-markdown": "^0.2.1",
-    "metalsmith-pagination": "^1.1.1",
-    "metalsmith-permalinks": "^0.3.0",
-    "metalsmith-sass": "^1.2.1",
-    "metalsmith-tags": "^0.9.1",
-    "metalsmith-templates": "^0.4.0",
-    "moment": "^2.10.3"
+    "prettier": "^3.6.2",
+    "prettier-plugin-astro": "^0.14.1",
+    "prettier-plugin-tailwindcss": "^0.7.1"
   }
 }

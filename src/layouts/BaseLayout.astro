@@ -1,0 +1,44 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title, description } = Astro.props;
+const siteTitle = "Franklin Javier";
+const siteDescription = "Front-end developer";
+const pageTitle = title ? `${title} - ${siteTitle}` : `${siteTitle} - ${siteDescription}`;
+const pageDescription = description || siteDescription;
+---
+
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>{pageTitle}</title>
+    <meta name="description" content={pageDescription} />
+    <meta name="author" content="Franklin Javier" />
+
+    <!-- RSS -->
+    <link rel="alternate" href="/rss.xml" type="application/rss+xml" title="Feed" />
+
+    <!-- Theme script - must be in head to prevent flash -->
+    <script is:inline>
+      if (
+        localStorage.getItem('color-theme') === 'dark' ||
+        (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)
+      ) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    </script>
+  </head>
+  <body class="min-h-screen bg-gray-50 dark:bg-black text-gray-900 dark:text-gray-100 antialiased transition-colors">
+    <slot />
+  </body>
+</html>

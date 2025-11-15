@@ -1,0 +1,56 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import ThemeToggle from '../components/ThemeToggle.astro';
+
+interface Props {
+  title: string;
+  date: Date;
+  description?: string;
+}
+
+const { title, date, description } = Astro.props;
+
+const formattedDate = new Intl.DateTimeFormat('pt-BR', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric'
+}).format(date);
+---
+
+<BaseLayout title={title} description={description}>
+  <nav class="fixed top-0 left-0 right-0 bg-white/80 dark:bg-black/80 backdrop-blur-sm z-50 border-b border-gray-100 dark:border-gray-800">
+    <div class="max-w-7xl mx-auto px-8 py-6">
+      <div class="flex justify-between items-center text-sm">
+        <a href="/" class="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 transition">Home</a>
+        <a href="/#about" class="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 transition">About me</a>
+        <a href="mailto:franklinjalves@gmail.com" class="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 transition">Contact</a>
+        <a href="/#posts" class="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 transition">Blog</a>
+        <ThemeToggle />
+      </div>
+    </div>
+  </nav>
+
+  <div class="pt-32 pb-20">
+    <article class="max-w-3xl mx-auto px-8">
+      <a href="/" class="inline-block mb-8 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition">
+        ← Back to home
+      </a>
+
+      <header class="mb-12">
+        <h1 class="text-5xl font-bold leading-tight mb-4">{title}</h1>
+        <time class="text-sm text-gray-500 dark:text-gray-400">{formattedDate}</time>
+      </header>
+
+      <div class="prose prose-lg dark:prose-invert max-w-none
+        prose-headings:font-bold
+        prose-p:leading-relaxed
+        prose-a:underline prose-a:decoration-1 prose-a:underline-offset-2
+        prose-code:text-sm prose-code:font-mono
+        prose-code:before:content-none prose-code:after:content-none
+        prose-pre:rounded-lg prose-pre:shadow-lg
+        prose-img:rounded-lg prose-img:shadow-lg">
+        <slot />
+      </div>
+    </article>
+  </div>
+</BaseLayout>

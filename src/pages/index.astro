@@ -1,0 +1,176 @@
+---
+import { getCollection } from 'astro:content'
+import BaseLayout from '../layouts/BaseLayout.astro'
+import ThemeToggle from '../components/ThemeToggle.astro'
+
+const allPosts = await getCollection('blog', ({ data }) => {
+  return data.draft !== true
+})
+
+const sortedPosts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+---
+
+<BaseLayout>
+  <nav
+    class="fixed top-0 left-0 right-0 bg-white/80 dark:bg-black/80 backdrop-blur-sm z-50 border-b border-gray-100 dark:border-gray-800"
+  >
+    <div class="max-w-7xl mx-auto px-8 py-6">
+      <div class="flex justify-between items-center text-sm">
+        <a
+          href="/"
+          class="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 transition"
+          >Home</a
+        >
+        <a href="#about" class="text-gray-900 dark:text-gray-100 font-medium">About me</a>
+        <a
+          href="mailto:franklinjalves@gmail.com"
+          class="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 transition"
+          >Contact</a
+        >
+        <a
+          href="#posts"
+          class="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 transition"
+          >Blog</a
+        >
+        <ThemeToggle />
+      </div>
+    </div>
+  </nav>
+
+  <main class="pt-32 pb-20">
+    <!-- Hero Section -->
+    <section class="max-w-7xl mx-auto px-8 mb-32" id="about">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
+        <div>
+          <h1 class="text-6xl lg:text-7xl font-bold leading-tight mb-8">
+            A little bit<br />about me
+          </h1>
+          <div class="space-y-6 text-lg text-gray-700 dark:text-gray-300 max-w-xl">
+            <p>
+              I'm a Principal Engineer with 16 years of front-end development experience, delivering
+              high-performance web and mobile applications. I combine technical expertise with
+              leadership, driving innovative front-end initiatives.
+            </p>
+            <p>
+              My specialization includes React and Node.js architectures, performance optimization,
+              and advanced monitoring methodologies. I focus on creating accessible, user-friendly
+              experiences through design systems and web accessibility.
+            </p>
+            <p>
+              Beyond technical work, I actively contribute to the front-end community through
+              mentorship, pair programming, and knowledge-sharing. I'm also a speaker at tech talks
+              and industry events.
+            </p>
+          </div>
+        </div>
+
+        <!-- Photo -->
+        <div class="relative lg:mt-16">
+          <div class="transform rotate-3 shadow-2xl">
+            <img
+              src="/img/linkedin-pic.jpeg"
+              alt="Franklin Javier"
+              class="w-full h-auto rounded-lg"
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Info Section -->
+    <section class="max-w-7xl mx-auto px-8">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-16">
+        <div>
+          <h2 class="font-bold text-lg mb-6">Work Experience</h2>
+          <div class="space-y-6 text-sm">
+            <div>
+              <p class="text-gray-700 dark:text-gray-300">Principal Engineer</p>
+              <p class="text-gray-500 dark:text-gray-400">Stone Giant Studio</p>
+              <p class="text-gray-500 dark:text-gray-400">2023 - Present</p>
+            </div>
+            <div>
+              <p class="text-gray-700 dark:text-gray-300">Principal Engineer</p>
+              <p class="text-gray-500 dark:text-gray-400">Grupo Boticário</p>
+              <p class="text-gray-500 dark:text-gray-400">2021 - 2023</p>
+            </div>
+            <div>
+              <p class="text-gray-700 dark:text-gray-300">Head of Technology</p>
+              <p class="text-gray-500 dark:text-gray-400">Beleza na Web</p>
+              <p class="text-gray-500 dark:text-gray-400">2018 - 2020</p>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h2 class="font-bold text-lg mb-6">Dev Stack</h2>
+          <div class="space-y-2 text-sm text-gray-700 dark:text-gray-300">
+            <p>React / Typescript</p>
+            <p>Remix / Node.js</p>
+            <p>Tailwind CSS</p>
+            <p>Performance Optimization</p>
+            <p>Design Systems</p>
+            <p>Accessibility (a11y)</p>
+          </div>
+        </div>
+
+        <div>
+          <h2 class="font-bold text-lg mb-6">Contact</h2>
+          <div class="space-y-2 text-sm">
+            <p class="text-gray-700 dark:text-gray-300">Lisboa, Portugal</p>
+            <a
+              href="mailto:franklinjalves@gmail.com"
+              class="block text-gray-700 dark:text-gray-300 underline hover:text-gray-900 dark:hover:text-gray-100"
+            >
+              franklinjalves@gmail.com
+            </a>
+            <a
+              href="https://www.linkedin.com/in/franklinjavier-98504321"
+              target="_blank"
+              rel="noopener"
+              class="block text-gray-700 dark:text-gray-300 underline hover:text-gray-900 dark:hover:text-gray-100"
+            >
+              LinkedIn
+            </a>
+            <a
+              href="/cv.pdf"
+              target="_blank"
+              class="block text-gray-700 dark:text-gray-300 underline hover:text-gray-900 dark:hover:text-gray-100"
+            >
+              Download CV
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Blog Posts Section -->
+    <section class="max-w-7xl mx-auto px-8 mt-32" id="posts">
+      <h2 class="text-3xl font-bold mb-12">Recent Posts</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {
+          sortedPosts.slice(0, 6).map((post) => {
+            const formattedDate = new Intl.DateTimeFormat('pt-BR', {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric'
+            }).format(post.data.date)
+
+            return (
+              <article class="group">
+                <a href={`/blog/${post.slug}/`} class="block">
+                  <h3 class="text-xl font-semibold mb-2 group-hover:underline">
+                    {post.data.title}
+                  </h3>
+                  <time class="text-sm text-gray-500 dark:text-gray-400">{formattedDate}</time>
+                  {post.data.description && (
+                    <p class="mt-3 text-gray-700 dark:text-gray-300">{post.data.description}</p>
+                  )}
+                </a>
+              </article>
+            )
+          })
+        }
+      </div>
+    </section>
+  </main>
+</BaseLayout>

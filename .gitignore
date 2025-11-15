@@ -1,4 +1,21 @@
+# Build output
+dist/
+.astro/
+
+# Old build output
+build/
+
+# Dependencies
+node_modules/
+
+# Environment variables
+.env
+.env.production
+
+# macOS
 .DS_Store
-node_modules
-build/*
-npm-debug.log
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
