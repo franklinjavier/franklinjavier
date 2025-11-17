@@ -1,0 +1,29 @@
+---
+import { getCollection } from 'astro:content'
+import BlogByTag from '../../../components/BlogByTag.astro'
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog', ({ data }) => {
+    return data.draft !== true && data.lang === 'en'
+  })
+
+  // Collect all unique tags
+  const tags = new Set<string>()
+  posts.forEach(post => {
+    const postTags = typeof post.data.tags === 'string'
+      ? post.data.tags.split(',').map(tag => tag.trim())
+      : post.data.tags || []
+
+    postTags.forEach(tag => tags.add(tag))
+  })
+
+  return Array.from(tags).map(tag => ({
+    params: { tag: tag.toLowerCase().replace(/\s+/g, '-') },
+    props: { tag }
+  }))
+}
+
+const { tag } = Astro.props
+---
+
+<BlogByTag lang="en" tag={tag} />

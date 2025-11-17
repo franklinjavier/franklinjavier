@@ -7,20 +7,32 @@ interface Props {
   title: string;
   date: Date;
   description?: string;
+  tags?: string | string[];
 }
 
-const { title, date, description } = Astro.props;
+const { title, date, description, tags: rawTags } = Astro.props;
+
+// Parse tags
+const tags = typeof rawTags === 'string'
+  ? rawTags.split(',').map(tag => tag.trim())
+  : rawTags || [];
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 const dateLocale = lang === 'en' ? 'en-US' : 'pt-BR';
-const homeUrl = lang === 'en' ? '/en/' : '/';
+const blogUrl = lang === 'en' ? '/blog/' : '/pt-br/blog/';
 
 const formattedDate = new Intl.DateTimeFormat(dateLocale, {
   year: 'numeric',
   month: 'long',
   day: 'numeric'
 }).format(date);
+
+// Helper function to create tag URLs
+const getTagUrl = (tag: string) => {
+  const tagSlug = tag.toLowerCase().replace(/\s+/g, '-');
+  return lang === 'en' ? `/blog/tag/${tagSlug}/` : `/pt-br/blog/tag/${tagSlug}/`;
+};
 ---
 
 <BaseLayout title={title} description={description}>
@@ -28,13 +40,27 @@ const formattedDate = new Intl.DateTimeFormat(dateLocale, {
 
   <div class="pt-32 pb-20">
     <article class="max-w-3xl mx-auto px-8">
-      <a href={homeUrl} class="inline-block mb-8 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition">
-        ← {t('nav.home')}
+      <a href={blogUrl} class="inline-block mb-8 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition">
+        ← {t('blog.backToBlog')}
       </a>
 
       <header class="mb-12">
         <h1 class="text-5xl font-bold leading-tight mb-4">{title}</h1>
-        <time class="text-sm text-gray-500 dark:text-gray-400">{formattedDate}</time>
+        <div class="flex items-center gap-4 flex-wrap">
+          <time class="text-sm text-gray-500 dark:text-gray-400">{formattedDate}</time>
+          {tags.length > 0 && (
+            <div class="flex flex-wrap gap-2">
+              {tags.map(tag => (
+                <a
+                  href={getTagUrl(tag)}
+                  class="text-xs px-3 py-1 bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition"
+                >
+                  {tag}
+                </a>
+              ))}
+            </div>
+          )}
+        </div>
       </header>
 
       <div class="prose prose-lg dark:prose-invert max-w-none

@@ -1,16 +1,17 @@
 ---
-import '../styles/global.css';
+import '../styles/global.css'
+import { ViewTransitions } from 'astro:transitions'
 
 interface Props {
-  title?: string;
-  description?: string;
+  title?: string
+  description?: string
 }
 
-const { title, description } = Astro.props;
-const siteTitle = "Franklin Javier";
-const siteDescription = "Front-end developer";
-const pageTitle = title ? `${title} - ${siteTitle}` : `${siteTitle} - ${siteDescription}`;
-const pageDescription = description || siteDescription;
+const { title, description } = Astro.props
+const siteTitle = 'Franklin Javier'
+const siteDescription = 'Front-end developer'
+const pageTitle = title ? `${title} - ${siteTitle}` : `${siteTitle} - ${siteDescription}`
+const pageDescription = description || siteDescription
 ---
 
 <!doctype html>
@@ -26,19 +27,25 @@ const pageDescription = description || siteDescription;
     <!-- RSS -->
     <link rel="alternate" href="/rss.xml" type="application/rss+xml" title="Feed" />
 
+    <!-- View Transitions -->
+    <ViewTransitions />
+
     <!-- Theme script - must be in head to prevent flash -->
     <script is:inline>
       if (
         localStorage.getItem('color-theme') === 'dark' ||
-        (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)
+        (!('color-theme' in localStorage) &&
+          window.matchMedia('(prefers-color-scheme: dark)').matches)
       ) {
-        document.documentElement.classList.add('dark');
+        document.documentElement.classList.add('dark')
       } else {
-        document.documentElement.classList.remove('dark');
+        document.documentElement.classList.remove('dark')
       }
     </script>
   </head>
-  <body class="min-h-screen bg-gray-50 dark:bg-black text-gray-900 dark:text-gray-100 antialiased transition-colors">
+  <body
+    class="min-h-screen bg-gray-50 dark:bg-black text-gray-900 dark:text-gray-100 antialiased transition-colors"
+  >
     <slot />
   </body>
 </html>

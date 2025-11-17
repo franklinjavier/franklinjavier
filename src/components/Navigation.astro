@@ -8,7 +8,7 @@ const t = useTranslations(lang)
 
 const homeUrl = lang === 'en' ? '/' : '/pt-br/'
 const aboutUrl = lang === 'en' ? '/#about' : '/pt-br/#about'
-const postsUrl = lang === 'en' ? '/#posts' : '/pt-br/#posts'
+const postsUrl = lang === 'en' ? '/blog/' : '/pt-br/blog/'
 ---
 
 <nav
@@ -22,19 +22,14 @@ const postsUrl = lang === 'en' ? '/#posts' : '/pt-br/#posts'
         >{t('nav.home')}</a
       >
       <a
-        href={aboutUrl}
-        class="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 transition"
-        >{t('nav.about')}</a
-      >
-      <a
-        href="mailto:franklinjalves@gmail.com"
-        class="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 transition"
-        >{t('nav.contact')}</a
-      >
-      <a
         href={postsUrl}
         class="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 transition"
         >{t('nav.blog')}</a
+      >
+      <a
+        href={aboutUrl}
+        class="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 transition"
+        >{t('nav.about')}</a
       >
       <div class="flex items-center gap-2">
         <LanguageToggle />

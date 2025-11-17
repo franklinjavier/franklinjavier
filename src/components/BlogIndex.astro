@@ -1,0 +1,99 @@
+---
+import { getCollection } from 'astro:content'
+import BaseLayout from '../layouts/BaseLayout.astro'
+import Navigation from './Navigation.astro'
+import { useTranslations } from '../i18n/utils'
+
+interface Props {
+  lang: 'en' | 'pt-br'
+}
+
+const { lang } = Astro.props
+const t = useTranslations(lang)
+
+const allPosts = await getCollection('blog', ({ data }) => {
+  return data.draft !== true && data.lang === lang
+})
+
+const sortedPosts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+
+const title = t('blog.title')
+const description = t('blog.description')
+const dateLocale = lang === 'en' ? 'en-US' : 'pt-BR'
+---
+
+<BaseLayout title={title} description={description}>
+  <Navigation />
+
+  <main class="pt-32 pb-20">
+    <div class="max-w-4xl mx-auto px-8">
+      <!-- Header -->
+      <header class="mb-16">
+        <h1 class="text-5xl font-bold mb-4">{t('blog.title')}</h1>
+        <p class="text-lg text-gray-600 dark:text-gray-400">
+          {allPosts.length} {allPosts.length === 1 ? t('blog.articleCount') : t('blog.articlesCount')} - {t('blog.description')}
+        </p>
+      </header>
+
+      <!-- Posts list -->
+      <div class="space-y-12">
+        {
+          sortedPosts.map((post) => {
+            const formattedDate = new Intl.DateTimeFormat(dateLocale, {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric'
+            }).format(post.data.date)
+
+            const slug = lang === 'pt-br' ? post.slug.replace('pt-br/', '') : post.slug
+            const postUrl = lang === 'en' ? `/blog/${slug}/` : `/pt-br/blog/${slug}/`
+
+            // Parse tags
+            const tags = typeof post.data.tags === 'string'
+              ? post.data.tags.split(',').map(tag => tag.trim())
+              : post.data.tags || []
+
+            return (
+              <article class="group border-b border-gray-200 dark:border-gray-800 pb-12 last:border-0">
+                <div>
+                  <a href={postUrl} class="block">
+                    <time class="text-sm text-gray-500 dark:text-gray-400">
+                      {formattedDate}
+                    </time>
+                    <h2 class="text-2xl font-bold mt-2 mb-3 group-hover:underline">
+                      {post.data.title}
+                    </h2>
+                    {post.data.description && (
+                      <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
+                        {post.data.description}
+                      </p>
+                    )}
+                  </a>
+                  {tags.length > 0 && (
+                    <div class="flex flex-wrap gap-2 mt-4">
+                      {tags.map(tag => {
+                        const tagSlug = tag.toLowerCase().replace(/\s+/g, '-')
+                        const tagUrl = lang === 'en' ? `/blog/tag/${tagSlug}/` : `/pt-br/blog/tag/${tagSlug}/`
+                        return (
+                          <a
+                            href={tagUrl}
+                            class="text-xs px-3 py-1 bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition"
+                          >
+                            {tag}
+                          </a>
+                        )
+                      })}
+                    </div>
+                  )}
+                  <a href={postUrl} class="block mt-4 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition">
+                    {t('blog.readMore')}
+                  </a>
+                </div>
+              </article>
+            )
+          })
+        }
+      </div>
+    </div>
+  </main>
+</BaseLayout>

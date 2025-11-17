@@ -1,0 +1,76 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro'
+import { getLangFromUrl } from '../i18n/utils'
+
+const lang = getLangFromUrl(Astro.url)
+const homeUrl = lang === 'en' ? '/' : '/pt-br/'
+const title = lang === 'en' ? '404 - Page Not Found' : '404 - Página Não Encontrada'
+---
+
+<BaseLayout title={title}>
+  <main class="min-h-screen flex items-center justify-center px-8">
+    <div class="text-center">
+      <!-- Big 404 with glitch effect -->
+      <h1 class="text-9xl font-bold text-gray-900 dark:text-gray-100 glitch" data-text="404">
+        404
+      </h1>
+
+      <!-- Simple message -->
+      <p class="text-xl text-gray-600 dark:text-gray-400 mt-8">
+        {lang === 'en' ? 'Page not found' : 'Página não encontrada'}
+      </p>
+
+      <!-- Home link -->
+      <a
+        href={homeUrl}
+        class="inline-block mt-8 text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 underline"
+      >
+        {lang === 'en' ? 'Go back home' : 'Voltar para home'}
+      </a>
+    </div>
+  </main>
+
+  <style>
+    @keyframes glitch {
+      0% {
+        text-shadow: 0.05em 0 0 rgba(255, 0, 0, 0.75),
+          -0.05em -0.025em 0 rgba(0, 255, 0, 0.75),
+          -0.025em 0.05em 0 rgba(0, 0, 255, 0.75);
+      }
+      14% {
+        text-shadow: 0.05em 0 0 rgba(255, 0, 0, 0.75),
+          -0.05em -0.025em 0 rgba(0, 255, 0, 0.75),
+          -0.025em 0.05em 0 rgba(0, 0, 255, 0.75);
+      }
+      15% {
+        text-shadow: -0.05em -0.025em 0 rgba(255, 0, 0, 0.75),
+          0.025em 0.025em 0 rgba(0, 255, 0, 0.75),
+          -0.05em -0.05em 0 rgba(0, 0, 255, 0.75);
+      }
+      49% {
+        text-shadow: -0.05em -0.025em 0 rgba(255, 0, 0, 0.75),
+          0.025em 0.025em 0 rgba(0, 255, 0, 0.75),
+          -0.05em -0.05em 0 rgba(0, 0, 255, 0.75);
+      }
+      50% {
+        text-shadow: 0.025em 0.05em 0 rgba(255, 0, 0, 0.75),
+          0.05em 0 0 rgba(0, 255, 0, 0.75),
+          0 -0.05em 0 rgba(0, 0, 255, 0.75);
+      }
+      99% {
+        text-shadow: 0.025em 0.05em 0 rgba(255, 0, 0, 0.75),
+          0.05em 0 0 rgba(0, 255, 0, 0.75),
+          0 -0.05em 0 rgba(0, 0, 255, 0.75);
+      }
+      100% {
+        text-shadow: -0.025em 0 0 rgba(255, 0, 0, 0.75),
+          -0.025em -0.025em 0 rgba(0, 255, 0, 0.75),
+          -0.025em -0.05em 0 rgba(0, 0, 255, 0.75);
+      }
+    }
+
+    .glitch {
+      animation: glitch 1s linear infinite;
+    }
+  </style>
+</BaseLayout>
