@@ -9,7 +9,7 @@ export async function GET(context: APIContext) {
 
   return rss({
     title: 'Franklin Javier',
-    description: 'Front-end developer',
+    description: "I'm a Principal Engineer with 16 years of front-end development experience, delivering high-performance web and mobile applications.",
     site: context.site || 'https://franklinjavier.com',
     items: posts.map((post) => ({
       title: post.data.title,
