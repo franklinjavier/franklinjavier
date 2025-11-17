@@ -24,73 +24,75 @@
   const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon')
   const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon')
 
-  // Function to toggle theme
-  function toggleTheme() {
-    // Check if View Transitions API is supported
-    if (!document.startViewTransition) {
-      performThemeToggle()
-      return
+  if (themeToggleBtn && themeToggleDarkIcon && themeToggleLightIcon) {
+    // Update icons based on current theme
+    const isDark =
+      localStorage.getItem('color-theme') === 'dark' ||
+      (!('color-theme' in localStorage) &&
+        window.matchMedia('(prefers-color-scheme: dark)').matches)
+
+    if (isDark) {
+      themeToggleLightIcon.classList.remove('hidden')
+      themeToggleDarkIcon.classList.add('hidden')
+    } else {
+      themeToggleDarkIcon.classList.remove('hidden')
+      themeToggleLightIcon.classList.add('hidden')
     }
 
-    // Start view transition
-    document.startViewTransition(() => {
-      performThemeToggle()
+    // Toggle theme with View Transition
+    function toggleTheme() {
+      // Check if View Transitions API is supported
+      if (!document.startViewTransition) {
+        performThemeToggle()
+        return
+      }
+
+      // Start view transition
+      document.startViewTransition(() => {
+        performThemeToggle()
+      })
+    }
+
+    function performThemeToggle() {
+      // Toggle icons
+      themeToggleDarkIcon.classList.toggle('hidden')
+      themeToggleLightIcon.classList.toggle('hidden')
+
+      // Toggle dark class and update localStorage
+      if (localStorage.getItem('color-theme')) {
+        if (localStorage.getItem('color-theme') === 'light') {
+          document.documentElement.classList.add('dark')
+          localStorage.setItem('color-theme', 'dark')
+        } else {
+          document.documentElement.classList.remove('dark')
+          localStorage.setItem('color-theme', 'light')
+        }
+      } else {
+        if (document.documentElement.classList.contains('dark')) {
+          document.documentElement.classList.remove('dark')
+          localStorage.setItem('color-theme', 'light')
+        } else {
+          document.documentElement.classList.add('dark')
+          localStorage.setItem('color-theme', 'dark')
+        }
+      }
+    }
+
+    // Click handler
+    themeToggleBtn.addEventListener('click', toggleTheme)
+
+    // Keyboard shortcut: Press 'T' to toggle theme
+    document.addEventListener('keydown', (e) => {
+      if (
+        e.key === 't' &&
+        !e.metaKey &&
+        !e.ctrlKey &&
+        !e.altKey &&
+        document.activeElement?.tagName !== 'INPUT' &&
+        document.activeElement?.tagName !== 'TEXTAREA'
+      ) {
+        toggleTheme()
+      }
     })
   }
-
-  function performThemeToggle() {
-    // Toggle icons
-    themeToggleDarkIcon?.classList.toggle('hidden')
-    themeToggleLightIcon?.classList.toggle('hidden')
-
-    // If set via local storage previously
-    if (localStorage.getItem('color-theme')) {
-      if (localStorage.getItem('color-theme') === 'light') {
-        document.documentElement.classList.add('dark')
-        localStorage.setItem('color-theme', 'dark')
-      } else {
-        document.documentElement.classList.remove('dark')
-        localStorage.setItem('color-theme', 'light')
-      }
-    } else {
-      // If NOT set via local storage previously
-      if (document.documentElement.classList.contains('dark')) {
-        document.documentElement.classList.remove('dark')
-        localStorage.setItem('color-theme', 'light')
-      } else {
-        document.documentElement.classList.add('dark')
-        localStorage.setItem('color-theme', 'dark')
-      }
-    }
-  }
-
-  // Change the icons inside the button based on previous settings
-  if (
-    localStorage.getItem('color-theme') === 'dark' ||
-    (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)
-  ) {
-    themeToggleLightIcon?.classList.remove('hidden')
-    document.documentElement.classList.add('dark')
-  } else {
-    themeToggleDarkIcon?.classList.remove('hidden')
-    document.documentElement.classList.remove('dark')
-  }
-
-  // Click handler
-  themeToggleBtn?.addEventListener('click', () => toggleTheme())
-
-  // Keyboard shortcut: Press 'T' to toggle theme
-  document.addEventListener('keydown', (e) => {
-    // Only toggle if user is not typing in an input/textarea
-    if (
-      e.key === 't' &&
-      !e.metaKey &&
-      !e.ctrlKey &&
-      !e.altKey &&
-      document.activeElement?.tagName !== 'INPUT' &&
-      document.activeElement?.tagName !== 'TEXTAREA'
-    ) {
-      toggleTheme()
-    }
-  })
 </script>
