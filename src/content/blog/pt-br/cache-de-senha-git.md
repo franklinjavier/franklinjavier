@@ -4,6 +4,8 @@ date: 2015-08-05
 description: Um jeito simples de fazer o Git memorizar sua senha
 author: Franklin Javier
 tags: git
+lang: pt-br
+translationKey: git-password-cache
 ---
 
 Toda vez que eu vou dar um pull ou push de um projeto clonado via HTTPS, o Git solicita minha senha.

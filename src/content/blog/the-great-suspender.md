@@ -1,33 +1,35 @@
 ---
 title: The Great Suspender
 date: 2015-06-25
-description: Dica - The Great Suspender
+description: Tip - The Great Suspender
 author: Franklin Javier
 tags: tip
+lang: en
+translationKey: the-great-suspender
 ---
 
-Muitas pessoas vem reclamando do Google Chrome pelo seu consumo de memória. 
-Dependendo do uso, o software chega a consumir 1GB. A situação fica ainda pior quando se usa muitas extensões.
+Many people have been complaining about Google Chrome's memory consumption.
+Depending on usage, the software can consume up to 1GB. The situation gets even worse when using many extensions.
 
-Eu tenho o hábito de abrir diversas abas quando estou estudando, 
-e no decorrer do dia vou analisando e fechando. Por mais que a config da minha maquina seja boa, 
-chega um momento que fica bem lento.
+I have the habit of opening several tabs when I'm studying,
+and throughout the day I analyze and close them. Even though my machine's configuration is good,
+there comes a time when it gets quite slow.
 
-Para tentar amenizar essa situação, [The Great Suspender](https://chrome.google.com/webstore/detail/the-great-suspender/klbibkeccnjlkjkiokjodocebajanakg) 
-é uma extensão que suspende o processo das abas que estão inativas por X tempo. 
-Ou seja, se eu configurei o tempo para 30 minutos, as abas que ficarem inativas por esse tempo são suspensas. Simples assim!
+To try to alleviate this situation, [The Great Suspender](https://chrome.google.com/webstore/detail/the-great-suspender/klbibkeccnjlkjkiokjodocebajanakg)
+is an extension that suspends the process of tabs that are inactive for X time.
+That is, if I configured the time to 30 minutes, tabs that remain inactive for that time are suspended. Simple as that!
 
 [![](http://i.imgur.com/IJZClow.png)](http://i.imgur.com/IJZClow.png)
 
-As abas "pinadas" ou as definidas em uma whitelist, não entram na condição acima, evitando que páginas 
-sejam suspensas.
+Pinned tabs or those defined in a whitelist don't fall under the above condition, preventing pages
+from being suspended.
 
-Outra feature bacana é o histórico de páginas suspensas. Cada entrada inclui um marcador de tempo de quando 
-ocorreu a suspensão. Se quiser, você pode voltar a suspender ou recarregar todas as páginas de um dia anterior. 
+Another cool feature is the history of suspended pages. Each entry includes a timestamp of when
+the suspension occurred. If you want, you can suspend again or reload all pages from a previous day.
 
-E você, já encontrou alguma extensão que facilitou a sua vida? Comente.
+Have you found any extension that made your life easier? Comment.
 
-Para saber mais:
+To learn more:
 
 - [Webstore](https://chrome.google.com/webstore/detail/the-great-suspender/klbibkeccnjlkjkiokjodocebajanakg).
-- [Página do projeto](https://github.com/deanoemcke/thegreatsuspender)
+- [Project page](https://github.com/deanoemcke/thegreatsuspender)

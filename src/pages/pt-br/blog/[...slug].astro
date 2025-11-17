@@ -1,14 +1,14 @@
 ---
 import { getCollection } from 'astro:content';
-import PostLayout from '../../layouts/PostLayout.astro';
+import PostLayout from '../../../layouts/PostLayout.astro';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog', ({ data }) => {
-    return data.draft !== true && data.lang === 'en';
+    return data.draft !== true && data.lang === 'pt-br';
   });
 
   return posts.map((post) => ({
-    params: { slug: post.slug },
+    params: { slug: post.slug.replace('pt-br/', '') },
     props: post,
   }));
 }

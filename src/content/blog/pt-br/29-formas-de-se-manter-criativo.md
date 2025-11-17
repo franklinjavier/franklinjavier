@@ -4,6 +4,8 @@ date: 2015-08-27
 description: Atitudes bem simples, que podemos adotar em nosso dia a dia e que fazem a diferença.
 author: Franklin Javier
 tags: lifehack
+lang: pt-br
+translationKey: 29-ways-to-stay-creative
 ---
 
 Essa é uma lista que gosto sempre de ter por perto para dar um UP no dia. São aquelas atitudes bem simples, que podemos adotar em nosso dia a dia e que fazem a diferença.

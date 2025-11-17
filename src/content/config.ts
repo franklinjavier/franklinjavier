@@ -9,6 +9,8 @@ const blog = defineCollection({
     author: z.string().default('Franklin Javier'),
     tags: z.union([z.string(), z.array(z.string())]).optional(),
     draft: z.boolean().optional().default(false),
+    lang: z.enum(['pt-br', 'en']).default('pt-br'),
+    translationKey: z.string().optional(),
   }),
 });
 
@@ -17,6 +19,7 @@ const pages = defineCollection({
   schema: z.object({
     title: z.string(),
     description: z.string().optional(),
+    lang: z.enum(['pt-br', 'en']).default('pt-br'),
   }),
 });
 

@@ -1,6 +1,7 @@
 ---
 import BaseLayout from './BaseLayout.astro';
-import ThemeToggle from '../components/ThemeToggle.astro';
+import Navigation from '../components/Navigation.astro';
+import { getLangFromUrl, useTranslations } from '../i18n/utils';
 
 interface Props {
   title: string;
@@ -10,7 +11,12 @@ interface Props {
 
 const { title, date, description } = Astro.props;
 
-const formattedDate = new Intl.DateTimeFormat('pt-BR', {
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const dateLocale = lang === 'en' ? 'en-US' : 'pt-BR';
+const homeUrl = lang === 'en' ? '/en/' : '/';
+
+const formattedDate = new Intl.DateTimeFormat(dateLocale, {
   year: 'numeric',
   month: 'long',
   day: 'numeric'
@@ -18,22 +24,12 @@ const formattedDate = new Intl.DateTimeFormat('pt-BR', {
 ---
 
 <BaseLayout title={title} description={description}>
-  <nav class="fixed top-0 left-0 right-0 bg-white/80 dark:bg-black/80 backdrop-blur-sm z-50 border-b border-gray-100 dark:border-gray-800">
-    <div class="max-w-7xl mx-auto px-8 py-6">
-      <div class="flex justify-between items-center text-sm">
-        <a href="/" class="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 transition">Home</a>
-        <a href="/#about" class="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 transition">About me</a>
-        <a href="mailto:franklinjalves@gmail.com" class="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 transition">Contact</a>
-        <a href="/#posts" class="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 transition">Blog</a>
-        <ThemeToggle />
-      </div>
-    </div>
-  </nav>
+  <Navigation />
 
   <div class="pt-32 pb-20">
     <article class="max-w-3xl mx-auto px-8">
-      <a href="/" class="inline-block mb-8 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition">
-        ← Back to home
+      <a href={homeUrl} class="inline-block mb-8 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition">
+        ← {t('nav.home')}
       </a>
 
       <header class="mb-12">

@@ -1,0 +1,157 @@
+---
+import { getCollection } from 'astro:content'
+import BaseLayout from '../layouts/BaseLayout.astro'
+import Navigation from '../components/Navigation.astro'
+import { useTranslations } from '../i18n/utils'
+
+interface Props {
+  lang: 'pt-br' | 'en'
+}
+
+const { lang } = Astro.props
+const t = useTranslations(lang)
+
+const allPosts = await getCollection('blog', ({ data }) => {
+  return data.draft !== true && data.lang === lang
+})
+
+const sortedPosts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+
+const blogUrlPrefix = lang === 'en' ? '/blog/' : '/pt-br/blog/'
+const dateLocale = lang === 'en' ? 'en-US' : 'pt-BR'
+---
+
+<BaseLayout>
+  <Navigation />
+
+  <main class="pt-32 pb-20">
+    <!-- Hero Section -->
+    <section class="max-w-7xl mx-auto px-8 mb-32" id="about">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
+        <div>
+          <h1
+            class="text-6xl lg:text-7xl font-bold leading-tight mb-8"
+            set:html={t('hero.title').replace('\n', '<br />')}
+          />
+          <div class="space-y-6 text-lg text-gray-700 dark:text-gray-300 max-w-xl">
+            <p>{t('hero.bio1')}</p>
+            <p>{t('hero.bio2')}</p>
+            <p>{t('hero.bio3')}</p>
+          </div>
+        </div>
+
+        <!-- Photo -->
+        <div class="relative lg:mt-16">
+          <div class="transform rotate-3 shadow-2xl">
+            <img
+              src="/img/frank.jpeg"
+              alt="Franklin Javier"
+              class="w-full h-auto rounded-3xl"
+              width="600"
+              height="600"
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Info Section -->
+    <section class="max-w-7xl mx-auto px-8">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-16">
+        <div>
+          <h2 class="font-bold text-lg mb-6">{t('experience.title')}</h2>
+          <div class="space-y-6 text-sm">
+            <div>
+              <p class="text-gray-700 dark:text-gray-300">{t('experience.role1')}</p>
+              <p class="text-gray-500 dark:text-gray-400">{t('experience.company1')}</p>
+              <p class="text-gray-500 dark:text-gray-400">{t('experience.period1')}</p>
+            </div>
+            <div>
+              <p class="text-gray-700 dark:text-gray-300">{t('experience.role2')}</p>
+              <p class="text-gray-500 dark:text-gray-400">{t('experience.company2')}</p>
+              <p class="text-gray-500 dark:text-gray-400">{t('experience.period2')}</p>
+            </div>
+            <div>
+              <p class="text-gray-700 dark:text-gray-300">{t('experience.role3')}</p>
+              <p class="text-gray-500 dark:text-gray-400">{t('experience.company3')}</p>
+              <p class="text-gray-500 dark:text-gray-400">{t('experience.period3')}</p>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h2 class="font-bold text-lg mb-6">{t('stack.title')}</h2>
+          <div class="space-y-2 text-sm text-gray-700 dark:text-gray-300">
+            <p>React / Typescript</p>
+            <p>Remix / Node.js</p>
+            <p>Tailwind CSS</p>
+            <p>Performance Optimization</p>
+            <p>Design Systems</p>
+            <p>Accessibility (a11y)</p>
+          </div>
+        </div>
+
+        <div>
+          <h2 class="font-bold text-lg mb-6">{t('contact.title')}</h2>
+          <div class="space-y-2 text-sm">
+            <p class="text-gray-700 dark:text-gray-300">{t('contact.location')}</p>
+            <a
+              href="mailto:franklinjalves@gmail.com"
+              class="block text-gray-700 dark:text-gray-300 underline hover:text-gray-900 dark:hover:text-gray-100"
+            >
+              franklinjalves@gmail.com
+            </a>
+            <a
+              href="https://www.linkedin.com/in/franklinjavier-98504321"
+              target="_blank"
+              rel="noopener"
+              class="block text-gray-700 dark:text-gray-300 underline hover:text-gray-900 dark:hover:text-gray-100"
+            >
+              LinkedIn
+            </a>
+            <a
+              href="/cv.pdf"
+              target="_blank"
+              class="block text-gray-700 dark:text-gray-300 underline hover:text-gray-900 dark:hover:text-gray-100"
+            >
+              {t('contact.downloadCV')}
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Blog Posts Section -->
+    <section class="max-w-7xl mx-auto px-8 mt-32" id="posts">
+      <h2 class="text-3xl font-bold mb-12">{t('blog.recentPosts')}</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {
+          sortedPosts.slice(0, 6).map((post) => {
+            const formattedDate = new Intl.DateTimeFormat(dateLocale, {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric'
+            }).format(post.data.date)
+
+            const slug = post.slug.replace('pt-br/', '')
+            const postUrl = `${blogUrlPrefix}${slug}/`
+
+            return (
+              <article class="group">
+                <a href={postUrl} class="block">
+                  <h3 class="text-xl font-semibold mb-2 group-hover:underline">
+                    {post.data.title}
+                  </h3>
+                  <time class="text-sm text-gray-500 dark:text-gray-400">{formattedDate}</time>
+                  {post.data.description && (
+                    <p class="mt-3 text-gray-700 dark:text-gray-300">{post.data.description}</p>
+                  )}
+                </a>
+              </article>
+            )
+          })
+        }
+      </div>
+    </section>
+  </main>
+</BaseLayout>

@@ -9,6 +9,13 @@ export default defineConfig({
   build: {
     format: 'directory', // Creates /posts/title/index.html
   },
+  i18n: {
+    defaultLocale: 'en',
+    locales: ['en', 'pt-br'],
+    routing: {
+      prefixDefaultLocale: false,
+    },
+  },
   markdown: {
     syntaxHighlight: 'shiki',
     shikiConfig: {

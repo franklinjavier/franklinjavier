@@ -1,0 +1,37 @@
+---
+import { getLangFromUrl, getAlternateUrl, getTranslatedPost } from '../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const targetLang = lang === 'pt-br' ? 'en' : 'pt-br';
+
+// Detect if we're on a blog post page
+const isBlogPost = Astro.url.pathname.includes('/blog/');
+
+let alternateUrl = '';
+
+if (isBlogPost) {
+  // Extract post slug
+  const pathParts = Astro.url.pathname.split('/').filter(Boolean);
+  const blogIndex = pathParts.indexOf('blog');
+  const slug = pathParts.slice(blogIndex + 1).join('/');
+
+  // Remove trailing slash
+  const cleanSlug = slug.replace(/\/$/, '');
+
+  // Build full slug considering the language
+  const fullSlug = lang === 'pt-br' ? `pt-br/${cleanSlug}` : cleanSlug;
+
+  alternateUrl = await getTranslatedPost(fullSlug, lang, targetLang);
+} else {
+  alternateUrl = getAlternateUrl(Astro.url, targetLang);
+}
+---
+
+<a
+  href={alternateUrl}
+  class="language-toggle inline-flex items-center gap-1 px-2 py-1.5 text-2xl hover:opacity-80 transition-opacity"
+  aria-label={lang === 'pt-br' ? 'Switch to English' : 'Mudar para Português'}
+  title={lang === 'pt-br' ? 'Switch to English' : 'Mudar para Português'}
+>
+  <span>{lang === 'pt-br' ? '🇺🇸' : '🇧🇷'}</span>
+</a>

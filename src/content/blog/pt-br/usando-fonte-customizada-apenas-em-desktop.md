@@ -4,6 +4,8 @@ date: 2015-07-04
 description: Técnica simples para otimizar seu site/projeto. Venha descobrir!
 author: Franklin Javier
 tags: front-end, css, optimization
+lang: pt-br
+translationKey: loading-webfonts-desktop-only
 ---
 
 Usar webfont em seu site/projeto pode ser de fato interessante mas, dependendo do número

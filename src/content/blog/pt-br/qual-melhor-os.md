@@ -4,6 +4,8 @@ date: 2015-06-14
 description: Qual é o melhor Sistema Operacional (OS)?
 author: Franklin Javier
 tags: os, linux, osx, windows
+lang: pt-br
+translationKey: which-is-the-best-os
 ---
 
 Síntese clichê: Não existe o melhor [sistema operacional](https://pt.wikipedia.org/wiki/Sistema_operativo). 
