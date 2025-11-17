@@ -55,8 +55,8 @@
 
     function performThemeToggle() {
       // Toggle icons
-      themeToggleDarkIcon.classList.toggle('hidden')
-      themeToggleLightIcon.classList.toggle('hidden')
+      themeToggleDarkIcon?.classList.toggle('hidden')
+      themeToggleLightIcon?.classList.toggle('hidden')
 
       // Toggle dark class and update localStorage
       if (localStorage.getItem('color-theme')) {
