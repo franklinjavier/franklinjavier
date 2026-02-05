@@ -2,7 +2,7 @@
 import { getCollection } from 'astro:content'
 import BaseLayout from '../layouts/BaseLayout.astro'
 import Navigation from './Navigation.astro'
-import { useTranslations } from '../i18n/utils'
+import { useTranslations, formatDate, parseTags, getPostUrl } from '../i18n/utils'
 
 interface Props {
   lang: 'en' | 'pt-br'
@@ -15,11 +15,7 @@ const t = useTranslations(lang)
 const allPosts = await getCollection('blog', ({ data }) => {
   if (data.draft === true || data.lang !== lang) return false
 
-  // Parse tags
-  const tags = typeof data.tags === 'string'
-    ? data.tags.split(',').map(t => t.trim().toLowerCase())
-    : (data.tags || []).map((t: string) => t.toLowerCase())
-
+  const tags = parseTags(data.tags).map(t => t.toLowerCase())
   return tags.includes(tag.toLowerCase())
 })
 
@@ -27,10 +23,9 @@ const sortedPosts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.
 
 const title = `${t('blog.title')} - ${tag}`
 const description = `${t('blog.postsTagged')} "${tag}"`
-const dateLocale = lang === 'en' ? 'en-US' : 'pt-BR'
 ---
 
-<BaseLayout title={title} description={description}>
+<BaseLayout title={title} description={description} lang={lang}>
   <Navigation />
 
   <main class="pt-32 pb-20">
@@ -60,19 +55,9 @@ const dateLocale = lang === 'en' ? 'en-US' : 'pt-BR'
         <div class="space-y-12">
           {
             sortedPosts.map((post) => {
-              const formattedDate = new Intl.DateTimeFormat(dateLocale, {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-              }).format(post.data.date)
-
-              const slug = lang === 'pt-br' ? post.slug.replace('pt-br/', '') : post.slug
-              const postUrl = lang === 'en' ? `/blog/${slug}/` : `/pt-br/blog/${slug}/`
-
-              // Parse tags
-              const tags = typeof post.data.tags === 'string'
-                ? post.data.tags.split(',').map(tag => tag.trim())
-                : post.data.tags || []
+              const formattedDate = formatDate(post.data.date, lang)
+              const postUrl = getPostUrl(post.slug, lang)
+              const tags = parseTags(post.data.tags)
 
               return (
                 <article class="group border-b border-gray-200 dark:border-gray-800 pb-12 last:border-0">

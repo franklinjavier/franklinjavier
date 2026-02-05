@@ -1,6 +1,44 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  /* Map Tailwind v4 gray to v3's default gray (cool gray) for visual parity */
+  --color-gray-50: #f9fafb;
+  --color-gray-100: #f3f4f6;
+  --color-gray-200: #e5e7eb;
+  --color-gray-300: #d1d5db;
+  --color-gray-400: #9ca3af;
+  --color-gray-500: #6b7280;
+  --color-gray-600: #4b5563;
+  --color-gray-700: #374151;
+  --color-gray-800: #1f2937;
+  --color-gray-900: #111827;
+}
+
+/* Typography plugin customizations */
+.prose {
+  max-width: 65ch;
+  color: inherit;
+
+  & a {
+    color: inherit;
+    text-decoration: underline;
+
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+
+  & code::before {
+    content: "";
+  }
+
+  & code::after {
+    content: "";
+  }
+}
 
 /* View Transitions - Page Navigation (default) - Diagonal Polygon Effect */
 @keyframes page-reveal {

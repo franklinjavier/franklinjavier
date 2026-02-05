@@ -1,13 +1,14 @@
 ---
 import '../styles/global.css'
-import { ViewTransitions } from 'astro:transitions'
 
 interface Props {
   title?: string
   description?: string
+  lang?: string
 }
 
-const { title, description } = Astro.props
+const { title, description, lang = 'en' } = Astro.props
+const htmlLang = lang === 'pt-br' ? 'pt-BR' : 'en'
 const siteTitle = 'Franklin Javier'
 const siteDescription =
   "I'm a Principal Engineer with 16 years of front-end development experience, delivering high-performance web and mobile applications."
@@ -16,7 +17,7 @@ const pageDescription = description || siteDescription
 ---
 
 <!doctype html>
-<html lang="pt-BR">
+<html lang={htmlLang}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -24,6 +25,9 @@ const pageDescription = description || siteDescription
     <title>{pageTitle}</title>
     <meta name="description" content={pageDescription} />
     <meta name="author" content="Franklin Javier" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
     <!-- RSS -->
     <link rel="alternate" href="/rss.xml" type="application/rss+xml" title="Feed" />

@@ -38,6 +38,9 @@ export const ui = {
     'blog.postsTagged': 'Posts com a tag',
     'blog.backToBlog': 'Voltar para o blog',
     'blog.noPostsFound': 'Nenhum post encontrado',
+    '404.title': '404 - Página Não Encontrada',
+    '404.message': 'Página não encontrada',
+    '404.goHome': 'Voltar para home',
   },
   en: {
     'nav.home': 'Home',
@@ -71,5 +74,8 @@ export const ui = {
     'blog.postsTagged': 'Posts tagged with',
     'blog.backToBlog': 'Back to blog',
     'blog.noPostsFound': 'No posts found',
+    '404.title': '404 - Page Not Found',
+    '404.message': 'Page not found',
+    '404.goHome': 'Go back home',
   },
 } as const;

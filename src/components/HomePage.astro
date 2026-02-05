@@ -2,7 +2,7 @@
 import { getCollection } from 'astro:content'
 import BaseLayout from '../layouts/BaseLayout.astro'
 import Navigation from '../components/Navigation.astro'
-import { useTranslations } from '../i18n/utils'
+import { useTranslations, formatDate, getPostUrl } from '../i18n/utils'
 
 interface Props {
   lang: 'pt-br' | 'en'
@@ -17,11 +17,9 @@ const allPosts = await getCollection('blog', ({ data }) => {
 
 const sortedPosts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
 
-const blogUrlPrefix = lang === 'en' ? '/blog/' : '/pt-br/blog/'
-const dateLocale = lang === 'en' ? 'en-US' : 'pt-BR'
 ---
 
-<BaseLayout title="Principal Engineer">
+<BaseLayout title="Principal Engineer" lang={lang}>
   <Navigation />
 
   <main class="pt-32 pb-20">
@@ -127,14 +125,8 @@ const dateLocale = lang === 'en' ? 'en-US' : 'pt-BR'
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {
           sortedPosts.slice(0, 6).map((post) => {
-            const formattedDate = new Intl.DateTimeFormat(dateLocale, {
-              year: 'numeric',
-              month: 'long',
-              day: 'numeric'
-            }).format(post.data.date)
-
-            const slug = post.slug.replace('pt-br/', '')
-            const postUrl = `${blogUrlPrefix}${slug}/`
+            const formattedDate = formatDate(post.data.date, lang)
+            const postUrl = getPostUrl(post.slug, lang)
 
             return (
               <article class="group">

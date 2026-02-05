@@ -17,8 +17,8 @@ This is a bilingual personal blog built with **Astro** and **Tailwind CSS**. The
 ## Tech Stack
 
 - **Framework**: Astro 5.x (static site generator)
-- **Styling**: Tailwind CSS 3.x with Typography plugin
-- **Package Manager**: pnpm
+- **Styling**: Tailwind CSS 4.x with Typography plugin (CSS-first config in `global.css`)
+- **Package Manager**: bun
 - **Language**: TypeScript (strict mode)
 - **Content**: Markdown with frontmatter
 - **Syntax Highlighting**: Shiki with Vesper theme
@@ -28,10 +28,10 @@ This is a bilingual personal blog built with **Astro** and **Tailwind CSS**. The
 
 ### Development
 ```bash
-pnpm install      # Install dependencies
-pnpm dev          # Start development server at http://localhost:4321
-pnpm build        # Build for production (outputs to dist/)
-pnpm preview      # Preview production build locally
+bun install       # Install dependencies
+bun dev           # Start development server at http://localhost:4321
+bun run build     # Build for production (outputs to dist/)
+bun preview       # Preview production build locally
 ```
 
 ## Architecture
@@ -80,10 +80,10 @@ When creating new pages or features:
 
 ### Styling
 
-Uses Tailwind CSS with custom configuration:
-- Dark mode enabled with `darkMode: 'class'`
-- Typography plugin for prose styling with dark mode support (`prose-invert`)
-- Global styles in `src/styles/global.css` with Tailwind directives
+Uses Tailwind CSS 4 with CSS-first configuration:
+- Dark mode via `@custom-variant dark` in `global.css`
+- Typography plugin loaded via `@plugin "@tailwindcss/typography"` in `global.css`
+- Tailwind integrated via `@tailwindcss/vite` plugin in `astro.config.mjs`
 - Pure black backgrounds in dark mode (`bg-black`) for Linear-style aesthetic
 - All components include dark mode variants
 

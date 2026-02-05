@@ -1,7 +1,7 @@
 ---
 import BaseLayout from './BaseLayout.astro';
 import Navigation from '../components/Navigation.astro';
-import { getLangFromUrl, useTranslations } from '../i18n/utils';
+import { getLangFromUrl, useTranslations, parseTags, formatDate, getTagUrl } from '../i18n/utils';
 
 interface Props {
   title: string;
@@ -12,30 +12,14 @@ interface Props {
 
 const { title, date, description, tags: rawTags } = Astro.props;
 
-// Parse tags
-const tags = typeof rawTags === 'string'
-  ? rawTags.split(',').map(tag => tag.trim())
-  : rawTags || [];
-
+const tags = parseTags(rawTags);
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
-const dateLocale = lang === 'en' ? 'en-US' : 'pt-BR';
 const blogUrl = lang === 'en' ? '/blog/' : '/pt-br/blog/';
-
-const formattedDate = new Intl.DateTimeFormat(dateLocale, {
-  year: 'numeric',
-  month: 'long',
-  day: 'numeric'
-}).format(date);
-
-// Helper function to create tag URLs
-const getTagUrl = (tag: string) => {
-  const tagSlug = tag.toLowerCase().replace(/\s+/g, '-');
-  return lang === 'en' ? `/blog/tag/${tagSlug}/` : `/pt-br/blog/tag/${tagSlug}/`;
-};
+const formattedDate = formatDate(date, lang);
 ---
 
-<BaseLayout title={title} description={description}>
+<BaseLayout title={title} description={description} lang={lang}>
   <Navigation />
 
   <div class="pt-32 pb-20">
@@ -52,7 +36,7 @@ const getTagUrl = (tag: string) => {
             <div class="flex flex-wrap gap-2">
               {tags.map(tag => (
                 <a
-                  href={getTagUrl(tag)}
+                  href={getTagUrl(tag, lang)}
                   class="text-xs px-3 py-1 bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition"
                 >
                   {tag}

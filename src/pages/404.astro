@@ -1,31 +1,28 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro'
-import { getLangFromUrl } from '../i18n/utils'
+import { getLangFromUrl, useTranslations } from '../i18n/utils'
 
 const lang = getLangFromUrl(Astro.url)
+const t = useTranslations(lang)
 const homeUrl = lang === 'en' ? '/' : '/pt-br/'
-const title = lang === 'en' ? '404 - Page Not Found' : '404 - Página Não Encontrada'
 ---
 
-<BaseLayout title={title}>
+<BaseLayout title={t('404.title')} lang={lang}>
   <main class="min-h-screen flex items-center justify-center px-8">
     <div class="text-center">
-      <!-- Big 404 with glitch effect -->
       <h1 class="text-9xl font-bold text-gray-900 dark:text-gray-100 glitch" data-text="404">
         404
       </h1>
 
-      <!-- Simple message -->
       <p class="text-xl text-gray-600 dark:text-gray-400 mt-8">
-        {lang === 'en' ? 'Page not found' : 'Página não encontrada'}
+        {t('404.message')}
       </p>
 
-      <!-- Home link -->
       <a
         href={homeUrl}
         class="inline-block mt-8 text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 underline"
       >
-        {lang === 'en' ? 'Go back home' : 'Voltar para home'}
+        {t('404.goHome')}
       </a>
     </div>
   </main>
