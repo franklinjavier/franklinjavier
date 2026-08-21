@@ -1,19 +1,25 @@
 ---
 import '../styles/global.css'
+import Footer from '../components/Footer.astro'
+import { SITE_TITLE, SITE_DESCRIPTION, SITE_IMAGE, absoluteUrl, baseJsonLd } from '../lib/site'
 
 interface Props {
   title?: string
   description?: string
   lang?: string
+  type?: 'website' | 'article'
+  jsonLd?: Record<string, unknown>
 }
 
-const { title, description, lang = 'en' } = Astro.props
+const { title, description, lang = 'en', type = 'website', jsonLd } = Astro.props
 const htmlLang = lang === 'pt-br' ? 'pt-BR' : 'en'
-const siteTitle = 'Franklin Javier'
-const siteDescription =
-  "I'm a Principal Engineer with 16 years of front-end development experience, delivering high-performance web and mobile applications."
+const siteTitle = SITE_TITLE
+const siteDescription = SITE_DESCRIPTION
 const pageTitle = title ? `${title} - ${siteTitle}` : `${siteTitle} - ${siteDescription}`
 const pageDescription = description || siteDescription
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site ?? 'https://franklinjavier.com').href
+const ogImage = absoluteUrl(SITE_IMAGE, Astro.site)
+const ogLocale = lang === 'pt-br' ? 'pt_BR' : 'en_US'
 ---
 
 <!doctype html>
@@ -25,6 +31,26 @@ const pageDescription = description || siteDescription
     <title>{pageTitle}</title>
     <meta name="description" content={pageDescription} />
     <meta name="author" content="Franklin Javier" />
+    <link rel="canonical" href={canonicalUrl} />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content={type} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={pageDescription} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:site_name" content={siteTitle} />
+    <meta property="og:locale" content={ogLocale} />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={pageDescription} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <!-- Structured data -->
+    <script type="application/ld+json" is:inline set:html={JSON.stringify(baseJsonLd())} />
+    {jsonLd && <script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} />}
 
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -49,5 +75,6 @@ const pageDescription = description || siteDescription
     class="min-h-screen bg-gray-50 dark:bg-black text-gray-900 dark:text-gray-100 antialiased transition-colors"
   >
     <slot />
+    <Footer />
   </body>
 </html>

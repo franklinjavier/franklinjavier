@@ -5,6 +5,14 @@ import { getLangFromUrl, useTranslations } from '../i18n/utils'
 const lang = getLangFromUrl(Astro.url)
 const t = useTranslations(lang)
 const homeUrl = lang === 'en' ? '/' : '/pt-br/'
+const blogUrl = lang === 'en' ? '/blog/' : '/pt-br/blog/'
+
+const helpLinks = [
+  { href: homeUrl, label: t('404.goHome') },
+  { href: blogUrl, label: t('nav.blog') },
+  { href: '/sitemap.xml', label: t('404.sitemap') },
+  { href: '/llms.txt', label: t('404.llms') },
+]
 ---
 
 <BaseLayout title={t('404.title')} lang={lang}>
@@ -18,12 +26,24 @@ const homeUrl = lang === 'en' ? '/' : '/pt-br/'
         {t('404.message')}
       </p>
 
-      <a
-        href={homeUrl}
-        class="inline-block mt-8 text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 underline"
-      >
-        {t('404.goHome')}
-      </a>
+      <p class="text-sm text-gray-500 dark:text-gray-400 mt-8">
+        {t('404.help')}
+      </p>
+
+      <ul class="mt-4 space-y-2 text-sm">
+        {
+          helpLinks.map((link) => (
+            <li>
+              <a
+                href={link.href}
+                class="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 underline"
+              >
+                {link.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
     </div>
   </main>
 

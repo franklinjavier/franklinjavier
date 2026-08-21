@@ -1,0 +1,33 @@
+---
+import { getLangFromUrl, useTranslations, getLocalizedPath } from '../i18n/utils'
+
+const lang = getLangFromUrl(Astro.url)
+const t = useTranslations(lang)
+
+const links = [
+  { href: getLocalizedPath('/about/', lang), label: t('nav.about') },
+  { href: getLocalizedPath('/contact/', lang), label: t('nav.contact') },
+  { href: getLocalizedPath('/privacy/', lang), label: t('nav.privacy') },
+  { href: '/rss.xml', label: 'RSS' },
+]
+---
+
+<footer class="border-t border-gray-100 dark:border-gray-800">
+  <div
+    class="max-w-7xl mx-auto px-8 py-8 flex flex-wrap items-center justify-between gap-x-6 gap-y-2 text-sm text-gray-500 dark:text-gray-400"
+  >
+    <p>© {new Date().getFullYear()} Franklin Javier</p>
+    <div class="flex flex-wrap gap-x-6 gap-y-2">
+      {
+        links.map((link) => (
+          <a
+            href={link.href}
+            class="hover:text-gray-900 dark:hover:text-gray-100 transition"
+          >
+            {link.label}
+          </a>
+        ))
+      }
+    </div>
+  </div>
+</footer>
