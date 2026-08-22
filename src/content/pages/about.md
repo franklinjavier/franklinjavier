@@ -1,12 +1,14 @@
 ---
 title: About
-description: Who Franklin Javier is - Principal Engineer with 16 years of front-end development experience.
+description: Who Franklin Javier is - Principal Engineer with 16 years of front-end experience, now working on AI-native products and agent tooling.
 lang: en
 ---
 
-I'm Franklin Javier, a Principal Engineer with 16 years of front-end development experience, delivering high-performance web and mobile applications. I combine technical expertise with leadership, driving innovative front-end initiatives across product teams.
+I'm Franklin Javier, a Principal Engineer with 16 years of front-end development experience, delivering high-performance web and mobile applications. I combine technical expertise with leadership, driving front-end and agentic engineering initiatives across product teams.
 
-My specialization includes React and Node.js architectures, performance optimization, and advanced monitoring methodologies. I focus on creating accessible, user-friendly experiences through design systems and web accessibility (a11y). My day-to-day stack includes React, TypeScript, Remix, Node.js, and Tailwind CSS.
+Today most of my work is AI-native. I design agent harnesses and orchestration - the skills, evaluation loops and guardrails that make coding agents reliable enough to ship with - across Claude Code, Cursor, Codex and Gemini CLI. This site is built the same way: every page has a markdown twin served through content negotiation, plus an [llms.txt](/llms.txt) guide, so agents can read it as well as browsers can.
+
+The rest of my specialization is React and Node.js architectures, web performance and observability, design systems and web accessibility (a11y). My day-to-day stack includes React, TypeScript, Remix, Node.js, and Tailwind CSS.
 
 ## Experience
 

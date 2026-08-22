@@ -1,7 +1,7 @@
 export const SITE_URL = 'https://franklinjavier.com'
 export const SITE_TITLE = 'Franklin Javier'
 export const SITE_DESCRIPTION =
-  "I'm a Principal Engineer with 16 years of front-end development experience, delivering high-performance web and mobile applications."
+  "I'm a Principal Engineer with 16 years of front-end development experience, now building AI-native products and the agent harnesses behind them."
 export const SITE_AUTHOR = 'Franklin Javier'
 export const SITE_EMAIL = 'franklinjalves@gmail.com'
 export const SITE_IMAGE = '/img/frank.jpeg'
@@ -30,7 +30,22 @@ export const KNOWS_ABOUT = [
   'Remix',
   'Design systems',
   'Web accessibility',
+  'Agentic development',
+  'AI agent orchestration',
+  'AI coding agents',
+  'Agent skills',
   'Engineering leadership',
+]
+
+// Day-to-day stack, rendered on the homepage and in its markdown twin.
+export const DEV_STACK = [
+  'React / Typescript',
+  'Remix / Node.js',
+  'Tailwind CSS',
+  'Performance Optimization',
+  'AI Agents / Orchestration',
+  'Design Systems',
+  'Accessibility (a11y)',
 ]
 
 export function absoluteUrl(path: string, site?: URL | string): string {

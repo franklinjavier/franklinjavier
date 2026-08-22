@@ -17,6 +17,7 @@ A melhor forma de falar comigo é por email. Leio tudo o que chega na minha caix
 
 - Vagas e consultoria de engenharia front-end em nível principal/staff
 - Liderança técnica, revisões de arquitetura e auditorias de performance em aplicações React e Node.js
+- Desenvolvimento agêntico: harness de agente, skills, laços de avaliação e como tornar agentes de código confiáveis num codebase real
 - Palestras em tech talks, conferências e eventos de comunidade
 - Mentoria e pair programming para pessoas desenvolvedoras front-end
 - Feedback sobre algum artigo publicado neste blog

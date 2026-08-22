@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content'
 import BaseLayout from '../layouts/BaseLayout.astro'
 import Navigation from '../components/Navigation.astro'
 import { useTranslations, formatDate, getPostUrl } from '../i18n/utils'
+import { DEV_STACK } from '../lib/site'
 
 interface Props {
   lang: 'pt-br' | 'en'
@@ -80,12 +81,7 @@ const sortedPosts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.
         <div>
           <h2 class="font-bold text-lg mb-6">{t('stack.title')}</h2>
           <div class="space-y-2 text-sm text-gray-700 dark:text-gray-300">
-            <p>React / Typescript</p>
-            <p>Remix / Node.js</p>
-            <p>Tailwind CSS</p>
-            <p>Performance Optimization</p>
-            <p>Design Systems</p>
-            <p>Accessibility (a11y)</p>
+            {DEV_STACK.map((item) => <p>{item}</p>)}
           </div>
         </div>
 

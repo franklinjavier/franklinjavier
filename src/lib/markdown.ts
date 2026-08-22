@@ -3,7 +3,7 @@
 // callers pass plain data extracted from content collections.
 
 import { ui } from '../i18n/ui'
-import { SITE_TITLE, SITE_DESCRIPTION, SITE_EMAIL, SITE_URL, SOCIAL_LINKS } from './site'
+import { SITE_TITLE, SITE_DESCRIPTION, SITE_EMAIL, SITE_URL, SOCIAL_LINKS, DEV_STACK } from './site'
 import { APPEARANCES, speakingUrl } from './speaking'
 
 export type Lang = 'en' | 'pt-br'
@@ -61,7 +61,7 @@ ${t['hero.bio3']}
 
 ## ${t['stack.title']}
 
-React / TypeScript, Remix / Node.js, Tailwind CSS, Performance Optimization, Design Systems, Accessibility (a11y)
+${DEV_STACK.join(', ')}
 
 ## ${t['contact.title']}
 

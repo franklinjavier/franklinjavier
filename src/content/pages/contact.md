@@ -17,6 +17,7 @@ The best way to reach me is by email. I read everything that lands in my inbox, 
 
 - Principal / staff-level front-end engineering roles and consulting
 - Technical leadership, architecture reviews, and performance audits for React and Node.js applications
+- Agentic development: agent harnesses, skills, evaluation loops, and making AI coding agents reliable in a real codebase
 - Speaking at tech talks, conferences, and community events
 - Mentorship and pair programming for front-end engineers
 - Feedback about an article published on this blog
