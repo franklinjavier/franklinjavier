@@ -7,6 +7,8 @@
     "dev": "astro dev",
     "build": "astro check && astro build",
     "preview": "astro preview",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "test": "bun run build && bun test tests",
     "updatedeps": "bun update --latest"
   },
