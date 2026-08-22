@@ -3,13 +3,12 @@
 //
 // Only add an entry once the link resolves and the participation is confirmed.
 //
-// Pending confirmation, not listed yet:
-//   - Hipsters Ponto Tech #416 "Performance na Web 2: SSR, Core Web Vitals e Front-end"
-//   - Publication date of the "Performance em E-commerce" talk
+// Pending: publication date of the "Performance em E-commerce" talk.
 //
-// Ruled out - search results attributed these but they are not appearances,
-// only posts that were interacted with: BuildCon 2025 "Keep it Clean",
-// LeadDev Lisbon launch.
+// Ruled out by the author - search results attributed these but they are not
+// appearances: Hipsters Ponto Tech #416 "Performance na Web 2", BuildCon 2025
+// "Keep it Clean", and the LeadDev Lisbon launch (the last two came from posts
+// that were merely interacted with).
 
 import { SITE_URL } from './site'
 import type { Lang } from './markdown'

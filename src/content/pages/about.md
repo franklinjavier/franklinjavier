@@ -16,4 +16,8 @@ My specialization includes React and Node.js architectures, performance optimiza
 
 Beyond technical work, I actively contribute to the front-end community through mentorship, pair programming, and knowledge-sharing. I also speak at tech talks and on podcasts - every appearance is listed, with its original link, on the [speaking page](/speaking/).
 
+## Open source
+
+I publish work in the open, most recently [stonegiantstudio/skills](https://github.com/stonegiantstudio/skills) - 36 Apache-2.0 skills for AI coding agents, portable across Claude Code, Cursor, Codex and Gemini CLI. My other repositories are at [github.com/franklinjavier](https://github.com/franklinjavier).
+
 I'm based in Lisbon, Portugal, and I write on this site in both English and Portuguese about front-end development, React, performance, and engineering culture. You can read my articles on the [blog](/blog/), see my [talks and podcast appearances](/speaking/), download my [CV](/cv.pdf), or [get in touch](/contact/).

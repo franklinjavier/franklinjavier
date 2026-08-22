@@ -16,4 +16,8 @@ Minha especialização inclui arquiteturas React e Node.js, otimização de perf
 
 Além do trabalho técnico, contribuo ativamente com a comunidade front-end através de mentoria, pair programming e compartilhamento de conhecimento. Também palestro em tech talks e participo de podcasts - cada participação está listada, com o link original, na [página de palestras](/pt-br/speaking/).
 
+## Open source
+
+Publico trabalho em aberto, mais recentemente o [stonegiantstudio/skills](https://github.com/stonegiantstudio/skills) - 36 skills Apache-2.0 para agentes de código, portáveis entre Claude Code, Cursor, Codex e Gemini CLI. Meus outros repositórios estão em [github.com/franklinjavier](https://github.com/franklinjavier).
+
 Moro em Lisboa, Portugal, e escrevo neste site em inglês e português sobre desenvolvimento front-end, React, performance e cultura de engenharia. Você pode ler meus artigos no [blog](/pt-br/blog/), ver minhas [palestras e podcasts](/pt-br/speaking/), baixar meu [CV](/cv.pdf) ou [entrar em contato](/pt-br/contact/).
