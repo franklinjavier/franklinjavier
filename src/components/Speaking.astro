@@ -1,0 +1,96 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro'
+import Navigation from './Navigation.astro'
+import { useTranslations, formatDate, getLocalizedPath } from '../i18n/utils'
+import { APPEARANCES, speakingJsonLd } from '../lib/speaking'
+
+interface Props {
+  lang: 'en' | 'pt-br'
+}
+
+const { lang } = Astro.props
+const t = useTranslations(lang)
+
+const appearances = [...APPEARANCES].sort((a, b) => (b.date ?? '').localeCompare(a.date ?? ''))
+---
+
+<BaseLayout
+  title={t('speaking.title')}
+  description={t('speaking.description')}
+  lang={lang}
+  jsonLd={speakingJsonLd(lang)}
+>
+  <Navigation />
+
+  <main class="pt-32 pb-20">
+    <div class="max-w-4xl mx-auto px-8">
+      <header class="mb-16">
+        <h1 class="text-5xl font-bold mb-4">{t('speaking.title')}</h1>
+        <p class="text-lg text-gray-600 dark:text-gray-400 max-w-2xl">{t('speaking.intro')}</p>
+      </header>
+
+      <div class="space-y-12">
+        {
+          appearances.map((appearance) => {
+            const kindLabel =
+              appearance.kind === 'podcast' ? t('speaking.kind.podcast') : t('speaking.kind.talk')
+            const actionLabel =
+              appearance.kind === 'podcast'
+                ? t('speaking.action.podcast')
+                : t('speaking.action.talk')
+
+            return (
+              <article class="group border-b border-gray-200 pb-12 last:border-0 dark:border-gray-800">
+                <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-gray-500 dark:text-gray-400">
+                  <span class="rounded-full bg-gray-100 px-3 py-1 text-xs text-gray-600 dark:bg-gray-800 dark:text-gray-400">
+                    {kindLabel}
+                  </span>
+                  <span>{appearance.event}</span>
+                  {appearance.date && (
+                    <time datetime={appearance.date}>
+                      {formatDate(new Date(`${appearance.date}T00:00:00Z`), lang)}
+                    </time>
+                  )}
+                </div>
+
+                <h2 class="mt-3 mb-3 text-2xl font-bold">
+                  <a href={appearance.url} target="_blank" rel="noopener" class="group-hover:underline">
+                    {appearance.title[lang]}
+                  </a>
+                </h2>
+
+                <p class="leading-relaxed text-gray-700 dark:text-gray-300">
+                  {appearance.summary[lang]}
+                </p>
+
+                {appearance.with && appearance.with.length > 0 && (
+                  <p class="mt-3 text-sm text-gray-500 dark:text-gray-400">
+                    {t('speaking.with')}: {appearance.with.join(', ')}
+                  </p>
+                )}
+
+                <a
+                  href={appearance.url}
+                  target="_blank"
+                  rel="noopener"
+                  class="mt-4 block text-sm text-gray-600 underline underline-offset-2 transition hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100"
+                >
+                  {actionLabel} →
+                </a>
+              </article>
+            )
+          })
+        }
+      </div>
+
+      <p class="mt-16 text-sm text-gray-600 dark:text-gray-400">
+        <a
+          href={getLocalizedPath('/contact/', lang)}
+          class="underline underline-offset-2 transition hover:text-gray-900 dark:hover:text-gray-100"
+        >
+          {t('speaking.invite')}
+        </a>
+      </p>
+    </div>
+  </main>
+</BaseLayout>

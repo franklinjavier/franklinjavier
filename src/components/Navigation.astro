@@ -9,6 +9,7 @@ const t = useTranslations(lang)
 const homeUrl = lang === 'en' ? '/' : '/pt-br/'
 const aboutUrl = lang === 'en' ? '/#about' : '/pt-br/#about'
 const postsUrl = lang === 'en' ? '/blog/' : '/pt-br/blog/'
+const speakingUrl = lang === 'en' ? '/speaking/' : '/pt-br/speaking/'
 ---
 
 <nav
@@ -25,6 +26,11 @@ const postsUrl = lang === 'en' ? '/blog/' : '/pt-br/blog/'
         href={postsUrl}
         class="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 transition"
         >{t('nav.blog')}</a
+      >
+      <a
+        href={speakingUrl}
+        class="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 transition"
+        >{t('nav.speaking')}</a
       >
       <a
         href={aboutUrl}

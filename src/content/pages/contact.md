@@ -1,6 +1,6 @@
 ---
 title: Contact
-description: How to get in touch with Franklin Javier - email, LinkedIn, and GitHub.
+description: How to get in touch with Franklin Javier - email, LinkedIn, GitHub, and X.
 lang: en
 ---
 
@@ -9,8 +9,9 @@ The best way to reach me is by email. I read everything that lands in my inbox, 
 ## Channels
 
 - **Email**: [franklinjalves@gmail.com](mailto:franklinjalves@gmail.com)
-- **LinkedIn**: [linkedin.com/in/franklinjavier-98504321](https://www.linkedin.com/in/franklinjavier-98504321)
+- **LinkedIn**: [linkedin.com/in/franklin-javier-98504321](https://www.linkedin.com/in/franklin-javier-98504321)
 - **GitHub**: [github.com/franklinjavier](https://github.com/franklinjavier)
+- **X**: [@franklinjavier](https://x.com/franklinjavier)
 
 ## What to contact me about
 

@@ -56,6 +56,50 @@ describe('homepage metadata', () => {
     expect(person?.address).toMatchObject({ addressLocality: 'Lisbon', addressCountry: 'PT' })
     expect(person?.sameAs).toContain('https://github.com/franklinjavier')
   })
+
+  test('Person graph carries the disambiguation fields', () => {
+    const graphBlock = jsonLdBlocks(html()).find((block) => '@graph' in block)
+    const graph = (graphBlock as { '@graph': Record<string, unknown>[] })['@graph']
+    const person = graph.find((node) => node['@type'] === 'Person')
+    expect(person?.worksFor).toMatchObject({ name: 'Stone Giant Studio' })
+    expect(person?.alumniOf).toContainEqual({ '@type': 'Organization', name: 'Beleza na Web' })
+    expect(person?.knowsAbout).toContain('Web performance')
+    expect(person?.sameAs).toContain('https://x.com/franklinjavier')
+    expect(person?.sameAs).toContain('https://www.linkedin.com/in/franklin-javier-98504321')
+  })
+
+  test('attributes X cards to the author with a large image', () => {
+    expect(html()).toContain('name="twitter:card" content="summary_large_image"')
+    expect(html()).toContain('name="twitter:creator" content="@franklinjavier"')
+  })
+})
+
+describe('speaking page', () => {
+  test('lists each appearance with its source link in both languages', () => {
+    for (const path of ['speaking/index.html', 'pt-br/speaking/index.html']) {
+      const html = read(path)
+      expect(html).toContain(
+        'https://www.hipsters.tech/performance-e-otimizacoes-na-web-hipsters-114/',
+      )
+      expect(html).toContain('https://www.youtube.com/watch?v=ad7e9TuQs1s')
+      expect(html).toContain('Sérgio Lopes')
+    }
+  })
+
+  test('has ItemList JSON-LD whose items credit the Person', () => {
+    const list = jsonLdBlocks(read('speaking/index.html')).find(
+      (block) => block['@type'] === 'ItemList',
+    )
+    expect(list).toBeDefined()
+    const items = list?.itemListElement as { item: Record<string, unknown> }[]
+    expect(items.length).toBeGreaterThan(0)
+    for (const entry of items) {
+      expect(entry.item.url).toBeTruthy()
+      expect(entry.item.contributor).toMatchObject({
+        '@id': 'https://franklinjavier.com/#person',
+      })
+    }
+  })
 })
 
 describe('blog post pages', () => {
@@ -78,6 +122,8 @@ describe('markdown variants', () => {
       'pt-br/blog/index.md',
       'blog/how-to-be-proactive/index.md',
       'pt-br/blog/como-ser-pessoa-propositiva/index.md',
+      'speaking/index.md',
+      'pt-br/speaking/index.md',
       'about/index.md',
       'contact/index.md',
       'privacy/index.md',
@@ -100,7 +146,7 @@ describe('markdown variants', () => {
 
   test('homepage markdown links to blog, about, contact and privacy', () => {
     const md = read('index.md')
-    for (const path of ['/blog/', '/about/', '/contact/', '/privacy/']) {
+    for (const path of ['/blog/', '/speaking/', '/about/', '/contact/', '/privacy/']) {
       expect(md).toContain(`https://franklinjavier.com${path}`)
     }
   })
@@ -116,6 +162,7 @@ describe('llms.txt', () => {
 
   test('links the trust pages and machine-readable indexes', () => {
     expect(txt()).toContain('https://franklinjavier.com/about/')
+    expect(txt()).toContain('https://franklinjavier.com/speaking/')
     expect(txt()).toContain('https://franklinjavier.com/contact/')
     expect(txt()).toContain('https://franklinjavier.com/sitemap.xml')
     expect(txt()).toContain('https://franklinjavier.com/rss.xml')
@@ -149,6 +196,8 @@ describe('sitemap.xml', () => {
       'https://franklinjavier.com/blog/',
       'https://franklinjavier.com/blog/how-to-be-proactive/',
       'https://franklinjavier.com/blog/tag/react/',
+      'https://franklinjavier.com/speaking/',
+      'https://franklinjavier.com/pt-br/speaking/',
       'https://franklinjavier.com/about/',
       'https://franklinjavier.com/contact/',
       'https://franklinjavier.com/privacy/',

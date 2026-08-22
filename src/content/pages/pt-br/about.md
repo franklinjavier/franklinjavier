@@ -14,6 +14,6 @@ Minha especialização inclui arquiteturas React e Node.js, otimização de perf
 - **Principal Engineer** no Grupo Boticário (2021 - 2023)
 - **Head de Tecnologia** na Beleza na Web (2018 - 2020)
 
-Além do trabalho técnico, contribuo ativamente com a comunidade front-end através de mentoria, pair programming e compartilhamento de conhecimento. Também sou palestrante em tech talks e eventos da indústria.
+Além do trabalho técnico, contribuo ativamente com a comunidade front-end através de mentoria, pair programming e compartilhamento de conhecimento. Também palestro em tech talks e participo de podcasts - cada participação está listada, com o link original, na [página de palestras](/pt-br/speaking/).
 
-Moro em Lisboa, Portugal, e escrevo neste site em inglês e português sobre desenvolvimento front-end, React, performance e cultura de engenharia. Você pode ler meus artigos no [blog](/pt-br/blog/), baixar meu [CV](/cv.pdf) ou [entrar em contato](/pt-br/contact/).
+Moro em Lisboa, Portugal, e escrevo neste site em inglês e português sobre desenvolvimento front-end, React, performance e cultura de engenharia. Você pode ler meus artigos no [blog](/pt-br/blog/), ver minhas [palestras e podcasts](/pt-br/speaking/), baixar meu [CV](/cv.pdf) ou [entrar em contato](/pt-br/contact/).

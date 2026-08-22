@@ -3,8 +3,8 @@ import { getPublishedPosts, getTagPages, getTrustPages, trustPageUrl, toPostSumm
 import { SITE_URL } from '../lib/site'
 import type { Lang } from '../lib/markdown'
 
-// Date the trust pages (about/contact/privacy) were last edited.
-const TRUST_PAGES_LASTMOD = new Date('2026-08-21')
+// Date the trust pages (about/contact/privacy) and /speaking/ were last edited.
+const TRUST_PAGES_LASTMOD = new Date('2026-08-22')
 
 interface SitemapEntry {
   url: string
@@ -39,6 +39,7 @@ export const GET: APIRoute = async () => {
     const prefix = lang === 'en' ? '' : '/pt-br'
     entries.push({ url: `${prefix}/`, lastmod: newestPostDate(lang) })
     entries.push({ url: `${prefix}/blog/`, lastmod: newestPostDate(lang) })
+    entries.push({ url: `${prefix}/speaking/`, lastmod: TRUST_PAGES_LASTMOD })
     for (const tagPage of getTagPages(posts, lang)) {
       const lastmod = tagPage.posts.reduce(
         (latest, post) => (post.data.date > latest ? post.data.date : latest),

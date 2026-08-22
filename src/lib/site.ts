@@ -7,9 +7,29 @@ export const SITE_EMAIL = 'franklinjalves@gmail.com'
 export const SITE_IMAGE = '/img/frank.jpeg'
 export const SITE_JOB_TITLE = 'Principal Engineer'
 export const SITE_LOCATION = { locality: 'Lisbon', country: 'PT' }
+export const SITE_X_HANDLE = '@franklinjavier'
 export const SOCIAL_LINKS = [
-  'https://www.linkedin.com/in/franklinjavier-98504321',
+  'https://www.linkedin.com/in/franklin-javier-98504321',
   'https://github.com/franklinjavier',
+  'https://x.com/franklinjavier',
+]
+
+// Employment history, mirrored from the homepage translations. Feeds the
+// Person graph so search engines and LLMs disambiguate this Franklin Javier
+// from the several unrelated people sharing the name.
+export const CURRENT_EMPLOYER = 'Stone Giant Studio'
+export const PAST_EMPLOYERS = ['Grupo Boticário', 'Beleza na Web']
+export const KNOWS_ABOUT = [
+  'Front-end development',
+  'Web performance',
+  'Core Web Vitals',
+  'React',
+  'TypeScript',
+  'Node.js',
+  'Remix',
+  'Design systems',
+  'Web accessibility',
+  'Engineering leadership',
 ]
 
 export function absoluteUrl(path: string, site?: URL | string): string {
@@ -26,6 +46,10 @@ export function personJsonLd() {
     description: SITE_DESCRIPTION,
     jobTitle: SITE_JOB_TITLE,
     email: `mailto:${SITE_EMAIL}`,
+    worksFor: { '@type': 'Organization', name: CURRENT_EMPLOYER },
+    alumniOf: PAST_EMPLOYERS.map((name) => ({ '@type': 'Organization', name })),
+    knowsAbout: KNOWS_ABOUT,
+    knowsLanguage: ['en', 'pt-BR'],
     address: {
       '@type': 'PostalAddress',
       addressLocality: SITE_LOCATION.locality,

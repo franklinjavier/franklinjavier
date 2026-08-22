@@ -5,6 +5,7 @@ const lang = getLangFromUrl(Astro.url)
 const t = useTranslations(lang)
 
 const links = [
+  { href: getLocalizedPath('/speaking/', lang), label: t('nav.speaking') },
   { href: getLocalizedPath('/about/', lang), label: t('nav.about') },
   { href: getLocalizedPath('/contact/', lang), label: t('nav.contact') },
   { href: getLocalizedPath('/privacy/', lang), label: t('nav.privacy') },
