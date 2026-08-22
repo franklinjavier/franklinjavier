@@ -8,61 +8,56 @@ lang: en
 translationKey: open-source-agent-skills
 ---
 
-At Stone Giant Studio we accumulated a private toolchain for AI coding agents — the accumulated "here is how we actually do this" that we kept re-teaching to every new agent session. We published 36 of those skills under Apache-2.0 at [github.com/stonegiantstudio/skills](https://github.com/stonegiantstudio/skills).
+At Stone Giant Studio we built up a private toolchain for AI coding agents. All the "this is how we actually do this here" that we kept re-teaching to every new agent session. We put 36 of those skills under Apache-2.0 at [github.com/stonegiantstudio/skills](https://github.com/stonegiantstudio/skills).
 
-## What a skill actually is
+## A skill is a markdown file
 
-A skill is a markdown file. That is the whole format.
+That is the entire format. No binaries, no runtime, nothing to install.
 
-No binaries, no runtime, no dependencies to install. It follows the [agentskills.io](https://agentskills.io) specification, which means the same file works across Claude Code, Cursor, Codex, Gemini CLI and a long list of others.
+It follows the [agentskills.io](https://agentskills.io) spec, so the same file works in Claude Code, Cursor, Codex, Gemini CLI and a long list of others.
 
-This sounds almost too simple to be useful, and that reaction is worth examining. The bottleneck when working with a coding agent is rarely capability. It is context: the agent does not know your conventions, your review standards, or the three sharp edges in the library you use. A skill is just that knowledge, written down once, in a place the agent reads automatically.
+Sounds too simple to be useful, I know. But think about where you actually lose time with a coding agent. It is rarely capability. It is that the agent does not know your conventions, your review bar, or the three sharp edges in the library you use. A skill is that knowledge, written down once, somewhere the agent reads on its own.
 
-The portability matters more than it looks. Tooling in this space turns over fast. Knowledge encoded as markdown survives a change of agent; knowledge encoded as a plugin for one vendor does not.
+The portability matters more than it looks. Tooling in this space turns over fast. Knowledge in a markdown file survives you switching agents. Knowledge in one vendor's plugin does not.
 
 ## Installing
 
-For Claude Code, register the marketplace and install the plugin:
+Claude Code, through the plugin system:
 
 ```bash
 claude plugin marketplace add stonegiantstudio/skills
 claude plugin install stone-giant@stone-giant-studio-skills
 ```
 
-Commands arrive namespaced, as `/stone-giant:park`.
+Commands come namespaced, like `/stone-giant:park`.
 
-For every other agent:
+Everything else:
 
 ```bash
 npx skills add stonegiantstudio/skills
 ```
 
-There the commands are unprefixed — `/park`. Use one method or the other, not both, or you get duplicates.
+There they come unprefixed, `/park`. Pick one method, not both, or you get duplicates.
 
-## The two kinds
+## What is in there
 
-**Interactive commands** you invoke deliberately:
+Some you call on purpose:
 
-- `/park` — a shutdown ritual. It captures the state of what you were doing so the unfinished work stops occupying your attention after you close the laptop. This is the one I did not expect to care about and use most.
-- `/score` — rubric-based evaluation of an artifact, with auto-iteration until it hits a target quality level.
-- `/eval-npm` — dependency analysis across maintenance signals, security and bundle cost, so "should we add this package" becomes a data question.
-- `/seo-geo-aeo` — search visibility assessment across Google, GA4 and threat data.
+- `/park` is a shutdown ritual. It captures the state of what you were doing so the unfinished work stops running in your head after you close the laptop. I did not expect to care about this one and I use it most.
+- `/score` evaluates an artifact against a rubric and iterates until it hits a target.
+- `/eval-npm` looks at maintenance, security and bundle cost together, so "should we add this package" becomes a question with data behind it.
+- `/seo-geo-aeo` checks search visibility across Google, GA4 and threat data.
 
-**Auto-triggered skills** that load when the context calls for them, without being asked:
+Others load by themselves when the context calls for them. `npm-security-advisory` catches supply-chain anomalies before the threat feeds do. `ci-performance` does critical-path analysis on your pipeline instead of you guessing which job to parallelize. Then `react-router-v7`, `js-ninja`, `zod-ninja`, `testing-ninja`, `design-ninja` for framework and language patterns, `drizzle-migrations` for PostgreSQL migrations across environments, and `signup-signin` for auth UX with OTP, passkeys and recovery flows.
 
-- `npm-security-advisory` — supply-chain anomaly detection that fires before threat feeds catch up.
-- `ci-performance` — critical-path analysis for pipelines, instead of guessing which job to parallelize.
-- `react-router-v7`, `js-ninja`, `zod-ninja`, `testing-ninja`, `design-ninja` — framework and language patterns.
-- `drizzle-migrations`, `signup-signin` — PostgreSQL migrations across environments, and auth UX covering OTP, passkeys and recovery flows.
-
-Beyond those, the repo covers database and infrastructure work (PostgreSQL, SQL Server, Kysely, Lambda, Better Auth, Resend), writing and product, and a PDF suite for extraction, creation and report visualization.
+The rest covers database and infrastructure work, writing and product, and a PDF suite for extraction and reports.
 
 ## Why publish them
 
-Two reasons, and the second is the honest one.
+Two reasons, and the second is the real one.
 
-The first is that most of this is not proprietary. The skill that explains how to write a behavioural test is not a competitive advantage; it is a description of good practice that happens to be written for a machine reader. Keeping it private helps nobody.
+Most of this is not proprietary. The skill explaining how to write a behavioural test is not a competitive advantage. It is good practice, written for a machine reader instead of a human one. Keeping it private helps nobody.
 
-The second is that publishing forces quality. A skill that only I read can be vague and still work, because I fill the gaps from memory. A skill someone else's agent reads cannot. Going through 36 of them with that lens found real problems — instructions that only made sense given context we had never written down.
+The second reason is that publishing forces quality. A skill only I read can be vague and still work, because I fill in the gaps from memory without noticing. A skill someone else's agent reads cannot. Going through all 36 with that in mind turned up real problems: instructions that only made sense if you already knew things we had never written down anywhere.
 
 If you use them and something is unclear, that is a bug. Issues and pull requests are open.

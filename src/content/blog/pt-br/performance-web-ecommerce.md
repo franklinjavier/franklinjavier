@@ -8,69 +8,65 @@ lang: pt-br
 translationKey: web-performance-ecommerce
 ---
 
-A maior parte do conteúdo sobre performance é escrita para uma página web genérica. E-commerce não é uma página web genérica. Tem um funil, tem receita atrelada a cada etapa desse funil, e tem uma cauda longa de scripts de terceiros que ninguém do time de engenharia escolheu colocar ali.
+Quase todo conteúdo sobre performance é escrito para uma página web genérica. Uma loja não é uma página web genérica. Ela tem funil, tem dinheiro atrelado a cada etapa desse funil, e tem uma pilha de scripts de terceiros que ninguém da engenharia pediu.
 
-Passei anos trabalhando nesse problema em escala, e falei sobre isso publicamente no [Hipsters Ponto Tech #114 e numa palestra sobre performance em e-commerce](/pt-br/speaking/). O que vem a seguir é a parte que o conselho genérico costuma deixar de fora.
+Trabalhei nisso por anos, e falei sobre o assunto no [Hipsters Ponto Tech #114 e numa palestra sobre performance em e-commerce](/pt-br/speaking/). Aqui vai a parte que o conselho genérico deixa de fora.
 
-## Sua nota no Lighthouse não é a métrica
+## Pare de otimizar a nota do Lighthouse
 
-O erro mais comum de todos é otimizar para o número que aparece no laboratório.
+O Lighthouse roda um aparelho simulado numa rede simulada. Ótimo para depurar, péssimo como alvo.
 
-O Lighthouse roda um dispositivo simulado numa rede simulada. É uma ótima ferramenta de depuração e um péssimo alvo. O que importa é dado de campo — o que pessoas reais, em dispositivos reais, efetivamente viveram. Isso significa CrUX, ou melhor ainda, o seu próprio RUM.
+O que importa é dado de campo: o que pessoas reais, em aparelhos reais, pegaram. CrUX, ou melhor ainda, o seu próprio RUM.
 
-A diferença entre os dois raramente é pequena, e quase sempre aponta para o mesmo lado: o campo é pior. Seu time desenvolve em notebooks rápidos com fibra no escritório. Uma fatia relevante do tráfego de e-commerce é Android intermediário em rede móvel, muitas vezes num navegador cheio de extensões e num aparelho que está com throttling térmico desde as 10 da manhã.
+Os dois quase nunca batem, e o campo é quase sempre pior. Seu time desenvolve em notebook rápido com fibra no escritório. Boa parte do seu tráfego é um Android intermediário em rede móvel, num navegador cheio de extensão, num aparelho com throttling térmico desde as dez da manhã.
 
-Um hábito útil: antes de otimizar qualquer coisa, olhe o p75 do seu dado de campo segmentado por classe de dispositivo. A história que ele conta costuma ser diferente da história do laboratório.
+Então, antes de otimizar qualquer coisa, olhe o p75 do seu dado de campo separado por classe de aparelho. Costuma contar uma história diferente da do laboratório.
 
-## Ligue cada métrica a uma tela concreta
+## Toda métrica pertence a uma tela
 
-"Melhorar o LCP" não é uma ação. Melhorar o LCP *onde* é.
+"Melhorar o LCP" não é tarefa. Melhorar o LCP *onde* é.
 
-**Página de produto.** O LCP é quase sempre a imagem do produto. Ou seja: a correção quase nunca é JavaScript — é o pipeline de imagem. Dimensões corretas, formato moderno, um atributo `sizes` de verdade, `fetchpriority="high"` na imagem principal, e remover o `loading="lazy"` que alguém aplicou em todas as imagens do site, inclusive na que está acima da dobra. Esse último caso é notavelmente comum e custa um round trip inteiro.
+Na página de produto, o LCP é a imagem do produto, quase sempre. Então a correção quase nunca é JavaScript. É o pipeline de imagem: dimensão certa, formato moderno, um `sizes` de verdade, `fetchpriority="high"` na imagem principal. E tirar o `loading="lazy"` que alguém aplicou em toda imagem do site, inclusive na que está acima da dobra. Vejo esse aí bastante. Custa um round trip inteiro.
 
-**Páginas de listagem.** Aqui quem morde é o CLS, e a causa costuma ser algo injetado tarde: um banner promocional, um selo de desconto, um widget de personalização que decide, depois da hidratação, que o card precisa de mais uma linha de texto. Reserve o espaço antes de saber o conteúdo.
+Nas páginas de listagem o problema é CLS, e a causa costuma ser algo que chega tarde: um banner de promoção, um selo de desconto, um widget de personalização que decide depois da hidratação que o card precisa de mais uma linha. Reserve o espaço antes de saber o que vai nele.
 
-**Carrinho e checkout.** O que dói é o INP. Ele substituiu o FID por um bom motivo — o FID media o atraso até a primeira interação, o que favorecia páginas lentas exatamente nos momentos que importam. As interações que importam numa loja são adicionar ao carrinho, escolher variação, aplicar filtro. São justamente as que rodam mais JavaScript. Uma página pode ter um LCP excelente e ainda assim parecer quebrada porque tocar no seletor de tamanho leva 400ms para pintar.
+No carrinho e no checkout, quem dói é o INP. Ele substituiu o FID por um bom motivo. O FID media só o atraso até a primeira interação, o que favorecia páginas lentas justo na hora que conta. Numa loja, as interações que contam são adicionar ao carrinho, escolher tamanho, aplicar filtro. E são elas que rodam mais JavaScript. Uma página pode ter um LCP ótimo e ainda parecer quebrada porque tocar no tamanho leva 400ms para pintar.
 
-## A main thread pertence a terceiros
+## A maior parte da main thread não é sua
 
-Aqui vai a medição desconfortável: abra uma página de produto real, grave um trace de performance e atribua o tempo de main thread por origem.
+Abra uma página de produto real, grave um trace e agrupe o tempo de main thread por origem.
 
-Na maioria das lojas, a maior parte não é o seu código. É o gerenciador de tags, o widget de chat, o snippet de teste A/B, o analytics, o motor de recomendação, o pixel de uma campanha que acabou há dois anos.
+Na maioria das lojas, o seu código é minoria. O resto é o gerenciador de tags, o widget de chat, o snippet de teste A/B, o analytics, um motor de recomendação, um pixel de campanha que acabou faz dois anos.
 
-Isso não é, em primeiro lugar, um problema técnico. É um problema de dono. Esses scripts foram adicionados por pessoas que são avaliadas pelo que o script viabiliza, não pelo que ele custa. Ninguém remove porque ninguém responde pelo agregado.
+O que faz disso um problema de dono, mais do que um problema técnico. Esses scripts foram colocados por gente que é avaliada pelo que o script viabiliza, nunca pelo que ele custa. Ninguém remove porque ninguém responde pelo total.
 
 Duas coisas que funcionam:
 
-- **Um inventário com dono e data de revisão por tag.** Não uma revisão de performance — uma revisão de existência. "Isso ainda faz alguma coisa?" Um número surpreendente não faz.
-- **Tirar do caminho crítico e provar que continua funcionando.** Adiar um script de marketing só vira conversa de verdade quando você consegue mostrar para o time de marketing que ele ainda dispara.
+- **Um inventário com dono e data de revisão por tag.** Não uma revisão de performance. Uma revisão de existência: isso ainda faz alguma coisa? Boa parte não faz.
+- **Tirar do caminho crítico e provar que continua disparando.** Adiar um script de marketing só vira conversa de verdade quando você mostra para o marketing que ele ainda funciona.
 
-## Orçamento precisa de dono, não de dashboard
+## Orçamento sem dono é dashboard
 
-Orçamentos de performance falham de um jeito previsível: alguém define, o CI começa a avisar, os avisos viram rotina, e seis meses depois o orçamento é decoração.
+Orçamento de performance morre sempre do mesmo jeito. Alguém define, o CI começa a avisar, os avisos viram papel de parede, e seis meses depois o orçamento é enfeite.
 
-Um orçamento só funciona quando três coisas são verdade. Ele quebra o CI, não avisa. Ele é por rota, não pelo site inteiro — um limite de bundle para "o app" não diz nada sobre qual página regrediu. E um time específico é dono do número, para que a regressão tenha destinatário.
+Orçamento funciona quando quebra o build em vez de avisar. Quando é por rota, porque um limite de bundle para "o app" não diz nada sobre qual página regrediu. E quando um time específico é dono do número, para a regressão ter em quem bater.
 
-Sem o terceiro, você tem um dashboard.
+## Delete coisas
 
-## Os maiores ganhos são remoções
+As maiores melhorias quase sempre vêm de remover, não de otimizar. Um bundle de polyfill para navegador sem tráfego mensurável. Uma biblioteca de data importada inteira por causa de um `format`. Um pacote de ícones importado como barrel file. Um carrossel na home que o analytics diz que ninguém passa do primeiro slide. Um peso de fonte que o design system nunca usa.
 
-Essa é a parte que surpreende quem espera que trabalho de performance seja engenhoso.
+Tree-shaking não te salva de um barrel import. Code-splitting não te salva de uma funcionalidade que ninguém usa; só entrega ela mais tarde.
 
-Repetidamente, as maiores melhorias vêm de remover, não de otimizar: um bundle de polyfills para navegadores sem tráfego mensurável, uma biblioteca de datas importada inteira por causa de uma chamada de `format`, um conjunto de ícones importado como barrel file, um carrossel na home que o analytics mostra que ninguém passa do primeiro slide, um peso de fonte que o design system não usa.
-
-Tree-shaking não te salva de um barrel import. Code-splitting não te salva de entregar uma funcionalidade que ninguém usa — só faz entregar mais tarde.
-
-Antes de partir para uma otimização engenhosa, faça a auditoria chata: o que tem no bundle, quem colocou, e se ainda existe algo dependendo daquilo. Essa auditoria se pagou todas as vezes em que eu rodei.
+Então, antes da otimização esperta, faça a auditoria chata: o que tem no bundle, quem colocou, se ainda tem algo dependendo daquilo. Essa auditoria se pagou todas as vezes que eu rodei.
 
 ## Por onde começar
 
-Se você herdou uma loja lenta e precisa de um ponto de partida:
+Você herdou uma loja lenta e precisa de um ponto de partida:
 
 1. Consiga dado de campo. Sem ele você está adivinhando, e vai otimizar a página errada.
-2. Escolha o template de maior receita — normalmente a página de produto — e resolva direito o elemento de LCP dele.
-3. Atribua o tempo de main thread por origem e leve esse número para quem é dono das tags.
-4. Coloque um orçamento por rota no CI, quebrando o build, com um nome atrelado.
+2. Pegue o template de maior receita, normalmente a página de produto, e resolva direito o elemento de LCP dele.
+3. Agrupe o tempo de main thread por origem e leve esse número para quem é dono das tags.
+4. Coloque um orçamento por rota no CI, quebrando o build, com nome de time nele.
 5. Delete alguma coisa.
 
-Nada disso é exótico. A parte difícil nunca foi a técnica — é que performance é um problema entre times sendo resolvido por um time só, e a medição é o que dá alavancagem a esse time.
+Nada disso é esperto. Performance é um problema que atravessa times e cai no colo de um só, e medição é como esse time faz os outros se mexerem.
