@@ -66,6 +66,7 @@ describe('homepage metadata', () => {
     expect(person?.knowsAbout).toContain('Web performance')
     expect(person?.sameAs).toContain('https://x.com/franklinjavier')
     expect(person?.sameAs).toContain('https://www.linkedin.com/in/franklin-javier-98504321')
+    expect(person?.sameAs).toContain('https://dev.to/franklinjavier')
   })
 
   test('attributes X cards to the author with a large image', () => {

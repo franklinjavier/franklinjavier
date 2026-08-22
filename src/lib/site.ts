@@ -12,6 +12,7 @@ export const SOCIAL_LINKS = [
   'https://www.linkedin.com/in/franklin-javier-98504321',
   'https://github.com/franklinjavier',
   'https://x.com/franklinjavier',
+  'https://dev.to/franklinjavier',
 ]
 
 // Employment history, mirrored from the homepage translations. Feeds the
