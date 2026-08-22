@@ -87,7 +87,7 @@ async function buildMarkdown(props: Props): Promise<string> {
       return postMarkdown({
         ...toPostSummary(props.post),
         lang: props.post.data.lang,
-        body: props.post.body,
+        body: props.post.body ?? '',
       })
     }
     case 'page': {
@@ -96,7 +96,7 @@ async function buildMarkdown(props: Props): Promise<string> {
         description: props.page.data.description,
         lang: props.page.data.lang,
         url: trustPageUrl(props.page),
-        body: props.page.body,
+        body: props.page.body ?? '',
       })
     }
   }

@@ -16,7 +16,7 @@ This is a bilingual personal blog built with **Astro** and **Tailwind CSS**. The
 
 ## Tech Stack
 
-- **Framework**: Astro 5.x (static site generator)
+- **Framework**: Astro 7.x (static site generator)
 - **Styling**: Tailwind CSS 4.x with Typography plugin (CSS-first config in `global.css`)
 - **Package Manager**: bun
 - **Language**: TypeScript (strict mode)
@@ -40,7 +40,7 @@ bun preview       # Preview production build locally
 
 Blog posts are managed using Astro's Content Collections API:
 - Located in `src/content/blog/`
-- Schema defined in `src/content/config.ts`
+- Schema defined in `src/content.config.ts` (Content Layer API with glob loaders)
 - Required frontmatter: `title`, `date`, `lang` ('en' or 'pt-br'), `translationKey`
 - Optional frontmatter: `description`, `author`, `tags`, `draft`
 - English posts are at root level (e.g., `my-post.md`)

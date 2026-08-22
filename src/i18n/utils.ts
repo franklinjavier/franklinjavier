@@ -61,7 +61,7 @@ export async function getTranslatedPost(currentSlug: string, _currentLang: strin
   const allPosts = await getCollection('blog');
 
   // Find current post
-  const currentPost = allPosts.find(post => post.slug === currentSlug);
+  const currentPost = allPosts.find(post => post.id === currentSlug);
 
   if (!currentPost || !currentPost.data.translationKey) {
     // If no translationKey, return to home in target language
@@ -75,7 +75,7 @@ export async function getTranslatedPost(currentSlug: string, _currentLang: strin
   );
 
   if (translatedPost) {
-    const slug = translatedPost.slug.replace('pt-br/', '');
+    const slug = translatedPost.id.replace('pt-br/', '');
     const blogPrefix = targetLang === 'en' ? '/blog/' : '/pt-br/blog/';
     return `${blogPrefix}${slug}/`;
   }

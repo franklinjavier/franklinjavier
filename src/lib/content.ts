@@ -17,7 +17,7 @@ export function toPostSummary(post: CollectionEntry<'blog'>): PostSummary {
     title: post.data.title,
     description: post.data.description,
     date: post.data.date,
-    url: getPostUrl(post.slug, post.data.lang),
+    url: getPostUrl(post.id, post.data.lang),
     tags: parseTags(post.data.tags),
     author: post.data.author,
   }
@@ -52,5 +52,5 @@ export async function getTrustPages(): Promise<CollectionEntry<'pages'>[]> {
 }
 
 export function trustPageUrl(page: CollectionEntry<'pages'>): string {
-  return `/${page.slug}/`
+  return `/${page.id}/`
 }

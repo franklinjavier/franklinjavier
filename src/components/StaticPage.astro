@@ -1,5 +1,5 @@
 ---
-import { getEntry } from 'astro:content'
+import { getEntry, render } from 'astro:content'
 import BaseLayout from '../layouts/BaseLayout.astro'
 import Navigation from './Navigation.astro'
 
@@ -16,7 +16,7 @@ if (!entry) {
   throw new Error(`Missing page content for "${entrySlug}"`)
 }
 
-const { Content } = await entry.render()
+const { Content } = await render(entry)
 ---
 
 <BaseLayout title={entry.data.title} description={entry.data.description} lang={lang}>
