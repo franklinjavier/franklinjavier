@@ -67,7 +67,7 @@ So before the clever optimization, do the boring audit: what is in the bundle, w
 
 The boilerplate we standardised on is at [github.com/franklinjavier/storefront](https://github.com/franklinjavier/storefront). Node.js, Redis, server-rendered views, New Relic wired in. It still runs the Beleza na Web and Grupo Boticário storefronts today.
 
-The README says it scales past 1M of throughput. That is the same dashboard: 472k requests per minute on average, peaking at 1.1M, with an error rate of 0.0064%.
+The README says it scales past 1M of throughput. That number comes from a load test we ran ahead of Black Friday: 472k requests per minute on average, peaking at 1.1M, with an error rate of 0.0064%. Same dashboard as above, which is the point. We knew the ceiling before the day, instead of finding it live.
 
 ## Where to start
 

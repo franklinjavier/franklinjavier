@@ -67,7 +67,7 @@ Então, antes da otimização esperta, faça a auditoria chata: o que tem no bun
 
 O boilerplate que a gente padronizou está em [github.com/franklinjavier/storefront](https://github.com/franklinjavier/storefront). Node.js, Redis, views renderizadas no servidor, New Relic plugado. Ele ainda roda as lojas da Beleza na Web e do Grupo Boticário hoje.
 
-O README diz que ele escala além de 1M de throughput. É o mesmo dashboard: 472 mil requisições por minuto na média, com pico de 1,1 milhão, e taxa de erro de 0,0064%.
+O README diz que ele escala além de 1M de throughput. Esse número vem de um teste de carga que a gente rodou antes da Black Friday: 472 mil requisições por minuto na média, com pico de 1,1 milhão, e taxa de erro de 0,0064%. É o mesmo dashboard lá de cima, e é justamente esse o ponto. A gente sabia o teto antes do dia, em vez de descobrir ao vivo.
 
 ## Por onde começar
 
