@@ -15,7 +15,7 @@ const t = useTranslations(lang)
 const allPosts = await getCollection('blog', ({ data }) => {
   if (data.draft === true || data.lang !== lang) return false
 
-  const tags = parseTags(data.tags).map(t => t.toLowerCase())
+  const tags = parseTags(data.tags).map((t) => t.toLowerCase())
   return tags.includes(tag.toLowerCase())
 })
 
@@ -23,75 +23,78 @@ const sortedPosts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.
 
 const title = `${t('blog.title')} - ${tag}`
 const description = `${t('blog.postsTagged')} "${tag}"`
+
+// Built here rather than interpolated across JSX lines: a line break between
+// sibling expressions collapses the space between them.
+const countLabel = `${sortedPosts.length} ${
+  sortedPosts.length === 1 ? t('blog.articleCount') : t('blog.articlesCount')
+}`
 ---
 
 <BaseLayout title={title} description={description} lang={lang}>
   <Navigation />
 
   <main class="pt-32 pb-20">
-    <div class="max-w-4xl mx-auto px-8">
+    <div class="mx-auto max-w-4xl px-8">
       <!-- Header -->
       <header class="mb-16">
         <a
           href={lang === 'en' ? '/blog/' : '/pt-br/blog/'}
-          class="inline-block mb-4 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition"
+          class="mb-4 inline-block text-sm text-gray-500 transition hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100"
         >
           ← {t('blog.backToBlog')}
         </a>
-        <h1 class="text-5xl font-bold mb-4">
-          {t('blog.postsTagged')} <span class="text-gray-600 dark:text-gray-400">"{tag}"</span>
+        <h1 class="mb-4 text-5xl font-bold">
+          {t('blog.postsTagged')}{' '}
+          <span class="text-gray-600 dark:text-gray-400">"{tag}"</span>
         </h1>
-        <p class="text-lg text-gray-600 dark:text-gray-400">
-          {sortedPosts.length} {sortedPosts.length === 1 ? t('blog.articleCount') : t('blog.articlesCount')}
-        </p>
+        <p class="text-lg text-gray-600 dark:text-gray-400">{countLabel}</p>
       </header>
 
       <!-- Posts list -->
-      {sortedPosts.length === 0 ? (
-        <div class="text-center py-12">
-          <p class="text-gray-600 dark:text-gray-400">{t('blog.noPostsFound')}</p>
-        </div>
-      ) : (
-        <div class="space-y-12">
-          {
-            sortedPosts.map((post) => {
+      {
+        sortedPosts.length === 0 ? (
+          <div class="py-12 text-center">
+            <p class="text-gray-600 dark:text-gray-400">{t('blog.noPostsFound')}</p>
+          </div>
+        ) : (
+          <div class="space-y-12">
+            {sortedPosts.map((post) => {
               const formattedDate = formatDate(post.data.date, lang)
               const postUrl = getPostUrl(post.id, lang)
               const tags = parseTags(post.data.tags)
 
               return (
-                <article class="group border-b border-gray-200 dark:border-gray-800 pb-12 last:border-0">
+                <article class="group border-b border-gray-200 pb-12 last:border-0 dark:border-gray-800">
                   <a href={postUrl} class="block">
-                    <time class="text-sm text-gray-500 dark:text-gray-400">
-                      {formattedDate}
-                    </time>
-                    <h2 class="text-2xl font-bold mt-2 mb-3 group-hover:underline">
+                    <time class="text-sm text-gray-500 dark:text-gray-400">{formattedDate}</time>
+                    <h2 class="mt-2 mb-3 text-2xl font-bold group-hover:underline">
                       {post.data.title}
                     </h2>
                     {post.data.description && (
-                      <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
+                      <p class="leading-relaxed text-gray-700 dark:text-gray-300">
                         {post.data.description}
                       </p>
                     )}
                     {tags.length > 0 && (
-                      <div class="flex flex-wrap gap-2 mt-4">
-                        {tags.map(t => (
-                          <span class="text-xs px-3 py-1 bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 rounded-full">
+                      <div class="mt-4 flex flex-wrap gap-2">
+                        {tags.map((t) => (
+                          <span class="rounded-full bg-gray-100 px-3 py-1 text-xs text-gray-600 dark:bg-gray-800 dark:text-gray-400">
                             {t}
                           </span>
                         ))}
                       </div>
                     )}
-                    <div class="mt-4 text-sm text-gray-600 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-100">
+                    <div class="mt-4 text-sm text-gray-600 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-gray-100">
                       {t('blog.readMore')}
                     </div>
                   </a>
                 </article>
               )
-            })
-          }
-        </div>
-      )}
+            })}
+          </div>
+        )
+      }
     </div>
   </main>
 </BaseLayout>

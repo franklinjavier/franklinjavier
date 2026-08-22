@@ -1,9 +1,9 @@
 export const languages = {
   'pt-br': 'Português',
   en: 'English',
-};
+}
 
-export const defaultLang = 'en';
+export const defaultLang = 'en'
 
 export const ui = {
   'pt-br': {
@@ -14,8 +14,10 @@ export const ui = {
     'nav.blog': 'Blog',
     'nav.speaking': 'Palestras',
     'speaking.title': 'Palestras e Podcasts',
-    'speaking.description': 'Participações públicas de Franklin Javier em podcasts, palestras e eventos de tecnologia.',
-    'speaking.intro': 'Participações públicas em podcasts, palestras e eventos, com o link original de cada uma. A maior parte é em português e sobre performance web.',
+    'speaking.description':
+      'Participações públicas de Franklin Javier em podcasts, palestras e eventos de tecnologia.',
+    'speaking.intro':
+      'Participações públicas em podcasts, palestras e eventos, com o link original de cada uma. A maior parte é em português e sobre performance web.',
     'speaking.with': 'Com',
     'speaking.kind.podcast': 'Podcast',
     'speaking.kind.talk': 'Palestra',
@@ -23,9 +25,12 @@ export const ui = {
     'speaking.action.talk': 'Assistir',
     'speaking.invite': 'Para convites de palestra, entre em contato.',
     'hero.title': 'Um pouco\nsobre mim',
-    'hero.bio1': 'Principal Engineer com 16 anos de experiência em desenvolvimento front-end, entregando aplicações web e mobile de alta performance. Hoje a maior parte do meu trabalho é AI-native: desenho harness de agente, orquestração e a ferramentaria que torna agentes de código confiáveis.',
-    'hero.bio2': 'Minha especialização vai de arquiteturas React e Node.js, performance e observabilidade, até desenvolvimento agêntico: skills, laços de avaliação e orquestração entre Claude Code, Cursor, Codex e Gemini CLI. Foco em criar experiências acessíveis através de design systems e acessibilidade web.',
-    'hero.bio3': 'Além do trabalho técnico, contribuo com a comunidade através de mentoria, pair programming e open source, incluindo projetos com foco em AI e ferramentaria de agente. Também palestro em tech talks e participo de podcasts.',
+    'hero.bio1':
+      'Principal Engineer com 16 anos de experiência em desenvolvimento front-end, entregando aplicações web e mobile de alta performance. Hoje a maior parte do meu trabalho é AI-native: desenho harness de agente, orquestração e a ferramentaria que torna agentes de código confiáveis.',
+    'hero.bio2':
+      'Minha especialização vai de arquiteturas React e Node.js, performance e observabilidade, até desenvolvimento agêntico: skills, laços de avaliação e orquestração entre Claude Code, Cursor, Codex e Gemini CLI. Foco em criar experiências acessíveis através de design systems e acessibilidade web.',
+    'hero.bio3':
+      'Além do trabalho técnico, contribuo com a comunidade através de mentoria, pair programming e open source, incluindo projetos com foco em AI e ferramentaria de agente. Também palestro em tech talks e participo de podcasts.',
     'experience.title': 'Experiência Profissional',
     'experience.role1': 'Principal Engineer',
     'experience.company1': 'Stone Giant Studio',
@@ -64,8 +69,10 @@ export const ui = {
     'nav.blog': 'Blog',
     'nav.speaking': 'Speaking',
     'speaking.title': 'Speaking & Podcasts',
-    'speaking.description': "Franklin Javier's public appearances on podcasts, talks and tech events.",
-    'speaking.intro': 'Public appearances on podcasts, talks and events, each with its original link. Most are in Portuguese and about web performance.',
+    'speaking.description':
+      "Franklin Javier's public appearances on podcasts, talks and tech events.",
+    'speaking.intro':
+      'Public appearances on podcasts, talks and events, each with its original link. Most are in Portuguese and about web performance.',
     'speaking.with': 'With',
     'speaking.kind.podcast': 'Podcast',
     'speaking.kind.talk': 'Talk',
@@ -73,9 +80,12 @@ export const ui = {
     'speaking.action.talk': 'Watch',
     'speaking.invite': 'For speaking invitations, get in touch.',
     'hero.title': 'A little bit\nabout me',
-    'hero.bio1': 'I\'m a Principal Engineer with 16 years of front-end development experience, delivering high-performance web and mobile applications. Today most of my work is AI-native: designing agent harnesses, orchestration, and the tooling that makes coding agents reliable.',
-    'hero.bio2': 'My specialization spans React and Node.js architectures, performance and observability, and agentic development: skills, evaluation loops, and orchestration across Claude Code, Cursor, Codex and Gemini CLI. I focus on accessible, user-friendly experiences through design systems and web accessibility.',
-    'hero.bio3': 'Beyond technical work, I contribute to the community through mentorship, pair programming, and open source, including projects focused on AI and agent tooling. I also speak at tech talks and on podcasts.',
+    'hero.bio1':
+      "I'm a Principal Engineer with 16 years of front-end development experience, delivering high-performance web and mobile applications. Today most of my work is AI-native: designing agent harnesses, orchestration, and the tooling that makes coding agents reliable.",
+    'hero.bio2':
+      'My specialization spans React and Node.js architectures, performance and observability, and agentic development: skills, evaluation loops, and orchestration across Claude Code, Cursor, Codex and Gemini CLI. I focus on accessible, user-friendly experiences through design systems and web accessibility.',
+    'hero.bio3':
+      'Beyond technical work, I contribute to the community through mentorship, pair programming, and open source, including projects focused on AI and agent tooling. I also speak at tech talks and on podcasts.',
     'experience.title': 'Work Experience',
     'experience.role1': 'Principal Engineer',
     'experience.company1': 'Stone Giant Studio',
@@ -106,4 +116,4 @@ export const ui = {
     '404.sitemap': 'Sitemap (XML)',
     '404.llms': 'AI agent guide (llms.txt)',
   },
-} as const;
+} as const

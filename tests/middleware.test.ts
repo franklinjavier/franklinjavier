@@ -39,9 +39,7 @@ describe('edge middleware', () => {
         headers: { accept: 'text/markdown' },
       }),
     )
-    expect(response.headers.get('x-middleware-rewrite')).toBe(
-      'https://franklinjavier.com/index.md',
-    )
+    expect(response.headers.get('x-middleware-rewrite')).toBe('https://franklinjavier.com/index.md')
   })
 
   test('serves a markdown 404 body when the path has no markdown twin', async () => {
@@ -91,8 +89,7 @@ describe('edge middleware', () => {
     const response = await middleware(
       new Request('https://franklinjavier.com/', {
         headers: {
-          accept:
-            'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+          accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
         },
       }),
     )

@@ -1,5 +1,11 @@
 import type { APIRoute } from 'astro'
-import { getPublishedPosts, getTagPages, getTrustPages, trustPageUrl, toPostSummary } from '../lib/content'
+import {
+  getPublishedPosts,
+  getTagPages,
+  getTrustPages,
+  trustPageUrl,
+  toPostSummary,
+} from '../lib/content'
 import { SITE_URL } from '../lib/site'
 import type { Lang } from '../lib/markdown'
 

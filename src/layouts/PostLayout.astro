@@ -1,23 +1,23 @@
 ---
-import BaseLayout from './BaseLayout.astro';
-import Navigation from '../components/Navigation.astro';
-import { getLangFromUrl, useTranslations, parseTags, formatDate, getTagUrl } from '../i18n/utils';
-import { blogPostingJsonLd } from '../lib/site';
+import BaseLayout from './BaseLayout.astro'
+import Navigation from '../components/Navigation.astro'
+import { getLangFromUrl, useTranslations, parseTags, formatDate, getTagUrl } from '../i18n/utils'
+import { blogPostingJsonLd } from '../lib/site'
 
 interface Props {
-  title: string;
-  date: Date;
-  description?: string;
-  tags?: string | string[];
+  title: string
+  date: Date
+  description?: string
+  tags?: string | string[]
 }
 
-const { title, date, description, tags: rawTags } = Astro.props;
+const { title, date, description, tags: rawTags } = Astro.props
 
-const tags = parseTags(rawTags);
-const lang = getLangFromUrl(Astro.url);
-const t = useTranslations(lang);
-const blogUrl = lang === 'en' ? '/blog/' : '/pt-br/blog/';
-const formattedDate = formatDate(date, lang);
+const tags = parseTags(rawTags)
+const lang = getLangFromUrl(Astro.url)
+const t = useTranslations(lang)
+const blogUrl = lang === 'en' ? '/blog/' : '/pt-br/blog/'
+const formattedDate = formatDate(date, lang)
 const jsonLd = blogPostingJsonLd({
   title,
   description,
@@ -25,45 +25,45 @@ const jsonLd = blogPostingJsonLd({
   url: Astro.url.pathname,
   lang,
   tags,
-});
+})
 ---
 
 <BaseLayout title={title} description={description} lang={lang} type="article" jsonLd={jsonLd}>
   <Navigation />
 
   <div class="pt-32 pb-20">
-    <article class="max-w-3xl mx-auto px-8">
-      <a href={blogUrl} class="inline-block mb-8 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition">
+    <article class="mx-auto max-w-3xl px-8">
+      <a
+        href={blogUrl}
+        class="mb-8 inline-block text-sm text-gray-500 transition hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100"
+      >
         ← {t('blog.backToBlog')}
       </a>
 
       <header class="mb-12">
-        <h1 class="text-5xl font-bold leading-tight mb-4">{title}</h1>
-        <div class="flex items-center gap-4 flex-wrap">
+        <h1 class="mb-4 text-5xl leading-tight font-bold">{title}</h1>
+        <div class="flex flex-wrap items-center gap-4">
           <time class="text-sm text-gray-500 dark:text-gray-400">{formattedDate}</time>
-          {tags.length > 0 && (
-            <div class="flex flex-wrap gap-2">
-              {tags.map(tag => (
-                <a
-                  href={getTagUrl(tag, lang)}
-                  class="text-xs px-3 py-1 bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition"
-                >
-                  {tag}
-                </a>
-              ))}
-            </div>
-          )}
+          {
+            tags.length > 0 && (
+              <div class="flex flex-wrap gap-2">
+                {tags.map((tag) => (
+                  <a
+                    href={getTagUrl(tag, lang)}
+                    class="rounded-full bg-gray-100 px-3 py-1 text-xs text-gray-600 transition hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700"
+                  >
+                    {tag}
+                  </a>
+                ))}
+              </div>
+            )
+          }
         </div>
       </header>
 
-      <div class="prose prose-lg dark:prose-invert max-w-none
-        prose-headings:font-bold
-        prose-p:leading-relaxed
-        prose-a:underline prose-a:decoration-1 prose-a:underline-offset-2
-        prose-code:text-sm prose-code:font-mono
-        prose-code:before:content-none prose-code:after:content-none
-        prose-pre:rounded-lg prose-pre:shadow-lg
-        prose-img:rounded-lg prose-img:shadow-lg">
+      <div
+        class="prose prose-lg dark:prose-invert prose-headings:font-bold prose-p:leading-relaxed prose-a:underline prose-a:decoration-1 prose-a:underline-offset-2 prose-code:text-sm prose-code:font-mono prose-code:before:content-none prose-code:after:content-none prose-pre:rounded-lg prose-pre:shadow-lg prose-img:rounded-lg prose-img:shadow-lg max-w-none"
+      >
         <slot />
       </div>
     </article>

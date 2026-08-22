@@ -9,13 +9,13 @@ export async function getStaticPaths() {
   })
 
   const tags = new Set<string>()
-  posts.forEach(post => {
-    parseTags(post.data.tags).forEach(tag => tags.add(tag))
+  posts.forEach((post) => {
+    parseTags(post.data.tags).forEach((tag) => tags.add(tag))
   })
 
-  return Array.from(tags).map(tag => ({
+  return Array.from(tags).map((tag) => ({
     params: { tag: tag.toLowerCase().replace(/\s+/g, '-') },
-    props: { tag }
+    props: { tag },
   }))
 }
 

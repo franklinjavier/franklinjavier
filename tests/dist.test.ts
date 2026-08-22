@@ -140,9 +140,7 @@ describe('markdown variants', () => {
   test('post markdown carries title, canonical URL and raw markdown body', () => {
     const md = read('blog/how-to-be-proactive/index.md')
     expect(md).toMatch(/^# /)
-    expect(md).toContain(
-      '- Canonical: https://franklinjavier.com/blog/how-to-be-proactive/',
-    )
+    expect(md).toContain('- Canonical: https://franklinjavier.com/blog/how-to-be-proactive/')
   })
 
   test('homepage markdown links to blog, about, contact and privacy', () => {
@@ -173,9 +171,7 @@ describe('llms.txt', () => {
     expect(txt()).toContain('## Blog posts (English)')
     expect(txt()).toContain('## Blog posts (Português)')
     expect(txt()).toContain('https://franklinjavier.com/blog/how-to-be-proactive/')
-    expect(txt()).toContain(
-      'https://franklinjavier.com/pt-br/blog/como-ser-pessoa-propositiva/',
-    )
+    expect(txt()).toContain('https://franklinjavier.com/pt-br/blog/como-ser-pessoa-propositiva/')
   })
 })
 
@@ -247,7 +243,10 @@ describe('trust pages', () => {
     ]) {
       const html = read(path)
       const article = html.match(/<article[^>]*>(.*?)<\/article>/s)?.[1] ?? ''
-      const text = article.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim()
+      const text = article
+        .replace(/<[^>]+>/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim()
       expect(text.length).toBeGreaterThanOrEqual(500)
     }
   })
@@ -256,9 +255,9 @@ describe('trust pages', () => {
 describe('vercel.json', () => {
   test('sets Vary: Accept and markdown content-type headers', () => {
     const config = JSON.parse(readFileSync(join(import.meta.dir, '..', 'vercel.json'), 'utf-8'))
-    const allHeaders = (config.headers as { source: string; headers: { key: string; value: string }[] }[]).flatMap(
-      (rule) => rule.headers.map((header) => ({ source: rule.source, ...header })),
-    )
+    const allHeaders = (
+      config.headers as { source: string; headers: { key: string; value: string }[] }[]
+    ).flatMap((rule) => rule.headers.map((header) => ({ source: rule.source, ...header })))
     expect(allHeaders).toContainEqual({ source: '/(.*)', key: 'Vary', value: 'Accept' })
     expect(allHeaders).toContainEqual({
       source: '/(.*\\.md)',
@@ -269,9 +268,9 @@ describe('vercel.json', () => {
 
   test('sets RFC 8288 Link discovery headers on both homepages', () => {
     const config = JSON.parse(readFileSync(join(import.meta.dir, '..', 'vercel.json'), 'utf-8'))
-    const linkRules = (config.headers as { source: string; headers: { key: string; value: string }[] }[]).filter(
-      (rule) => rule.headers.some((header) => header.key === 'Link'),
-    )
+    const linkRules = (
+      config.headers as { source: string; headers: { key: string; value: string }[] }[]
+    ).filter((rule) => rule.headers.some((header) => header.key === 'Link'))
     const sources = linkRules.map((rule) => rule.source)
     expect(sources).toContain('/')
     expect(sources.some((source) => source.startsWith('/pt-br'))).toBe(true)

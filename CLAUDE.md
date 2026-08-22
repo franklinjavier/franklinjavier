@@ -27,6 +27,7 @@ This is a bilingual personal blog built with **Astro** and **Tailwind CSS**. The
 ## Commands
 
 ### Development
+
 ```bash
 bun install       # Install dependencies
 bun dev           # Start development server at http://localhost:4321
@@ -39,6 +40,7 @@ bun preview       # Preview production build locally
 ### Content Collections
 
 Blog posts are managed using Astro's Content Collections API:
+
 - Located in `src/content/blog/`
 - Schema defined in `src/content.config.ts` (Content Layer API with glob loaders)
 - Required frontmatter: `title`, `date`, `lang` ('en' or 'pt-br'), `translationKey`
@@ -73,6 +75,7 @@ Blog posts are managed using Astro's Content Collections API:
 - **ThemeToggle** (`src/components/ThemeToggle.astro`): Dark mode toggle with sun/moon icons and localStorage persistence
 
 When creating new pages or features:
+
 1. Create a reusable component in `src/components/` that accepts `lang` prop
 2. Use the translation dictionary (`useTranslations(lang)`) for all text
 3. Create minimal page files in `src/pages/` that import the component with the appropriate lang
@@ -81,6 +84,7 @@ When creating new pages or features:
 ### Styling
 
 Uses Tailwind CSS 4 with CSS-first configuration:
+
 - Dark mode via `@custom-variant dark` in `global.css`
 - Typography plugin loaded via `@plugin "@tailwindcss/typography"` in `global.css`
 - Tailwind integrated via `@tailwindcss/vite` plugin in `astro.config.mjs`
@@ -108,6 +112,7 @@ Uses Tailwind CSS 4 with CSS-first configuration:
 Posts must be created in BOTH languages. Follow these steps:
 
 1. Create English version in `src/content/blog/{slug}.md`:
+
 ```markdown
 ---
 title: Post Title
@@ -122,6 +127,7 @@ Your content here...
 ```
 
 2. Create Portuguese version in `src/content/blog/pt-br/{slug}.md`:
+
 ```markdown
 ---
 title: Título do Post
@@ -165,6 +171,7 @@ Set `draft: true` in frontmatter to exclude from build.
 ## Git Commit Guidelines
 
 When creating git commits:
+
 - **DO NOT** include "Generated with Claude Code" or "Co-Authored-By: Claude" in commit messages
 - Use concise, descriptive commit messages
 - Use bullet points for multiple changes
@@ -172,17 +179,20 @@ When creating git commits:
 ## Best Practices
 
 ### Code Reusability
+
 - **NEVER duplicate code** between language versions
 - Always create reusable components with `lang` prop
 - Follow the pattern: minimal page files that import shared components
 
 ### Internationalization
+
 - **ALWAYS use the translation dictionary** - never hardcode UI text
 - Add new translation keys to `src/i18n/ui.ts` for both languages
 - Use `useTranslations(lang)` function to access translations
 - Ensure all blog posts exist in both EN and PT-BR
 
 ### Styling
+
 - Tags should use `rounded-full` class (pill-shaped)
 - Maintain consistent dark mode support across all components
 - Use Tailwind utility classes for styling
