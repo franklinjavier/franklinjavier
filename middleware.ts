@@ -1,5 +1,5 @@
 import { next, rewrite } from '@vercel/edge'
-import { prefersMarkdown, markdownPathFor } from './src/lib/negotiation'
+import { prefersMarkdown, markdownPathFor } from './src/lib/negotiation.js'
 
 // Vercel Edge Middleware: serves the pre-rendered markdown twin of a page
 // (see src/pages/[...path]/index.md.ts) when a client asks for it with
