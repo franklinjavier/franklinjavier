@@ -163,6 +163,17 @@ describe('robots.txt', () => {
   test('references the sitemap', () => {
     expect(read('robots.txt')).toContain('Sitemap: https://franklinjavier.com/sitemap.xml')
   })
+
+  test('declares AI content usage preferences via Content Signals', () => {
+    const txt = read('robots.txt')
+    const contentSignal = txt.match(/^Content-Signal: (.*)$/m)?.[1] ?? ''
+    expect(contentSignal).toContain('search=yes')
+    expect(contentSignal).toContain('ai-input=yes')
+    expect(contentSignal).toMatch(/ai-train=(yes|no)/)
+    const groupLines = txt.split('\n\n')[0]
+    expect(groupLines).toContain('User-agent: *')
+    expect(groupLines).toContain('Content-Signal:')
+  })
 })
 
 describe('404 page', () => {
@@ -204,5 +215,21 @@ describe('vercel.json', () => {
       key: 'Content-Type',
       value: 'text/markdown; charset=utf-8',
     })
+  })
+
+  test('sets RFC 8288 Link discovery headers on both homepages', () => {
+    const config = JSON.parse(readFileSync(join(import.meta.dir, '..', 'vercel.json'), 'utf-8'))
+    const linkRules = (config.headers as { source: string; headers: { key: string; value: string }[] }[]).filter(
+      (rule) => rule.headers.some((header) => header.key === 'Link'),
+    )
+    const sources = linkRules.map((rule) => rule.source)
+    expect(sources).toContain('/')
+    expect(sources.some((source) => source.startsWith('/pt-br'))).toBe(true)
+    for (const rule of linkRules) {
+      const value = rule.headers.find((header) => header.key === 'Link')?.value ?? ''
+      expect(value).toContain('</llms.txt>; rel="describedby"')
+      expect(value).toContain('</rss.xml>; rel="alternate"')
+      expect(value).toContain('</sitemap.xml>; rel="sitemap"')
+    }
   })
 })
