@@ -20,6 +20,6 @@ Beyond technical work, I actively contribute to the front-end community through 
 
 ## Open source
 
-I publish work in the open, most recently [stonegiantstudio/skills](https://github.com/stonegiantstudio/skills) - 36 Apache-2.0 skills for AI coding agents, portable across Claude Code, Cursor, Codex and Gemini CLI. My other repositories are at [github.com/franklinjavier](https://github.com/franklinjavier).
+I publish work in the open, including projects focused on AI - most recently [stonegiantstudio/skills](https://github.com/stonegiantstudio/skills), a set of Apache-2.0 skills for AI coding agents, portable across Claude Code, Cursor, Codex and Gemini CLI. My other repositories are at [github.com/franklinjavier](https://github.com/franklinjavier).
 
 I'm based in Lisbon, Portugal, and I write on this site in both English and Portuguese about front-end development, React, performance, and engineering culture. You can read my articles on the [blog](/blog/), see my [talks and podcast appearances](/speaking/), download my [CV](/cv.pdf), or [get in touch](/contact/).
