@@ -1,6 +1,6 @@
 ---
-title: We published 36 of our agent skills as open source
-date: 2026-08-22
+title: We published 28 of our agent skills as open source
+date: 2026-06-26
 description: Stone Giant Studio's internal skills for AI coding agents are now public - markdown files, no dependencies, portable across Claude Code, Cursor, Codex and Gemini CLI.
 author: Franklin Javier
 tags: ai, agents, open-source, tooling
@@ -8,7 +8,7 @@ lang: en
 translationKey: open-source-agent-skills
 ---
 
-At Stone Giant Studio we built up a private toolchain for AI coding agents. All the "this is how we actually do this here" that we kept re-teaching to every new agent session. We put 36 of those skills under Apache-2.0 at [github.com/stonegiantstudio/skills](https://github.com/stonegiantstudio/skills).
+At Stone Giant Studio we built up a private toolchain for AI coding agents. All the "this is how we actually do this here" that we kept re-teaching to every new agent session. We put 28 of those skills under Apache-2.0 at [github.com/stonegiantstudio/skills](https://github.com/stonegiantstudio/skills).
 
 ## A skill is a markdown file
 
@@ -58,6 +58,6 @@ Two reasons, and the second is the real one.
 
 Most of this is not proprietary. The skill explaining how to write a behavioural test is not a competitive advantage. It is good practice, written for a machine reader instead of a human one. Keeping it private helps nobody.
 
-The second reason is that publishing forces quality. A skill only I read can be vague and still work, because I fill in the gaps from memory without noticing. A skill someone else's agent reads cannot. Going through all 36 with that in mind turned up real problems: instructions that only made sense if you already knew things we had never written down anywhere.
+The second reason is that publishing forces quality. A skill only I read can be vague and still work, because I fill in the gaps from memory without noticing. A skill someone else's agent reads cannot. Going through all 28 with that in mind turned up real problems: instructions that only made sense if you already knew things we had never written down anywhere.
 
 If you use them and something is unclear, that is a bug. Issues and pull requests are open.

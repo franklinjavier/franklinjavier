@@ -1,6 +1,6 @@
 ---
-title: Publicamos 36 das nossas skills de agente como open source
-date: 2026-08-22
+title: Publicamos 28 das nossas skills de agente como open source
+date: 2026-06-26
 description: As skills internas do Stone Giant Studio para agentes de código agora são públicas - arquivos markdown, sem dependências, portáveis entre Claude Code, Cursor, Codex e Gemini CLI.
 author: Franklin Javier
 tags: ia, agentes, open-source, tooling
@@ -8,7 +8,7 @@ lang: pt-br
 translationKey: open-source-agent-skills
 ---
 
-No Stone Giant Studio a gente foi juntando um toolchain privado para agentes de código. Todo aquele "aqui a gente faz assim" que a gente reensinava a cada nova sessão de agente. Colocamos 36 dessas skills sob Apache-2.0 em [github.com/stonegiantstudio/skills](https://github.com/stonegiantstudio/skills).
+No Stone Giant Studio a gente foi juntando um toolchain privado para agentes de código. Todo aquele "aqui a gente faz assim" que a gente reensinava a cada nova sessão de agente. Colocamos 28 dessas skills sob Apache-2.0 em [github.com/stonegiantstudio/skills](https://github.com/stonegiantstudio/skills).
 
 ## Uma skill é um arquivo markdown
 
@@ -58,6 +58,6 @@ Dois motivos, e o segundo é o de verdade.
 
 A maior parte disso não é proprietária. A skill que explica como escrever um teste comportamental não é vantagem competitiva. É boa prática, escrita para um leitor de máquina em vez de um humano. Manter privado não ajuda ninguém.
 
-O segundo motivo é que publicar força qualidade. Uma skill que só eu leio pode ser vaga e ainda funcionar, porque eu preencho as lacunas de memória sem perceber. Uma skill que o agente de outra pessoa lê, não pode. Passar pelas 36 com isso na cabeça revelou problemas de verdade: instruções que só faziam sentido se você já soubesse coisas que a gente nunca tinha escrito em lugar nenhum.
+O segundo motivo é que publicar força qualidade. Uma skill que só eu leio pode ser vaga e ainda funcionar, porque eu preencho as lacunas de memória sem perceber. Uma skill que o agente de outra pessoa lê, não pode. Passar pelas 28 com isso na cabeça revelou problemas de verdade: instruções que só faziam sentido se você já soubesse coisas que a gente nunca tinha escrito em lugar nenhum.
 
 Se você usar e alguma coisa estiver confusa, isso é um bug. Issues e pull requests estão abertos.

@@ -1,6 +1,6 @@
 ---
 title: O que performance web realmente significa em e-commerce
-date: 2026-08-22
+date: 2024-03-20
 description: Conselho genérico de performance não sobrevive ao contato com uma loja. O que medir, para onde o tempo realmente vai, e por que os maiores ganhos costumam ser remoções.
 author: Franklin Javier
 tags: performance, frontend, e-commerce, core-web-vitals

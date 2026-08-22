@@ -1,6 +1,6 @@
 ---
 title: What web performance actually means in e-commerce
-date: 2026-08-22
+date: 2024-03-20
 description: Generic performance advice does not survive contact with a storefront. What to measure, where the time really goes, and why the biggest wins are usually deletions.
 author: Franklin Javier
 tags: performance, frontend, e-commerce, core-web-vitals
