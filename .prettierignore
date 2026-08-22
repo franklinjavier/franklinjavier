@@ -1,0 +1,9 @@
+dist
+.astro
+node_modules
+bun.lock
+public
+
+# Blog and page prose - prettier only rewrites emphasis markers here,
+# which churns content files for no benefit.
+src/content

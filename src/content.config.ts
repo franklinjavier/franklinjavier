@@ -1,5 +1,5 @@
-import { defineCollection, z } from 'astro:content';
-import { glob } from 'astro/loaders';
+import { defineCollection, z } from 'astro:content'
+import { glob } from 'astro/loaders'
 
 const blog = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/blog' }),
@@ -13,7 +13,7 @@ const blog = defineCollection({
     lang: z.enum(['pt-br', 'en']).default('pt-br'),
     translationKey: z.string().optional(),
   }),
-});
+})
 
 const pages = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/pages' }),
@@ -22,6 +22,6 @@ const pages = defineCollection({
     description: z.string().optional(),
     lang: z.enum(['pt-br', 'en']).default('pt-br'),
   }),
-});
+})
 
-export const collections = { blog, pages };
+export const collections = { blog, pages }

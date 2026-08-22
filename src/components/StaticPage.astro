@@ -23,15 +23,14 @@ const { Content } = await render(entry)
   <Navigation />
 
   <div class="pt-32 pb-20">
-    <article class="max-w-3xl mx-auto px-8">
+    <article class="mx-auto max-w-3xl px-8">
       <header class="mb-12">
-        <h1 class="text-5xl font-bold leading-tight">{entry.data.title}</h1>
+        <h1 class="text-5xl leading-tight font-bold">{entry.data.title}</h1>
       </header>
 
-      <div class="prose prose-lg dark:prose-invert max-w-none
-        prose-headings:font-bold
-        prose-p:leading-relaxed
-        prose-a:underline prose-a:decoration-1 prose-a:underline-offset-2">
+      <div
+        class="prose prose-lg dark:prose-invert prose-headings:font-bold prose-p:leading-relaxed prose-a:underline prose-a:decoration-1 prose-a:underline-offset-2 max-w-none"
+      >
         <Content />
       </div>
     </article>

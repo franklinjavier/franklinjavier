@@ -16,17 +16,17 @@ const helpLinks = [
 ---
 
 <BaseLayout title={t('404.title')} lang={lang}>
-  <main class="min-h-screen flex items-center justify-center px-8">
+  <main class="flex min-h-screen items-center justify-center px-8">
     <div class="text-center">
-      <h1 class="text-9xl font-bold text-gray-900 dark:text-gray-100 glitch" data-text="404">
+      <h1 class="glitch text-9xl font-bold text-gray-900 dark:text-gray-100" data-text="404">
         404
       </h1>
 
-      <p class="text-xl text-gray-600 dark:text-gray-400 mt-8">
+      <p class="mt-8 text-xl text-gray-600 dark:text-gray-400">
         {t('404.message')}
       </p>
 
-      <p class="text-sm text-gray-500 dark:text-gray-400 mt-8">
+      <p class="mt-8 text-sm text-gray-500 dark:text-gray-400">
         {t('404.help')}
       </p>
 
@@ -36,7 +36,7 @@ const helpLinks = [
             <li>
               <a
                 href={link.href}
-                class="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 underline"
+                class="text-gray-700 underline hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-100"
               >
                 {link.label}
               </a>
@@ -50,37 +50,44 @@ const helpLinks = [
   <style>
     @keyframes glitch {
       0% {
-        text-shadow: 0.05em 0 0 rgba(255, 0, 0, 0.75),
+        text-shadow:
+          0.05em 0 0 rgba(255, 0, 0, 0.75),
           -0.05em -0.025em 0 rgba(0, 255, 0, 0.75),
           -0.025em 0.05em 0 rgba(0, 0, 255, 0.75);
       }
       14% {
-        text-shadow: 0.05em 0 0 rgba(255, 0, 0, 0.75),
+        text-shadow:
+          0.05em 0 0 rgba(255, 0, 0, 0.75),
           -0.05em -0.025em 0 rgba(0, 255, 0, 0.75),
           -0.025em 0.05em 0 rgba(0, 0, 255, 0.75);
       }
       15% {
-        text-shadow: -0.05em -0.025em 0 rgba(255, 0, 0, 0.75),
+        text-shadow:
+          -0.05em -0.025em 0 rgba(255, 0, 0, 0.75),
           0.025em 0.025em 0 rgba(0, 255, 0, 0.75),
           -0.05em -0.05em 0 rgba(0, 0, 255, 0.75);
       }
       49% {
-        text-shadow: -0.05em -0.025em 0 rgba(255, 0, 0, 0.75),
+        text-shadow:
+          -0.05em -0.025em 0 rgba(255, 0, 0, 0.75),
           0.025em 0.025em 0 rgba(0, 255, 0, 0.75),
           -0.05em -0.05em 0 rgba(0, 0, 255, 0.75);
       }
       50% {
-        text-shadow: 0.025em 0.05em 0 rgba(255, 0, 0, 0.75),
+        text-shadow:
+          0.025em 0.05em 0 rgba(255, 0, 0, 0.75),
           0.05em 0 0 rgba(0, 255, 0, 0.75),
           0 -0.05em 0 rgba(0, 0, 255, 0.75);
       }
       99% {
-        text-shadow: 0.025em 0.05em 0 rgba(255, 0, 0, 0.75),
+        text-shadow:
+          0.025em 0.05em 0 rgba(255, 0, 0, 0.75),
           0.05em 0 0 rgba(0, 255, 0, 0.75),
           0 -0.05em 0 rgba(0, 0, 255, 0.75);
       }
       100% {
-        text-shadow: -0.025em 0 0 rgba(255, 0, 0, 0.75),
+        text-shadow:
+          -0.025em 0 0 rgba(255, 0, 0, 0.75),
           -0.025em -0.025em 0 rgba(0, 255, 0, 0.75),
           -0.025em -0.05em 0 rgba(0, 0, 255, 0.75);
       }

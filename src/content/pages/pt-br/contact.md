@@ -1,6 +1,6 @@
 ---
 title: Contato
-description: Como entrar em contato com Franklin Javier - email, LinkedIn e GitHub.
+description: Como entrar em contato com Franklin Javier - email, LinkedIn, GitHub e X.
 lang: pt-br
 ---
 
@@ -9,13 +9,15 @@ A melhor forma de falar comigo é por email. Leio tudo o que chega na minha caix
 ## Canais
 
 - **Email**: [franklinjalves@gmail.com](mailto:franklinjalves@gmail.com)
-- **LinkedIn**: [linkedin.com/in/franklinjavier-98504321](https://www.linkedin.com/in/franklinjavier-98504321)
+- **LinkedIn**: [linkedin.com/in/franklin-javier-98504321](https://www.linkedin.com/in/franklin-javier-98504321)
 - **GitHub**: [github.com/franklinjavier](https://github.com/franklinjavier)
+- **X**: [@franklinjavier](https://x.com/franklinjavier)
 
 ## Sobre o que me contatar
 
 - Vagas e consultoria de engenharia front-end em nível principal/staff
 - Liderança técnica, revisões de arquitetura e auditorias de performance em aplicações React e Node.js
+- Desenvolvimento agêntico: harness de agente, skills, laços de avaliação e como tornar agentes de código confiáveis num codebase real
 - Palestras em tech talks, conferências e eventos de comunidade
 - Mentoria e pair programming para pessoas desenvolvedoras front-end
 - Feedback sobre algum artigo publicado neste blog

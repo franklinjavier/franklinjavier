@@ -1,15 +1,16 @@
-import rss from '@astrojs/rss';
-import { getCollection } from 'astro:content';
-import type { APIContext } from 'astro';
+import rss from '@astrojs/rss'
+import { getCollection } from 'astro:content'
+import type { APIContext } from 'astro'
 
 export async function GET(context: APIContext) {
   const posts = await getCollection('blog', ({ data }) => {
-    return data.draft !== true;
-  });
+    return data.draft !== true
+  })
 
   return rss({
     title: 'Franklin Javier',
-    description: "I'm a Principal Engineer with 16 years of front-end development experience, delivering high-performance web and mobile applications.",
+    description:
+      "I'm a Principal Engineer with 16 years of front-end development experience, delivering high-performance web and mobile applications.",
     site: context.site || 'https://franklinjavier.com',
     items: posts.map((post) => ({
       title: post.data.title,
@@ -17,5 +18,5 @@ export async function GET(context: APIContext) {
       description: post.data.description,
       link: `/blog/${post.id}/`,
     })),
-  });
+  })
 }

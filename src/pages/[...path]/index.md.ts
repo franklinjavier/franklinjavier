@@ -12,6 +12,7 @@ import {
   blogIndexMarkdown,
   tagIndexMarkdown,
   postMarkdown,
+  speakingMarkdown,
   staticPageMarkdown,
   type Lang,
 } from '../../lib/markdown'
@@ -24,6 +25,7 @@ type Props =
   | { kind: 'home'; lang: Lang }
   | { kind: 'blogIndex'; lang: Lang }
   | { kind: 'tag'; lang: Lang; tag: string }
+  | { kind: 'speaking'; lang: Lang }
   | { kind: 'post'; post: CollectionEntry<'blog'> }
   | { kind: 'page'; page: CollectionEntry<'pages'> }
 
@@ -45,6 +47,10 @@ export async function getStaticPaths() {
     paths.push({
       params: { path: prefix ? `${prefix}/blog` : 'blog' },
       props: { kind: 'blogIndex', lang },
+    })
+    paths.push({
+      params: { path: prefix ? `${prefix}/speaking` : 'speaking' },
+      props: { kind: 'speaking', lang },
     })
     for (const tagPage of getTagPages(posts, lang)) {
       paths.push({
@@ -82,6 +88,9 @@ async function buildMarkdown(props: Props): Promise<string> {
       const posts = await getPublishedPosts(props.lang)
       const tagPage = getTagPages(posts, props.lang).find((page) => page.tag === props.tag)
       return tagIndexMarkdown(props.lang, props.tag, (tagPage?.posts ?? []).map(toPostSummary))
+    }
+    case 'speaking': {
+      return speakingMarkdown(props.lang)
     }
     case 'post': {
       return postMarkdown({

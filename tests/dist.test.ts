@@ -56,6 +56,51 @@ describe('homepage metadata', () => {
     expect(person?.address).toMatchObject({ addressLocality: 'Lisbon', addressCountry: 'PT' })
     expect(person?.sameAs).toContain('https://github.com/franklinjavier')
   })
+
+  test('Person graph carries the disambiguation fields', () => {
+    const graphBlock = jsonLdBlocks(html()).find((block) => '@graph' in block)
+    const graph = (graphBlock as { '@graph': Record<string, unknown>[] })['@graph']
+    const person = graph.find((node) => node['@type'] === 'Person')
+    expect(person?.worksFor).toMatchObject({ name: 'Stone Giant Studio' })
+    expect(person?.alumniOf).toContainEqual({ '@type': 'Organization', name: 'Beleza na Web' })
+    expect(person?.knowsAbout).toContain('Web performance')
+    expect(person?.sameAs).toContain('https://x.com/franklinjavier')
+    expect(person?.sameAs).toContain('https://www.linkedin.com/in/franklin-javier-98504321')
+    expect(person?.sameAs).toContain('https://dev.to/franklinjavier')
+  })
+
+  test('attributes X cards to the author with a large image', () => {
+    expect(html()).toContain('name="twitter:card" content="summary_large_image"')
+    expect(html()).toContain('name="twitter:creator" content="@franklinjavier"')
+  })
+})
+
+describe('speaking page', () => {
+  test('lists each appearance with its source link in both languages', () => {
+    for (const path of ['speaking/index.html', 'pt-br/speaking/index.html']) {
+      const html = read(path)
+      expect(html).toContain(
+        'https://www.hipsters.tech/performance-e-otimizacoes-na-web-hipsters-114/',
+      )
+      expect(html).toContain('https://www.youtube.com/watch?v=ad7e9TuQs1s')
+      expect(html).toContain('Sérgio Lopes')
+    }
+  })
+
+  test('has ItemList JSON-LD whose items credit the Person', () => {
+    const list = jsonLdBlocks(read('speaking/index.html')).find(
+      (block) => block['@type'] === 'ItemList',
+    )
+    expect(list).toBeDefined()
+    const items = list?.itemListElement as { item: Record<string, unknown> }[]
+    expect(items.length).toBeGreaterThan(0)
+    for (const entry of items) {
+      expect(entry.item.url).toBeTruthy()
+      expect(entry.item.contributor).toMatchObject({
+        '@id': 'https://franklinjavier.com/#person',
+      })
+    }
+  })
 })
 
 describe('blog post pages', () => {
@@ -78,6 +123,8 @@ describe('markdown variants', () => {
       'pt-br/blog/index.md',
       'blog/how-to-be-proactive/index.md',
       'pt-br/blog/como-ser-pessoa-propositiva/index.md',
+      'speaking/index.md',
+      'pt-br/speaking/index.md',
       'about/index.md',
       'contact/index.md',
       'privacy/index.md',
@@ -93,14 +140,12 @@ describe('markdown variants', () => {
   test('post markdown carries title, canonical URL and raw markdown body', () => {
     const md = read('blog/how-to-be-proactive/index.md')
     expect(md).toMatch(/^# /)
-    expect(md).toContain(
-      '- Canonical: https://franklinjavier.com/blog/how-to-be-proactive/',
-    )
+    expect(md).toContain('- Canonical: https://franklinjavier.com/blog/how-to-be-proactive/')
   })
 
   test('homepage markdown links to blog, about, contact and privacy', () => {
     const md = read('index.md')
-    for (const path of ['/blog/', '/about/', '/contact/', '/privacy/']) {
+    for (const path of ['/blog/', '/speaking/', '/about/', '/contact/', '/privacy/']) {
       expect(md).toContain(`https://franklinjavier.com${path}`)
     }
   })
@@ -116,6 +161,7 @@ describe('llms.txt', () => {
 
   test('links the trust pages and machine-readable indexes', () => {
     expect(txt()).toContain('https://franklinjavier.com/about/')
+    expect(txt()).toContain('https://franklinjavier.com/speaking/')
     expect(txt()).toContain('https://franklinjavier.com/contact/')
     expect(txt()).toContain('https://franklinjavier.com/sitemap.xml')
     expect(txt()).toContain('https://franklinjavier.com/rss.xml')
@@ -125,9 +171,7 @@ describe('llms.txt', () => {
     expect(txt()).toContain('## Blog posts (English)')
     expect(txt()).toContain('## Blog posts (Português)')
     expect(txt()).toContain('https://franklinjavier.com/blog/how-to-be-proactive/')
-    expect(txt()).toContain(
-      'https://franklinjavier.com/pt-br/blog/como-ser-pessoa-propositiva/',
-    )
+    expect(txt()).toContain('https://franklinjavier.com/pt-br/blog/como-ser-pessoa-propositiva/')
   })
 })
 
@@ -149,6 +193,8 @@ describe('sitemap.xml', () => {
       'https://franklinjavier.com/blog/',
       'https://franklinjavier.com/blog/how-to-be-proactive/',
       'https://franklinjavier.com/blog/tag/react/',
+      'https://franklinjavier.com/speaking/',
+      'https://franklinjavier.com/pt-br/speaking/',
       'https://franklinjavier.com/about/',
       'https://franklinjavier.com/contact/',
       'https://franklinjavier.com/privacy/',
@@ -197,7 +243,10 @@ describe('trust pages', () => {
     ]) {
       const html = read(path)
       const article = html.match(/<article[^>]*>(.*?)<\/article>/s)?.[1] ?? ''
-      const text = article.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim()
+      const text = article
+        .replace(/<[^>]+>/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim()
       expect(text.length).toBeGreaterThanOrEqual(500)
     }
   })
@@ -206,9 +255,9 @@ describe('trust pages', () => {
 describe('vercel.json', () => {
   test('sets Vary: Accept and markdown content-type headers', () => {
     const config = JSON.parse(readFileSync(join(import.meta.dir, '..', 'vercel.json'), 'utf-8'))
-    const allHeaders = (config.headers as { source: string; headers: { key: string; value: string }[] }[]).flatMap(
-      (rule) => rule.headers.map((header) => ({ source: rule.source, ...header })),
-    )
+    const allHeaders = (
+      config.headers as { source: string; headers: { key: string; value: string }[] }[]
+    ).flatMap((rule) => rule.headers.map((header) => ({ source: rule.source, ...header })))
     expect(allHeaders).toContainEqual({ source: '/(.*)', key: 'Vary', value: 'Accept' })
     expect(allHeaders).toContainEqual({
       source: '/(.*\\.md)',
@@ -219,9 +268,9 @@ describe('vercel.json', () => {
 
   test('sets RFC 8288 Link discovery headers on both homepages', () => {
     const config = JSON.parse(readFileSync(join(import.meta.dir, '..', 'vercel.json'), 'utf-8'))
-    const linkRules = (config.headers as { source: string; headers: { key: string; value: string }[] }[]).filter(
-      (rule) => rule.headers.some((header) => header.key === 'Link'),
-    )
+    const linkRules = (
+      config.headers as { source: string; headers: { key: string; value: string }[] }[]
+    ).filter((rule) => rule.headers.some((header) => header.key === 'Link'))
     const sources = linkRules.map((rule) => rule.source)
     expect(sources).toContain('/')
     expect(sources.some((source) => source.startsWith('/pt-br'))).toBe(true)

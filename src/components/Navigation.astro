@@ -9,26 +9,32 @@ const t = useTranslations(lang)
 const homeUrl = lang === 'en' ? '/' : '/pt-br/'
 const aboutUrl = lang === 'en' ? '/#about' : '/pt-br/#about'
 const postsUrl = lang === 'en' ? '/blog/' : '/pt-br/blog/'
+const speakingUrl = lang === 'en' ? '/speaking/' : '/pt-br/speaking/'
 ---
 
 <nav
-  class="sticky top-0 left-0 right-0 bg-white/80 dark:bg-black/80 backdrop-blur z-50 border-b border-gray-100 dark:border-gray-800"
+  class="sticky top-0 right-0 left-0 z-50 border-b border-gray-100 bg-white/80 backdrop-blur dark:border-gray-800 dark:bg-black/80"
 >
-  <div class="max-w-7xl mx-auto px-8 py-3">
-    <div class="flex justify-between items-center text-sm">
+  <div class="mx-auto max-w-7xl px-8 py-3">
+    <div class="flex items-center justify-between text-sm">
       <a
         href={homeUrl}
-        class="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 transition"
+        class="text-gray-500 transition hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100"
         >{t('nav.home')}</a
       >
       <a
         href={postsUrl}
-        class="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 transition"
+        class="text-gray-500 transition hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100"
         >{t('nav.blog')}</a
       >
       <a
+        href={speakingUrl}
+        class="text-gray-500 transition hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100"
+        >{t('nav.speaking')}</a
+      >
+      <a
         href={aboutUrl}
-        class="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 transition"
+        class="text-gray-500 transition hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100"
         >{t('nav.about')}</a
       >
       <div class="flex items-center gap-2">

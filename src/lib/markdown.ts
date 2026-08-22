@@ -3,7 +3,8 @@
 // callers pass plain data extracted from content collections.
 
 import { ui } from '../i18n/ui'
-import { SITE_TITLE, SITE_DESCRIPTION, SITE_EMAIL, SITE_URL, SOCIAL_LINKS } from './site'
+import { SITE_TITLE, SITE_DESCRIPTION, SITE_EMAIL, SITE_URL, SOCIAL_LINKS, DEV_STACK } from './site'
+import { APPEARANCES, speakingUrl } from './speaking'
 
 export type Lang = 'en' | 'pt-br'
 
@@ -60,7 +61,7 @@ ${t['hero.bio3']}
 
 ## ${t['stack.title']}
 
-React / TypeScript, Remix / Node.js, Tailwind CSS, Performance Optimization, Design Systems, Accessibility (a11y)
+${DEV_STACK.join(', ')}
 
 ## ${t['contact.title']}
 
@@ -73,7 +74,7 @@ React / TypeScript, Remix / Node.js, Tailwind CSS, Performance Optimization, Des
 
 ${postList(recent)}
 
-[${t['nav.blog']}](${absolute(`${prefix}/blog/`)}) · [${t['nav.about']}](${absolute(`${prefix}/about/`)}) · [${t['nav.contact']}](${absolute(`${prefix}/contact/`)}) · [${t['nav.privacy']}](${absolute(`${prefix}/privacy/`)})
+[${t['nav.blog']}](${absolute(`${prefix}/blog/`)}) · [${t['nav.speaking']}](${absolute(`${prefix}/speaking/`)}) · [${t['nav.about']}](${absolute(`${prefix}/about/`)}) · [${t['nav.contact']}](${absolute(`${prefix}/contact/`)}) · [${t['nav.privacy']}](${absolute(`${prefix}/privacy/`)})
 
 ${footerNote(lang)}
 `
@@ -120,6 +121,36 @@ export function postMarkdown(post: PostSummary & { lang: Lang; body: string }): 
     '',
   ]
   return lines.join('\n')
+}
+
+export function speakingMarkdown(lang: Lang): string {
+  const t = ui[lang]
+  const entries = [...APPEARANCES]
+    .sort((a, b) => (b.date ?? '').localeCompare(a.date ?? ''))
+    .map((appearance) => {
+      const kind =
+        appearance.kind === 'podcast' ? t['speaking.kind.podcast'] : t['speaking.kind.talk']
+      const meta = [kind, appearance.event, appearance.date].filter(Boolean).join(' · ')
+      const credits =
+        appearance.with && appearance.with.length > 0
+          ? `\n  ${t['speaking.with']}: ${appearance.with.join(', ')}`
+          : ''
+      return `- [${appearance.title[lang]}](${appearance.url}) (${meta})\n  ${appearance.summary[lang]}${credits}`
+    })
+    .join('\n')
+
+  return `# ${t['speaking.title']} — ${SITE_TITLE}
+
+> ${t['speaking.description']}
+
+- Canonical: ${absolute(speakingUrl(lang))}
+
+${t['speaking.intro']}
+
+${entries}
+
+${footerNote(lang)}
+`
 }
 
 export function staticPageMarkdown(page: {
