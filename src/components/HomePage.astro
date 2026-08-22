@@ -126,7 +126,7 @@ const sortedPosts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.
         {
           sortedPosts.slice(0, 6).map((post) => {
             const formattedDate = formatDate(post.data.date, lang)
-            const postUrl = getPostUrl(post.slug, lang)
+            const postUrl = getPostUrl(post.id, lang)
 
             return (
               <article class="group">

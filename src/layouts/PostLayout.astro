@@ -2,6 +2,7 @@
 import BaseLayout from './BaseLayout.astro';
 import Navigation from '../components/Navigation.astro';
 import { getLangFromUrl, useTranslations, parseTags, formatDate, getTagUrl } from '../i18n/utils';
+import { blogPostingJsonLd } from '../lib/site';
 
 interface Props {
   title: string;
@@ -17,9 +18,17 @@ const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 const blogUrl = lang === 'en' ? '/blog/' : '/pt-br/blog/';
 const formattedDate = formatDate(date, lang);
+const jsonLd = blogPostingJsonLd({
+  title,
+  description,
+  date,
+  url: Astro.url.pathname,
+  lang,
+  tags,
+});
 ---
 
-<BaseLayout title={title} description={description} lang={lang}>
+<BaseLayout title={title} description={description} lang={lang} type="article" jsonLd={jsonLd}>
   <Navigation />
 
   <div class="pt-32 pb-20">

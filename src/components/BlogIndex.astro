@@ -39,7 +39,7 @@ const description = t('blog.description')
         {
           sortedPosts.map((post) => {
             const formattedDate = formatDate(post.data.date, lang)
-            const postUrl = getPostUrl(post.slug, lang)
+            const postUrl = getPostUrl(post.id, lang)
             const tags = parseTags(post.data.tags)
 
             return (

@@ -1,5 +1,5 @@
 ---
-import { getCollection } from 'astro:content';
+import { getCollection, render } from 'astro:content';
 import PostLayout from '../../../layouts/PostLayout.astro';
 
 export async function getStaticPaths() {
@@ -8,13 +8,13 @@ export async function getStaticPaths() {
   });
 
   return posts.map((post) => ({
-    params: { slug: post.slug.replace('pt-br/', '') },
+    params: { slug: post.id.replace('pt-br/', '') },
     props: post,
   }));
 }
 
 const post = Astro.props;
-const { Content } = await post.render();
+const { Content } = await render(post);
 ---
 
 <PostLayout
