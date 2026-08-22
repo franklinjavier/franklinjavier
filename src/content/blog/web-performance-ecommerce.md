@@ -1,26 +1,30 @@
 ---
 title: What web performance actually means in e-commerce
 date: 2024-03-20
-description: Generic performance advice does not survive contact with a storefront. What to measure, where the time really goes, and why the biggest wins are usually deletions.
+description: We took a storefront from 15s to 3s on throttled 3G and conversion went up 45%. What to measure, where the time really goes, and why the biggest wins are usually deletions.
 author: Franklin Javier
 tags: performance, frontend, e-commerce, core-web-vitals
 lang: en
 translationKey: web-performance-ecommerce
 ---
 
-Most performance advice is written for a generic web page. A storefront is not a generic web page. It has a funnel, money attached to every step of it, and a pile of third-party scripts that nobody on the engineering team asked for.
+At Beleza na Web we got page load on throttled 3G down from 15 seconds to 3. Conversion rate went up 45%.
 
-I worked on this for years, and talked about it on [Hipsters Ponto Tech #114 and in a talk on e-commerce performance](/speaking/). Here is the part the generic advice leaves out.
+I am starting with the embarrassing half of that number. Fifteen seconds. That was our own storefront, on the connection a real chunk of our customers actually had. It took about six months between November and May to fix, and the win was almost entirely in the browser. Time to first byte barely moved.
 
-## Stop optimizing the Lighthouse score
+That is the part generic performance advice keeps missing. A storefront is not a generic web page. It has a funnel, money attached to every step of it, and a pile of third-party scripts nobody on the engineering team asked for.
 
-Lighthouse runs a simulated device on a simulated network. Great for debugging, terrible as a target.
+## Your server is not the slow part
 
-What matters is field data: what real people on real devices got. CrUX, or better, your own RUM.
+I have a dashboard from that stack showing 51ms on the app server and 3.12 seconds of browser page load for the end user. Same system, same minute. Apdex 0.93 on the server, 0.69 in the browser.
+
+Two numbers, one of them great, and the great one measures something the customer never experiences.
+
+This is also why the Lighthouse score is the wrong target. Lighthouse runs a simulated device on a simulated network. Good for debugging, bad as a goal. What matters is field data: what real people on real devices got. CrUX, or better, your own RUM.
 
 The two rarely agree, and the field is almost always worse. Your team builds on fast laptops over office fibre. A big chunk of your traffic is a mid-range Android on a mobile network, in a browser full of extensions, on a phone that has been thermally throttled since 10am.
 
-So before optimizing anything, look at the p75 of your field data split by device class. It usually tells a different story than the lab did.
+So before optimizing anything, look at the p75 of your field data split by device class.
 
 ## Every metric belongs to a screen
 
@@ -59,6 +63,12 @@ Tree-shaking will not save you from a barrel import. Code-splitting will not sav
 
 So before the clever optimization, do the boring audit: what is in the bundle, who put it there, does anything still depend on it. That audit has paid off every single time I ran it.
 
+## The stack is public
+
+The boilerplate we standardised on is at [github.com/franklinjavier/storefront](https://github.com/franklinjavier/storefront). Node.js, Redis, server-rendered views, New Relic wired in. It still runs the Beleza na Web and Grupo Boticário storefronts today.
+
+The README says it scales past 1M of throughput. That is the same dashboard: 472k requests per minute on average, peaking at 1.1M, with an error rate of 0.0064%.
+
 ## Where to start
 
 You inherited a slow storefront and need somewhere to begin:
@@ -69,4 +79,4 @@ You inherited a slow storefront and need somewhere to begin:
 4. Put a route-scoped budget in CI, failing the build, with a team name on it.
 5. Delete something.
 
-None of this is clever. Performance is a problem that crosses teams and gets handed to one of them, and measurement is how that team gets anyone else to move.
+None of this is clever. Performance is a problem that crosses teams and gets handed to one of them, and measurement is how that team gets anyone else to move. The 45% is what made everyone else care.

@@ -1,26 +1,30 @@
 ---
 title: O que performance web realmente significa em e-commerce
 date: 2024-03-20
-description: Conselho genérico de performance não sobrevive ao contato com uma loja. O que medir, para onde o tempo realmente vai, e por que os maiores ganhos costumam ser remoções.
+description: Tiramos uma loja de 15s para 3s em 3G lento e a conversão subiu 45%. O que medir, para onde o tempo realmente vai, e por que os maiores ganhos costumam ser remoções.
 author: Franklin Javier
 tags: performance, frontend, e-commerce, core-web-vitals
 lang: pt-br
 translationKey: web-performance-ecommerce
 ---
 
-Quase todo conteúdo sobre performance é escrito para uma página web genérica. Uma loja não é uma página web genérica. Ela tem funil, tem dinheiro atrelado a cada etapa desse funil, e tem uma pilha de scripts de terceiros que ninguém da engenharia pediu.
+Na Beleza na Web a gente tirou o carregamento da página de 15 segundos para 3 em 3G lento. A taxa de conversão subiu 45%.
 
-Trabalhei nisso por anos, e falei sobre o assunto no [Hipsters Ponto Tech #114 e numa palestra sobre performance em e-commerce](/pt-br/speaking/). Aqui vai a parte que o conselho genérico deixa de fora.
+Começo pela metade vergonhosa desse número. Quinze segundos. Era a nossa própria loja, na conexão que boa parte dos nossos clientes tinha de verdade. Levou uns seis meses entre novembro e maio para resolver, e o ganho foi quase todo no navegador. O time to first byte quase não mudou.
 
-## Pare de otimizar a nota do Lighthouse
+É essa a parte que o conselho genérico de performance sempre deixa passar. Uma loja não é uma página web genérica. Ela tem funil, tem dinheiro atrelado a cada etapa desse funil, e tem uma pilha de scripts de terceiros que ninguém da engenharia pediu.
 
-O Lighthouse roda um aparelho simulado numa rede simulada. Ótimo para depurar, péssimo como alvo.
+## O seu servidor não é a parte lenta
 
-O que importa é dado de campo: o que pessoas reais, em aparelhos reais, pegaram. CrUX, ou melhor ainda, o seu próprio RUM.
+Tenho um dashboard dessa stack mostrando 51ms no app server e 3,12 segundos de carregamento de página no navegador do usuário final. Mesmo sistema, mesmo minuto. Apdex 0,93 no servidor, 0,69 no navegador.
+
+Dois números, um deles ótimo, e o ótimo mede uma coisa que o cliente nunca vive.
+
+É por isso também que a nota do Lighthouse é o alvo errado. Ele roda um aparelho simulado numa rede simulada. Bom para depurar, ruim como meta. O que importa é dado de campo: o que pessoas reais, em aparelhos reais, pegaram. CrUX, ou melhor ainda, o seu próprio RUM.
 
 Os dois quase nunca batem, e o campo é quase sempre pior. Seu time desenvolve em notebook rápido com fibra no escritório. Boa parte do seu tráfego é um Android intermediário em rede móvel, num navegador cheio de extensão, num aparelho com throttling térmico desde as dez da manhã.
 
-Então, antes de otimizar qualquer coisa, olhe o p75 do seu dado de campo separado por classe de aparelho. Costuma contar uma história diferente da do laboratório.
+Então, antes de otimizar qualquer coisa, olhe o p75 do seu dado de campo separado por classe de aparelho.
 
 ## Toda métrica pertence a uma tela
 
@@ -59,6 +63,12 @@ Tree-shaking não te salva de um barrel import. Code-splitting não te salva de 
 
 Então, antes da otimização esperta, faça a auditoria chata: o que tem no bundle, quem colocou, se ainda tem algo dependendo daquilo. Essa auditoria se pagou todas as vezes que eu rodei.
 
+## A stack é pública
+
+O boilerplate que a gente padronizou está em [github.com/franklinjavier/storefront](https://github.com/franklinjavier/storefront). Node.js, Redis, views renderizadas no servidor, New Relic plugado. Ele ainda roda as lojas da Beleza na Web e do Grupo Boticário hoje.
+
+O README diz que ele escala além de 1M de throughput. É o mesmo dashboard: 472 mil requisições por minuto na média, com pico de 1,1 milhão, e taxa de erro de 0,0064%.
+
 ## Por onde começar
 
 Você herdou uma loja lenta e precisa de um ponto de partida:
@@ -69,4 +79,4 @@ Você herdou uma loja lenta e precisa de um ponto de partida:
 4. Coloque um orçamento por rota no CI, quebrando o build, com nome de time nele.
 5. Delete alguma coisa.
 
-Nada disso é esperto. Performance é um problema que atravessa times e cai no colo de um só, e medição é como esse time faz os outros se mexerem.
+Nada disso é esperto. Performance é um problema que atravessa times e cai no colo de um só, e medição é como esse time faz os outros se mexerem. O 45% foi o que fez todo mundo se importar.
