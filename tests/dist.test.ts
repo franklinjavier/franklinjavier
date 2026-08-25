@@ -67,6 +67,8 @@ describe('stylesheets', () => {
     expect(css).not.toContain('file-selector')
     expect(css).not.toContain('datetime-edit')
     expect(css).not.toContain('::placeholder')
+    expect(css).not.toContain('--leading-relaxed')
+    expect(css).not.toContain('--tw-shadow')
     // Split graph: chrome CSS is not the shared BaseLayout dump.
     expect(pageHref).not.toContain('BaseLayout')
   })

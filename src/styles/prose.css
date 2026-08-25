@@ -41,7 +41,7 @@
 .prose :where(p) {
   margin-top: 1.3333333333333333em;
   margin-bottom: 1.3333333333333333em;
-  line-height: var(--leading-relaxed);
+  line-height: 1.625;
 }
 
 .prose :where(a) {
@@ -142,20 +142,17 @@
 .prose :where(img) {
   margin-top: 1.7777777777777777em;
   margin-bottom: 1.7777777777777777em;
-  border-radius: var(--radius-lg);
-  --tw-shadow:
-    0 10px 15px -3px var(--tw-shadow-color, #0000001a),
-    0 4px 6px -4px var(--tw-shadow-color, #0000001a);
+  border-radius: 0.5rem;
   box-shadow:
-    var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow),
-    var(--tw-ring-shadow), var(--tw-shadow);
+    0 10px 15px -3px #0000001a,
+    0 4px 6px -4px #0000001a;
 }
 
 .prose :where(code) {
   color: var(--tw-prose-code);
   font-weight: 600;
-  font-size: var(--text-sm);
-  line-height: var(--tw-leading, var(--text-sm--line-height));
+  font-size: 0.875rem;
+  line-height: calc(1.25 / 0.875);
   font-family: var(--font-mono);
 }
 
@@ -179,17 +176,14 @@
   margin-top: 2em;
   margin-bottom: 2em;
   overflow-x: auto;
-  border-radius: var(--radius-lg);
+  border-radius: 0.5rem;
   padding-top: 1em;
   padding-inline-end: 1.5em;
   padding-bottom: 1em;
   padding-inline-start: 1.5em;
-  --tw-shadow:
-    0 10px 15px -3px var(--tw-shadow-color, #0000001a),
-    0 4px 6px -4px var(--tw-shadow-color, #0000001a);
   box-shadow:
-    var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow),
-    var(--tw-ring-shadow), var(--tw-shadow);
+    0 10px 15px -3px #0000001a,
+    0 4px 6px -4px #0000001a;
 }
 
 .prose :where(pre code) {
@@ -200,9 +194,9 @@
   font-weight: inherit;
   color: inherit;
   /* text-sm / font-mono land after pre code inherit in production */
-  font-size: var(--text-sm);
+  font-size: 0.875rem;
   font-family: var(--font-mono);
-  line-height: var(--tw-leading, var(--text-sm--line-height));
+  line-height: calc(1.25 / 0.875);
 }
 
 .prose :where(pre code)::before,

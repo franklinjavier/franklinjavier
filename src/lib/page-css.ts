@@ -79,6 +79,23 @@ function elementNamesIn(selector: string): string[] {
     .filter((name) => name !== 'where' && name !== 'not' && name !== 'is' && name !== 'has')
 }
 
+function splitSelectors(prelude: string): string[] {
+  const parts: string[] = []
+  let depth = 0
+  let start = 0
+  for (let i = 0; i < prelude.length; i += 1) {
+    const char = prelude[i] as string
+    if (char === '(') depth += 1
+    else if (char === ')') depth -= 1
+    else if (char === ',' && depth === 0) {
+      parts.push(prelude.slice(start, i))
+      start = i + 1
+    }
+  }
+  parts.push(prelude.slice(start))
+  return parts
+}
+
 function atBlockInner(rule: string): { prelude: string; inner: string } | null {
   const open = rule.indexOf('{')
   const close = rule.lastIndexOf('}')
@@ -112,7 +129,7 @@ function selectorNeeded(selector: string, need: PageCssNeed): boolean {
 
   const classes = classNamesIn(trimmed).filter((name) => !ALWAYS_CLASSES.has(name))
   if (classes.length > 0) {
-    return classes.some((name) => need.classes.has(name))
+    return classes.every((name) => need.classes.has(name))
   }
 
   const tags = elementNamesIn(trimmed)
@@ -142,7 +159,7 @@ export function pruneCss(css: string, need: PageCssNeed): string {
       continue
     }
     const prelude = rule.slice(0, rule.indexOf('{')).trim()
-    const parts = prelude.split(',')
+    const parts = splitSelectors(prelude)
     if (parts.some((part) => selectorNeeded(part, need))) {
       kept.push(rule)
     }

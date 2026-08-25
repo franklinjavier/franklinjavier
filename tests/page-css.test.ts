@@ -28,6 +28,28 @@ describe('pruneCss', () => {
     expect(css).not.toContain('theme-transition')
   })
 
+  test('drops group-hover atoms whose own class is not on the page', () => {
+    const need = inventoryHtml(
+      '<div class="xused x-default-marker"><a class="xused">A</a></div>',
+    )
+    const css = pruneCss(
+      '.xused:where(.x-default-marker:hover *){text-decoration:underline}.xorphan:where(.x-default-marker:hover *){color:red}',
+      need,
+    )
+    expect(css).toContain('.xused')
+    expect(css).not.toContain('.xorphan')
+  })
+
+  test('does not keep unused dark variants whose comma is inside :where()', () => {
+    const need = inventoryHtml('<html><body class="xhome"></body></html>')
+    const css = pruneCss(
+      ':where(.dark, .dark *) .xorphan{color:#fff}:where(.dark, .dark *) .xhome{color:#000}',
+      need,
+    )
+    expect(css).toContain('.xhome')
+    expect(css).not.toContain('.xorphan')
+  })
+
   test('keeps prose on article pages', () => {
     const need = inventoryHtml('<div class="prose xpost"><h2>T</h2></div>')
     const css = pruneCss(sample, need)
