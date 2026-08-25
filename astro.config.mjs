@@ -8,6 +8,10 @@ export default defineConfig({
   output: 'static',
   build: {
     format: 'directory', // Creates /posts/title/index.html
+    // Keep the article prose sheet as a real CSS asset so home / blog index /
+    // speaking / 404 do not download .prose. Astro's default `auto` inlines
+    // sheets under 4kb, which would fold that sheet into article HTML.
+    inlineStylesheets: 'never',
   },
   i18n: {
     defaultLocale: 'en',
