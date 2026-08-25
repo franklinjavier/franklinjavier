@@ -9,7 +9,8 @@
     "preview": "astro preview",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "test": "bun run build && bun test tests",
+    "lint": "eslint src",
+    "test": "bun run lint && bun run build && bun test tests",
     "updatedeps": "bun update --latest"
   },
   "author": "Franklin Javier <franklinjalves@gmail.com>",
@@ -23,10 +24,13 @@
     "typescript": "^6.0.3"
   },
   "devDependencies": {
+    "@stylexjs/eslint-plugin": "^0.19.0",
     "@stylexjs/unplugin": "^0.19.0",
     "@types/bun": "^1.4.0",
+    "eslint": "^10.9.1",
     "prettier": "^3.9.6",
     "prettier-plugin-astro": "^0.14.1",
+    "typescript-eslint": "^8.68.0",
     "vite": "^8.0.13"
   }
 }
