@@ -20,7 +20,7 @@ const styles = stylex.create({
   title: {
     marginBottom: '1rem',
     fontSize: '3rem',
-    lineHeight: lh.tight,
+    lineHeight: lh.none,
     fontWeight: 700,
   },
 
