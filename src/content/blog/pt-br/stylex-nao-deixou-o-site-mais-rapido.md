@@ -1,7 +1,7 @@
 ---
-title: Troquei Tailwind por StyleX. O site não ficou mais rápido
+title: Experimento de performance com StyleX da Meta
 date: 2026-08-25
-description: Rodei no franklinjavier.com o mesmo tipo de troca que o Aiden Bai publicou. Com o visual igual, o LCP não se moveu. O CSS que caiu de verdade era typography que a home nunca pedia, e isso também acontecia no Tailwind.
+description: Experimentei trocar o Tailwind por StyleX e não melhorou nada em performance.
 author: Franklin Javier
 tags: performance, css, stylex, tailwind, frontend
 lang: pt-br
