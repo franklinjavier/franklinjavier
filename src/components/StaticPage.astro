@@ -1,4 +1,5 @@
 ---
+import '../styles/prose.css'
 import { getEntry, render } from 'astro:content'
 import BaseLayout from '../layouts/BaseLayout.astro'
 import Navigation from './Navigation.astro'
@@ -28,9 +29,7 @@ const { Content } = await render(entry)
         <h1 class="text-5xl leading-tight font-bold">{entry.data.title}</h1>
       </header>
 
-      <div
-        class="prose prose-lg dark:prose-invert prose-headings:font-bold prose-p:leading-relaxed prose-a:underline prose-a:decoration-1 prose-a:underline-offset-2 max-w-none"
-      >
+      <div class="prose">
         <Content />
       </div>
     </article>
