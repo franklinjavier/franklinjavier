@@ -62,6 +62,10 @@ describe('stylesheets', () => {
     // StyleX is compiled unlayered so it can override the document reset.
     expect(css).not.toContain('@layer priority')
     expect(css).not.toContain('tailwindcss')
+    // Thin preflight: no form/date dump on chrome pages.
+    expect(css).not.toContain('file-selector')
+    expect(css).not.toContain('datetime-edit')
+    expect(css).not.toContain('::placeholder')
   })
 
   test('article pages load thin prose; chrome pages do not share that file', () => {
