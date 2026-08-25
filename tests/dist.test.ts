@@ -222,6 +222,47 @@ describe('robots.txt', () => {
   })
 })
 
+describe('unregistered leftovers', () => {
+  test('does not ship the unused service worker or PWA manifest', () => {
+    expect(existsSync(join(DIST, 'sw.js'))).toBe(false)
+    expect(existsSync(join(DIST, 'manifest.json'))).toBe(false)
+  })
+})
+
+describe('payload cuts', () => {
+  function cssHrefs(html: string): string[] {
+    return [...html.matchAll(/<link[^>]+href="([^"]+\.css)"/g)].map((match) => match[1])
+  }
+
+  function cssFor(htmlPath: string): string {
+    return cssHrefs(read(htmlPath))
+      .map((href) => read(href.replace(/^\//, '')))
+      .join('\n')
+  }
+
+  test('home, blog index, speaking and 404 do not download .prose', () => {
+    for (const path of ['index.html', 'blog/index.html', 'speaking/index.html', '404.html']) {
+      expect(cssFor(path)).not.toContain('.prose')
+    }
+  })
+
+  test('about and a fenced post download the thin prose sheet', () => {
+    for (const path of ['about/index.html', 'blog/avoid-prop-drilling-react/index.html']) {
+      const css = cssFor(path)
+      expect(css).toContain('.prose')
+      expect(css).not.toMatch(/\.prose-lg\b/)
+      expect(css).not.toContain('blockquote')
+      expect(css).not.toContain('::file-selector-button')
+    }
+  })
+
+  test('does not emit Astro client JS', () => {
+    const html = read('index.html')
+    expect(html).not.toMatch(/_astro\/[^"]+\.js/)
+    expect(html).not.toContain('type="module"')
+  })
+})
+
 describe('404 page', () => {
   test('points agents at recovery links', () => {
     const html = read('404.html')

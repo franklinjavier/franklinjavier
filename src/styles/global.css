@@ -1,5 +1,8 @@
-@import 'tailwindcss';
-@plugin '@tailwindcss/typography';
+@layer theme, base, components, utilities;
+
+@import 'tailwindcss/theme.css' layer(theme);
+@import './preflight.css' layer(base);
+@import 'tailwindcss/utilities.css' layer(utilities);
 
 @custom-variant dark (&:where(.dark, .dark *));
 
@@ -17,30 +20,7 @@
   --color-gray-900: #111827;
 }
 
-/* Typography plugin customizations */
-.prose {
-  max-width: 65ch;
-  color: inherit;
-
-  & a {
-    color: inherit;
-    text-decoration: underline;
-
-    &:hover {
-      opacity: 0.8;
-    }
-  }
-
-  & code::before {
-    content: '';
-  }
-
-  & code::after {
-    content: '';
-  }
-}
-
-/* View Transitions - Page Navigation (default) - Diagonal Polygon Effect */
+/* Theme toggle uses View Transitions. html.theme-transition is never set. */
 @keyframes page-reveal {
   from {
     clip-path: polygon(50% -71%, -50% 71%, -50% 71%, 50% -71%);
@@ -58,69 +38,4 @@
 ::view-transition-new(root) {
   animation: 600ms cubic-bezier(0.4, 0, 0.2, 1) both page-reveal;
   z-index: 999;
-}
-
-/* View Transitions - Theme Toggle Animation */
-:root {
-  --expo-out: linear(
-    0 0%,
-    0.1684 2.66%,
-    0.3165 5.49%,
-    0.446 8.52%,
-    0.5581 11.78%,
-    0.6535 15.29%,
-    0.7341 19.11%,
-    0.8011 23.3%,
-    0.8557 27.93%,
-    0.8962 32.68%,
-    0.9283 38.01%,
-    0.9529 44.08%,
-    0.9711 51.14%,
-    0.9833 59.06%,
-    0.9915 68.74%,
-    1 100%
-  );
-}
-
-/* Theme toggle gets specific class to override default */
-html.theme-transition::view-transition-old(root),
-html.theme-transition::view-transition-new(root) {
-  animation-duration: 0.7s;
-  animation-timing-function: var(--expo-out);
-}
-
-html.theme-transition::view-transition-new(root) {
-  animation-name: reveal-light;
-}
-
-html.theme-transition::view-transition-old(root) {
-  animation: none;
-  z-index: -1;
-}
-
-html.theme-transition.dark::view-transition-old(root) {
-  animation: none;
-  z-index: -1;
-}
-
-html.theme-transition.dark::view-transition-new(root) {
-  animation-name: reveal-dark;
-}
-
-@keyframes reveal-dark {
-  from {
-    clip-path: polygon(50% -71%, -50% 71%, -50% 71%, 50% -71%);
-  }
-  to {
-    clip-path: polygon(50% -71%, -50% 71%, 50% 171%, 171% 50%);
-  }
-}
-
-@keyframes reveal-light {
-  from {
-    clip-path: polygon(171% 50%, 50% 171%, 50% 171%, 171% 50%);
-  }
-  to {
-    clip-path: polygon(171% 50%, 50% 171%, -50% 71%, 50% -71%);
-  }
 }

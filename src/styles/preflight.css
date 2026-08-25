@@ -1,0 +1,110 @@
+/*
+ * Tailwind v4 preflight, trimmed to tags the built HTML actually uses:
+ * html, a, button, svg, img, h1–h3, p, ul, ol, li, strong, em, code, pre, hr.
+ * Dropped: file-selector, date/time fields, placeholder, input/select/textarea,
+ * table, kbd, video, picture, iframe, [hidden], abbr, small, sub/sup, progress.
+ * No live page has those elements (home / about / posts / speaking / 404).
+ */
+
+*,
+::after,
+::before {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  border: 0 solid;
+}
+
+html {
+  line-height: 1.5;
+  -webkit-text-size-adjust: 100%;
+  tab-size: 4;
+  font-family: --theme(
+    --default-font-family,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    'Helvetica Neue',
+    'Noto Sans',
+    Arial,
+    sans-serif,
+    'Apple Color Emoji',
+    'Segoe UI Emoji',
+    'Segoe UI Symbol',
+    'Noto Color Emoji'
+  );
+  font-feature-settings: --theme(--default-font-feature-settings, normal);
+  font-variation-settings: --theme(--default-font-variation-settings, normal);
+  -webkit-tap-highlight-color: transparent;
+}
+
+hr {
+  height: 0;
+  color: inherit;
+  border-top-width: 1px;
+}
+
+h1,
+h2,
+h3 {
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+a {
+  color: inherit;
+  -webkit-text-decoration: inherit;
+  text-decoration: inherit;
+}
+
+b,
+strong {
+  font-weight: bolder;
+}
+
+code,
+pre {
+  font-family: --theme(
+    --default-mono-font-family,
+    ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    Monaco,
+    Consolas,
+    'Liberation Mono',
+    'Courier New',
+    monospace
+  );
+  font-feature-settings: --theme(--default-mono-font-feature-settings, normal);
+  font-variation-settings: --theme(--default-mono-font-variation-settings, normal);
+  font-size: 1em;
+}
+
+ol,
+ul {
+  list-style: none;
+}
+
+img,
+svg {
+  display: block;
+  vertical-align: middle;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+button {
+  font: inherit;
+  font-feature-settings: inherit;
+  font-variation-settings: inherit;
+  letter-spacing: inherit;
+  color: inherit;
+  border-radius: 0;
+  background-color: transparent;
+  opacity: 1;
+  appearance: button;
+}

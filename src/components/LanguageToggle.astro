@@ -30,29 +30,9 @@ if (isBlogPost) {
 <a
   id="language-toggle"
   href={alternateUrl}
-  class="language-toggle inline-flex items-center gap-1 px-2 py-1.5 text-2xl transition-opacity hover:opacity-80"
+  class="inline-flex items-center gap-1 px-2 py-1.5 text-2xl transition-opacity hover:opacity-80"
   aria-label={lang === 'pt-br' ? 'Switch to English' : 'Mudar para Português'}
   title={lang === 'pt-br' ? 'Switch to English' : 'Mudar para Português'}
 >
   <span>{lang === 'pt-br' ? '🇺🇸' : '🇧🇷'}</span>
 </a>
-
-<script>
-  // Keyboard shortcut: Press 'L' to toggle language
-  document.addEventListener('keydown', (e) => {
-    // Only toggle if user is not typing in an input/textarea
-    if (
-      e.key === 'l' &&
-      !e.metaKey &&
-      !e.ctrlKey &&
-      !e.altKey &&
-      document.activeElement?.tagName !== 'INPUT' &&
-      document.activeElement?.tagName !== 'TEXTAREA'
-    ) {
-      const languageToggle = document.getElementById('language-toggle') as HTMLAnchorElement
-      if (languageToggle) {
-        window.location.href = languageToggle.href
-      }
-    }
-  })
-</script>

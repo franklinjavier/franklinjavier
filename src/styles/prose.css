@@ -1,0 +1,222 @@
+/**
+ * Thin article typography for markdown bodies.
+ * Loaded from PostLayout and StaticPage only — not BaseLayout.
+ *
+ * Bakes production .prose.prose-lg + the live modifier classes
+ * (dark invert, headings bold, p leading-relaxed, link underline,
+ * code text-sm/mono/no-backticks, pre/img rounded-lg shadow-lg).
+ * Measure stays 65ch. max-w-none is not applied.
+ *
+ * Kept img: /blog/the-great-suspender/ embeds one.
+ * Dropped: kbd, table, thead, figure, video, picture, blockquote,
+ * lead, ol[type], h1/h4, not-prose. No live page uses them.
+ */
+
+.prose {
+  --tw-prose-headings: oklch(21% 0.034 264.665);
+  --tw-prose-bold: oklch(21% 0.034 264.665);
+  --tw-prose-counters: oklch(55.1% 0.027 264.364);
+  --tw-prose-bullets: oklch(87.2% 0.01 258.338);
+  --tw-prose-hr: oklch(92.8% 0.006 264.531);
+  --tw-prose-code: oklch(21% 0.034 264.665);
+  --tw-prose-pre-code: oklch(92.8% 0.006 264.531);
+  --tw-prose-pre-bg: oklch(27.8% 0.033 256.848);
+  font-size: 1.125rem;
+  line-height: 1.7777777777777777;
+  max-width: 65ch;
+  color: inherit;
+}
+
+.dark .prose {
+  --tw-prose-headings: #fff;
+  --tw-prose-bold: #fff;
+  --tw-prose-counters: oklch(70.7% 0.022 261.325);
+  --tw-prose-bullets: oklch(44.6% 0.03 256.802);
+  --tw-prose-hr: oklch(37.3% 0.034 259.733);
+  --tw-prose-code: #fff;
+  --tw-prose-pre-code: oklch(87.2% 0.01 258.338);
+  --tw-prose-pre-bg: #00000080;
+}
+
+.prose :where(p) {
+  margin-top: 1.3333333333333333em;
+  margin-bottom: 1.3333333333333333em;
+  line-height: 1.625;
+}
+
+.prose :where(a) {
+  color: inherit;
+  font-weight: 500;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+}
+
+.prose :where(a):hover {
+  opacity: 0.8;
+}
+
+.prose :where(strong) {
+  color: var(--tw-prose-bold);
+  font-weight: 600;
+}
+
+.prose :where(a strong) {
+  color: inherit;
+}
+
+.prose :where(ol) {
+  list-style-type: decimal;
+  margin-top: 1.3333333333333333em;
+  margin-bottom: 1.3333333333333333em;
+  padding-inline-start: 1.5555555555555556em;
+}
+
+.prose :where(ul) {
+  list-style-type: disc;
+  margin-top: 1.3333333333333333em;
+  margin-bottom: 1.3333333333333333em;
+  padding-inline-start: 1.5555555555555556em;
+}
+
+.prose :where(li) {
+  margin-top: 0.6666666666666666em;
+  margin-bottom: 0.6666666666666666em;
+}
+
+.prose :where(ol > li),
+.prose :where(ul > li) {
+  padding-inline-start: 0.4444444444444444em;
+}
+
+.prose :where(.prose > ul > li p) {
+  margin-top: 0.8888888888888888em;
+  margin-bottom: 0.8888888888888888em;
+}
+
+.prose :where(.prose > ul > li > p:first-child),
+.prose :where(.prose > ol > li > p:first-child) {
+  margin-top: 1.3333333333333333em;
+}
+
+.prose :where(.prose > ul > li > p:last-child),
+.prose :where(.prose > ol > li > p:last-child) {
+  margin-bottom: 1.3333333333333333em;
+}
+
+.prose :where(ul ul, ul ol, ol ul, ol ol) {
+  margin-top: 0.8888888888888888em;
+  margin-bottom: 0.8888888888888888em;
+}
+
+.prose :where(hr) {
+  margin-top: 3.111111111111111em;
+  margin-bottom: 3.111111111111111em;
+  border-color: var(--tw-prose-hr);
+}
+
+.prose :where(h2) {
+  color: var(--tw-prose-headings);
+  font-weight: 700;
+  font-size: 1.6666666666666667em;
+  margin-top: 1.8666666666666667em;
+  margin-bottom: 1.0666666666666667em;
+  line-height: 1.3333333333333333;
+}
+
+.prose :where(h3) {
+  color: var(--tw-prose-headings);
+  font-weight: 700;
+  font-size: 1.3333333333333333em;
+  margin-top: 1.6666666666666667em;
+  margin-bottom: 0.6666666666666666em;
+  line-height: 1.5;
+}
+
+.prose :where(hr + *),
+.prose :where(h2 + *),
+.prose :where(h3 + *) {
+  margin-top: 0;
+}
+
+.prose :where(img) {
+  margin-top: 1.7777777777777777em;
+  margin-bottom: 1.7777777777777777em;
+  border-radius: 0.5rem;
+  box-shadow:
+    0 10px 15px -3px #0000001a,
+    0 4px 6px -4px #0000001a;
+}
+
+.prose :where(code) {
+  color: var(--tw-prose-code);
+  font-weight: 600;
+  font-size: 0.875rem;
+  line-height: calc(1.25 / 0.875);
+  font-family: var(--font-mono);
+}
+
+.prose :where(code)::before,
+.prose :where(code)::after {
+  content: '';
+}
+
+.prose :where(a code),
+.prose :where(h2 code),
+.prose :where(h3 code) {
+  color: inherit;
+}
+
+.prose :where(pre) {
+  color: var(--tw-prose-pre-code);
+  background-color: var(--tw-prose-pre-bg);
+  font-weight: 400;
+  font-size: 0.8888888888888888em;
+  line-height: 1.75;
+  margin-top: 2em;
+  margin-bottom: 2em;
+  overflow-x: auto;
+  border-radius: 0.5rem;
+  padding-top: 1em;
+  padding-inline-end: 1.5em;
+  padding-bottom: 1em;
+  padding-inline-start: 1.5em;
+  box-shadow:
+    0 10px 15px -3px #0000001a,
+    0 4px 6px -4px #0000001a;
+}
+
+.prose :where(pre code) {
+  background-color: transparent;
+  border-width: 0;
+  border-radius: 0;
+  padding: 0;
+  font-weight: inherit;
+  color: inherit;
+  /* text-sm / font-mono land after pre code inherit in production */
+  font-size: 0.875rem;
+  font-family: var(--font-mono);
+  line-height: calc(1.25 / 0.875);
+}
+
+.prose :where(pre code)::before,
+.prose :where(pre code)::after {
+  content: none;
+}
+
+.prose :where(ol > li)::marker {
+  font-weight: 400;
+  color: var(--tw-prose-counters);
+}
+
+.prose :where(ul > li)::marker {
+  color: var(--tw-prose-bullets);
+}
+
+.prose :where(.prose > :first-child) {
+  margin-top: 0;
+}
+
+.prose :where(.prose > :last-child) {
+  margin-bottom: 0;
+}
