@@ -29,6 +29,38 @@ beforeAll(() => {
   }
 })
 
+describe('stylesheets', () => {
+  test('pages share one compiled StyleX stylesheet and no app JS', () => {
+    const pages = [
+      'index.html',
+      'about/index.html',
+      'blog/index.html',
+      'privacy/index.html',
+      'contact/index.html',
+      'speaking/index.html',
+      'pt-br/index.html',
+    ]
+    const cssHrefs = new Set<string>()
+    for (const path of pages) {
+      const html = read(path)
+      expect(html).not.toMatch(/src="[^"]+_astro\/[^"]+\.js"/)
+      const hrefs = [...html.matchAll(/href="([^"]+\.css)"/g)].map((match) => match[1])
+      expect(hrefs.length).toBeGreaterThan(0)
+      for (const href of hrefs) {
+        cssHrefs.add(href)
+      }
+    }
+
+    const layoutHref = [...cssHrefs].find((href) => href.includes('BaseLayout'))
+    expect(layoutHref).toBeDefined()
+    const css = read(layoutHref!.replace(/^\//, ''))
+    expect(css).toContain('@layer priority')
+    expect(css).toContain('.prose')
+    expect(css).not.toContain('--tw-')
+    expect(css).not.toContain('tailwindcss')
+  })
+})
+
 describe('homepage metadata', () => {
   const html = () => read('index.html')
 

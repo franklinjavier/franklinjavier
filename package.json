@@ -1,7 +1,7 @@
 {
   "name": "franklinjavier",
   "version": "2.0.0",
-  "description": "Franklin Javier's Personal Blog - Built with Astro + Tailwind",
+  "description": "Franklin Javier's Personal Blog - Built with Astro + StyleX",
   "type": "module",
   "scripts": {
     "dev": "astro dev",
@@ -17,18 +17,16 @@
   "dependencies": {
     "@astrojs/check": "^0.9.10",
     "@astrojs/rss": "^4.0.19",
-    "@tailwindcss/typography": "^0.5.20",
-    "@tailwindcss/vite": "^4.3.3",
+    "@stylexjs/stylex": "^0.19.0",
     "@vercel/edge": "^1.3.3",
     "astro": "^7.2.4",
-    "tailwindcss": "^4.3.3",
     "typescript": "^6.0.3"
   },
   "devDependencies": {
+    "@stylexjs/unplugin": "^0.19.0",
     "@types/bun": "^1.4.0",
     "prettier": "^3.9.6",
     "prettier-plugin-astro": "^0.14.1",
-    "prettier-plugin-tailwindcss": "^0.8.1",
     "vite": "^8.0.13"
   }
 }

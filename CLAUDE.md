@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a bilingual personal blog built with **Astro** and **Tailwind CSS**. The site is a modern, minimalistic blog focused on front-end development topics. Features a clean, professional design with dark mode support.
+This is a bilingual personal blog built with **Astro** and **StyleX**. The site is a modern, minimalistic blog focused on front-end development topics. Features a clean, professional design with dark mode support.
 
 ### Internationalization (i18n)
 
@@ -17,7 +17,7 @@ This is a bilingual personal blog built with **Astro** and **Tailwind CSS**. The
 ## Tech Stack
 
 - **Framework**: Astro 7.x (static site generator)
-- **Styling**: Tailwind CSS 4.x with Typography plugin (CSS-first config in `global.css`)
+- **Styling**: StyleX (compile-time atomic CSS via `@stylexjs/unplugin`) plus a small `global.css` reset/prose/view-transition layer
 - **Package Manager**: bun
 - **Language**: TypeScript (strict mode)
 - **Content**: Markdown with frontmatter
@@ -83,12 +83,12 @@ When creating new pages or features:
 
 ### Styling
 
-Uses Tailwind CSS 4 with CSS-first configuration:
+Uses StyleX compiled at build time by `@stylexjs/unplugin` (official Vite setup):
 
-- Dark mode via `@custom-variant dark` in `global.css`
-- Typography plugin loaded via `@plugin "@tailwindcss/typography"` in `global.css`
-- Tailwind integrated via `@tailwindcss/vite` plugin in `astro.config.mjs`
-- Pure black backgrounds in dark mode (`bg-black`) for Linear-style aesthetic
+- Styles live in `src/styles/*.ts` and are applied with `stylex.attrs()` (the official non-React API)
+- Dark mode is class-based (`.dark` on `<html>`), expressed as StyleX conditions
+- Markdown/prose, the document reset, and view-transition keyframes stay in `src/styles/global.css`
+- Pure black backgrounds in dark mode for Linear-style aesthetic
 - All components include dark mode variants
 
 ### Dark Mode
@@ -193,9 +193,9 @@ When creating git commits:
 
 ### Styling
 
-- Tags should use `rounded-full` class (pill-shaped)
+- Tags should stay pill-shaped (`borderRadius: 9999px` in StyleX)
 - Maintain consistent dark mode support across all components
-- Use Tailwind utility classes for styling
+- Use StyleX (`stylex.create` + `stylex.attrs`) for component styling; keep `global.css` for reset, prose, and view transitions only
 
 ## Notes
 

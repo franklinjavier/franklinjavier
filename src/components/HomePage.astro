@@ -4,6 +4,33 @@ import BaseLayout from '../layouts/BaseLayout.astro'
 import Navigation from '../components/Navigation.astro'
 import { useTranslations, formatDate, getPostUrl } from '../i18n/utils'
 import { DEV_STACK } from '../lib/site'
+import {
+  page,
+  hero,
+  heroGrid,
+  heroTitle,
+  heroBio,
+  photoWrap,
+  photoFrame,
+  photo,
+  info,
+  infoGrid,
+  infoTitle,
+  stack6,
+  stack2,
+  stack2Muted,
+  textPrimary,
+  textMuted,
+  contactLink,
+  posts,
+  postsTitle,
+  postsGrid,
+  cardGroup,
+  block,
+  cardTitle,
+  mutedTime,
+  cardDescription,
+} from '../styles/app'
 
 interface Props {
   lang: 'pt-br' | 'en'
@@ -22,16 +49,13 @@ const sortedPosts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.
 <BaseLayout title="Principal Engineer" lang={lang}>
   <Navigation />
 
-  <main class="pt-32 pb-20">
+  <main class={page.class}>
     <!-- Hero Section -->
-    <section class="mx-auto mb-32 max-w-7xl px-8" id="about">
-      <div class="grid grid-cols-1 items-start gap-16 lg:grid-cols-2">
+    <section class={hero.class} id="about">
+      <div class={heroGrid.class}>
         <div>
-          <h1
-            class="mb-8 text-6xl leading-tight font-bold lg:text-7xl"
-            set:html={t('hero.title').replace('\n', '<br />')}
-          />
-          <div class="max-w-xl space-y-6 text-lg text-gray-700 dark:text-gray-300">
+          <h1 class={heroTitle.class} set:html={t('hero.title').replace('\n', '<br />')} />
+          <div class={heroBio.class}>
             <p>{t('hero.bio1')}</p>
             <p>{t('hero.bio2')}</p>
             <p>{t('hero.bio3')}</p>
@@ -39,12 +63,12 @@ const sortedPosts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.
         </div>
 
         <!-- Photo -->
-        <div class="relative lg:mt-16">
-          <div class="rotate-3 transform shadow-2xl">
+        <div class={photoWrap.class}>
+          <div class={photoFrame.class}>
             <img
               src="/img/frank.jpeg"
               alt="Franklin Javier"
-              class="h-auto w-full rounded-3xl"
+              class={photo.class}
               width="600"
               height="600"
             />
@@ -54,51 +78,48 @@ const sortedPosts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.
     </section>
 
     <!-- Info Section -->
-    <section class="mx-auto max-w-7xl px-8">
-      <div class="grid grid-cols-1 gap-16 md:grid-cols-3">
+    <section class={info.class}>
+      <div class={infoGrid.class}>
         <div>
-          <h2 class="mb-6 text-lg font-bold">{t('experience.title')}</h2>
-          <div class="space-y-6 text-sm">
+          <h2 class={infoTitle.class}>{t('experience.title')}</h2>
+          <div class={stack6.class}>
             <div>
-              <p class="text-gray-700 dark:text-gray-300">{t('experience.role1')}</p>
-              <p class="text-gray-500 dark:text-gray-400">{t('experience.company1')}</p>
-              <p class="text-gray-500 dark:text-gray-400">{t('experience.period1')}</p>
+              <p class={textPrimary.class}>{t('experience.role1')}</p>
+              <p class={textMuted.class}>{t('experience.company1')}</p>
+              <p class={textMuted.class}>{t('experience.period1')}</p>
             </div>
             <div>
-              <p class="text-gray-700 dark:text-gray-300">{t('experience.role2')}</p>
-              <p class="text-gray-500 dark:text-gray-400">{t('experience.company2')}</p>
-              <p class="text-gray-500 dark:text-gray-400">{t('experience.period2')}</p>
+              <p class={textPrimary.class}>{t('experience.role2')}</p>
+              <p class={textMuted.class}>{t('experience.company2')}</p>
+              <p class={textMuted.class}>{t('experience.period2')}</p>
             </div>
             <div>
-              <p class="text-gray-700 dark:text-gray-300">{t('experience.role3')}</p>
-              <p class="text-gray-500 dark:text-gray-400">{t('experience.company3')}</p>
-              <p class="text-gray-500 dark:text-gray-400">{t('experience.period3')}</p>
+              <p class={textPrimary.class}>{t('experience.role3')}</p>
+              <p class={textMuted.class}>{t('experience.company3')}</p>
+              <p class={textMuted.class}>{t('experience.period3')}</p>
             </div>
           </div>
         </div>
 
         <div>
-          <h2 class="mb-6 text-lg font-bold">{t('stack.title')}</h2>
-          <div class="space-y-2 text-sm text-gray-700 dark:text-gray-300">
+          <h2 class={infoTitle.class}>{t('stack.title')}</h2>
+          <div class={stack2Muted.class}>
             {DEV_STACK.map((item) => <p>{item}</p>)}
           </div>
         </div>
 
         <div>
-          <h2 class="mb-6 text-lg font-bold">{t('contact.title')}</h2>
-          <div class="space-y-2 text-sm">
-            <p class="text-gray-700 dark:text-gray-300">{t('contact.location')}</p>
-            <a
-              href="mailto:franklinjalves@gmail.com"
-              class="block text-gray-700 underline hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-100"
-            >
+          <h2 class={infoTitle.class}>{t('contact.title')}</h2>
+          <div class={stack2.class}>
+            <p class={textPrimary.class}>{t('contact.location')}</p>
+            <a href="mailto:franklinjalves@gmail.com" class={contactLink.class}>
               franklinjalves@gmail.com
             </a>
             <a
               href="https://www.linkedin.com/in/franklin-javier-98504321"
               target="_blank"
               rel="noopener"
-              class="block text-gray-700 underline hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-100"
+              class={contactLink.class}
             >
               LinkedIn
             </a>
@@ -106,15 +127,11 @@ const sortedPosts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.
               href="https://x.com/franklinjavier"
               target="_blank"
               rel="noopener"
-              class="block text-gray-700 underline hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-100"
+              class={contactLink.class}
             >
               X
             </a>
-            <a
-              href="/cv.pdf"
-              target="_blank"
-              class="block text-gray-700 underline hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-100"
-            >
+            <a href="/cv.pdf" target="_blank" class={contactLink.class}>
               {t('contact.downloadCV')}
             </a>
           </div>
@@ -123,23 +140,21 @@ const sortedPosts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.
     </section>
 
     <!-- Blog Posts Section -->
-    <section class="mx-auto mt-32 max-w-7xl px-8" id="posts">
-      <h2 class="mb-12 text-3xl font-bold">{t('blog.recentPosts')}</h2>
-      <div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+    <section class={posts.class} id="posts">
+      <h2 class={postsTitle.class}>{t('blog.recentPosts')}</h2>
+      <div class={postsGrid.class}>
         {
           sortedPosts.slice(0, 6).map((post) => {
             const formattedDate = formatDate(post.data.date, lang)
             const postUrl = getPostUrl(post.id, lang)
 
             return (
-              <article class="group">
-                <a href={postUrl} class="block">
-                  <h3 class="mb-2 text-xl font-semibold group-hover:underline">
-                    {post.data.title}
-                  </h3>
-                  <time class="text-sm text-gray-500 dark:text-gray-400">{formattedDate}</time>
+              <article class={cardGroup.class}>
+                <a href={postUrl} class={block.class}>
+                  <h3 class={cardTitle.class}>{post.data.title}</h3>
+                  <time class={mutedTime.class}>{formattedDate}</time>
                   {post.data.description && (
-                    <p class="mt-3 text-gray-700 dark:text-gray-300">{post.data.description}</p>
+                    <p class={cardDescription.class}>{post.data.description}</p>
                   )}
                 </a>
               </article>

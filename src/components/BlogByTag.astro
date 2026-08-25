@@ -3,6 +3,26 @@ import { getCollection } from 'astro:content'
 import BaseLayout from '../layouts/BaseLayout.astro'
 import Navigation from './Navigation.astro'
 import { useTranslations, formatDate, parseTags, getPostUrl } from '../i18n/utils'
+import {
+  page,
+  container4xl,
+  header16,
+  backLinkTight,
+  pageTitle,
+  titleMuted,
+  sectionLead,
+  empty,
+  emptyText,
+  list,
+  group,
+  block,
+  mutedTime,
+  articleTitle,
+  descriptionText,
+  tagRowSpaced,
+  tagStatic,
+  readMoreGroup,
+} from '../styles/app'
 
 interface Props {
   lang: 'en' | 'pt-br'
@@ -34,60 +54,49 @@ const countLabel = `${sortedPosts.length} ${
 <BaseLayout title={title} description={description} lang={lang}>
   <Navigation />
 
-  <main class="pt-32 pb-20">
-    <div class="mx-auto max-w-4xl px-8">
+  <main class={page.class}>
+    <div class={container4xl.class}>
       <!-- Header -->
-      <header class="mb-16">
-        <a
-          href={lang === 'en' ? '/blog/' : '/pt-br/blog/'}
-          class="mb-4 inline-block text-sm text-gray-500 transition hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100"
-        >
+      <header class={header16.class}>
+        <a href={lang === 'en' ? '/blog/' : '/pt-br/blog/'} class={backLinkTight.class}>
           ← {t('blog.backToBlog')}
         </a>
-        <h1 class="mb-4 text-5xl font-bold">
+        <h1 class={pageTitle.class}>
           {t('blog.postsTagged')}{' '}
-          <span class="text-gray-600 dark:text-gray-400">"{tag}"</span>
+          <span class={titleMuted.class}>"{tag}"</span>
         </h1>
-        <p class="text-lg text-gray-600 dark:text-gray-400">{countLabel}</p>
+        <p class={sectionLead.class}>{countLabel}</p>
       </header>
 
       <!-- Posts list -->
       {
         sortedPosts.length === 0 ? (
-          <div class="py-12 text-center">
-            <p class="text-gray-600 dark:text-gray-400">{t('blog.noPostsFound')}</p>
+          <div class={empty.class}>
+            <p class={emptyText.class}>{t('blog.noPostsFound')}</p>
           </div>
         ) : (
-          <div class="space-y-12">
+          <div class={list.class}>
             {sortedPosts.map((post) => {
               const formattedDate = formatDate(post.data.date, lang)
               const postUrl = getPostUrl(post.id, lang)
               const tags = parseTags(post.data.tags)
 
               return (
-                <article class="group border-b border-gray-200 pb-12 last:border-0 dark:border-gray-800">
-                  <a href={postUrl} class="block">
-                    <time class="text-sm text-gray-500 dark:text-gray-400">{formattedDate}</time>
-                    <h2 class="mt-2 mb-3 text-2xl font-bold group-hover:underline">
-                      {post.data.title}
-                    </h2>
+                <article class={group.class}>
+                  <a href={postUrl} class={block.class}>
+                    <time class={mutedTime.class}>{formattedDate}</time>
+                    <h2 class={articleTitle.class}>{post.data.title}</h2>
                     {post.data.description && (
-                      <p class="leading-relaxed text-gray-700 dark:text-gray-300">
-                        {post.data.description}
-                      </p>
+                      <p class={descriptionText.class}>{post.data.description}</p>
                     )}
                     {tags.length > 0 && (
-                      <div class="mt-4 flex flex-wrap gap-2">
-                        {tags.map((t) => (
-                          <span class="rounded-full bg-gray-100 px-3 py-1 text-xs text-gray-600 dark:bg-gray-800 dark:text-gray-400">
-                            {t}
-                          </span>
+                      <div class={tagRowSpaced.class}>
+                        {tags.map((item) => (
+                          <span class={tagStatic.class}>{item}</span>
                         ))}
                       </div>
                     )}
-                    <div class="mt-4 text-sm text-gray-600 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-gray-100">
-                      {t('blog.readMore')}
-                    </div>
+                    <div class={readMoreGroup.class}>{t('blog.readMore')}</div>
                   </a>
                 </article>
               )

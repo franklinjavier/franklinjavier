@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css'
 import Footer from '../components/Footer.astro'
+import { body } from '../styles/app'
 import {
   SITE_TITLE,
   SITE_DESCRIPTION,
@@ -80,9 +81,7 @@ const ogLocale = lang === 'pt-br' ? 'pt_BR' : 'en_US'
       }
     </script>
   </head>
-  <body
-    class="min-h-screen bg-gray-50 text-gray-900 antialiased transition-colors dark:bg-black dark:text-gray-100"
-  >
+  <body class={body.class}>
     <slot />
     <Footer />
   </body>

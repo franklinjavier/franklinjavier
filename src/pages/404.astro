@@ -1,6 +1,15 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro'
 import { getLangFromUrl, useTranslations } from '../i18n/utils'
+import {
+  notFoundMain,
+  notFoundCenter,
+  notFoundCode,
+  notFoundMessage,
+  notFoundHelp,
+  notFoundList,
+  notFoundLink,
+} from '../styles/app'
 
 const lang = getLangFromUrl(Astro.url)
 const t = useTranslations(lang)
@@ -16,28 +25,19 @@ const helpLinks = [
 ---
 
 <BaseLayout title={t('404.title')} lang={lang}>
-  <main class="flex min-h-screen items-center justify-center px-8">
-    <div class="text-center">
-      <h1 class="glitch text-9xl font-bold text-gray-900 dark:text-gray-100" data-text="404">
-        404
-      </h1>
+  <main class={notFoundMain.class}>
+    <div class={notFoundCenter.class}>
+      <h1 class:list={['glitch', notFoundCode.class]} data-text="404">404</h1>
 
-      <p class="mt-8 text-xl text-gray-600 dark:text-gray-400">
-        {t('404.message')}
-      </p>
+      <p class={notFoundMessage.class}>{t('404.message')}</p>
 
-      <p class="mt-8 text-sm text-gray-500 dark:text-gray-400">
-        {t('404.help')}
-      </p>
+      <p class={notFoundHelp.class}>{t('404.help')}</p>
 
-      <ul class="mt-4 space-y-2 text-sm">
+      <ul class={notFoundList.class}>
         {
           helpLinks.map((link) => (
             <li>
-              <a
-                href={link.href}
-                class="text-gray-700 underline hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-100"
-              >
+              <a href={link.href} class={notFoundLink.class}>
                 {link.label}
               </a>
             </li>

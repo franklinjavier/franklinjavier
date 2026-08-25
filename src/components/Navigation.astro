@@ -2,6 +2,7 @@
 import ThemeToggle from './ThemeToggle.astro'
 import LanguageToggle from './LanguageToggle.astro'
 import { useTranslations, getLangFromUrl } from '../i18n/utils'
+import { nav, navInner, navRow, navLink, navActions } from '../styles/app'
 
 const lang = getLangFromUrl(Astro.url)
 const t = useTranslations(lang)
@@ -12,32 +13,14 @@ const postsUrl = lang === 'en' ? '/blog/' : '/pt-br/blog/'
 const speakingUrl = lang === 'en' ? '/speaking/' : '/pt-br/speaking/'
 ---
 
-<nav
-  class="sticky top-0 right-0 left-0 z-50 border-b border-gray-100 bg-white/80 backdrop-blur dark:border-gray-800 dark:bg-black/80"
->
-  <div class="mx-auto max-w-7xl px-8 py-3">
-    <div class="flex items-center justify-between text-sm">
-      <a
-        href={homeUrl}
-        class="text-gray-500 transition hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100"
-        >{t('nav.home')}</a
-      >
-      <a
-        href={postsUrl}
-        class="text-gray-500 transition hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100"
-        >{t('nav.blog')}</a
-      >
-      <a
-        href={speakingUrl}
-        class="text-gray-500 transition hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100"
-        >{t('nav.speaking')}</a
-      >
-      <a
-        href={aboutUrl}
-        class="text-gray-500 transition hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100"
-        >{t('nav.about')}</a
-      >
-      <div class="flex items-center gap-2">
+<nav class={nav.class}>
+  <div class={navInner.class}>
+    <div class={navRow.class}>
+      <a href={homeUrl} class={navLink.class}>{t('nav.home')}</a>
+      <a href={postsUrl} class={navLink.class}>{t('nav.blog')}</a>
+      <a href={speakingUrl} class={navLink.class}>{t('nav.speaking')}</a>
+      <a href={aboutUrl} class={navLink.class}>{t('nav.about')}</a>
+      <div class={navActions.class}>
         <LanguageToggle />
         <ThemeToggle />
       </div>

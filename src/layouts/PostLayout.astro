@@ -3,6 +3,17 @@ import BaseLayout from './BaseLayout.astro'
 import Navigation from '../components/Navigation.astro'
 import { getLangFromUrl, useTranslations, parseTags, formatDate, getTagUrl } from '../i18n/utils'
 import { blogPostingJsonLd } from '../lib/site'
+import {
+  page,
+  container3xl,
+  backLink,
+  header12,
+  pageTitle,
+  metaRow,
+  mutedTime,
+  tagRow,
+  tag,
+} from '../styles/app'
 
 interface Props {
   title: string
@@ -31,28 +42,22 @@ const jsonLd = blogPostingJsonLd({
 <BaseLayout title={title} description={description} lang={lang} type="article" jsonLd={jsonLd}>
   <Navigation />
 
-  <div class="pt-32 pb-20">
-    <article class="mx-auto max-w-3xl px-8">
-      <a
-        href={blogUrl}
-        class="mb-8 inline-block text-sm text-gray-500 transition hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100"
-      >
+  <div class={page.class}>
+    <article class={container3xl.class}>
+      <a href={blogUrl} class={backLink.class}>
         ← {t('blog.backToBlog')}
       </a>
 
-      <header class="mb-12">
-        <h1 class="mb-4 text-5xl leading-tight font-bold">{title}</h1>
-        <div class="flex flex-wrap items-center gap-4">
-          <time class="text-sm text-gray-500 dark:text-gray-400">{formattedDate}</time>
+      <header class={header12.class}>
+        <h1 class={pageTitle.class}>{title}</h1>
+        <div class={metaRow.class}>
+          <time class={mutedTime.class}>{formattedDate}</time>
           {
             tags.length > 0 && (
-              <div class="flex flex-wrap gap-2">
-                {tags.map((tag) => (
-                  <a
-                    href={getTagUrl(tag, lang)}
-                    class="rounded-full bg-gray-100 px-3 py-1 text-xs text-gray-600 transition hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700"
-                  >
-                    {tag}
+              <div class={tagRow.class}>
+                {tags.map((item) => (
+                  <a href={getTagUrl(item, lang)} class={tag.class}>
+                    {item}
                   </a>
                 ))}
               </div>
@@ -61,9 +66,7 @@ const jsonLd = blogPostingJsonLd({
         </div>
       </header>
 
-      <div
-        class="prose prose-lg dark:prose-invert prose-headings:font-bold prose-p:leading-relaxed prose-a:underline prose-a:decoration-1 prose-a:underline-offset-2 prose-code:text-sm prose-code:font-mono prose-code:before:content-none prose-code:after:content-none prose-pre:rounded-lg prose-pre:shadow-lg prose-img:rounded-lg prose-img:shadow-lg max-w-none"
-      >
+      <div class="prose">
         <slot />
       </div>
     </article>
