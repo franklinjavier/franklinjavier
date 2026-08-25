@@ -1,51 +1,49 @@
 ---
-title: A performance experiment with Meta's StyleX
+title: I swapped Tailwind for StyleX on a site that already scored 100
 date: 2026-08-25
-description: I tried swapping Tailwind for StyleX and nothing got faster.
+description: PageSpeed was already 100. Matching production ate the CSS win. What shipped was unused typography, still on Tailwind.
 author: Franklin Javier
 tags: performance, css, stylex, tailwind, frontend
 lang: en
 translationKey: stylex-personal-site
 ---
 
-I swapped the Tailwind on [franklinjavier.com](https://franklinjavier.com) for StyleX. The site was already 100 on PageSpeed, zero JavaScript in the bundle, system font, one photo. LCP did not move. With the look matching production, CSS dropped 8% raw and 6% gzipped. I reverted the swap.
+I put StyleX on [franklinjavier.com](https://franklinjavier.com). PageSpeed was already 100, no JavaScript in the bundle, system font, one photo. LCP did not budge. Once the page looked like production, CSS was 8% smaller raw and 6% smaller gzipped. I reverted.
 
-What I actually shipped was something else: the `@tailwindcss/typography` the home page never asked for, a thinner preflight, three scripts becoming one. All of that in Tailwind. StyleX stayed in the lab.
+What landed on master is unused `@tailwindcss/typography`, a thinner preflight, and three client scripts folded into one. Still Tailwind. StyleX never shipped.
 
-## Aiden's screenshot
+## The tweet I was chasing
 
-Aiden Bai posted on X a Tailwind → StyleX swap on his site. FCP 20% faster, LCP 7%, CSS cut in half, JS 5% smaller, INP unchanged at 24ms. I wanted the same kind of experiment, on my site, measured several times before and after.
+[Aiden Bai posted a Tailwind-to-StyleX swap](https://x.com/aidenybai/status/2092021888642085254) with a screenshot: FCP 20% faster, LCP 7%, CSS half the size, JS down 5%, INP still 24ms. I wanted that experiment on this site, measured more than once on each side.
 
-[Aiden's screenshot on X](https://x.com/aidenybai/status/2092021888642085254)
+His numbers are the frame. They are not what happened here.
 
-His screenshot is the reference. It is not the result.
+## What the site already was
 
-## Before the swap
-
-PageSpeed mobile, five times, production with Tailwind: FCP 0.8s, LCP 1.1s, score 100. Desktop once: 0.3s / 0.3s. There is no field INP in CrUX. So I do not cite my INP.
+Five PageSpeed mobile runs on production Tailwind: FCP 0.8s, LCP 1.1s, score 100. Desktop once: 0.3s / 0.3s. This property has no CrUX INP, so I am not making one up.
 
 Home CSS: `BaseLayout.B8I3ZO9w.css`, 40325 bytes, 6932–6961 at gzip-6. `_astro` JS bundle: zero. The file starts with `/*! tailwindcss v4.3.3`.
 
-Lighthouse CLI 12.8.2 on the same machine, no CDN, `master` against [`d044686`](https://github.com/franklinjavier/franklinjavier/commit/d044686f53996cfab8fa1a1f763dae12e8b1ce8e): FCP 1051ms against 1052ms, LCP 1351ms against 1352ms. A tie. Neutral, in this case, means revert.
+Lighthouse CLI 12.8.2 on the same machine, no CDN, `master` against [`d044686`](https://github.com/franklinjavier/franklinjavier/commit/d044686f53996cfab8fa1a1f763dae12e8b1ce8e): FCP 1051ms vs 1052ms, LCP 1351ms vs 1352ms. A wash. Neutral, here, means revert.
 
-## Apples to apples
+## Pixel-perfect first
 
-The first StyleX preview was not the same site. Measuring there would have been cheating. Before any after-number, the look had to be pixel-perfect. Apples to apples.
+The first StyleX preview was a different site. Measuring that would have been cheating. I wanted the pixels to match before I took an after number.
 
-Along the way I got an `src/styles/app.ts` of 837 lines, one `stylex.create`, about 80 styles re-exported. Tailwind without Tailwind. That does not stay.
+Along the way I wrote an 837-line `src/styles/app.ts` with one `stylex.create` and about 80 styles re-exported. Tailwind with extra steps. I threw it out.
 
-The way the [StyleX docs](https://stylexjs.com/docs/learn/thinking-in-stylex) ask for it is different. Colocate `*.stylex.ts` on each view. Tokens only in `tokens.stylex.ts`. A local `create` becomes a static class. A small CSS file up front. Loading StyleX CSS on demand recalculates the whole page.
+[StyleX's own docs](https://stylexjs.com/docs/learn/thinking-in-stylex) want styles next to the markup. `*.stylex.ts` beside each view. Tokens only in `tokens.stylex.ts`. A local `create` compiles to a static class. One small CSS file up front, because lazy-loading their CSS recalculates the whole page.
 
-## What StyleX moved
+## What StyleX actually moved
 
-Commit [`d044686`](https://github.com/franklinjavier/franklinjavier/commit/d044686f53996cfab8fa1a1f763dae12e8b1ce8e), preview `zub4vcjma`, same look as production. PageSpeed again, five times on mobile: FCP 0.8s on all of them. LCP 1.1s on three, 0.8s on two. Desktop 0.3 / 0.3. Score 100. JS zero.
+Commit [`d044686`](https://github.com/franklinjavier/franklinjavier/commit/d044686f53996cfab8fa1a1f763dae12e8b1ce8e), preview `zub4vcjma`, same look as production. PageSpeed again, five mobile runs: FCP 0.8s every time. LCP 1.1s on three, 0.8s on two. Desktop 0.3 / 0.3. Score 100. JS zero.
 
 <div class="overflow-x-auto">
 <table>
 <thead>
 <tr>
 <th></th>
-<th>Tailwind live</th>
+<th>Live Tailwind</th>
 <th>StyleX <a href="https://github.com/franklinjavier/franklinjavier/commit/d044686f53996cfab8fa1a1f763dae12e8b1ce8e"><code>d044686</code></a> <code>zub4vcjma</code></th>
 </tr>
 </thead>
@@ -94,13 +92,13 @@ Commit [`d044686`](https://github.com/franklinjavier/franklinjavier/commit/d0446
 </table>
 </div>
 
-Pixel-perfect ate the gain. Preflight, typography, v4 line-height, a grid only on md and lg. All of that came back, and the CSS came with it.
+Matching production ate the win. Preflight, typography, v4 line-heights, a grid that only exists at md and lg. All of that came back, and the CSS came with it.
 
-## The rest of the CSS was not StyleX
+## The leftover was not StyleX
 
-Home, the blog index and speaking never use `.prose`. Live markdown is `p`, `h2`, `h3`, `ul`, `ol`, `a`, `strong`, `code`, `pre`, `hr`. Even so, the `@tailwindcss/typography` dump went out on every page.
+Home, the blog index, and speaking never use `.prose`. Live markdown is `p`, `h2`, `h3`, `ul`, `ol`, `a`, `strong`, `code`, `pre`, `hr`. The `@tailwindcss/typography` dump still went out on every page.
 
-To keep from crediting that to StyleX, I shipped the same cut on Tailwind. Three hosts, same bytes, gzip-6 with `mtime=0`.
+I ran the same cut on Tailwind so I would not credit StyleX for it. Three hosts, same byte math, gzip-6 with `mtime=0`.
 
 <div class="overflow-x-auto">
 <table>
@@ -120,7 +118,7 @@ To keep from crediting that to StyleX, I shipped the same cut on Tailwind. Three
 <td><code>ClV8krB3</code> 15304 / 3519</td>
 </tr>
 <tr>
-<th scope="row">Home asks for <code>prose.css</code></th>
+<th scope="row">Home requests <code>prose.css</code></th>
 <td>yes</td>
 <td>no</td>
 <td>no</td>
@@ -153,16 +151,16 @@ To keep from crediting that to StyleX, I shipped the same cut on Tailwind. Three
 </table>
 </div>
 
-A to C is the cut that remained, without StyleX. C to B is StyleX against Tailwind with the same cut: smaller CSS, worse HTML gzip.
+A to C is the leftover, no StyleX in it. C to B is StyleX vs Tailwind with that leftover held still: smaller CSS, worse HTML gzip.
 
-What went live was C. [PR #45](https://github.com/franklinjavier/franklinjavier/pull/45), commit [`0f4917c`](https://github.com/franklinjavier/franklinjavier/commit/0f4917ce0c647ab17ec200cb8657ed932e418472). Today franklinjavier.com serves `BaseLayout.ClV8krB3.css` 15304/3519. Home does not ask for `prose.css`. The post loads `prose.D-rI_UlP.css` 3507/929 plus BaseLayout. The 40325 dump is no longer production.
+C is what shipped. [PR #45](https://github.com/franklinjavier/franklinjavier/pull/45), commit [`0f4917c`](https://github.com/franklinjavier/franklinjavier/commit/0f4917ce0c647ab17ec200cb8657ed932e418472). franklinjavier.com now serves `BaseLayout.ClV8krB3.css` at 15304/3519. Home does not request `prose.css`. A post loads `prose.D-rI_UlP.css` 3507/929 plus BaseLayout. The 40325 dump is gone.
 
 The [StyleX PR](https://github.com/franklinjavier/franklinjavier/pull/43) closed without a merge.
 
-I did not run PageSpeed again after the cut. I do not invent LCP, FCP or INP for what is live now.
+I did not rerun PageSpeed after the cut. I am not inventing LCP, FCP, or INP for what is live now.
 
-## A class that does not repeat compresses worse
+## Unique class names lose at gzip
 
-Home HTML on C: 13909 / 4160. On StyleX with the same cuts: 13445 / 4357. Less raw HTML, worse gzip. The StyleX class name is unique. Tailwind's repeats.
+Home HTML on C: 13909 / 4160. StyleX with the same cuts: 13445 / 4357. Less raw HTML, worse gzip. A Tailwind utility repeats. A StyleX atom does not.
 
-The StyleX docs say CSS settles as the site grows. A one-photo site does not get there. What this site had extra was prose the home page never asked for. That is what I cut. The system swap, not.
+StyleX says CSS plateaus as a codebase grows. A one-photo site never gets there. This one was shipping typography the homepage never used. I cut that. I did not change the styling system.
