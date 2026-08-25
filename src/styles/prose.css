@@ -143,9 +143,11 @@
   margin-top: 1.7777777777777777em;
   margin-bottom: 1.7777777777777777em;
   border-radius: var(--radius-lg);
-  --tw-shadow: 0 10px 15px -3px var(--tw-shadow-color, #0000001a),
+  --tw-shadow:
+    0 10px 15px -3px var(--tw-shadow-color, #0000001a),
     0 4px 6px -4px var(--tw-shadow-color, #0000001a);
-  box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow),
+  box-shadow:
+    var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow),
     var(--tw-ring-shadow), var(--tw-shadow);
 }
 
@@ -159,7 +161,7 @@
 
 .prose :where(code)::before,
 .prose :where(code)::after {
-  content: "";
+  content: '';
 }
 
 .prose :where(a code),
@@ -182,9 +184,11 @@
   padding-inline-end: 1.5em;
   padding-bottom: 1em;
   padding-inline-start: 1.5em;
-  --tw-shadow: 0 10px 15px -3px var(--tw-shadow-color, #0000001a),
+  --tw-shadow:
+    0 10px 15px -3px var(--tw-shadow-color, #0000001a),
     0 4px 6px -4px var(--tw-shadow-color, #0000001a);
-  box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow),
+  box-shadow:
+    var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow),
     var(--tw-ring-shadow), var(--tw-shadow);
 }
 
