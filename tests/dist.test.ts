@@ -29,26 +29,31 @@ beforeAll(() => {
   }
 })
 
+function stylesheetHrefs(html: string): string[] {
+  return [...html.matchAll(/href="([^"]+\.css)"/g)].map((match) => match[1])
+}
+
+function pageCss(path: string): string {
+  return stylesheetHrefs(read(path))
+    .map((href) => read(href.replace(/^\//, '')))
+    .join('\n')
+}
+
 describe('stylesheets', () => {
-  test('pages share one compiled StyleX stylesheet and no app JS', () => {
-    const pages = [
-      'index.html',
-      'about/index.html',
-      'blog/index.html',
-      'privacy/index.html',
-      'contact/index.html',
-      'speaking/index.html',
-      'pt-br/index.html',
-    ]
+  test('chrome pages share BaseLayout CSS, ship no app JS, and stay prose-free', () => {
+    const chromePages = ['index.html', 'blog/index.html', 'speaking/index.html', '404.html']
     const cssHrefs = new Set<string>()
-    for (const path of pages) {
+    for (const path of chromePages) {
       const html = read(path)
       expect(html).not.toMatch(/src="[^"]+_astro\/[^"]+\.js"/)
-      const hrefs = [...html.matchAll(/href="([^"]+\.css)"/g)].map((match) => match[1])
+      const hrefs = stylesheetHrefs(html)
       expect(hrefs.length).toBeGreaterThan(0)
       for (const href of hrefs) {
         cssHrefs.add(href)
       }
+      const css = pageCss(path)
+      expect(css).not.toContain('.prose')
+      expect(css).not.toContain('--tw-prose-headings')
     }
 
     const layoutHref = [...cssHrefs].find((href) => href.includes('BaseLayout'))
@@ -56,9 +61,24 @@ describe('stylesheets', () => {
     const css = read(layoutHref!.replace(/^\//, ''))
     // StyleX is compiled unlayered so it can override the document reset.
     expect(css).not.toContain('@layer priority')
-    expect(css).toContain('.prose')
-    expect(css).toContain('--tw-prose-body')
     expect(css).not.toContain('tailwindcss')
+  })
+
+  test('article pages load thin prose; chrome pages do not share that file', () => {
+    const articlePages = [
+      'about/index.html',
+      'privacy/index.html',
+      'contact/index.html',
+      'pt-br/about/index.html',
+      'blog/avoid-prop-drilling-react/index.html',
+    ]
+    for (const path of articlePages) {
+      const css = pageCss(path)
+      expect(css).toContain('.prose')
+      expect(css).toContain('--tw-prose-headings')
+      expect(css).not.toContain('not-prose')
+      expect(css).not.toContain('prose-lg')
+    }
   })
 })
 

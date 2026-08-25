@@ -2,7 +2,6 @@
    https://stylexjs.com/docs/learn/installation/vite */
 
 @import './preflight.css';
-@import './prose.css';
 
 .hidden {
   display: none;
