@@ -1,10 +1,14 @@
 /* Compile-time StyleX CSS is appended to this entry by @stylexjs/unplugin.
+   Official Vite config uses useCSSLayers: true. Reset sits in a lower
+   layer so StyleX atoms still override it.
    https://stylexjs.com/docs/learn/installation/vite */
 
-@import './preflight.css';
+@import './preflight.css' layer(reset);
 
-.hidden {
-  display: none;
+@layer reset {
+  .hidden {
+    display: none;
+  }
 }
 
 /* Theme toggle uses View Transitions. html.theme-transition is never set. */

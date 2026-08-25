@@ -60,8 +60,8 @@ describe('stylesheets', () => {
     const layoutHref = [...cssHrefs].find((href) => href.includes('BaseLayout'))
     expect(layoutHref).toBeDefined()
     const css = read(layoutHref!.replace(/^\//, ''))
-    // StyleX is compiled unlayered so it can override the document reset.
-    expect(css).not.toContain('@layer priority')
+    // Official layers: StyleX sits in @layer priority above the reset layer.
+    expect(css).toContain('@layer priority')
     expect(css).not.toContain('tailwindcss')
     // Thin preflight: no form/date dump on chrome pages.
     expect(css).not.toContain('file-selector')
