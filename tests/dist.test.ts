@@ -46,6 +46,7 @@ describe('stylesheets', () => {
     for (const path of chromePages) {
       const html = read(path)
       expect(html).not.toMatch(/src="[^"]+_astro\/[^"]+\.js"/)
+      expect(html).not.toContain('type="module"')
       const hrefs = stylesheetHrefs(html)
       expect(hrefs.length).toBeGreaterThan(0)
       for (const href of hrefs) {

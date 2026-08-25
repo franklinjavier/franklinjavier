@@ -26,7 +26,7 @@ export function inventoryHtml(html: string): PageCssNeed {
     classes,
     tags,
     hasProse: classes.has('prose'),
-    hasViewTransition: html.includes('startViewTransition'),
+    hasViewTransition: html.includes('id="theme-toggle"'),
   }
 }
 

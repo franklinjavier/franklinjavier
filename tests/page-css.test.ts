@@ -17,7 +17,7 @@ html.theme-transition{animation:none}
 describe('pruneCss', () => {
   test('drops article and unused StyleX rules from a chrome page', () => {
     const need = inventoryHtml(
-      '<html><body class="xhome"><p class="hidden">Hi</p><script>startViewTransition()</script></body></html>',
+      '<html><body class="xhome"><p class="hidden">Hi</p><button id="theme-toggle"></button></body></html>',
     )
     const css = pruneCss(sample, need)
     expect(css).toContain('.xhome')

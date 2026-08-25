@@ -68,17 +68,9 @@ const ogLocale = lang === 'pt-br' ? 'pt_BR' : 'en_US'
     <!-- RSS -->
     <link rel="alternate" href="/rss.xml" type="application/rss+xml" title="Feed" />
 
-    <!-- Theme script - must be in head to prevent flash -->
     <script is:inline>
-      if (
-        localStorage.getItem('color-theme') === 'dark' ||
-        (!('color-theme' in localStorage) &&
-          window.matchMedia('(prefers-color-scheme: dark)').matches)
-      ) {
-        document.documentElement.classList.add('dark')
-      } else {
-        document.documentElement.classList.remove('dark')
-      }
+      /* prettier-ignore */
+      ;(function(){var r=document.documentElement,s=localStorage.getItem('color-theme');r.classList.toggle('dark',s==='dark'||(s===null&&matchMedia('(prefers-color-scheme: dark)').matches));function boot(){var t=document.getElementById('theme-toggle'),m=document.getElementById('theme-toggle-dark-icon'),u=document.getElementById('theme-toggle-light-icon'),l=document.getElementById('language-toggle');function sync(){if(!m||!u)return;var on=r.classList.contains('dark');m.classList.toggle('hidden',on);u.classList.toggle('hidden',!on)}function apply(on){r.classList.toggle('dark',on);localStorage.setItem('color-theme',on?'dark':'light');sync()}function tog(){var go=function(){apply(!r.classList.contains('dark'))};document.startViewTransition?document.startViewTransition(go):go()}sync();if(t)t.addEventListener('click',tog);document.addEventListener('keydown',function(e){if(e.metaKey||e.ctrlKey||e.altKey)return;var n=document.activeElement&&document.activeElement.tagName;if(n==='INPUT'||n==='TEXTAREA')return;if(e.key==='t'&&t)tog();if(e.key==='l'&&l)location.href=l.href})}document.readyState==='loading'?document.addEventListener('DOMContentLoaded',boot):boot()})()
     </script>
   </head>
   <body class={body.class}>
