@@ -1,8 +1,6 @@
 // @ts-check
 import { defineConfig } from 'astro/config'
 import stylex from '@stylexjs/unplugin'
-import { fileURLToPath } from 'node:url'
-import { applyPageCss } from './src/lib/page-css'
 
 // Official StyleX Vite compiler: https://stylexjs.com/docs/learn/installation/vite
 // runtimeInjection: false keeps this compile-time atomic CSS, not runtime CSS-in-JS.
@@ -10,16 +8,6 @@ import { applyPageCss } from './src/lib/page-css'
 export default defineConfig({
   site: 'https://franklinjavier.com',
   output: 'static',
-  integrations: [
-    {
-      name: 'page-css',
-      hooks: {
-        'astro:build:done': ({ dir }) => {
-          applyPageCss(fileURLToPath(dir))
-        },
-      },
-    },
-  ],
   build: {
     format: 'directory', // Creates /posts/title/index.html
     // Official StyleX Vite plugin appends compiled CSS to an emitted stylesheet.

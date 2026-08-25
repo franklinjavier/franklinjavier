@@ -57,9 +57,9 @@ describe('stylesheets', () => {
       expect(css).not.toContain('--tw-prose-headings')
     }
 
-    const pageHref = [...cssHrefs].find((href) => href.includes('/_astro/p-'))
-    expect(pageHref).toBeDefined()
-    const css = read(pageHref!.replace(/^\//, ''))
+    const layoutHref = [...cssHrefs].find((href) => href.includes('BaseLayout'))
+    expect(layoutHref).toBeDefined()
+    const css = read(layoutHref!.replace(/^\//, ''))
     // StyleX is compiled unlayered so it can override the document reset.
     expect(css).not.toContain('@layer priority')
     expect(css).not.toContain('tailwindcss')
@@ -69,8 +69,8 @@ describe('stylesheets', () => {
     expect(css).not.toContain('::placeholder')
     expect(css).not.toContain('--leading-relaxed')
     expect(css).not.toContain('--tw-shadow')
-    // Split graph: chrome CSS is not the shared BaseLayout dump.
-    expect(pageHref).not.toContain('BaseLayout')
+    // Official StyleX: one atomic sheet, not a per-route prune.
+    expect(layoutHref).toContain('BaseLayout')
   })
 
   test('article pages load thin prose; chrome pages do not share that file', () => {
@@ -87,7 +87,7 @@ describe('stylesheets', () => {
       expect(css).toContain('--tw-prose-headings')
       expect(css).not.toContain('not-prose')
       expect(css).not.toContain('prose-lg')
-      expect(stylesheetHrefs(read(path)).some((href) => href.includes('/_astro/p-'))).toBe(true)
+      expect(stylesheetHrefs(read(path)).length).toBeGreaterThan(0)
     }
   })
 })
