@@ -5,20 +5,20 @@ import Navigation from './Navigation.astro'
 import { useTranslations, formatDate, parseTags, getTagUrl, getPostUrl } from '../i18n/utils'
 import {
   page,
-  container4xl,
-  header16,
-  pageTitle,
-  sectionLead,
+  container,
+  header,
+  title as heading,
+  lead,
   list,
-  group,
+  article,
   block,
-  mutedTime,
+  time,
   articleTitle,
-  descriptionText,
-  tagRowSpaced,
+  description as excerpt,
+  tagRow,
   tag,
   readMore,
-} from '../styles/app'
+} from './BlogIndex.stylex'
 
 interface Props {
   lang: 'en' | 'pt-br'
@@ -48,11 +48,11 @@ const summary = `${countLabel} - ${description}`
   <Navigation />
 
   <main class={page.class}>
-    <div class={container4xl.class}>
+    <div class={container.class}>
       <!-- Header -->
-      <header class={header16.class}>
-        <h1 class={pageTitle.class}>{t('blog.title')}</h1>
-        <p class={sectionLead.class}>{summary}</p>
+      <header class={header.class}>
+        <h1 class={heading.class}>{t('blog.title')}</h1>
+        <p class={lead.class}>{summary}</p>
       </header>
 
       <!-- Posts list -->
@@ -64,17 +64,17 @@ const summary = `${countLabel} - ${description}`
             const tags = parseTags(post.data.tags)
 
             return (
-              <article class={group.class}>
+              <article class={article.class}>
                 <div>
                   <a href={postUrl} class={block.class}>
-                    <time class={mutedTime.class}>{formattedDate}</time>
+                    <time class={time.class}>{formattedDate}</time>
                     <h2 class={articleTitle.class}>{post.data.title}</h2>
                     {post.data.description && (
-                      <p class={descriptionText.class}>{post.data.description}</p>
+                      <p class={excerpt.class}>{post.data.description}</p>
                     )}
                   </a>
                   {tags.length > 0 && (
-                    <div class={tagRowSpaced.class}>
+                    <div class={tagRow.class}>
                       {tags.map((item) => {
                         return (
                           <a href={getTagUrl(item, lang)} class={tag.class}>

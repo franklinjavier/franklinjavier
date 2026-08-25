@@ -2,7 +2,7 @@
 import { getEntry, render } from 'astro:content'
 import BaseLayout from '../layouts/BaseLayout.astro'
 import Navigation from './Navigation.astro'
-import { page, container3xl, header12, pageTitlePlain } from '../styles/app'
+import { page, article, header, title } from './StaticPage.stylex'
 
 interface Props {
   lang: 'pt-br' | 'en'
@@ -24,12 +24,14 @@ const { Content } = await render(entry)
   <Navigation />
 
   <div class={page.class}>
-    <article class={container3xl.class}>
-      <header class={header12.class}>
-        <h1 class={pageTitlePlain.class}>{entry.data.title}</h1>
+    <article class={article.class}>
+      <header class={header.class}>
+        <h1 class={title.class}>{entry.data.title}</h1>
       </header>
 
-      <div class="prose">
+      <div
+        class="prose prose-lg dark:prose-invert prose-headings:font-bold prose-p:leading-relaxed prose-a:underline prose-a:decoration-1 prose-a:underline-offset-2 max-w-none"
+      >
         <Content />
       </div>
     </article>

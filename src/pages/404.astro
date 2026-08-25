@@ -1,15 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro'
 import { getLangFromUrl, useTranslations } from '../i18n/utils'
-import {
-  notFoundMain,
-  notFoundCenter,
-  notFoundCode,
-  notFoundMessage,
-  notFoundHelp,
-  notFoundList,
-  notFoundLink,
-} from '../styles/app'
+import { main, center, code, message, help, list, link } from './_404.stylex'
 
 const lang = getLangFromUrl(Astro.url)
 const t = useTranslations(lang)
@@ -25,20 +17,20 @@ const helpLinks = [
 ---
 
 <BaseLayout title={t('404.title')} lang={lang}>
-  <main class={notFoundMain.class}>
-    <div class={notFoundCenter.class}>
-      <h1 class:list={['glitch', notFoundCode.class]} data-text="404">404</h1>
+  <main class={main.class}>
+    <div class={center.class}>
+      <h1 class:list={['glitch', code.class]} data-text="404">404</h1>
 
-      <p class={notFoundMessage.class}>{t('404.message')}</p>
+      <p class={message.class}>{t('404.message')}</p>
 
-      <p class={notFoundHelp.class}>{t('404.help')}</p>
+      <p class={help.class}>{t('404.help')}</p>
 
-      <ul class={notFoundList.class}>
+      <ul class={list.class}>
         {
-          helpLinks.map((link) => (
+          helpLinks.map((item) => (
             <li>
-              <a href={link.href} class={notFoundLink.class}>
-                {link.label}
+              <a href={item.href} class={link.class}>
+                {item.label}
               </a>
             </li>
           ))

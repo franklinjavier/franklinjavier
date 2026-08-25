@@ -32,7 +32,9 @@ export default defineConfig({
   vite: {
     plugins: [
       stylex.vite({
-        useCSSLayers: true,
+        // Official: StyleX must be unlayered to override the document reset.
+        // https://stylexjs.com/docs/llm-resources
+        useCSSLayers: false,
         runtimeInjection: false,
         // Prefer the shared layout stylesheet over page-scoped CSS (e.g. 404).
         cssInjectionTarget: (fileName) => fileName.endsWith('.css') && !fileName.includes('404'),

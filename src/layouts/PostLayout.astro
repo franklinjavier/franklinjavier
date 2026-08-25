@@ -5,15 +5,15 @@ import { getLangFromUrl, useTranslations, parseTags, formatDate, getTagUrl } fro
 import { blogPostingJsonLd } from '../lib/site'
 import {
   page,
-  container3xl,
-  backLink,
-  header12,
-  pageTitle,
-  metaRow,
-  mutedTime,
-  tagRow,
+  article as articleBox,
+  back,
+  header,
+  title as heading,
+  meta,
+  time,
+  tags as tagRow,
   tag,
-} from '../styles/app'
+} from './PostLayout.stylex'
 
 interface Props {
   title: string
@@ -43,15 +43,15 @@ const jsonLd = blogPostingJsonLd({
   <Navigation />
 
   <div class={page.class}>
-    <article class={container3xl.class}>
-      <a href={blogUrl} class={backLink.class}>
+    <article class={articleBox.class}>
+      <a href={blogUrl} class={back.class}>
         ← {t('blog.backToBlog')}
       </a>
 
-      <header class={header12.class}>
-        <h1 class={pageTitle.class}>{title}</h1>
-        <div class={metaRow.class}>
-          <time class={mutedTime.class}>{formattedDate}</time>
+      <header class={header.class}>
+        <h1 class={heading.class}>{title}</h1>
+        <div class={meta.class}>
+          <time class={time.class}>{formattedDate}</time>
           {
             tags.length > 0 && (
               <div class={tagRow.class}>
@@ -66,7 +66,9 @@ const jsonLd = blogPostingJsonLd({
         </div>
       </header>
 
-      <div class="prose">
+      <div
+        class="prose prose-lg dark:prose-invert prose-headings:font-bold prose-p:leading-relaxed prose-a:underline prose-a:decoration-1 prose-a:underline-offset-2 prose-code:text-sm prose-code:font-mono prose-code:before:content-none prose-code:after:content-none prose-pre:rounded-lg prose-pre:shadow-lg prose-img:rounded-lg prose-img:shadow-lg max-w-none"
+      >
         <slot />
       </div>
     </article>

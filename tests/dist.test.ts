@@ -54,9 +54,10 @@ describe('stylesheets', () => {
     const layoutHref = [...cssHrefs].find((href) => href.includes('BaseLayout'))
     expect(layoutHref).toBeDefined()
     const css = read(layoutHref!.replace(/^\//, ''))
-    expect(css).toContain('@layer priority')
+    // StyleX is compiled unlayered so it can override the document reset.
+    expect(css).not.toContain('@layer priority')
     expect(css).toContain('.prose')
-    expect(css).not.toContain('--tw-')
+    expect(css).toContain('--tw-prose-body')
     expect(css).not.toContain('tailwindcss')
   })
 })

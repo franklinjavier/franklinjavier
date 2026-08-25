@@ -1,6 +1,6 @@
 ---
 import { getLangFromUrl, getAlternateUrl, getTranslatedPost } from '../i18n/utils'
-import { languageToggle } from '../styles/app'
+import { toggle } from './LanguageToggle.stylex'
 
 const lang = getLangFromUrl(Astro.url)
 const targetLang = lang === 'pt-br' ? 'en' : 'pt-br'
@@ -31,7 +31,7 @@ if (isBlogPost) {
 <a
   id="language-toggle"
   href={alternateUrl}
-  class:list={['language-toggle', languageToggle.class]}
+  class:list={['language-toggle', toggle.class]}
   aria-label={lang === 'pt-br' ? 'Switch to English' : 'Mudar para Português'}
   title={lang === 'pt-br' ? 'Switch to English' : 'Mudar para Português'}
 >

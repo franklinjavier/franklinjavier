@@ -1,11 +1,11 @@
 ---
-import { themeButton, themeIcon } from '../styles/app'
+import { button, icon } from './ThemeToggle.stylex'
 ---
 
-<button id="theme-toggle" type="button" class={themeButton.class} aria-label="Toggle dark mode">
+<button id="theme-toggle" type="button" class={button.class} aria-label="Toggle dark mode">
   <svg
     id="theme-toggle-dark-icon"
-    class:list={['hidden', themeIcon.class]}
+    class:list={['hidden', icon.class]}
     fill="currentColor"
     viewBox="0 0 20 20"
   >
@@ -13,7 +13,7 @@ import { themeButton, themeIcon } from '../styles/app'
   </svg>
   <svg
     id="theme-toggle-light-icon"
-    class:list={['hidden', themeIcon.class]}
+    class:list={['hidden', icon.class]}
     fill="currentColor"
     viewBox="0 0 20 20"
   >

@@ -2,7 +2,7 @@
 import ThemeToggle from './ThemeToggle.astro'
 import LanguageToggle from './LanguageToggle.astro'
 import { useTranslations, getLangFromUrl } from '../i18n/utils'
-import { nav, navInner, navRow, navLink, navActions } from '../styles/app'
+import { nav, inner, row, link, actions } from './Navigation.stylex'
 
 const lang = getLangFromUrl(Astro.url)
 const t = useTranslations(lang)
@@ -14,13 +14,13 @@ const speakingUrl = lang === 'en' ? '/speaking/' : '/pt-br/speaking/'
 ---
 
 <nav class={nav.class}>
-  <div class={navInner.class}>
-    <div class={navRow.class}>
-      <a href={homeUrl} class={navLink.class}>{t('nav.home')}</a>
-      <a href={postsUrl} class={navLink.class}>{t('nav.blog')}</a>
-      <a href={speakingUrl} class={navLink.class}>{t('nav.speaking')}</a>
-      <a href={aboutUrl} class={navLink.class}>{t('nav.about')}</a>
-      <div class={navActions.class}>
+  <div class={inner.class}>
+    <div class={row.class}>
+      <a href={homeUrl} class={link.class}>{t('nav.home')}</a>
+      <a href={postsUrl} class={link.class}>{t('nav.blog')}</a>
+      <a href={speakingUrl} class={link.class}>{t('nav.speaking')}</a>
+      <a href={aboutUrl} class={link.class}>{t('nav.about')}</a>
+      <div class={actions.class}>
         <LanguageToggle />
         <ThemeToggle />
       </div>

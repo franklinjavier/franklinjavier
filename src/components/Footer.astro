@@ -1,6 +1,6 @@
 ---
 import { getLangFromUrl, useTranslations, getLocalizedPath } from '../i18n/utils'
-import { footer, footerInner, footerLinks, footerLink } from '../styles/app'
+import { footer, inner, links as linkRow, link } from './Footer.stylex'
 
 const lang = getLangFromUrl(Astro.url)
 const t = useTranslations(lang)
@@ -15,13 +15,13 @@ const links = [
 ---
 
 <footer class={footer.class}>
-  <div class={footerInner.class}>
+  <div class={inner.class}>
     <p>© {new Date().getFullYear()} Franklin Javier</p>
-    <div class={footerLinks.class}>
+    <div class={linkRow.class}>
       {
-        links.map((link) => (
-          <a href={link.href} class={footerLink.class}>
-            {link.label}
+        links.map((item) => (
+          <a href={item.href} class={link.class}>
+            {item.label}
           </a>
         ))
       }

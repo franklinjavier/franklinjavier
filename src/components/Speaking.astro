@@ -5,22 +5,22 @@ import { useTranslations, formatDate, getLocalizedPath } from '../i18n/utils'
 import { APPEARANCES, speakingJsonLd } from '../lib/speaking'
 import {
   page,
-  container4xl,
-  header16,
-  pageTitle,
+  container,
+  header,
+  title,
   intro,
   list,
-  group,
-  appearanceMeta,
-  tagStatic,
+  article,
+  meta,
+  kind,
   talkTitle,
   talkLink,
-  descriptionText,
+  summary,
   withLine,
   action,
-  inviteWrap,
+  invite,
   inviteLink,
-} from '../styles/app'
+} from './Speaking.stylex'
 
 interface Props {
   lang: 'en' | 'pt-br'
@@ -41,9 +41,9 @@ const appearances = [...APPEARANCES].sort((a, b) => (b.date ?? '').localeCompare
   <Navigation />
 
   <main class={page.class}>
-    <div class={container4xl.class}>
-      <header class={header16.class}>
-        <h1 class={pageTitle.class}>{t('speaking.title')}</h1>
+    <div class={container.class}>
+      <header class={header.class}>
+        <h1 class={title.class}>{t('speaking.title')}</h1>
         <p class={intro.class}>{t('speaking.intro')}</p>
       </header>
 
@@ -58,9 +58,9 @@ const appearances = [...APPEARANCES].sort((a, b) => (b.date ?? '').localeCompare
                 : t('speaking.action.talk')
 
             return (
-              <article class={group.class}>
-                <div class={appearanceMeta.class}>
-                  <span class={tagStatic.class}>{kindLabel}</span>
+              <article class={article.class}>
+                <div class={meta.class}>
+                  <span class={kind.class}>{kindLabel}</span>
                   <span>{appearance.event}</span>
                   {appearance.date && (
                     <time datetime={appearance.date}>
@@ -75,7 +75,7 @@ const appearances = [...APPEARANCES].sort((a, b) => (b.date ?? '').localeCompare
                   </a>
                 </h2>
 
-                <p class={descriptionText.class}>{appearance.summary[lang]}</p>
+                <p class={summary.class}>{appearance.summary[lang]}</p>
 
                 {appearance.with && appearance.with.length > 0 && (
                   <p class={withLine.class}>
@@ -92,7 +92,7 @@ const appearances = [...APPEARANCES].sort((a, b) => (b.date ?? '').localeCompare
         }
       </div>
 
-      <p class={inviteWrap.class}>
+      <p class={invite.class}>
         <a href={getLocalizedPath('/contact/', lang)} class={inviteLink.class}>
           {t('speaking.invite')}
         </a>
