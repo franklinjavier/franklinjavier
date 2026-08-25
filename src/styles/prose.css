@@ -8,8 +8,10 @@
  * Measure stays 65ch. max-w-none is not applied.
  *
  * Kept img: /blog/the-great-suspender/ embeds one.
- * Dropped: kbd, table, thead, figure, video, picture, blockquote,
- * lead, ol[type], h1/h4, not-prose. No live page uses them.
+ * Tables: one post ships HTML <table>s; rules stay here so home
+ * never downloads them. Not the typography plugin dump.
+ * Dropped: kbd, figure, video, picture, blockquote,
+ * lead, ol[type], h1/h4, not-prose.
  */
 
 .prose {
@@ -165,6 +167,38 @@
 .prose :where(h2 code),
 .prose :where(h3 code) {
   color: inherit;
+}
+
+.prose :where(.overflow-x-auto) {
+  overflow-x: auto;
+  margin-top: 1.7777777777777777em;
+  margin-bottom: 1.7777777777777777em;
+  -webkit-overflow-scrolling: touch;
+}
+
+.prose :where(table) {
+  width: max-content;
+  min-width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.prose :where(th),
+.prose :where(td) {
+  padding: 0.5rem 1rem 0.5rem 0;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid var(--tw-prose-hr);
+}
+
+.prose :where(th) {
+  font-weight: 600;
+}
+
+.prose :where(th:not(:first-child)),
+.prose :where(td:not(:first-child)) {
+  white-space: nowrap;
 }
 
 .prose :where(pre) {

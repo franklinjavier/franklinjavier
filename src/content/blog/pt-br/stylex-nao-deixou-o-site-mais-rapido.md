@@ -40,16 +40,59 @@ O jeito que o [doc do StyleX](https://stylexjs.com/docs/learn/thinking-in-stylex
 
 Commit [`d044686`](https://github.com/franklinjavier/franklinjavier/commit/d044686f53996cfab8fa1a1f763dae12e8b1ce8e), preview `zub4vcjma`, visual igual ao do ar. PageSpeed de novo, cinco vezes no mobile: FCP 0,8s em todas. LCP 1,1s em três, 0,8s em duas. Desktop 0,3 / 0,3. Nota 100. JS zero.
 
-| | Tailwind no ar | StyleX [`d044686`](https://github.com/franklinjavier/franklinjavier/commit/d044686f53996cfab8fa1a1f763dae12e8b1ce8e) `zub4vcjma` |
-|---|---|---|
-| FCP mobile (PageSpeed ×5) | 0,8s | 0,8s |
-| LCP mobile (PageSpeed ×5) | 1,1s | 1,1s em 3, 0,8s em 2 |
-| FCP / LCP desktop | 0,3 / 0,3 | 0,3 / 0,3 |
-| Nota | 100 | 100 |
-| CSS cru | 40325 | 36972 |
-| CSS gzip-6 | 6932–6961 | 6499–6519 |
-| HTML cru / gzip-6 | 14829 / 4289 | 14448 / 4523 |
-| JS `_astro` | 0 | 0 |
+<div class="overflow-x-auto">
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Tailwind no ar</th>
+<th>StyleX <a href="https://github.com/franklinjavier/franklinjavier/commit/d044686f53996cfab8fa1a1f763dae12e8b1ce8e"><code>d044686</code></a> <code>zub4vcjma</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th scope="row">FCP mobile (PageSpeed ×5)</th>
+<td>0,8s</td>
+<td>0,8s</td>
+</tr>
+<tr>
+<th scope="row">LCP mobile (PageSpeed ×5)</th>
+<td>1,1s</td>
+<td>1,1s em 3, 0,8s em 2</td>
+</tr>
+<tr>
+<th scope="row">FCP / LCP desktop</th>
+<td>0,3 / 0,3</td>
+<td>0,3 / 0,3</td>
+</tr>
+<tr>
+<th scope="row">Nota</th>
+<td>100</td>
+<td>100</td>
+</tr>
+<tr>
+<th scope="row">CSS cru</th>
+<td>40325</td>
+<td>36972</td>
+</tr>
+<tr>
+<th scope="row">CSS gzip-6</th>
+<td>6932–6961</td>
+<td>6499–6519</td>
+</tr>
+<tr>
+<th scope="row">HTML cru / gzip-6</th>
+<td>14829 / 4289</td>
+<td>14448 / 4523</td>
+</tr>
+<tr>
+<th scope="row">JS <code>_astro</code></th>
+<td>0</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+</div>
 
 Pixel-perfect comeu o ganho. Preflight, typography, line-height do v4, grid exclusivo em md e lg. Tudo isso voltou, e o CSS foi com ele.
 
@@ -59,14 +102,56 @@ A home, o índice do blog e o speaking nunca usam `.prose`. O markdown ao vivo �
 
 Para não creditar isso ao StyleX, subi o mesmo corte no Tailwind. Três hosts, mesmos bytes, gzip-6 com `mtime=0`.
 
-| | A Tailwind, sem corte | B StyleX + cortes (não publicado) | C Tailwind + cortes (no ar) |
-|---|---|---|
-| CSS da home | `B8I3ZO9w` 40325 / 6932 | `0JEitMbP` 9475 / 2764 | `ClV8krB3` 15304 / 3519 |
-| Home pede `prose.css` | sim | não | não |
-| CSS do post `/blog/avoid-prop-drilling-react/` | 40325 / 6932 | 12982 / 3693 (prose 3507/929 + BaseLayout) | 18811 / 4448 (mesmo prose + BaseLayout) |
-| HTML da home | 14829 / 4289 | 13445 / 4357 | 13909 / 4160 |
-| HTML do post | 14874 / 4429 | 13491 / 4384 | 13675 / 4196 |
-| JS `_astro` | 0 | 0 | 0 |
+<div class="overflow-x-auto">
+<table>
+<thead>
+<tr>
+<th></th>
+<th>A Tailwind, sem corte</th>
+<th>B StyleX + cortes (não publicado)</th>
+<th>C Tailwind + cortes (no ar)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th scope="row">CSS da home</th>
+<td><code>B8I3ZO9w</code> 40325 / 6932</td>
+<td><code>0JEitMbP</code> 9475 / 2764</td>
+<td><code>ClV8krB3</code> 15304 / 3519</td>
+</tr>
+<tr>
+<th scope="row">Home pede <code>prose.css</code></th>
+<td>sim</td>
+<td>não</td>
+<td>não</td>
+</tr>
+<tr>
+<th scope="row">CSS do post <code>/blog/avoid-prop-drilling-react/</code></th>
+<td>40325 / 6932</td>
+<td>12982 / 3693 (prose 3507/929 + BaseLayout)</td>
+<td>18811 / 4448 (mesmo prose + BaseLayout)</td>
+</tr>
+<tr>
+<th scope="row">HTML da home</th>
+<td>14829 / 4289</td>
+<td>13445 / 4357</td>
+<td>13909 / 4160</td>
+</tr>
+<tr>
+<th scope="row">HTML do post</th>
+<td>14874 / 4429</td>
+<td>13491 / 4384</td>
+<td>13675 / 4196</td>
+</tr>
+<tr>
+<th scope="row">JS <code>_astro</code></th>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+</div>
 
 A para C é o corte que sobrou, sem StyleX. C para B é StyleX contra Tailwind com o corte igual: CSS menor, HTML gzip pior.
 
@@ -76,8 +161,8 @@ O [PR do StyleX](https://github.com/franklinjavier/franklinjavier/pull/43) fecho
 
 Não rodei PageSpeed de novo depois do corte. Não invento LCP, FCP nem INP para o que está no ar agora.
 
-## Átomo único comprime pior
+## Classe que não se repete comprime pior
 
-HTML da home no C: 13909 / 4160. No StyleX com os mesmos cortes: 13445 / 4357. Menos HTML cru, gzip pior. Classe do Tailwind se repete. Átomo do StyleX é único.
+HTML da home no C: 13909 / 4160. No StyleX com os mesmos cortes: 13445 / 4357. Menos HTML cru, gzip pior. O nome de classe do StyleX é único. O do Tailwind se repete.
 
 O doc do StyleX diz que o CSS estabiliza quando o site cresce. Um site de uma foto não chega lá. O que esse site tinha de sobra era prose que a home não pedia. Isso eu cortei. A troca de sistema, não.
