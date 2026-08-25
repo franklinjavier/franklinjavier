@@ -135,6 +135,3 @@
 .prose a{color:inherit;text-decoration:underline}
 .prose a:hover{opacity:.8}
 .prose code:before,.prose code:after{content:""}
-.max-w-none {
-  max-width: none;
-}
