@@ -50,7 +50,6 @@ const sortedPosts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.
   <Navigation />
 
   <main class={page.class}>
-    <!-- Hero Section -->
     <section class={hero.class} id="about">
       <div class={heroGrid.class}>
         <div>
@@ -62,7 +61,6 @@ const sortedPosts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.
           </div>
         </div>
 
-        <!-- Photo -->
         <div class={photoWrap.class}>
           <div class={photoFrame.class}>
             <img
@@ -77,7 +75,6 @@ const sortedPosts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.
       </div>
     </section>
 
-    <!-- Info Section -->
     <section class={info.class}>
       <div class={infoGrid.class}>
         <div>
@@ -139,7 +136,6 @@ const sortedPosts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.
       </div>
     </section>
 
-    <!-- Blog Posts Section -->
     <section class={posts.class} id="posts">
       <h2 class={postsTitle.class}>{t('blog.recentPosts')}</h2>
       <div class={postsGrid.class}>

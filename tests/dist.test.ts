@@ -283,6 +283,13 @@ describe('robots.txt', () => {
   })
 })
 
+describe('unregistered leftovers', () => {
+  test('does not ship the unused service worker or PWA manifest', () => {
+    expect(existsSync(join(DIST, 'sw.js'))).toBe(false)
+    expect(existsSync(join(DIST, 'manifest.json'))).toBe(false)
+  })
+})
+
 describe('404 page', () => {
   test('points agents at recovery links', () => {
     const html = read('404.html')

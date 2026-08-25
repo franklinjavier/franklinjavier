@@ -127,7 +127,7 @@ export function pruneCss(css: string, need: PageCssNeed): string {
   for (const rule of splitCssRules(css)) {
     if (rule.startsWith('@keyframes')) {
       const name = rule.slice('@keyframes'.length).trim().split(/[\s{]/)[0]
-      if (name === 'page-reveal' || name === 'reveal-dark' || name === 'reveal-light') {
+      if (name === 'page-reveal') {
         if (need.hasViewTransition) kept.push(rule)
       } else if (name === 'glitch') {
         if (need.classes.has('glitch')) kept.push(rule)

@@ -49,13 +49,11 @@ const summary = `${countLabel} - ${description}`
 
   <main class={page.class}>
     <div class={container.class}>
-      <!-- Header -->
       <header class={header.class}>
         <h1 class={heading.class}>{t('blog.title')}</h1>
         <p class={lead.class}>{summary}</p>
       </header>
 
-      <!-- Posts list -->
       <div class={list.class}>
         {
           sortedPosts.map((post) => {
@@ -69,9 +67,7 @@ const summary = `${countLabel} - ${description}`
                   <a href={postUrl} class={block.class}>
                     <time class={time.class}>{formattedDate}</time>
                     <h2 class={articleTitle.class}>{post.data.title}</h2>
-                    {post.data.description && (
-                      <p class={excerpt.class}>{post.data.description}</p>
-                    )}
+                    {post.data.description && <p class={excerpt.class}>{post.data.description}</p>}
                   </a>
                   {tags.length > 0 && (
                     <div class={tagRow.class}>

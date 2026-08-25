@@ -55,7 +55,6 @@ const countLabel = `${sortedPosts.length} ${
 
   <main class={page.class}>
     <div class={container.class}>
-      <!-- Header -->
       <header class={header.class}>
         <a href={lang === 'en' ? '/blog/' : '/pt-br/blog/'} class={back.class}>
           ← {t('blog.backToBlog')}
@@ -67,7 +66,6 @@ const countLabel = `${sortedPosts.length} ${
         <p class={lead.class}>{countLabel}</p>
       </header>
 
-      <!-- Posts list -->
       {
         sortedPosts.length === 0 ? (
           <div class={empty.class}>
@@ -85,9 +83,7 @@ const countLabel = `${sortedPosts.length} ${
                   <a href={postUrl} class={block.class}>
                     <time class={time.class}>{formattedDate}</time>
                     <h2 class={articleTitle.class}>{post.data.title}</h2>
-                    {post.data.description && (
-                      <p class={excerpt.class}>{post.data.description}</p>
-                    )}
+                    {post.data.description && <p class={excerpt.class}>{post.data.description}</p>}
                     {tags.length > 0 && (
                       <div class={tagRow.class}>
                         {tags.map((item) => (
