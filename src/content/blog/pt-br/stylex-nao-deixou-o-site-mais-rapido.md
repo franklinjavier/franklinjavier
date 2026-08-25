@@ -16,7 +16,7 @@ O que eu acabei publicando foi outra coisa: o `@tailwindcss/typography` que a ho
 
 Aiden Bai publicou no X uma troca Tailwind → StyleX no site dele. FCP 20% mais rápido, LCP 7%, CSS pela metade, JS 5% menor, INP 24ms iguais. Eu quis o mesmo tipo de experimento, no meu site, medido várias vezes antes e depois.
 
-![Print do Aiden Bai no X: Tailwind para StyleX, FCP 20% mais rápido, LCP 7%, CSS pela metade](/img/blog/aiden-bai-stylex.png)
+[O print do Aiden no X](https://x.com/aidenybai/status/2092021888642085254)
 
 O print dele é a referência. Não é o resultado.
 
