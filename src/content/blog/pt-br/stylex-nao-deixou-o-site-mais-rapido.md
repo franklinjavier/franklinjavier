@@ -1,7 +1,7 @@
 ---
 title: Troquei Tailwind por StyleX. O site não ficou mais rápido
 date: 2026-08-25
-description: Rodei no franklinjavier.com o mesmo tipo de troca que o Aiden Bai publicou. Com o visual igual, o LCP não se moveu. O CSS que caiu de verdade era typography que a home nunca pedia, e isso também roda no Tailwind.
+description: Rodei no franklinjavier.com o mesmo tipo de troca que o Aiden Bai publicou. Com o visual igual, o LCP não se moveu. O CSS que caiu de verdade era typography que a home nunca pedia, e isso também acontecia no Tailwind.
 author: Franklin Javier
 tags: performance, css, stylex, tailwind, frontend
 lang: pt-br
@@ -16,7 +16,9 @@ O que eu acabei publicando foi outra coisa: o `@tailwindcss/typography` que a ho
 
 Aiden Bai publicou no X uma troca Tailwind → StyleX no site dele. FCP 20% mais rápido, LCP 7%, CSS pela metade, JS 5% menor, INP 24ms iguais. Eu quis o mesmo tipo de experimento, no meu site, medido várias vezes antes e depois.
 
-O print dele é o quadro. Não é o resultado.
+![Print do Aiden Bai no X: Tailwind para StyleX, FCP 20% mais rápido, LCP 7%, CSS pela metade](/img/blog/aiden-bai-stylex.png)
+
+O print dele é a referência. Não é o resultado.
 
 ## Antes de trocar
 
@@ -24,7 +26,7 @@ PageSpeed mobile, cinco vezes, produção com Tailwind: FCP 0,8s, LCP 1,1s, nota
 
 CSS da home: `BaseLayout.B8I3ZO9w.css`, 40325 bytes, 6932–6961 no gzip-6. Bundle `_astro` de JS: zero. O arquivo começa com `/*! tailwindcss v4.3.3`.
 
-Lighthouse CLI 12.8.2 na mesma máquina, sem CDN, `master` contra o branch do StyleX: FCP 1051ms contra 1052ms, LCP 1351ms contra 1352ms. Empate. Neutro, nesse caso, é reverter.
+Lighthouse CLI 12.8.2 na mesma máquina, sem CDN, `master` contra [`d044686`](https://github.com/franklinjavier/franklinjavier/commit/d044686f53996cfab8fa1a1f763dae12e8b1ce8e): FCP 1051ms contra 1052ms, LCP 1351ms contra 1352ms. Empate. Neutro, nesse caso, é reverter.
 
 ## Laranja com laranja
 
@@ -32,13 +34,13 @@ A primeira preview do StyleX não era o mesmo site. Medir ali seria trapacear. A
 
 No caminho apareceu um `src/styles/app.ts` de 837 linhas, um `stylex.create` só, uns 80 estilos reexportados. Tailwind sem Tailwind. Isso não fica.
 
-O jeito que o [doc do StyleX](https://stylexjs.com/docs/learn/thinking-in-stylex) pede é outro. Colocalizar `*.stylex.ts` em cada view. Token só em `tokens.stylex.ts`. `create` local vira classe estática. Um arquivo CSS pequeno na frente. Carregar StyleX preguiçoso recalcula a página inteira.
+O jeito que o [doc do StyleX](https://stylexjs.com/docs/learn/thinking-in-stylex) pede é outro. Colocalizar `*.stylex.ts` em cada view. Token só em `tokens.stylex.ts`. `create` local vira classe estática. Um arquivo CSS pequeno no começo. Carregar o CSS do StyleX sob demanda recalcula a página inteira.
 
 ## O que o StyleX moveu
 
-Hash `zub4vcjma`, visual igual ao do ar. PageSpeed de novo, cinco vezes no mobile: FCP 0,8s em todas. LCP 1,1s em três, 0,8s em duas. Desktop 0,3 / 0,3. Nota 100. JS zero.
+Commit [`d044686`](https://github.com/franklinjavier/franklinjavier/commit/d044686f53996cfab8fa1a1f763dae12e8b1ce8e), preview `zub4vcjma`, visual igual ao do ar. PageSpeed de novo, cinco vezes no mobile: FCP 0,8s em todas. LCP 1,1s em três, 0,8s em duas. Desktop 0,3 / 0,3. Nota 100. JS zero.
 
-| | Tailwind no ar | StyleX `zub4vcjma` |
+| | Tailwind no ar | StyleX [`d044686`](https://github.com/franklinjavier/franklinjavier/commit/d044686f53996cfab8fa1a1f763dae12e8b1ce8e) `zub4vcjma` |
 |---|---|---|
 | FCP mobile (PageSpeed ×5) | 0,8s | 0,8s |
 | LCP mobile (PageSpeed ×5) | 1,1s | 1,1s em 3, 0,8s em 2 |
