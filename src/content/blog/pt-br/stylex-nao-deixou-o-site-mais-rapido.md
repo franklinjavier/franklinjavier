@@ -1,168 +1,179 @@
 ---
-title: Experimento de performance com StyleX da Meta
+title: Troquei Tailwind por StyleX. O site não ficou mais rápido.
 date: 2026-08-25
-description: Experimentei trocar o Tailwind por StyleX e não melhorou nada em performance.
+description: Migrei um site com nota 100 no PageSpeed para StyleX, medi o resultado e descobri que o ganho real estava em outro lugar.
 author: Franklin Javier
 tags: performance, css, stylex, tailwind, frontend
 lang: pt-br
 translationKey: stylex-personal-site
 ---
 
-Troquei o Tailwind do [franklinjavier.com](https://franklinjavier.com) por StyleX. O site já era 100 no PageSpeed, JavaScript de bundle zero, fonte do sistema, uma foto. O LCP não saiu do lugar. Com o visual igual ao do ar, o CSS caiu 8% cru e 6% no gzip. Reverti a troca.
+Migrei o `franklinjavier.com` de Tailwind CSS para StyleX com uma pergunta simples: **a troca deixaria um site já otimizado ainda mais rápido?**
 
-O que eu acabei publicando foi outra coisa: o `@tailwindcss/typography` que a home nunca pedia, um preflight mais magro, três scripts virando um. Tudo isso no Tailwind. O StyleX ficou no laboratório.
+A resposta curta é não.
 
-## O print do Aiden
+O site já marcava 100 no PageSpeed, não enviava JavaScript no bundle do Astro, usava a fonte do sistema e tinha apenas uma imagem relevante na página inicial. Depois de reproduzir o mesmo visual com StyleX, o FCP permaneceu em 0,8 s e o LCP não apresentou uma melhora consistente. O CSS ficou menor — cerca de 8% sem compressão e 6% em gzip —, mas isso não se traduziu em uma diferença perceptível de carregamento.
 
-Aiden Bai publicou no X uma troca Tailwind → StyleX no site dele. FCP 20% mais rápido, LCP 7%, CSS pela metade, JS 5% menor, INP 24ms iguais. Eu quis o mesmo tipo de experimento, no meu site, medido várias vezes antes e depois.
+Por isso, reverti a migração.
 
-[O print do Aiden no X](https://x.com/aidenybai/status/2092021888642085254)
+O experimento, porém, revelou otimizações que não dependiam do StyleX: o `@tailwindcss/typography` era carregado em páginas que não o utilizavam, o preflight podia ser menor e três scripts podiam virar um. Essas mudanças foram aplicadas mantendo Tailwind.
 
-O print dele é a referência. Não é o resultado.
+## O que motivou o teste
 
-## Antes de trocar
+[Aiden Bai publicou no X](https://x.com/aidenybai/status/2092021888642085254) os resultados de uma migração de Tailwind para StyleX no próprio site. No experimento dele, o FCP melhorou 20%, o LCP 7%, o CSS caiu pela metade e o JavaScript ficou 5% menor. O INP permaneceu em 24 ms.
 
-PageSpeed mobile, cinco vezes, produção com Tailwind: FCP 0,8s, LCP 1,1s, nota 100. Desktop uma vez: 0,3s / 0,3s. Não tem INP de campo no CrUX. Então não cito INP meu.
+Era um resultado interessante, mas servia apenas como ponto de partida. Sites diferentes têm conteúdos, pipelines e gargalos diferentes. O print do Aiden era a referência do experimento, não uma previsão para o meu site.
 
-CSS da home: `BaseLayout.B8I3ZO9w.css`, 40325 bytes, 6932–6961 no gzip-6. Bundle `_astro` de JS: zero. O arquivo começa com `/*! tailwindcss v4.3.3`.
+Eu queria repetir o processo em um ambiente que conheço bem: medir o estado atual várias vezes, migrar, garantir equivalência visual e medir novamente.
 
-Lighthouse CLI 12.8.2 na mesma máquina, sem CDN, `master` contra [`d044686`](https://github.com/franklinjavier/franklinjavier/commit/d044686f53996cfab8fa1a1f763dae12e8b1ce8e): FCP 1051ms contra 1052ms, LCP 1351ms contra 1352ms. Empate. Neutro, nesse caso, é reverter.
+## O ponto de partida
 
-## Laranja com laranja
+Antes de alterar qualquer código, rodei o PageSpeed cinco vezes em produção, no perfil mobile. O resultado foi estável:
 
-A primeira preview do StyleX não era o mesmo site. Medir ali seria trapacear. Antes de qualquer número de depois, o visual tinha que estar pixel-perfect. Laranja com laranja.
+| Métrica | Resultado |
+| --- | ---: |
+| FCP mobile | 0,8 s |
+| LCP mobile | 1,1 s |
+| FCP desktop | 0,3 s |
+| LCP desktop | 0,3 s |
+| Nota do PageSpeed | 100 |
+| JavaScript no bundle `_astro` | 0 |
 
-No caminho apareceu um `src/styles/app.ts` de 837 linhas, um `stylex.create` só, uns 80 estilos reexportados. Tailwind sem Tailwind. Isso não fica.
+O site ainda não possui dados de INP no CrUX. Portanto, não faria sentido atribuir ao projeto um número de INP baseado apenas em laboratório.
 
-O jeito que o [doc do StyleX](https://stylexjs.com/docs/learn/thinking-in-stylex) pede é outro. Colocalizar `*.stylex.ts` em cada view. Token só em `tokens.stylex.ts`. `create` local vira classe estática. Um arquivo CSS pequeno no começo. Carregar o CSS do StyleX sob demanda recalcula a página inteira.
+O CSS da página inicial era o arquivo `BaseLayout.B8I3ZO9w.css`, com 40.325 bytes sem compressão e entre 6.932 e 6.961 bytes usando gzip nível 6. O cabeçalho do arquivo confirmava o Tailwind CSS 4.3.3.
 
-## O que o StyleX moveu
+Também comparei `master` com o commit [`d044686`](https://github.com/franklinjavier/franklinjavier/commit/d044686f53996cfab8fa1a1f763dae12e8b1ce8e) usando Lighthouse CLI 12.8.2, na mesma máquina e sem CDN:
 
-Commit [`d044686`](https://github.com/franklinjavier/franklinjavier/commit/d044686f53996cfab8fa1a1f763dae12e8b1ce8e), preview `zub4vcjma`, visual igual ao do ar. PageSpeed de novo, cinco vezes no mobile: FCP 0,8s em todas. LCP 1,1s em três, 0,8s em duas. Desktop 0,3 / 0,3. Nota 100. JS zero.
+| Versão | FCP | LCP |
+| --- | ---: | ---: |
+| Tailwind | 1.051 ms | 1.351 ms |
+| StyleX | 1.052 ms | 1.352 ms |
 
-<div class="overflow-x-auto">
-<table>
-<thead>
-<tr>
-<th></th>
-<th>Tailwind no ar</th>
-<th>StyleX <a href="https://github.com/franklinjavier/franklinjavier/commit/d044686f53996cfab8fa1a1f763dae12e8b1ce8e"><code>d044686</code></a> <code>zub4vcjma</code></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<th scope="row">FCP mobile (PageSpeed ×5)</th>
-<td>0,8s</td>
-<td>0,8s</td>
-</tr>
-<tr>
-<th scope="row">LCP mobile (PageSpeed ×5)</th>
-<td>1,1s</td>
-<td>1,1s em 3, 0,8s em 2</td>
-</tr>
-<tr>
-<th scope="row">FCP / LCP desktop</th>
-<td>0,3 / 0,3</td>
-<td>0,3 / 0,3</td>
-</tr>
-<tr>
-<th scope="row">Nota</th>
-<td>100</td>
-<td>100</td>
-</tr>
-<tr>
-<th scope="row">CSS cru</th>
-<td>40325</td>
-<td>36972</td>
-</tr>
-<tr>
-<th scope="row">CSS gzip-6</th>
-<td>6932–6961</td>
-<td>6499–6519</td>
-</tr>
-<tr>
-<th scope="row">HTML cru / gzip-6</th>
-<td>14829 / 4289</td>
-<td>14448 / 4523</td>
-</tr>
-<tr>
-<th scope="row">JS <code>_astro</code></th>
-<td>0</td>
-<td>0</td>
-</tr>
-</tbody>
-</table>
-</div>
+Na prática, um empate.
 
-Pixel-perfect comeu o ganho. Preflight, typography, line-height do v4, grid exclusivo em md e lg. Tudo isso voltou, e o CSS foi com ele.
+## A primeira migração não valia como comparação
 
-## O resto do CSS não era StyleX
+A primeira preview com StyleX parecia promissora, mas ainda não reproduzia exatamente o site em produção. Comparar os números naquele ponto seria creditar ao StyleX ganhos que poderiam ter vindo de diferenças no layout, na tipografia ou nos estilos removidos durante a implementação.
 
-A home, o índice do blog e o speaking nunca usam `.prose`. O markdown ao vivo é `p`, `h2`, `h3`, `ul`, `ol`, `a`, `strong`, `code`, `pre`, `hr`. Mesmo assim o dump do `@tailwindcss/typography` ia em toda página.
+Antes de medir, a página precisava ser pixel-perfect. Laranja com laranja.
 
-Para não creditar isso ao StyleX, subi o mesmo corte no Tailwind. Três hosts, mesmos bytes, gzip-6 com `mtime=0`.
+A primeira tentativa também concentrou praticamente tudo em um `src/styles/app.ts` com 837 linhas: um único `stylex.create` e cerca de 80 estilos reexportados. Era Tailwind escrito com outra sintaxe, sem aproveitar o modelo de composição do StyleX.
+
+Reestruturei a implementação seguindo a organização recomendada pela [documentação do StyleX](https://stylexjs.com/docs/learn/thinking-in-stylex):
+
+- estilos `*.stylex.ts` colocalizados com cada view;
+- tokens compartilhados apenas em `tokens.stylex.ts`;
+- chamadas locais a `stylex.create`, convertidas em classes estáticas;
+- CSS inicial pequeno, sem carregar estilos de forma tardia e provocar uma nova recalculação da página.
+
+Só depois dessa correção e da equivalência visual voltei a medir.
+
+## O resultado com o mesmo visual
+
+O commit [`d044686`](https://github.com/franklinjavier/franklinjavier/commit/d044686f53996cfab8fa1a1f763dae12e8b1ce8e), publicado na preview `zub4vcjma`, reproduzia o visual da versão em produção. Rodei novamente o PageSpeed cinco vezes no mobile.
 
 <div class="overflow-x-auto">
 <table>
 <thead>
 <tr>
-<th></th>
-<th>A Tailwind, sem corte</th>
-<th>B StyleX + cortes (não publicado)</th>
-<th>C Tailwind + cortes (no ar)</th>
+<th>Métrica</th>
+<th>Tailwind em produção</th>
+<th>StyleX <a href="https://github.com/franklinjavier/franklinjavier/commit/d044686f53996cfab8fa1a1f763dae12e8b1ce8e"><code>d044686</code></a></th>
 </tr>
 </thead>
 <tbody>
-<tr>
-<th scope="row">CSS da home</th>
-<td><code>B8I3ZO9w</code> 40325 / 6932</td>
-<td><code>0JEitMbP</code> 9475 / 2764</td>
-<td><code>ClV8krB3</code> 15304 / 3519</td>
-</tr>
-<tr>
-<th scope="row">Home pede <code>prose.css</code></th>
-<td>sim</td>
-<td>não</td>
-<td>não</td>
-</tr>
-<tr>
-<th scope="row">CSS do post <code>/blog/avoid-prop-drilling-react/</code></th>
-<td>40325 / 6932</td>
-<td>12982 / 3693 (prose 3507/929 + BaseLayout)</td>
-<td>18811 / 4448 (mesmo prose + BaseLayout)</td>
-</tr>
-<tr>
-<th scope="row">HTML da home</th>
-<td>14829 / 4289</td>
-<td>13445 / 4357</td>
-<td>13909 / 4160</td>
-</tr>
-<tr>
-<th scope="row">HTML do post</th>
-<td>14874 / 4429</td>
-<td>13491 / 4384</td>
-<td>13675 / 4196</td>
-</tr>
-<tr>
-<th scope="row">JS <code>_astro</code></th>
-<td>0</td>
-<td>0</td>
-<td>0</td>
-</tr>
+<tr><th scope="row">FCP mobile, cinco execuções</th><td>0,8 s</td><td>0,8 s</td></tr>
+<tr><th scope="row">LCP mobile, cinco execuções</th><td>1,1 s</td><td>1,1 s em três; 0,8 s em duas</td></tr>
+<tr><th scope="row">FCP/LCP desktop</th><td>0,3/0,3 s</td><td>0,3/0,3 s</td></tr>
+<tr><th scope="row">Nota</th><td>100</td><td>100</td></tr>
+<tr><th scope="row">CSS sem compressão</th><td>40.325 B</td><td>36.972 B</td></tr>
+<tr><th scope="row">CSS em gzip-6</th><td>6.932–6.961 B</td><td>6.499–6.519 B</td></tr>
+<tr><th scope="row">HTML sem compressão</th><td>14.829 B</td><td>14.448 B</td></tr>
+<tr><th scope="row">HTML em gzip-6</th><td>4.289 B</td><td>4.523 B</td></tr>
+<tr><th scope="row">JavaScript no bundle <code>_astro</code></th><td>0</td><td>0</td></tr>
 </tbody>
 </table>
 </div>
 
-A para C é o corte que sobrou, sem StyleX. C para B é StyleX contra Tailwind com o corte igual: CSS menor, HTML gzip pior.
+O StyleX reduziu o CSS, mas não alterou o FCP. O LCP apresentou duas medições melhores, porém não de forma consistente o suficiente para atribuir o resultado à migração. O Lighthouse local também apontava empate.
 
-O que entrou no ar foi C. O [PR #45](https://github.com/franklinjavier/franklinjavier/pull/45), commit [`0f4917c`](https://github.com/franklinjavier/franklinjavier/commit/0f4917ce0c647ab17ec200cb8657ed932e418472). Hoje o franklinjavier.com serve `BaseLayout.ClV8krB3.css` 15304/3519. A home não pede `prose.css`. O post carrega `prose.D-rI_UlP.css` 3507/929 mais o BaseLayout. O dump de 40325 não é mais produção.
+Ao mesmo tempo, embora o HTML sem compressão fosse menor, sua versão comprimida ficou maior.
 
-O [PR do StyleX](https://github.com/franklinjavier/franklinjavier/pull/43) fechou sem merge.
+Para um site que já entregava nota 100, a redução de alguns bytes não justificava trocar todo o sistema de estilos sem um ganho mensurável para o usuário.
 
-Não rodei PageSpeed de novo depois do corte. Não invento LCP, FCP nem INP para o que está no ar agora.
+## O ganho real não vinha do StyleX
 
-## Classe que não se repete comprime pior
+Durante a migração, encontrei um problema independente da ferramenta escolhida: a página inicial, o índice do blog e a página de palestras carregavam estilos do `@tailwindcss/typography`, embora nenhuma delas utilizasse `.prose`.
 
-HTML da home no C: 13909 / 4160. No StyleX com os mesmos cortes: 13445 / 4357. Menos HTML cru, gzip pior. O nome de classe do StyleX é único. O do Tailwind se repete.
+O conteúdo Markdown renderizado nos artigos usa elementos como `p`, `h2`, `h3`, `ul`, `ol`, `a`, `strong`, `code`, `pre` e `hr`. A página inicial não precisava pagar por esses estilos.
 
-O doc do StyleX diz que o CSS estabiliza quando o site cresce. Um site de uma foto não chega lá. O que esse site tinha de sobra era prose que a home não pedia. Isso eu cortei. A troca de sistema, não.
+Para não atribuir ao StyleX um ganho que vinha da remoção de CSS desnecessário, reproduzi o mesmo corte na versão com Tailwind. Passei então a comparar três estados:
+
+- **A:** Tailwind original, sem o corte;
+- **B:** StyleX com os cortes, não publicado;
+- **C:** Tailwind com os mesmos cortes, publicado.
+
+As medições foram feitas em três hosts, usando os mesmos arquivos e gzip nível 6 com `mtime=0`.
+
+<div class="overflow-x-auto">
+<table>
+<thead>
+<tr>
+<th>Recurso</th>
+<th>A: Tailwind original</th>
+<th>B: StyleX + cortes</th>
+<th>C: Tailwind + cortes</th>
+</tr>
+</thead>
+<tbody>
+<tr><th scope="row">CSS da home</th><td>40.325 / 6.932 B</td><td>9.475 / 2.764 B</td><td>15.304 / 3.519 B</td></tr>
+<tr><th scope="row">Home carrega <code>prose.css</code></th><td>Sim</td><td>Não</td><td>Não</td></tr>
+<tr><th scope="row">CSS do artigo</th><td>40.325 / 6.932 B</td><td>12.982 / 3.693 B</td><td>18.811 / 4.448 B</td></tr>
+<tr><th scope="row">HTML da home</th><td>14.829 / 4.289 B</td><td>13.445 / 4.357 B</td><td>13.909 / 4.160 B</td></tr>
+<tr><th scope="row">HTML do artigo</th><td>14.874 / 4.429 B</td><td>13.491 / 4.384 B</td><td>13.675 / 4.196 B</td></tr>
+<tr><th scope="row">JavaScript no bundle <code>_astro</code></th><td>0</td><td>0</td><td>0</td></tr>
+</tbody>
+</table>
+</div>
+
+Cada célula de tamanho mostra bytes sem compressão e bytes em gzip-6.
+
+A comparação de **A para C** mostra o ganho obtido apenas com a limpeza do Tailwind. Já a comparação de **C para B** isola melhor a diferença entre StyleX e Tailwind depois que ambos recebem os mesmos cortes.
+
+Nesse cenário, o StyleX produz menos CSS. Entretanto, o HTML comprimido da página inicial fica pior: 4.357 bytes contra 4.160 bytes no Tailwind.
+
+## Menos HTML cru não significa menos HTML transferido
+
+Na versão C, a página inicial gerava 13.909 bytes de HTML, ou 4.160 bytes comprimidos. Com StyleX e os mesmos cortes, eram 13.445 bytes sem compressão, mas 4.357 bytes em gzip.
+
+Isso acontece porque as classes geradas pelo StyleX tendem a ser únicas, enquanto as classes utilitárias do Tailwind se repetem pelo documento. Repetição é exatamente o tipo de padrão que gzip comprime bem.
+
+Portanto, olhar apenas o tamanho bruto teria levado à conclusão errada: o HTML do StyleX era menor no arquivo original, mas maior na transferência.
+
+A documentação do StyleX argumenta que o CSS tende a se estabilizar conforme a aplicação cresce. É uma característica interessante para produtos grandes, com muitos componentes e combinações de estilo. Um site pessoal com uma foto e poucas páginas, porém, dificilmente chega ao ponto em que essa vantagem se torna relevante.
+
+## O que foi publicado
+
+A migração para StyleX permaneceu no laboratório. O [PR #43](https://github.com/franklinjavier/franklinjavier/pull/43) foi encerrado sem merge.
+
+O que entrou em produção foi a versão C, ainda com Tailwind, no [PR #45](https://github.com/franklinjavier/franklinjavier/pull/45) e commit [`0f4917c`](https://github.com/franklinjavier/franklinjavier/commit/0f4917ce0c647ab17ec200cb8657ed932e418472):
+
+- o CSS do `@tailwindcss/typography` passou a ser carregado apenas nos artigos;
+- o preflight foi reduzido;
+- três scripts foram consolidados em um;
+- o bundle `_astro` continuou sem JavaScript.
+
+Hoje, a página inicial serve `BaseLayout.ClV8krB3.css`, com 15.304 bytes sem compressão e 3.519 bytes em gzip. Ela não solicita mais `prose.css`. Os artigos carregam `prose.D-rI_UlP.css`, com 3.507 bytes sem compressão e 929 bytes em gzip, além do CSS base.
+
+Não rodei novamente o PageSpeed depois desse corte. Portanto, não atribuo novos valores de LCP, FCP ou INP à versão que está no ar. O que consigo afirmar é a redução dos recursos transferidos.
+
+## Conclusão
+
+O experimento não mostra que StyleX é lento, nem que Tailwind é sempre a melhor escolha. Mostra apenas que, **neste site e com este conteúdo**, a migração não produziu uma melhora de performance que justificasse a troca.
+
+O StyleX gerou menos CSS. Mas o site já tinha JavaScript zero, nota 100 e tempos baixos. Depois que o visual ficou realmente equivalente, o ganho de CSS diminuiu, o HTML comprimido piorou e as métricas de carregamento permaneceram essencialmente iguais.
+
+A parte mais valiosa da migração foi revelar desperdícios que existiam no projeto atual. Corrigi esses problemas sem trocar a ferramenta.
+
+Essa foi a principal conclusão do teste: quando o resultado é neutro, reverter também é uma decisão de performance — especialmente se a migração aumenta a complexidade sem melhorar a experiência do usuário.
