@@ -256,10 +256,17 @@ describe('payload cuts', () => {
     }
   })
 
-  test('does not emit Astro client JS', () => {
+  test('only emits Vercel Analytics client JS', () => {
     const html = read('index.html')
     expect(html).not.toMatch(/_astro\/[^"]+\.js/)
-    expect(html).not.toContain('type="module"')
+
+    const moduleScripts = [...html.matchAll(/<script type="module">(.*?)<\/script>/gs)].map(
+      (match) => match[1],
+    )
+
+    expect(moduleScripts).toHaveLength(1)
+    expect(moduleScripts[0]).toContain('vercel-analytics')
+    expect(moduleScripts[0]).toContain('@vercel/analytics')
   })
 })
 
