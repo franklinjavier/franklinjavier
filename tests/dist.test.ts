@@ -258,9 +258,9 @@ describe('payload cuts', () => {
 
   test('only emits Vercel Analytics client JS', () => {
     const html = read('index.html')
-    expect(html).not.toMatch(/_astro\\/[^"]+\\.js/)
+    expect(html).not.toMatch(/_astro\/[^"]+\.js/)
 
-    const moduleScripts = [...html.matchAll(/<script type="module">(.*?)<\\/script>/gs)].map(
+    const moduleScripts = [...html.matchAll(/<script type="module">(.*?)<\/script>/gs)].map(
       (match) => match[1],
     )
 
