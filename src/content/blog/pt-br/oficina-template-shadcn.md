@@ -1,5 +1,5 @@
 ---
-title: Oficina: um template de Grok Bot que o shadcn instala
+title: "Oficina: um template de Grok Bot que o shadcn instala"
 date: 2026-08-25
 description: Um item, orchestrator. O CLI do shadcn puxa do GitHub. Sem domínio próprio, sem instalador meu.
 author: Franklin Javier
