@@ -23,3 +23,5 @@ pnpm-debug.log*
 # Local research and scratch material (never publish)
 research/
 work/
+
+__pycache__/
