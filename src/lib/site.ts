@@ -108,6 +108,7 @@ export function blogPostingJsonLd(post: {
   url: string
   lang: string
   tags?: string[]
+  image?: string
 }) {
   return {
     '@context': 'https://schema.org',
@@ -119,6 +120,7 @@ export function blogPostingJsonLd(post: {
     url: absoluteUrl(post.url),
     mainEntityOfPage: absoluteUrl(post.url),
     ...(post.tags && post.tags.length > 0 ? { keywords: post.tags.join(', ') } : {}),
+    ...(post.image ? { image: absoluteUrl(post.image) } : {}),
     author: { '@id': `${SITE_URL}/#person` },
     publisher: { '@id': `${SITE_URL}/#person` },
   }

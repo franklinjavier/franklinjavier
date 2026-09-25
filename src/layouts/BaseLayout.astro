@@ -19,16 +19,26 @@ interface Props {
   jsonLd?: Record<string, unknown>
   /** Skip the site footer (standalone pages like the CV). */
   bare?: boolean
+  /** Social preview image (og:image, twitter:image); defaults to the site photo. */
+  image?: string
 }
 
-const { title, description, lang = 'en', type = 'website', jsonLd, bare = false } = Astro.props
+const {
+  title,
+  description,
+  lang = 'en',
+  type = 'website',
+  jsonLd,
+  bare = false,
+  image,
+} = Astro.props
 const htmlLang = lang === 'pt-br' ? 'pt-BR' : 'en'
 const siteTitle = SITE_TITLE
 const siteDescription = SITE_DESCRIPTION
 const pageTitle = title ? `${title} - ${siteTitle}` : `${siteTitle} - ${siteDescription}`
 const pageDescription = description || siteDescription
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site ?? 'https://franklinjavier.com').href
-const ogImage = absoluteUrl(SITE_IMAGE, Astro.site)
+const ogImage = absoluteUrl(image ?? SITE_IMAGE, Astro.site)
 const ogLocale = lang === 'pt-br' ? 'pt_BR' : 'en_US'
 ---
 
@@ -65,9 +75,7 @@ const ogLocale = lang === 'pt-br' ? 'pt_BR' : 'en_US'
       ;(function(){var r=document.documentElement,s=localStorage.getItem('color-theme');r.classList.toggle('dark',s==='dark'||(s===null&&matchMedia('(prefers-color-scheme: dark)').matches));function boot(){var t=document.getElementById('theme-toggle'),m=document.getElementById('theme-toggle-dark-icon'),u=document.getElementById('theme-toggle-light-icon'),l=document.getElementById('language-toggle');function sync(){if(!m||!u)return;var on=r.classList.contains('dark');m.classList.toggle('hidden',on);u.classList.toggle('hidden',!on)}function apply(on){r.classList.toggle('dark',on);localStorage.setItem('color-theme',on?'dark':'light');sync()}function tog(){var go=function(){apply(!r.classList.contains('dark'))};document.startViewTransition?document.startViewTransition(go):go()}sync();if(t)t.addEventListener('click',tog);document.addEventListener('keydown',function(e){if(e.metaKey||e.ctrlKey||e.altKey)return;var n=document.activeElement&&document.activeElement.tagName;if(n==='INPUT'||n==='TEXTAREA')return;if(e.key==='t'&&t)tog();if(e.key==='l'&&l)location.href=l.href})}document.readyState==='loading'?document.addEventListener('DOMContentLoaded',boot):boot()})()
     </script>
   </head>
-  <body
-    class="min-h-screen bg-white text-gray-900 antialiased transition-colors dark:bg-black dark:text-gray-100"
-  >
+  <body class="min-h-screen bg-white text-gray-900 antialiased transition-colors dark:bg-black dark:text-gray-100">
     <slot />
     {!bare && <Footer />}
     <Analytics />

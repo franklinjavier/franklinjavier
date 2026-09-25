@@ -12,6 +12,8 @@ const blog = defineCollection({
     draft: z.boolean().optional().default(false),
     lang: z.enum(['pt-br', 'en']).default('pt-br'),
     translationKey: z.string().optional(),
+    /** Social preview image; defaults to the first image in the post. */
+    image: z.string().optional(),
   }),
 })
 
