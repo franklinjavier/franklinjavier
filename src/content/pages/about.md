@@ -24,4 +24,4 @@ I publish work in the open, including projects focused on AI. Most recently [sto
 
 Older and still in production: [storefront](https://github.com/franklinjavier/storefront), the Node.js and Redis boilerplate we standardised on for e-commerce. It runs the Beleza na Web and Grupo Boticário storefronts, and holds over 1M requests per minute. My other repositories are at [github.com/franklinjavier](https://github.com/franklinjavier).
 
-I'm based in Lisbon, Portugal, and I write on this site in both English and Portuguese about front-end development, React, performance, and engineering culture. You can read my articles on the [blog](/blog/), see my [talks and podcast appearances](/speaking/), download my [CV](/cv.pdf), or [get in touch](/contact/).
+I'm based in Lisbon, Portugal, and I write on this site in both English and Portuguese about front-end development, React, performance, and engineering culture. You can read my articles on the [blog](/blog/), see my [talks and podcast appearances](/speaking/), download my [CV](/cv/), or [get in touch](/contact/).

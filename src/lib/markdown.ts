@@ -68,7 +68,7 @@ ${DEV_STACK.join(', ')}
 - ${t['contact.location']}
 - Email: ${SITE_EMAIL}
 - ${SOCIAL_LINKS.map((link) => `<${link}>`).join('\n- ')}
-- CV: ${absolute('/cv.pdf')}
+- ${t['nav.cv']}: ${absolute(`${prefix}/cv/`)}
 
 ## ${t['blog.recentPosts']}
 

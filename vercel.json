@@ -4,6 +4,11 @@
       "source": "/posts/:slug",
       "destination": "/pt-br/blog/:slug",
       "permanent": true
+    },
+    {
+      "source": "/cv.pdf",
+      "destination": "/cv/",
+      "permanent": true
     }
   ],
   "headers": [

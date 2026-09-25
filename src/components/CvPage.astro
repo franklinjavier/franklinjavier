@@ -1,0 +1,271 @@
+---
+/**
+ * CV page. Content lives in the `pages` collection (cv.md / pt-br/cv.md), so it
+ * also gets a markdown twin and a sitemap entry like the other static pages.
+ * The print stylesheet turns it into a clean two-page PDF (Cmd/Ctrl+P).
+ */
+import { getEntry, render } from 'astro:content'
+import BaseLayout from '../layouts/BaseLayout.astro'
+import Navigation from './Navigation.astro'
+import { useTranslations } from '../i18n/utils'
+import { SITE_EMAIL, SITE_TITLE, SITE_URL, SOCIAL_LINKS } from '../lib/site'
+
+interface Props {
+  lang: 'pt-br' | 'en'
+}
+
+const { lang } = Astro.props
+const t = useTranslations(lang)
+const entry = await getEntry('pages', lang === 'en' ? 'cv' : 'pt-br/cv')
+
+if (!entry) {
+  throw new Error(`Missing CV content for "${lang}"`)
+}
+
+const { Content } = await render(entry)
+const linkedin = SOCIAL_LINKS.find((link) => link.includes('linkedin.com'))
+const github = SOCIAL_LINKS.find((link) => link.includes('github.com'))
+const site = new URL(SITE_URL).host
+---
+
+<BaseLayout title={entry.data.title} description={entry.data.description} lang={lang}>
+  <Navigation />
+
+  <main class="pt-24 pb-20">
+    <article class="cv mx-auto max-w-3xl px-8">
+      <header class="cv-header">
+        <div>
+          <h1>{SITE_TITLE}</h1>
+          <p class="cv-role">{t('cv.role')}</p>
+          <p class="cv-contact">
+            <span>{t('contact.location')}</span>
+            <a href={`mailto:${SITE_EMAIL}`}>{SITE_EMAIL}</a>
+            {linkedin && <a href={linkedin}>LinkedIn</a>}
+            {github && <a href={github}>GitHub</a>}
+            <a href={SITE_URL}>{site}</a>
+          </p>
+        </div>
+        <button type="button" class="cv-print" onclick="window.print()">
+          <svg
+            viewBox="0 0 24 24"
+            width="16"
+            height="16"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M6 9V3h12v6M6 18H4a1 1 0 0 1-1-1v-6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v6a1 1 0 0 1-1 1h-2"
+            ></path>
+            <path d="M6 14h12v7H6z"></path>
+          </svg>
+          {t('cv.print')}
+        </button>
+      </header>
+
+      <div class="cv-body">
+        <Content />
+      </div>
+    </article>
+  </main>
+</BaseLayout>
+
+<style is:global>
+  .cv {
+    --cv-muted: oklch(55.1% 0.027 264.364);
+    --cv-rule: oklch(92.8% 0.006 264.531);
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+
+  .dark .cv {
+    --cv-muted: oklch(70.7% 0.022 261.325);
+    --cv-rule: oklch(37.3% 0.034 259.733);
+  }
+
+  .cv a {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 2px;
+  }
+
+  .cv-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--cv-rule);
+  }
+
+  .cv-header h1 {
+    font-size: 2.25rem;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  .cv-role {
+    margin-top: 0.25rem;
+    font-size: 1.125rem;
+    font-weight: 500;
+  }
+
+  .cv-contact {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1rem;
+    margin-top: 0.75rem;
+    font-size: 0.875rem;
+    color: var(--cv-muted);
+  }
+
+  .cv-print {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.875rem;
+    border: 1px solid var(--cv-rule);
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    color: var(--cv-muted);
+    cursor: pointer;
+    transition-property: color, border-color, scale;
+    transition-duration: 150ms;
+  }
+
+  .cv-print:active {
+    scale: 0.96;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .cv-print:hover {
+      color: inherit;
+      border-color: currentColor;
+    }
+  }
+
+  .cv-body h2 {
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .cv-body h3 {
+    margin-top: 1.25rem;
+    font-size: 1rem;
+    font-weight: 600;
+  }
+
+  .cv-body h3 + p {
+    margin-top: 0.125rem;
+    font-size: 0.875rem;
+    color: var(--cv-muted);
+  }
+
+  .cv-body p {
+    margin-top: 0.5rem;
+  }
+
+  .cv-body ul {
+    margin-top: 0.5rem;
+    padding-inline-start: 1.25rem;
+    list-style-type: disc;
+  }
+
+  .cv-body li {
+    margin-top: 0.25rem;
+    padding-inline-start: 0.25rem;
+  }
+
+  .cv-body li::marker {
+    color: var(--cv-muted);
+  }
+
+  .cv-body strong {
+    font-weight: 600;
+  }
+
+  @media print {
+    @page {
+      size: A4;
+      margin: 14mm 16mm;
+    }
+
+    nav,
+    footer,
+    .cv-print {
+      display: none !important;
+    }
+
+    html,
+    body {
+      background: #fff !important;
+      color: #000 !important;
+    }
+
+    main {
+      padding: 0 !important;
+    }
+
+    .cv {
+      --cv-muted: #555;
+      --cv-rule: #ccc;
+      max-width: none;
+      padding: 0;
+      font-size: 9.5pt;
+      line-height: 1.45;
+      color: #000;
+    }
+
+    .cv a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .cv-header {
+      padding-bottom: 0.6rem;
+    }
+
+    .cv-header h1 {
+      font-size: 20pt;
+    }
+
+    .cv-role {
+      font-size: 11pt;
+    }
+
+    .cv-contact {
+      margin-top: 0.3rem;
+      font-size: 9pt;
+    }
+
+    .cv-body h2 {
+      margin-top: 1rem;
+      margin-bottom: 0.3rem;
+      font-size: 9pt;
+      break-after: avoid;
+    }
+
+    .cv-body h3 {
+      margin-top: 0.6rem;
+      font-size: 10pt;
+      break-after: avoid;
+    }
+
+    .cv-body h3 + p {
+      font-size: 9pt;
+      break-after: avoid;
+    }
+
+    .cv-body li {
+      margin-top: 0.1rem;
+      break-inside: avoid;
+    }
+  }
+</style>
