@@ -17,9 +17,11 @@ interface Props {
   lang?: string
   type?: 'website' | 'article'
   jsonLd?: Record<string, unknown>
+  /** Skip the site footer (standalone pages like the CV). */
+  bare?: boolean
 }
 
-const { title, description, lang = 'en', type = 'website', jsonLd } = Astro.props
+const { title, description, lang = 'en', type = 'website', jsonLd, bare = false } = Astro.props
 const htmlLang = lang === 'pt-br' ? 'pt-BR' : 'en'
 const siteTitle = SITE_TITLE
 const siteDescription = SITE_DESCRIPTION
@@ -64,10 +66,10 @@ const ogLocale = lang === 'pt-br' ? 'pt_BR' : 'en_US'
     </script>
   </head>
   <body
-    class="min-h-screen bg-gray-50 text-gray-900 antialiased transition-colors dark:bg-black dark:text-gray-100"
+    class="min-h-screen bg-white text-gray-900 antialiased transition-colors dark:bg-black dark:text-gray-100"
   >
     <slot />
-    <Footer />
+    {!bare && <Footer />}
     <Analytics />
   </body>
 </html>
