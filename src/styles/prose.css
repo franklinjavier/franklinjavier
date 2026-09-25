@@ -557,6 +557,8 @@ html:has(.gallery[open]) {
   margin-top: 1.7777777777777777em;
   margin-bottom: 1.7777777777777777em;
   -webkit-overflow-scrolling: touch;
+  border: 1px solid var(--tw-prose-hr);
+  border-radius: 0.5rem;
   background:
     linear-gradient(to right, var(--tw-prose-page-bg) 30%, transparent) left / 2.5rem 100%
       no-repeat local,
@@ -590,6 +592,16 @@ html:has(.gallery[open]) {
 
 .prose :where(th) {
   font-weight: 600;
+}
+
+/* Inside the rounded table box: side padding, and no rule under the last row
+   (the box border closes it). */
+.prose :where(.overflow-x-auto th:first-child, .overflow-x-auto td:first-child) {
+  padding-inline-start: 1rem;
+}
+
+.prose :where(.overflow-x-auto tr:last-child td) {
+  border-bottom: 0;
 }
 
 .prose :where(th:not(:first-child)),
