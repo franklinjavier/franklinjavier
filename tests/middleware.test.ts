@@ -74,6 +74,32 @@ describe('edge middleware', () => {
     )
   })
 
+  test('serves <page>.md as the markdown twin, without an Accept header', async () => {
+    stubFetch(['/pt-br/blog/lisbon-ai-2026/index.md'])
+    const response = await middleware(
+      new Request('https://franklinjavier.com/pt-br/blog/lisbon-ai-2026.md'),
+    )
+    expect(response.headers.get('x-middleware-rewrite')).toBe(
+      'https://franklinjavier.com/pt-br/blog/lisbon-ai-2026/index.md',
+    )
+    expect(response.headers.get('content-type')).toBe('text/markdown; charset=utf-8')
+  })
+
+  test('serves a markdown 404 for <page>.md when the page does not exist', async () => {
+    stubFetch([])
+    const response = await middleware(new Request('https://franklinjavier.com/nope.md'))
+    expect(response.status).toBe(404)
+    expect(response.headers.get('content-type')).toBe('text/markdown; charset=utf-8')
+    expect(await response.text()).toMatch(/^# 404/)
+  })
+
+  test('passes real index.md twins straight through', async () => {
+    stubFetch([])
+    const response = await middleware(new Request('https://franklinjavier.com/blog/index.md'))
+    expect(response.headers.get('x-middleware-rewrite')).toBeNull()
+    expect(response.status).toBe(200)
+  })
+
   test('leaves legacy /posts/ URLs to the vercel.json redirect', async () => {
     stubFetch([])
     const response = await middleware(

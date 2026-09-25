@@ -46,6 +46,17 @@ export function markdownPathFor(pathname: string): string {
 }
 
 /**
+ * Maps a `<page>.md` URL (e.g. /blog/foo.md) to its page path (/blog/foo),
+ * so the markdown twin is also reachable by appending .md to a page URL.
+ * Returns null for the twins themselves (…/index.md) and any other path.
+ */
+export function markdownSuffixPage(pathname: string): string | null {
+  if (!pathname.endsWith('.md')) return null
+  if (pathname === '/index.md' || pathname.endsWith('/index.md')) return null
+  return pathname.slice(0, -'.md'.length)
+}
+
+/**
  * Markdown body served with a 404 status to clients that asked for
  * text/markdown on a path that has no markdown twin, so agents get
  * recovery links instead of the HTML 404 shell.
@@ -62,6 +73,6 @@ Where to look next:
 - [Sitemap](${SITE_URL}/sitemap.xml): all indexable URLs
 - [llms.txt](${SITE_URL}/llms.txt): guide for AI agents, with the full list of pages
 
-Every HTML page on this site has a markdown twin at \`<page-url>/index.md\`, also served when you request the page URL with \`Accept: text/markdown\`.
+Every HTML page on this site has a markdown twin at \`<page-url>/index.md\` (or \`<page-url>.md\`), also served when you request the page URL with \`Accept: text/markdown\`.
 `
 }

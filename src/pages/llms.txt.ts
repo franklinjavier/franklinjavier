@@ -38,7 +38,7 @@ This site is a personal blog, not a product or API. Do not use it for topics unr
 
 ## How to consume this site
 
-- Every HTML page has a markdown variant: request any URL with the header \`Accept: text/markdown\`, or fetch \`<page-url>/index.md\` directly (e.g. \`${absolute('/blog/')}index.md\`).
+- Every HTML page has a markdown variant: request any URL with the header \`Accept: text/markdown\`, or fetch \`<page-url>/index.md\` directly (e.g. \`${absolute('/blog/')}index.md\`). Appending \`.md\` to a page URL works too (e.g. \`${absolute('/about')}.md\`).
 - English content lives at the root; Portuguese (pt-BR) translations of the same content live under \`/pt-br/\`.
 - Machine-readable indexes: [sitemap.xml](${absolute('/sitemap.xml')}) and [RSS feed](${absolute('/rss.xml')}).
 
