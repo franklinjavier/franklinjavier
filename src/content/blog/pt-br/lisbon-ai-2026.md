@@ -16,7 +16,7 @@ draft: true
 
 Nos dias 23 e 24 de setembro fui ao [Lisbon AI](https://lisbonai.org/), no Centro Champalimaud, em Belém. É a segunda edição de uma conferência feita para quem constrói com IA. O primeiro dia foi de modelos, agentes e evals. O segundo, de IA aplicada e segurança.
 
-Assisti às palestras com o Granola gravando. Saí com 32 notas, cerca de 80 mil palavras de transcrição automática e 126 arquivos entre fotos e vídeos. Este post é a versão editada disso: primeiro as ideias que apareceram em várias palestras, depois cada palestra em detalhe, na ordem em que aconteceram, com os exemplos, as demos e as perguntas do público. É longo de propósito. Use o índice para ir direto às que interessam.
+Este post é baseado nas minhas anotações das 32 palestras e nas fotos e vídeos que fiz, com nomes conferidos na [página de palestrantes](https://lisbonai.org/speakers/). Primeiro vêm as ideias que apareceram em várias palestras, depois cada palestra em detalhe, na ordem em que aconteceram, com os exemplos, as demos e as perguntas do público. É longo de propósito. Use o índice para ir direto às que interessam.
 
 Pouca gente discutiu qual modelo é melhor. Mesmo nas palestras sobre modelos, a conversa ia parar em onde rodar, como medir e o que deixar o agente fazer.
 
@@ -356,7 +356,7 @@ Nas perguntas:
 
 ### Peter Kirkham, PostHog
 
-A gravação da palestra de Peter começa no meio, quando ele já tinha colocado a pergunta: quanto do trabalho de olhar os dados, achar o problema, corrigir e publicar dá para automatizar? Para ele, quase tudo, já que o PostHog já tem os dados. O PostHog Desktop é onde testam isso, com uma interface nova, sem mexer nos clientes atuais.
+Minhas notas da palestra de Peter começam no meio, quando ele já tinha colocado a pergunta: quanto do trabalho de olhar os dados, achar o problema, corrigir e publicar dá para automatizar? Para ele, quase tudo, já que o PostHog já tem os dados. O PostHog Desktop é onde testam isso, com uma interface nova, sem mexer nos clientes atuais.
 
 O Desktop é um editor de produto e um orquestrador de agentes ligado a todos os dados do PostHog. As peças:
 
@@ -564,9 +564,9 @@ Nas perguntas:
 
 ### Cloudflare
 
-O segundo dia abriu com a Cloudflare de novo, numa apresentação de patrocinador feita a dois: o Matt Carey, do dia anterior, e um colega, cujo nome não ficou na gravação. A tese foi que escrever código deixou de ser a parte difícil, e que a plataforma precisa se reorganizar em torno do que vem depois.
+O segundo dia abriu com a Cloudflare de novo, numa apresentação de patrocinador feita a dois: o Matt Carey, do dia anterior, e um colega, cujo nome não ficou nas minhas notas. A tese foi que escrever código deixou de ser a parte difícil, e que a plataforma precisa se reorganizar em torno do que vem depois.
 
-A gravação começa com a aposta de origem. Serverless tradicional empacota o seu código com um runtime inteiro num container, o que traz cold start lento e custo alto. Os Workers rodam em isolates V8: só o seu código vai junto de um processo de runtime que já está rodando, e é publicado em mais de 315 data centers. "Qualquer coisa que você queira pôr na internet roda num Worker", de cron a site de e-commerce e WordPress, e os Workers agora podem ser bem maiores do que antes. Depois vieram as peças para aplicações completas: Durable Objects, armazenamento de blobs, conexões com bancos de dados. ("Cinco minutos até a primeira vez que alguém disse IA", brincaram.)
+Minhas notas começam com a aposta de origem. Serverless tradicional empacota o seu código com um runtime inteiro num container, o que traz cold start lento e custo alto. Os Workers rodam em isolates V8: só o seu código vai junto de um processo de runtime que já está rodando, e é publicado em mais de 315 data centers. "Qualquer coisa que você queira pôr na internet roda num Worker", de cron a site de e-commerce e WordPress, e os Workers agora podem ser bem maiores do que antes. Depois vieram as peças para aplicações completas: Durable Objects, armazenamento de blobs, conexões com bancos de dados. ("Cinco minutos até a primeira vez que alguém disse IA", brincaram.)
 
 Eles citaram os quatro atos da Cloudflare, como descreve o CEO Matthew Prince: CDN e DNS, depois segurança corporativa, depois a plataforma de desenvolvimento, e agora a infraestrutura para agentes rodarem e conversarem na web. Com mais de 20% da internet passando pela Cloudflare, disseram, deve dar para fazer algo eficiente ali. Várias peças novas ainda aparecem marcadas como experimentais, e a explicação foi honesta: estão testando o que funciona. As que citaram:
 
@@ -934,7 +934,7 @@ Na pergunta, alguém sugeriu que modelos no aparelho, como os da Apple, resolver
 
 ### Boda Zhao, YLD
 
-A gravação da palestra do Boda começa no meio, já na primeira de três camadas de defesa contra ataques de supply chain em agentes de código: modelo, harness e sandbox. A regra dele no fim: pense em cobertura, não em perfeição.
+Minhas notas da palestra do Boda começam no meio, já na primeira de três camadas de defesa contra ataques de supply chain em agentes de código: modelo, harness e sandbox. A regra dele no fim: pense em cobertura, não em perfeição.
 
 **Modelo.** Sempre que possível, escolha um modelo mais esperto ou especializado em segurança. Modelos melhores alucinam menos e executam menos comandos perigosos por engano. Os especializados em segurança acham e corrigem vulnerabilidades sozinhos e podem até se dividir em time vermelho e time azul.
 
@@ -1001,7 +1001,7 @@ A demo:
 
 Essa nota de risco vira reputação dentro da rede. A descrição oficial da palestra dá um exemplo de produto: seguradoras de IA que precificam com base nessas cadeias de recibos, em vez de questionários.
 
-Havia um problema ainda sem solução: a pessoa aprova permissões descritas em linguagem, mas o que executa é código. Como garantir que as duas coisas batem? Para isso, ele criou um modelo de linguagem de decisão, rápido o bastante para autorizar em tempo real, que compara a permissão semântica que a pessoa viu com a permissão que o código realmente usa. Pelo que dá para entender na gravação, o nome homenageia Ricardo Reis, heterônimo de Fernando Pessoa, e Artur fechou com uma ideia do poeta: pôr um pouco de nós em tudo o que fazemos.
+Havia um problema ainda sem solução: a pessoa aprova permissões descritas em linguagem, mas o que executa é código. Como garantir que as duas coisas batem? Para isso, ele criou um modelo de linguagem de decisão, rápido o bastante para autorizar em tempo real, que compara a permissão semântica que a pessoa viu com a permissão que o código realmente usa. Pelo que anotei, o nome homenageia Ricardo Reis, heterônimo de Fernando Pessoa, e Artur fechou com uma ideia do poeta: pôr um pouco de nós em tudo o que fazemos.
 
 <hr class="divider">
 
@@ -1080,6 +1080,3 @@ O Lisbon AI aconteceu no Centro Champalimaud, na beira do Tejo, em Belém. Entre
 <button type="button" class="gallery-close" commandfor="lisbon-gallery" command="close" aria-label="Fechar galeria"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"></path></svg></button>
 </dialog>
 
-## Sobre as fontes
-
-Este relato vem das minhas notas no Granola, com transcrição automática, e das fotos e vídeos que fiz. Transcrição automática erra nome próprio, então conferi nomes, empresas e títulos na [página de palestrantes](https://lisbonai.org/speakers/) e nos slides fotografados. Quando uma informação veio da descrição oficial da palestra, e não da fala, o texto diz. Os números citados são dos palestrantes.

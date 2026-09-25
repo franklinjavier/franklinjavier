@@ -16,7 +16,7 @@ draft: true
 
 On September 23 and 24 I went to [Lisbon AI](https://lisbonai.org/), at the Champalimaud Centre in Belém. It is the second edition of a conference for people who build with AI. Day one covered models, agents and evals. Day two, applied AI and security.
 
-I sat through the talks with Granola recording. I came out with 32 notes, about 80,000 words of automatic transcript and 126 photo and video files. This post is the edited version of that: first the ideas that showed up across several talks, then each talk in detail, in the order they happened, with the examples, the demos and the audience questions. It is long on purpose. Use the index to jump to the ones you care about.
+This post is based on my notes from the 32 talks and the photos and videos I took, with names checked against the [speakers page](https://lisbonai.org/speakers/). First come the ideas that showed up across several talks, then each talk in detail, in the order they happened, with the examples, the demos and the audience questions. It is long on purpose. Use the index to jump to the ones you care about.
 
 Few people argued about which model is best. Even in the model talks, the conversation kept landing on where to run it, how to measure it and what to let the agent do.
 
@@ -356,7 +356,7 @@ In the Q&A:
 
 ### Peter Kirkham, PostHog
 
-The recording of Peter's talk starts in the middle, when he had already posed the question: how much of the work of looking at the data, finding the problem, fixing it and shipping can be automated? For him, almost all of it, since PostHog already has the data. PostHog Desktop is where they test that, with a new interface, without touching current customers.
+My notes on Peter's talk start in the middle, when he had already posed the question: how much of the work of looking at the data, finding the problem, fixing it and shipping can be automated? For him, almost all of it, since PostHog already has the data. PostHog Desktop is where they test that, with a new interface, without touching current customers.
 
 Desktop is a product editor and an agent orchestrator connected to all of PostHog's data. The pieces:
 
@@ -564,9 +564,9 @@ In the Q&A:
 
 ### Cloudflare
 
-Day two opened with Cloudflare again, in a sponsor talk given by two people: Matt Carey, from the day before, and a colleague whose name didn't make it into the recording. The thesis was that writing code is no longer the hard part, and the platform has to reorganize around what comes after.
+Day two opened with Cloudflare again, in a sponsor talk given by two people: Matt Carey, from the day before, and a colleague whose name didn't make it into my notes. The thesis was that writing code is no longer the hard part, and the platform has to reorganize around what comes after.
 
-The recording starts with the original bet. Traditional serverless packs your code with a whole runtime into a container, which means slow cold starts and high cost. Workers run in V8 isolates: only your code ships, alongside a runtime process that's already running, and it's deployed to more than 315 data centers. "Anything you want to put on the internet runs in a Worker," from a cron job to an e-commerce site or WordPress, and Workers can now be much bigger than before. Then came the pieces for full applications: Durable Objects, blob storage, database connections. ("Five minutes until the first time someone said AI," they joked.)
+My notes start with the original bet. Traditional serverless packs your code with a whole runtime into a container, which means slow cold starts and high cost. Workers run in V8 isolates: only your code ships, alongside a runtime process that's already running, and it's deployed to more than 315 data centers. "Anything you want to put on the internet runs in a Worker," from a cron job to an e-commerce site or WordPress, and Workers can now be much bigger than before. Then came the pieces for full applications: Durable Objects, blob storage, database connections. ("Five minutes until the first time someone said AI," they joked.)
 
 They cited Cloudflare's four acts, as CEO Matthew Prince describes them: CDN and DNS, then enterprise security, then the developer platform, and now infrastructure for agents to run and talk on the web. With more than 20% of the internet going through Cloudflare, they said, there should be a way to do something efficient there. Several new pieces are still labeled experimental, and the explanation was honest: they're testing what works. The ones they mentioned:
 
@@ -934,7 +934,7 @@ In the Q&A, someone suggested on-device models, like Apple's, would solve the pr
 
 ### Boda Zhao, YLD
 
-The recording of Boda's talk starts in the middle, already on the first of three layers of defense against supply chain attacks on coding agents: model, harness and sandbox. His rule at the end: think coverage, not perfection.
+My notes on Boda's talk start in the middle, already on the first of three layers of defense against supply chain attacks on coding agents: model, harness and sandbox. His rule at the end: think coverage, not perfection.
 
 **Model.** Whenever possible, pick a smarter model or one specialized in security. Better models hallucinate less and run fewer dangerous commands by mistake. Security-specialized ones find and fix vulnerabilities on their own and can even split into red team and blue team.
 
@@ -1001,7 +1001,7 @@ The demo:
 
 That risk score becomes reputation inside the network. The official talk description gives a product example: AI insurers pricing policies based on these receipt chains, instead of questionnaires.
 
-There was one problem still unsolved: a person approves permissions described in language, but what executes is code. How do you make sure the two match? For that, he built a decision language model, fast enough to authorize in real time, which compares the semantic permission the person saw with the permission the code actually uses. As far as I could make out from the recording, the name honors Ricardo Reis, one of Fernando Pessoa's heteronyms, and Artur closed with an idea from the poet: put a bit of ourselves into everything we do.
+There was one problem still unsolved: a person approves permissions described in language, but what executes is code. How do you make sure the two match? For that, he built a decision language model, fast enough to authorize in real time, which compares the semantic permission the person saw with the permission the code actually uses. As far as I could tell, the name honors Ricardo Reis, one of Fernando Pessoa's heteronyms, and Artur closed with an idea from the poet: put a bit of ourselves into everything we do.
 
 <hr class="divider">
 
@@ -1080,6 +1080,3 @@ Lisbon AI took place at the Champalimaud Centre, on the banks of the Tagus, in B
 <button type="button" class="gallery-close" commandfor="lisbon-gallery" command="close" aria-label="Close gallery"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"></path></svg></button>
 </dialog>
 
-## About the sources
-
-This report comes from my Granola notes, with automatic transcription, and from the photos and videos I took. Automatic transcription gets proper names wrong, so I checked names, companies and titles against the [speakers page](https://lisbonai.org/speakers/) and the slides I photographed. When a piece of information came from the official talk description rather than the talk itself, the text says so. The numbers quoted are the speakers'.
