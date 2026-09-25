@@ -77,7 +77,9 @@ const sortedPosts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.
         <div>
           <h2 class="mb-6 text-lg font-bold">{t('stack.title')}</h2>
           <div class="space-y-2 text-sm text-gray-700 dark:text-gray-300">
-            {DEV_STACK.map((item) => <p>{item}</p>)}
+            {DEV_STACK.map((item) => (
+              <p>{item}</p>
+            ))}
           </div>
         </div>
 
@@ -122,26 +124,22 @@ const sortedPosts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.
     <section class="mx-auto mt-32 max-w-7xl px-8" id="posts">
       <h2 class="mb-12 text-3xl font-bold">{t('blog.recentPosts')}</h2>
       <div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-        {
-          sortedPosts.slice(0, 6).map((post) => {
-            const formattedDate = formatDate(post.data.date, lang)
-            const postUrl = getPostUrl(post.id, lang)
+        {sortedPosts.slice(0, 6).map((post) => {
+          const formattedDate = formatDate(post.data.date, lang)
+          const postUrl = getPostUrl(post.id, lang)
 
-            return (
-              <article class="group">
-                <a href={postUrl} class="block">
-                  <h3 class="mb-2 text-xl font-semibold group-hover:underline">
-                    {post.data.title}
-                  </h3>
-                  <time class="text-sm text-gray-500 dark:text-gray-400">{formattedDate}</time>
-                  {post.data.description && (
-                    <p class="mt-3 text-gray-700 dark:text-gray-300">{post.data.description}</p>
-                  )}
-                </a>
-              </article>
-            )
-          })
-        }
+          return (
+            <article class="group">
+              <a href={postUrl} class="block">
+                <h3 class="mb-2 text-xl font-semibold group-hover:underline">{post.data.title}</h3>
+                <time class="text-sm text-gray-500 dark:text-gray-400">{formattedDate}</time>
+                {post.data.description && (
+                  <p class="mt-3 text-gray-700 dark:text-gray-300">{post.data.description}</p>
+                )}
+              </a>
+            </article>
+          )
+        })}
       </div>
     </section>
   </main>

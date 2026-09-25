@@ -22,27 +22,21 @@ const helpLinks = [
         404
       </h1>
 
-      <p class="mt-8 text-xl text-gray-600 dark:text-gray-400">
-        {t('404.message')}
-      </p>
+      <p class="mt-8 text-xl text-gray-600 dark:text-gray-400">{t('404.message')}</p>
 
-      <p class="mt-8 text-sm text-gray-500 dark:text-gray-400">
-        {t('404.help')}
-      </p>
+      <p class="mt-8 text-sm text-gray-500 dark:text-gray-400">{t('404.help')}</p>
 
       <ul class="mt-4 space-y-2 text-sm">
-        {
-          helpLinks.map((link) => (
-            <li>
-              <a
-                href={link.href}
-                class="text-gray-700 underline hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-100"
-              >
-                {link.label}
-              </a>
-            </li>
-          ))
-        }
+        {helpLinks.map((link) => (
+          <li>
+            <a
+              href={link.href}
+              class="text-gray-700 underline hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-100"
+            >
+              {link.label}
+            </a>
+          </li>
+        ))}
       </ul>
     </div>
   </main>

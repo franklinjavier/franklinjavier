@@ -560,14 +560,14 @@ html:has(.gallery[open]) {
   border: 1px solid var(--tw-prose-hr);
   border-radius: 0.5rem;
   background:
-    linear-gradient(to right, var(--tw-prose-page-bg) 30%, transparent) left / 2.5rem 100%
-      no-repeat local,
-    linear-gradient(to left, var(--tw-prose-page-bg) 30%, transparent) right / 2.5rem 100%
-      no-repeat local,
-    radial-gradient(farthest-side at 0 50%, var(--scroll-shadow), transparent) left / 1.125rem
-      100% no-repeat scroll,
-    radial-gradient(farthest-side at 100% 50%, var(--scroll-shadow), transparent) right /
-      1.125rem 100% no-repeat scroll;
+    linear-gradient(to right, var(--tw-prose-page-bg) 30%, transparent) left / 2.5rem 100% no-repeat
+      local,
+    linear-gradient(to left, var(--tw-prose-page-bg) 30%, transparent) right / 2.5rem 100% no-repeat
+      local,
+    radial-gradient(farthest-side at 0 50%, var(--scroll-shadow), transparent) left / 1.125rem 100%
+      no-repeat scroll,
+    radial-gradient(farthest-side at 100% 50%, var(--scroll-shadow), transparent) right / 1.125rem
+      100% no-repeat scroll;
 }
 
 .dark .prose :where(.overflow-x-auto) {

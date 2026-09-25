@@ -61,9 +61,7 @@ export function getPostUrl(slug: string, lang: string): string {
  */
 export async function getPostTranslationUrl(url: URL, lang: keyof typeof ui) {
   const targetLang: keyof typeof ui = lang === 'pt-br' ? 'en' : 'pt-br'
-  const slug = url.pathname
-    .replace(/^\/(pt-br\/)?blog\//, '')
-    .replace(/\/(index\.html)?$/, '')
+  const slug = url.pathname.replace(/^\/(pt-br\/)?blog\//, '').replace(/\/(index\.html)?$/, '')
   const currentId = lang === 'pt-br' ? `pt-br/${slug}` : slug
   const allPosts = await getCollection('blog')
   const current = allPosts.find((post) => post.id === currentId)

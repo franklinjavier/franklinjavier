@@ -41,51 +41,49 @@ const summary = `${countLabel} - ${description}`
 
       <!-- Posts list -->
       <div class="space-y-12">
-        {
-          sortedPosts.map((post) => {
-            const formattedDate = formatDate(post.data.date, lang)
-            const postUrl = getPostUrl(post.id, lang)
-            const tags = parseTags(post.data.tags)
+        {sortedPosts.map((post) => {
+          const formattedDate = formatDate(post.data.date, lang)
+          const postUrl = getPostUrl(post.id, lang)
+          const tags = parseTags(post.data.tags)
 
-            return (
-              <article class="group border-b border-gray-200 pb-12 last:border-0 dark:border-gray-800">
-                <div>
-                  <a href={postUrl} class="block">
-                    <time class="text-sm text-gray-500 dark:text-gray-400">{formattedDate}</time>
-                    <h2 class="mt-2 mb-3 text-2xl font-bold group-hover:underline">
-                      {post.data.title}
-                    </h2>
-                    {post.data.description && (
-                      <p class="leading-relaxed text-gray-700 dark:text-gray-300">
-                        {post.data.description}
-                      </p>
-                    )}
-                  </a>
-                  {tags.length > 0 && (
-                    <div class="mt-4 flex flex-wrap gap-2">
-                      {tags.map((tag) => {
-                        return (
-                          <a
-                            href={getTagUrl(tag, lang)}
-                            class="rounded-full bg-gray-100 px-3 py-1 text-xs text-gray-600 transition hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700"
-                          >
-                            {tag}
-                          </a>
-                        )
-                      })}
-                    </div>
+          return (
+            <article class="group border-b border-gray-200 pb-12 last:border-0 dark:border-gray-800">
+              <div>
+                <a href={postUrl} class="block">
+                  <time class="text-sm text-gray-500 dark:text-gray-400">{formattedDate}</time>
+                  <h2 class="mt-2 mb-3 text-2xl font-bold group-hover:underline">
+                    {post.data.title}
+                  </h2>
+                  {post.data.description && (
+                    <p class="leading-relaxed text-gray-700 dark:text-gray-300">
+                      {post.data.description}
+                    </p>
                   )}
-                  <a
-                    href={postUrl}
-                    class="mt-4 block text-sm text-gray-600 transition hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100"
-                  >
-                    {t('blog.readMore')}
-                  </a>
-                </div>
-              </article>
-            )
-          })
-        }
+                </a>
+                {tags.length > 0 && (
+                  <div class="mt-4 flex flex-wrap gap-2">
+                    {tags.map((tag) => {
+                      return (
+                        <a
+                          href={getTagUrl(tag, lang)}
+                          class="rounded-full bg-gray-100 px-3 py-1 text-xs text-gray-600 transition hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700"
+                        >
+                          {tag}
+                        </a>
+                      )
+                    })}
+                  </div>
+                )}
+                <a
+                  href={postUrl}
+                  class="mt-4 block text-sm text-gray-600 transition hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100"
+                >
+                  {t('blog.readMore')}
+                </a>
+              </div>
+            </article>
+          )
+        })}
       </div>
     </div>
   </main>
