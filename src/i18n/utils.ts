@@ -60,7 +60,7 @@ export function getPostUrl(slug: string, lang: string): string {
  * Unlike getTranslatedPost, it never falls back to the home page and skips drafts.
  */
 export async function getPostTranslationUrl(url: URL, lang: keyof typeof ui) {
-  const targetLang = lang === 'pt-br' ? 'en' : 'pt-br'
+  const targetLang: keyof typeof ui = lang === 'pt-br' ? 'en' : 'pt-br'
   const slug = url.pathname
     .replace(/^\/(pt-br\/)?blog\//, '')
     .replace(/\/(index\.html)?$/, '')
