@@ -55,6 +55,32 @@ export function getPostUrl(slug: string, lang: string): string {
   return lang === 'en' ? `/blog/${cleanSlug}/` : `/pt-br/blog/${cleanSlug}/`
 }
 
+/**
+ * URL of the published translation of the post at `url`, or null when there is none.
+ * Unlike getTranslatedPost, it never falls back to the home page and skips drafts.
+ */
+export async function getPostTranslationUrl(url: URL, lang: keyof typeof ui) {
+  const targetLang: keyof typeof ui = lang === 'pt-br' ? 'en' : 'pt-br'
+  const slug = url.pathname
+    .replace(/^\/(pt-br\/)?blog\//, '')
+    .replace(/\/(index\.html)?$/, '')
+  const currentId = lang === 'pt-br' ? `pt-br/${slug}` : slug
+  const allPosts = await getCollection('blog')
+  const current = allPosts.find((post) => post.id === currentId)
+  if (!current?.data.translationKey) return null
+
+  const translated = allPosts.find(
+    (post) =>
+      post.data.translationKey === current.data.translationKey &&
+      post.data.lang === targetLang &&
+      post.data.draft !== true,
+  )
+  if (!translated) return null
+
+  const blogPrefix = targetLang === 'en' ? '/blog/' : '/pt-br/blog/'
+  return { url: `${blogPrefix}${translated.id.replace('pt-br/', '')}/`, lang: targetLang }
+}
+
 export async function getTranslatedPost(
   currentSlug: string,
   _currentLang: string,

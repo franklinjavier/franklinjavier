@@ -19,3 +19,9 @@ node_modules/
 *.log
 npm-debug.log*
 pnpm-debug.log*
+
+# Local research and scratch material (never publish)
+research/
+work/
+
+__pycache__/

@@ -1,7 +1,7 @@
 export const SITE_URL = 'https://franklinjavier.com'
 export const SITE_TITLE = 'Franklin Javier'
 export const SITE_DESCRIPTION =
-  "I'm a Principal Engineer with 16 years of front-end development experience, now building AI-native products and the agent harnesses behind them."
+  "I'm a Principal Engineer with 19 years of front-end development experience, now building AI products and the agent harnesses behind them."
 export const SITE_AUTHOR = 'Franklin Javier'
 export const SITE_EMAIL = 'franklinjalves@gmail.com'
 export const SITE_IMAGE = '/img/frank.jpeg'
