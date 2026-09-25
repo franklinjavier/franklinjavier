@@ -54,8 +54,8 @@ Headings generate anchors from their text, so accented names keep their accents 
 <div class="overflow-x-auto">
 
 | Column | Column |
-| --- | --- |
-| a | b |
+| ------ | ------ |
+| a      | b      |
 
 </div>
 ```
@@ -64,7 +64,21 @@ Headings generate anchors from their text, so accented names keep their accents 
 
 ```html
 <figure>
-  <a href="/images/blog/<event>/<name>.webp"><img src="/images/blog/<event>/<name>.webp" srcset="/images/blog/<event>/<name>-640.webp 640w, /images/blog/<event>/<name>-1024.webp 1024w, /images/blog/<event>/<name>.webp 1600w" sizes="(max-width: 719px) calc(100vw - 4rem), 655px" alt="..." width="1600" height="..." loading="lazy" decoding="async"></a>
+  <a href="/images/blog/<event>/<name>.webp"
+    ><img
+      src="/images/blog/<event>/<name>.webp"
+      srcset="
+        /images/blog/<event>/<name>-640.webp   640w,
+        /images/blog/<event>/<name>-1024.webp 1024w,
+        /images/blog/<event>/<name>.webp      1600w
+      "
+      sizes="(max-width: 719px) calc(100vw - 4rem), 655px"
+      alt="..."
+      width="1600"
+      height="..."
+      loading="lazy"
+      decoding="async"
+  /></a>
   <figcaption>Why this slide matters.</figcaption>
 </figure>
 ```
