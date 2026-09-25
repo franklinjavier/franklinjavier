@@ -6,7 +6,7 @@ author: Franklin Javier
 tags: ia, agentes, evals, segurança, conferência
 lang: pt-br
 translationKey: lisbon-ai-2026
-draft: true
+draft: false
 ---
 
 <figure>
