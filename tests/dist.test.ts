@@ -131,6 +131,8 @@ describe('markdown variants', () => {
       'pt-br/about/index.md',
       'pt-br/contact/index.md',
       'pt-br/privacy/index.md',
+      'cv/index.md',
+      'pt-br/cv/index.md',
     ]
     for (const path of paths) {
       expect(existsSync(join(DIST, path))).toBe(true)
@@ -288,6 +290,8 @@ describe('trust pages', () => {
       'pt-br/about/index.html',
       'pt-br/contact/index.html',
       'pt-br/privacy/index.html',
+      'cv/index.html',
+      'pt-br/cv/index.html',
     ]) {
       const html = read(path)
       const article = html.match(/<article[^>]*>(.*?)<\/article>/s)?.[1] ?? ''

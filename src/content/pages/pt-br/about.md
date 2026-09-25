@@ -31,4 +31,4 @@ Publico boa parte do que faço em código aberto, inclusive projetos de IA. Mais
 
 Mais antigo e ainda em produção: o [storefront](https://github.com/franklinjavier/storefront), o boilerplate em Node.js e Redis que a gente padronizou para e-commerce. Ele roda as lojas da Beleza na Web e do Grupo Boticário, e aguenta mais de 1M de requisições por minuto. Meus outros repositórios estão em [github.com/franklinjavier](https://github.com/franklinjavier).
 
-Moro em Lisboa, Portugal, e escrevo neste site em inglês e português sobre desenvolvimento front-end, React, performance e cultura de engenharia. Você pode ler meus artigos no [blog](/pt-br/blog/), ver minhas [palestras e podcasts](/pt-br/speaking/), baixar meu [CV](/cv.pdf) ou [entrar em contato](/pt-br/contact/).
+Moro em Lisboa, Portugal, e escrevo neste site em inglês e português sobre desenvolvimento front-end, React, performance e cultura de engenharia. Você pode ler meus artigos no [blog](/pt-br/blog/), ver minhas [palestras e podcasts](/pt-br/speaking/), ver meu [currículo](/pt-br/cv/) ou [entrar em contato](/pt-br/contact/).

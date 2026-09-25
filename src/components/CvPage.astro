@@ -1,0 +1,314 @@
+---
+/**
+ * CV page, drawn as an A4 sheet on a desk (like a PDF viewer) instead of inside
+ * the site layout. On desktop the sheet uses the same sizes as the printout, so
+ * what you see is what Cmd/Ctrl+P saves. Content lives in the `pages` collection
+ * (cv.md / pt-br/cv.md), so it also gets a markdown twin and a sitemap entry.
+ */
+import { getEntry, render } from 'astro:content'
+import BaseLayout from '../layouts/BaseLayout.astro'
+import { languages } from '../i18n/ui'
+import { useTranslations, getLocalizedPath } from '../i18n/utils'
+import { SITE_EMAIL, SITE_TITLE, SITE_URL, SOCIAL_LINKS } from '../lib/site'
+
+interface Props {
+  lang: 'pt-br' | 'en'
+}
+
+const { lang } = Astro.props
+const t = useTranslations(lang)
+const entry = await getEntry('pages', lang === 'en' ? 'cv' : 'pt-br/cv')
+
+if (!entry) {
+  throw new Error(`Missing CV content for "${lang}"`)
+}
+
+const { Content } = await render(entry)
+const linkedin = SOCIAL_LINKS.find((link) => link.includes('linkedin.com'))
+const github = SOCIAL_LINKS.find((link) => link.includes('github.com'))
+const site = new URL(SITE_URL).host
+// Same UTM as the project links in cv.md, so visits from the CV show up in analytics.
+const siteUrl = `${SITE_URL}/?utm_source=CV_FranklinJavier&utm_medium=cv`
+const otherLang = lang === 'en' ? 'pt-br' : 'en'
+const flags = { en: '🇺🇸', 'pt-br': '🇧🇷' }
+---
+
+<BaseLayout title={entry.data.title} description={entry.data.description} lang={lang} bare>
+  <div class="cv-desk">
+    <div class="cv-toolbar">
+      <a href={getLocalizedPath('/', lang)}>← {site}</a>
+      <div class="cv-toolbar-actions">
+        <a href={getLocalizedPath('/cv/', otherLang)} hreflang={otherLang} lang={otherLang}>
+          <span aria-hidden="true">{flags[otherLang]}</span>
+          {languages[otherLang]}
+        </a>
+        <button type="button" class="cv-print" onclick="window.print()">
+          <svg
+            viewBox="0 0 24 24"
+            width="16"
+            height="16"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M6 9V3h12v6M6 18H4a1 1 0 0 1-1-1v-6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v6a1 1 0 0 1-1 1h-2"
+            ></path>
+            <path d="M6 14h12v7H6z"></path>
+          </svg>
+          {t('cv.print')}
+        </button>
+      </div>
+    </div>
+
+    <main>
+      <article class="cv">
+        <header class="cv-header">
+          <h1>{SITE_TITLE}</h1>
+          <p class="cv-role">{t('cv.role')}</p>
+          <p class="cv-contact">
+            <span>{t('contact.location')}</span>
+            <a href={`mailto:${SITE_EMAIL}`}>{SITE_EMAIL}</a>
+            {linkedin && <a href={linkedin}>LinkedIn</a>}
+            {github && <a href={github}>GitHub</a>}
+            <a href={siteUrl}>{site}</a>
+          </p>
+        </header>
+
+        <div class="cv-body">
+          <Content />
+        </div>
+      </article>
+    </main>
+  </div>
+</BaseLayout>
+
+<style is:global>
+  /* Desk: the gray area around the sheet, like a PDF viewer. */
+  .cv-desk {
+    min-height: 100vh;
+    padding: 1rem 0 3rem;
+    background-color: oklch(96.7% 0.003 264.542);
+  }
+
+  .dark .cv-desk {
+    background-color: oklch(21% 0.034 264.665);
+  }
+
+  .cv-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem 1.5rem;
+    width: min(210mm, 100%);
+    margin: 0 auto 1rem;
+    padding: 0 1rem;
+    font-size: 0.875rem;
+    color: oklch(44.6% 0.03 256.802);
+  }
+
+  .dark .cv-toolbar {
+    color: oklch(87.2% 0.01 258.338);
+  }
+
+  .cv-toolbar a,
+  .cv-print {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition-property: color, opacity, scale;
+    transition-duration: 150ms;
+  }
+
+  .cv-toolbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+  }
+
+  .cv-print {
+    padding: 0.4rem 0.875rem;
+    border: 1px solid currentColor;
+    border-radius: 9999px;
+    cursor: pointer;
+  }
+
+  .cv-print:active {
+    scale: 0.96;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .cv-toolbar a:hover,
+    .cv-print:hover {
+      opacity: 0.7;
+    }
+  }
+
+  /* The sheet stays white in dark mode, like paper. */
+  .cv {
+    --cv-muted: #555;
+    --cv-rule: #d4d4d4;
+    width: min(210mm, 100%);
+    margin: 0 auto;
+    padding: 2rem 1.25rem;
+    background-color: #fff;
+    color: oklch(21% 0.034 264.665);
+    font-size: 0.9375rem;
+    line-height: 1.55;
+  }
+
+  .cv a {
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-color: var(--cv-rule);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 2px;
+  }
+
+  .cv-header {
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--cv-rule);
+  }
+
+  .cv-header h1 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  .cv-role {
+    margin-top: 0.125rem;
+    font-size: 1.0625rem;
+    font-weight: 500;
+  }
+
+  .cv-contact {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.125rem 1rem;
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+    color: var(--cv-muted);
+  }
+
+  .cv-body h2 {
+    margin-top: 1.5rem;
+    margin-bottom: 0.4rem;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    break-after: avoid;
+  }
+
+  .cv-body h3 {
+    margin-top: 0.9rem;
+    font-size: 1rem;
+    font-weight: 600;
+    break-after: avoid;
+  }
+
+  .cv-body h3 + p {
+    margin-top: 0;
+    font-size: 0.875rem;
+    color: var(--cv-muted);
+    break-after: avoid;
+  }
+
+  .cv-body p {
+    margin-top: 0.4rem;
+  }
+
+  .cv-body ul {
+    margin-top: 0.4rem;
+    padding-inline-start: 1.25rem;
+    list-style-type: disc;
+  }
+
+  .cv-body li {
+    margin-top: 0.15rem;
+    padding-inline-start: 0.25rem;
+    break-inside: avoid;
+  }
+
+  .cv-body li::marker {
+    color: var(--cv-muted);
+  }
+
+  .cv-body strong {
+    font-weight: 600;
+  }
+
+  /* Desktop and print share the same sizes, so the screen matches the PDF. */
+  @media (min-width: 840px), print {
+    .cv {
+      font-size: 9.5pt;
+      line-height: 1.45;
+    }
+
+    .cv-header h1 {
+      font-size: 20pt;
+    }
+
+    .cv-role {
+      font-size: 11pt;
+    }
+
+    .cv-contact,
+    .cv-body h2,
+    .cv-body h3 + p {
+      font-size: 9pt;
+    }
+
+    .cv-body h3 {
+      font-size: 10pt;
+    }
+  }
+
+  /* On screen, the sheet gets the page margins and a paper shadow. */
+  @media screen and (min-width: 840px) {
+    .cv-desk {
+      padding-top: 1.5rem;
+    }
+
+    .cv {
+      padding: 14mm 16mm;
+      border-radius: 2px;
+      box-shadow:
+        0 1px 2px oklch(0 0 0 / 0.08),
+        0 8px 24px oklch(0 0 0 / 0.08);
+    }
+  }
+
+  @media print {
+    @page {
+      size: A4;
+      margin: 14mm 16mm;
+    }
+
+    .cv-toolbar {
+      display: none;
+    }
+
+    html,
+    body,
+    .cv-desk {
+      min-height: 0;
+      padding: 0;
+      background: #fff !important;
+    }
+
+    .cv {
+      width: auto;
+      padding: 0;
+      color: #000;
+    }
+
+    .cv a {
+      text-decoration: none;
+    }
+  }
+</style>

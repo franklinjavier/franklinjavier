@@ -2,7 +2,7 @@
 import { getCollection } from 'astro:content'
 import BaseLayout from '../layouts/BaseLayout.astro'
 import Navigation from '../components/Navigation.astro'
-import { useTranslations, formatDate, getPostUrl } from '../i18n/utils'
+import { useTranslations, formatDate, getPostUrl, getLocalizedPath } from '../i18n/utils'
 import { DEV_STACK } from '../lib/site'
 
 interface Props {
@@ -111,11 +111,10 @@ const sortedPosts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.
               X
             </a>
             <a
-              href="/cv.pdf"
-              target="_blank"
+              href={getLocalizedPath('/cv/', lang)}
               class="block text-gray-700 underline hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-100"
             >
-              {t('contact.downloadCV')}
+              {t('nav.cv')}
             </a>
           </div>
         </div>
