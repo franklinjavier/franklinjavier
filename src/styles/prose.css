@@ -609,6 +609,19 @@ html:has(.gallery[open]) {
   white-space: nowrap;
 }
 
+/* Desktop: the column is wide enough, so let cells wrap and the table fit
+   instead of scrolling. Phones keep nowrap + horizontal scroll. */
+@media (min-width: 720px) {
+  .prose :where(table) {
+    width: 100%;
+  }
+
+  .prose :where(th:not(:first-child)),
+  .prose :where(td:not(:first-child)) {
+    white-space: normal;
+  }
+}
+
 .prose :where(pre) {
   color: var(--tw-prose-pre-code);
   background-color: var(--tw-prose-pre-bg);
