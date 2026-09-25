@@ -54,3 +54,14 @@ export async function getTrustPages(): Promise<CollectionEntry<'pages'>[]> {
 export function trustPageUrl(page: CollectionEntry<'pages'>): string {
   return `/${page.id}/`
 }
+
+// Social preview image for a post: the `image` frontmatter field, or else the
+// first image in the body. Only site-relative or https images qualify, so an
+// old http:// embed never becomes the preview; callers fall back to the
+// site image when this returns undefined.
+export function postImage(post: CollectionEntry<'blog'>): string | undefined {
+  if (post.data.image) return post.data.image
+  const match = /<img\b[^>]*\bsrc="([^"]+)"|!\[[^\]]*\]\(([^)\s]+)/.exec(post.body ?? '')
+  const src = match?.[1] ?? match?.[2]
+  return src && (src.startsWith('/') || src.startsWith('https://')) ? src : undefined
+}
