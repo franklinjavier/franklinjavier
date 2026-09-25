@@ -42,7 +42,7 @@ const jsonLd = blogPostingJsonLd({
 <BaseLayout title={title} description={description} lang={lang} type="article" jsonLd={jsonLd}>
   <Navigation />
 
-  <div class="pt-24 pb-20">
+  <main class="pt-24 pb-20">
     <article class="mx-auto max-w-3xl px-8">
       <div class="mb-8 flex flex-wrap items-center justify-between gap-x-4 gap-y-2 text-sm">
         <a
@@ -91,7 +91,7 @@ const jsonLd = blogPostingJsonLd({
         <slot />
       </div>
     </article>
-  </div>
+  </main>
 
   <ImageViewer lang={lang} />
 </BaseLayout>
