@@ -1,7 +1,7 @@
 ---
 title: 'Lisbon AI 2026: 32 palestras sobre agentes, medição e confiança'
 date: 2026-09-25
-description: Relato dos dois dias do Lisbon AI 2026, com as ideias que ligaram as palestras e cada uma das 32 em detalhe, na ordem em que aconteceram.
+description: 'Relato dos dois dias do Lisbon AI 2026: os temas que apareceram em várias palestras e cada uma das 32 em detalhe, na ordem em que aconteceram.'
 author: Franklin Javier
 tags: ia, agentes, evals, segurança, conferência
 lang: pt-br

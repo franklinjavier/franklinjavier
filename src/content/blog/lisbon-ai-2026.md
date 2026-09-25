@@ -1,7 +1,7 @@
 ---
 title: 'Lisbon AI 2026: 32 talks on agents, measurement and trust'
 date: 2026-09-25
-description: A report from the two days of Lisbon AI 2026, with the ideas that tied the talks together and each of the 32 talks in detail, in the order they happened.
+description: 'A report from the two days of Lisbon AI 2026: the themes that came up across several talks, and each of the 32 in detail, in the order they happened.'
 author: Franklin Javier
 tags: ai, agents, evals, security, conference
 lang: en
