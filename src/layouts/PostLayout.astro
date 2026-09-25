@@ -67,4 +67,169 @@ const jsonLd = blogPostingJsonLd({
       </div>
     </article>
   </div>
+
+  <dialog id="image-viewer" class="image-viewer" aria-label={t('blog.imageViewer')}>
+    <img alt="" />
+    <form method="dialog">
+      <button class="image-viewer-close" aria-label={t('blog.closeImage')}>
+        <svg
+          viewBox="0 0 24 24"
+          width="20"
+          height="20"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          aria-hidden="true"
+        >
+          <path d="M18 6 6 18M6 6l12 12"></path>
+        </svg>
+      </button>
+    </form>
+  </dialog>
+
+  <script is:inline>
+    ;(() => {
+      const dialog = document.getElementById('image-viewer')
+      if (!dialog || !dialog.showModal) return
+      const img = dialog.querySelector('img')
+
+      const isImageUrl = (url) => /\.(avif|gif|jpe?g|png|svg|webp)(\?|#|$)/i.test(url)
+
+      document.addEventListener('click', (event) => {
+        const thumb = event.target.closest('.prose img')
+        if (!thumb || thumb.closest('.photo-stack, .gallery')) return
+        if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey) return
+        const link = thumb.closest('a')
+        if (link && !isImageUrl(link.href)) return
+        event.preventDefault()
+        img.src = link ? link.href : thumb.src
+        img.alt = thumb.alt
+        dialog.showModal()
+      })
+
+      dialog.addEventListener('click', (event) => {
+        if (!event.target.closest('.image-viewer-close')) dialog.close()
+      })
+    })()
+  </script>
 </BaseLayout>
+
+<style>
+  .image-viewer {
+    --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+    width: 100%;
+    max-width: 100%;
+    height: 100%;
+    max-height: 100%;
+    margin: 0;
+    padding: 1rem;
+    border: 0;
+    background: transparent;
+    opacity: 0;
+    scale: 0.96;
+    transition:
+      opacity 200ms var(--ease-out),
+      scale 200ms var(--ease-out),
+      overlay 200ms allow-discrete,
+      display 200ms allow-discrete;
+  }
+
+  .image-viewer[open] {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 1;
+    scale: 1;
+  }
+
+  @starting-style {
+    .image-viewer[open] {
+      opacity: 0;
+      scale: 0.96;
+    }
+  }
+
+  .image-viewer::backdrop {
+    background-color: oklch(0 0 0 / 0);
+    transition:
+      background-color 200ms var(--ease-out),
+      overlay 200ms allow-discrete,
+      display 200ms allow-discrete;
+  }
+
+  .image-viewer[open]::backdrop {
+    background-color: oklch(0 0 0 / 0.85);
+  }
+
+  @starting-style {
+    .image-viewer[open]::backdrop {
+      background-color: oklch(0 0 0 / 0);
+    }
+  }
+
+  .image-viewer img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    border-radius: 0.5rem;
+    cursor: zoom-out;
+  }
+
+  .image-viewer-close {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 9999px;
+    background-color: oklch(0 0 0 / 0.6);
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 150ms var(--ease-out);
+  }
+
+  .image-viewer-close:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: 2px;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .image-viewer-close:hover {
+      background-color: oklch(0 0 0 / 0.8);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .image-viewer,
+    .image-viewer[open] {
+      scale: 1;
+    }
+  }
+
+  :global(html:has(.image-viewer[open])) {
+    overflow: hidden;
+  }
+
+  :global(.prose img:not(.photo-stack img, .gallery img)) {
+    cursor: zoom-in;
+  }
+
+  :global(
+    .prose
+      a:not(
+        [href$='.avif'],
+        [href$='.gif'],
+        [href$='.jpg'],
+        [href$='.jpeg'],
+        [href$='.png'],
+        [href$='.svg'],
+        [href$='.webp']
+      )
+      img
+  ) {
+    cursor: pointer;
+  }
+</style>

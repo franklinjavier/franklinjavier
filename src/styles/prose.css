@@ -2,15 +2,16 @@
  * Thin article typography for markdown bodies.
  * Loaded from PostLayout and StaticPage only — not BaseLayout.
  *
- * Bakes production .prose.prose-lg + the live modifier classes
+ * Bakes production .prose.prose-lg (base size moved to 16px) + the live modifier classes
  * (dark invert, headings bold, p leading-relaxed, link underline,
  * code text-sm/mono/no-backticks, pre/img rounded-lg shadow-lg).
  * Measure stays 65ch. max-w-none is not applied.
  *
  * Kept img: /blog/the-great-suspender/ embeds one.
+ * Kept figure/figcaption: /blog/lisbon-ai-2026/ captions its photos.
  * Tables: one post ships HTML <table>s; rules stay here so home
  * never downloads them. Not the typography plugin dump.
- * Dropped: kbd, figure, video, picture, blockquote,
+ * Dropped: kbd, video, picture, blockquote,
  * lead, ol[type], h1/h4, not-prose.
  */
 
@@ -23,7 +24,8 @@
   --tw-prose-code: oklch(21% 0.034 264.665);
   --tw-prose-pre-code: oklch(92.8% 0.006 264.531);
   --tw-prose-pre-bg: oklch(27.8% 0.033 256.848);
-  font-size: 1.125rem;
+  --tw-prose-page-bg: #fff;
+  font-size: 1rem;
   line-height: 1.7777777777777777;
   max-width: 65ch;
   color: inherit;
@@ -38,6 +40,7 @@
   --tw-prose-code: #fff;
   --tw-prose-pre-code: oklch(87.2% 0.01 258.338);
   --tw-prose-pre-bg: #00000080;
+  --tw-prose-page-bg: #000;
 }
 
 .prose :where(p) {
@@ -117,6 +120,37 @@
   border-color: var(--tw-prose-hr);
 }
 
+/* Divider between long sections (talks in /blog/lisbon-ai-2026/):
+   a hairline that fades at both ends with a small diamond in the middle. */
+.prose :where(hr.divider) {
+  position: relative;
+  height: 1px;
+  margin-top: 3.5em;
+  margin-bottom: 3.5em;
+  border: 0;
+  overflow: visible;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--tw-prose-hr) 20%,
+    var(--tw-prose-hr) 80%,
+    transparent
+  );
+}
+
+.prose :where(hr.divider)::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0.5rem;
+  height: 0.5rem;
+  translate: -50% -50%;
+  rotate: 45deg;
+  border: 1px solid var(--tw-prose-counters);
+  background-color: var(--tw-prose-page-bg);
+}
+
 .prose :where(h2) {
   color: var(--tw-prose-headings);
   font-weight: 700;
@@ -148,6 +182,349 @@
   box-shadow:
     0 10px 15px -3px #0000001a,
     0 4px 6px -4px #0000001a;
+}
+
+.prose :where(figure) {
+  margin-top: 1.7777777777777777em;
+  margin-bottom: 1.7777777777777777em;
+}
+
+.prose :where(figure img) {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.prose :where(figcaption) {
+  margin-top: 0.8888888888888888em;
+  font-size: 0.875rem;
+  line-height: 1.4285714285714286;
+  color: var(--tw-prose-counters);
+}
+
+/* Photo gallery: a stack of prints that opens a native <dialog> carousel.
+   Opens via invoker commands (commandfor/command), no JS. Scroll buttons and
+   markers are progressive; without them the track still swipes and scrolls. */
+.prose :where(.photo-stack) {
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  display: flex;
+  justify-content: center;
+  margin-top: 2.5em;
+  margin-bottom: 3em;
+}
+
+.prose :where(.photo-stack-trigger) {
+  position: relative;
+  display: block;
+  width: min(calc(100% - 3rem), 22rem);
+  aspect-ratio: 4 / 3;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  transition: scale 150ms var(--ease-out);
+}
+
+.prose :where(.photo-stack-trigger):active {
+  scale: 0.96;
+}
+
+.prose :where(.photo-stack-trigger):focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 0.75rem;
+  border-radius: 0.75rem;
+}
+
+.prose :where(.photo-stack-trigger img) {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  object-fit: cover;
+  border: 0.375rem solid #fff;
+  border-radius: 0.5rem;
+  box-shadow:
+    0 1px 2px oklch(0 0 0 / 0.12),
+    0 8px 24px oklch(0 0 0 / 0.16);
+  transition-property: rotate, translate;
+  transition-duration: 250ms;
+  transition-timing-function: var(--ease-out);
+}
+
+.prose :where(.photo-stack-trigger img:nth-child(1)) {
+  rotate: -9deg;
+  translate: -7% 3%;
+}
+
+.prose :where(.photo-stack-trigger img:nth-child(2)) {
+  rotate: 8deg;
+  translate: 7% 2%;
+}
+
+.prose :where(.photo-stack-trigger img:nth-child(3)) {
+  rotate: -4deg;
+  translate: -2% -1%;
+}
+
+.prose :where(.photo-stack-trigger img:nth-child(4)) {
+  rotate: 3deg;
+  translate: 2% 0;
+}
+
+.prose :where(.photo-stack-trigger img:nth-child(5)) {
+  rotate: -1deg;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .prose :where(.photo-stack-trigger:hover img:nth-child(1)) {
+    rotate: -14deg;
+    translate: -16% 4%;
+  }
+
+  .prose :where(.photo-stack-trigger:hover img:nth-child(2)) {
+    rotate: 13deg;
+    translate: 16% 3%;
+  }
+
+  .prose :where(.photo-stack-trigger:hover img:nth-child(3)) {
+    rotate: -7deg;
+    translate: -8% -2%;
+  }
+
+  .prose :where(.photo-stack-trigger:hover img:nth-child(4)) {
+    rotate: 6deg;
+    translate: 8% -1%;
+  }
+
+  .prose :where(.photo-stack-trigger:hover img:nth-child(5)) {
+    rotate: 0deg;
+    translate: 0 -3%;
+  }
+}
+
+.prose :where(.photo-stack-label) {
+  position: absolute;
+  bottom: 1rem;
+  left: 50%;
+  translate: -50% 0;
+  padding: 0.375rem 0.875rem;
+  border-radius: 9999px;
+  background-color: oklch(0 0 0 / 0.65);
+  color: #fff;
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.25rem;
+  white-space: nowrap;
+}
+
+.prose :where(.gallery) {
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  width: 100%;
+  max-width: 100%;
+  height: 100%;
+  max-height: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #fff;
+  opacity: 0;
+  scale: 0.96;
+  transition:
+    opacity 200ms var(--ease-out),
+    scale 200ms var(--ease-out),
+    overlay 200ms allow-discrete,
+    display 200ms allow-discrete;
+}
+
+.prose :where(.gallery[open]) {
+  display: flex;
+  flex-direction: column;
+  opacity: 1;
+  scale: 1;
+}
+
+@starting-style {
+  .prose :where(.gallery[open]) {
+    opacity: 0;
+    scale: 0.96;
+  }
+}
+
+.prose :where(.gallery)::backdrop {
+  background-color: oklch(0.13 0 0 / 0);
+  transition:
+    background-color 200ms var(--ease-out),
+    overlay 200ms allow-discrete,
+    display 200ms allow-discrete;
+}
+
+.prose :where(.gallery[open])::backdrop {
+  background-color: oklch(0.13 0 0 / 0.96);
+}
+
+@starting-style {
+  .prose :where(.gallery[open])::backdrop {
+    background-color: oklch(0.13 0 0 / 0);
+  }
+}
+
+.prose :where(.gallery-track) {
+  flex: 1;
+  display: flex;
+  min-height: 0;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  outline: none;
+  scroll-marker-group: after;
+}
+
+.prose :where(.gallery-slide) {
+  flex: 0 0 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 4rem 1rem 1rem;
+  scroll-snap-align: center;
+}
+
+.prose :where(.gallery-slide img) {
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: calc(100dvh - 10rem);
+  margin: 0;
+  object-fit: contain;
+  box-shadow: none;
+}
+
+.prose :where(.gallery-slide figcaption) {
+  max-width: 40rem;
+  margin: 0;
+  color: oklch(1 0 0 / 0.75);
+  text-align: center;
+}
+
+.prose :where(.gallery-track)::scroll-marker-group {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem 1.5rem;
+}
+
+.prose :where(.gallery-slide)::scroll-marker {
+  content: '';
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 9999px;
+  background-color: oklch(1 0 0 / 0.35);
+  transition: background-color 150ms var(--ease-out);
+}
+
+.prose :where(.gallery-slide)::scroll-marker:target-current {
+  background-color: #fff;
+}
+
+.prose :where(.gallery-track)::scroll-button(*) {
+  position: fixed;
+  top: 50%;
+  translate: 0 -50%;
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 0;
+  border-radius: 9999px;
+  background-color: oklch(1 0 0 / 0.12);
+  color: #fff;
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    background-color 150ms var(--ease-out),
+    opacity 150ms var(--ease-out);
+}
+
+.prose :where(.gallery-track)::scroll-button(*):disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.prose :where(.gallery-track)::scroll-button(left) {
+  content: '‹' / attr(data-prev);
+  left: 1rem;
+}
+
+.prose :where(.gallery-track)::scroll-button(right) {
+  content: '›' / attr(data-next);
+  right: 1rem;
+}
+
+.prose :where(.gallery-close) {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 9999px;
+  background-color: oklch(1 0 0 / 0.12);
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 150ms var(--ease-out);
+}
+
+.prose :where(.gallery-close):focus-visible,
+.prose :where(.gallery-track)::scroll-button(*):focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .prose :where(.gallery-close):hover,
+  .prose :where(.gallery-track)::scroll-button(*):hover {
+    background-color: oklch(1 0 0 / 0.24);
+  }
+}
+
+/* Slides change with a cut + fade instead of a slide: the snapped slide
+   (scroll-state container query) fades in. Unsupported browsers just cut. */
+.prose :where(.gallery-slide) {
+  container-type: scroll-state;
+}
+
+@supports (container-type: scroll-state) {
+  .prose :where(.gallery-slide > *) {
+    opacity: 0;
+    transition: opacity 200ms var(--ease-out);
+  }
+
+  @container scroll-state(snapped: x) {
+    .prose :where(.gallery-slide > *) {
+      opacity: 1;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .prose :where(.photo-stack-trigger img) {
+    transition: none;
+  }
+
+  .prose :where(.gallery),
+  .prose :where(.gallery[open]) {
+    scale: 1;
+  }
+}
+
+html:has(.gallery[open]) {
+  overflow: hidden;
 }
 
 .prose :where(code) {
