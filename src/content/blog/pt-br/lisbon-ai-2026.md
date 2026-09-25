@@ -78,7 +78,7 @@ A demo foi o Nativ, app construído sobre o motor. Prince desligou o Wi-Fi, diss
 
 Segundo Prince, o motor já passou de 7,5 milhões de downloads. A Neywa Labs trabalha com Cohere, Google DeepMind, Baidu e Liquid AI para ter modelos abertos otimizados para Apple Silicon no dia do lançamento. Num M5 Max com 48 GB, um desses modelos roda com 256 mil tokens de contexto. Num Mac Studio, o motor atende 16 sessões em paralelo com 32 mil tokens cada, o suficiente para 16 agentes ou 16 pessoas numa máquina só.
 
-O fecho: a inteligência por watt subiu nos últimos três anos, os melhores modelos abertos estão perto dos fechados, e 70 a 90% dos casos de uso de hoje já rodam na máquina local.
+Prince encerrou dizendo que a inteligência por watt subiu nos últimos três anos, que os melhores modelos abertos estão perto dos fechados e que, pela estimativa dele, 70 a 90% dos casos de uso de hoje já rodam na máquina local.
 
 <hr class="divider">
 
@@ -130,7 +130,7 @@ Hoje o problema se divide em três camadas, cada uma resolvida por um tipo difer
   <figcaption>Entender, aparência e estrutura: as três camadas que, para Chema, ainda são resolvidas por modelos diferentes.</figcaption>
 </figure>
 
-O Mundus, modelo da Sperid, junta as três camadas e unifica seis problemas de visão computacional num modelo só. Ele recebe algumas fotos, um panorama, um vídeo ou um texto, e devolve uma cena 3D estruturada, que abre direto num motor de jogo. Foi treinado no conteúdo da internet inteira, não só nos poucos arquivos 3D que existem.
+O Mundus, modelo da Sperid, junta as três camadas e unifica seis problemas de visão computacional num modelo só. Ele recebe algumas fotos, um panorama, um vídeo ou um texto, e devolve uma cena 3D estruturada, que abre direto num motor de jogo. Chema defendeu treinar esse tipo de modelo com as imagens e os vídeos da web, em vez de depender só dos poucos arquivos 3D que existem.
 
 As demos foram ao vivo. Chema passou os dois dias anteriores destilando o modelo para rodar rápido o bastante no palco. A partir de algumas fotos em perspectiva, o Mundus gerou um mundo 3D, preenchendo o que as fotos não mostravam, e cada rodada saía um pouco diferente. Numa cena de uma casa reconstruída, ele esvaziou a sala, pegou um vaso de cerâmica, soltou no chão, mudou o tamanho e trocou de lugar, sem abrir nenhum motor 3D. O modelo também entende o que gera: dá para buscar objetos na cena com um texto, o que serve para rotular dados capturados no mundo real de forma automática.
 
@@ -192,7 +192,7 @@ Nas perguntas, contou que pagou tudo do próprio bolso. A filtragem do Bagaço r
 
 Sergio quis saber se dá para fazer, com ferramentas abertas, o que os laboratórios fazem com seus agentes de código: treinar o modelo dentro do harness. Em poucos meses, disse, deixamos de escrever código e passamos a usar agentes, e um agente é sempre um harness (Claude Code, OpenCode, Codex) mais um modelo. Os relatórios dos modelos de fronteira mostram que eles são treinados em ambientes de aprendizado por reforço montados com esses harnesses.
 
-A pilha dele usou só peças da Hugging Face:
+A pilha combinou ferramentas de treino e infraestrutura da Hugging Face com o OpenCode num container Docker:
 
 - **TRL**, a biblioteca de treino, com a versão assíncrona do GRPO;
 - **OpenEnv**, um padrão para ambientes de treino que a Hugging Face desenvolve com Meta, Reflection e outros laboratórios;
@@ -247,7 +247,7 @@ A terceira onda é a que interessa a ele, quando a mãe e os primos dele, que n�
 A aposta da Cloudflare, feita antes de agentes existirem, são os isolates, a mesma tecnologia V8 dos navegadores. Existem em duas formas:
 
 - **Workers:** sem estado, para APIs de requisição e resposta. Sobem quando precisam e escalam para bilhões de requisições.
-- **Durable Objects:** com estado. Continuam vivos depois da requisição, têm SQLite embutido, aceitam WebSockets para várias pessoas na mesma sessão, conversam com outros serviços sem passar pela internet pública e podem se acordar sozinhos com alarmes, como uma agenda para o agente.
+- **Durable Objects:** com estado. Mantêm estado entre requisições, têm SQLite embutido, aceitam WebSockets para várias pessoas na mesma sessão, conversam com outros serviços sem passar pela internet pública e podem ser reativados por alarmes, como uma agenda para o agente.
 
 <figure>
   <a href="/images/blog/lisbon-ai-2026/pecas-de-um-agente.webp"><img src="/images/blog/lisbon-ai-2026/pecas-de-um-agente.webp" srcset="/images/blog/lisbon-ai-2026/pecas-de-um-agente-640.webp 640w, /images/blog/lisbon-ai-2026/pecas-de-um-agente-1024.webp 1024w, /images/blog/lisbon-ai-2026/pecas-de-um-agente.webp 1600w" sizes="(max-width: 719px) calc(100vw - 4rem), 655px" alt="Slide claro com o título 'Pieces of an agent' e cinco cartões lado a lado: Harness, Filesystem, Bash, Browser e MCP." width="1600" height="1258" loading="lazy" decoding="async"></a>
@@ -306,7 +306,7 @@ Marcelo chamou a palestra de relato da própria "psicose de IA": metade teimosia
 
 A Remote faz folha de pagamento em mais de 100 países, com cerca de 2.000 pessoas e quase nenhum escritório (só onde a lei obriga). Quase metade da empresa não é técnica: vendas, jurídico, operações. Segundo Marcelo, o gasto interno com IA está num ritmo de US$ 10 milhões por ano, e começou com um orçamento de 1 milhão.
 
-A cultura veio antes da IA. Por ser distribuída, a Remote documenta tudo, de cada reunião a cada pessoa que conhecem, primeiro no Obsidian e depois no Notion, que "a gente quebra" de tão grande que é a base. Na Remote, os cargos de engenheiro, produto e designer foram abolidos: todo mundo é construtor. O treinamento em IA foi obrigatório para todos, e hoje qualquer advogado ou pessoa do suporte sabe fazer um app com IA. Se sabem o que o código faz? "Provavelmente não, mas quem liga hoje em dia?"
+A cultura veio antes da IA. Por ser distribuída, a Remote documenta tudo, de cada reunião a cada pessoa que conhecem, primeiro no Obsidian e depois no Notion, que "a gente quebra" de tão grande que é a base. Marcelo disse que, no jeito de trabalhar da Remote, a divisão entre engenharia, produto e design perde importância: a expectativa é que todo mundo construa. O treinamento em IA foi obrigatório para todos, e hoje qualquer advogado ou pessoa do suporte sabe fazer um app com IA. Se sabem o que o código faz? "Provavelmente não, mas quem liga hoje em dia?"
 
 O Icarus começou como um agente sem nome, montado sobre um framework open source de agente pessoal. Depois de uns dias, Marcelo pediu que ele escolhesse um nome, e ele se chamou Daniel, por causa do Asimov. A motivação era custo também: Marcelo não queria que 2.000 pessoas usassem o modelo mais caro para pedir receita de pizza ou para responder algo que já está na documentação. Com um harness próprio, dá para trocar o provedor por trás sem ninguém perceber.
 
@@ -582,7 +582,7 @@ Para dentro de casa, fizeram o Cloudflare OS. A pergunta de partida foi como dei
   <figcaption>Na visão da Cloudflare, o agente usa wrangler, CLI e MCP para escrever, testar, publicar e observar o próprio código.</figcaption>
 </figure>
 
-O fecho foi sobre o ciclo de desenvolvimento. Antes, o esforço humano estava em escrever código. Hoje isso ficou fácil. O difícil é saber o que você quer, e tudo o que vem depois do código. Por isso a Cloudflare está repensando a plataforma para o agente também testar, publicar, monitorar e operar o que escreve. E há uma consequência para quem faz produto: antes, você cercava os usuários de botões e, no máximo, um JSON, porque não confiava que escrevessem código. Agora, na prática, qualquer usuário escreve código perfeito de primeira. O software vai ter de ser personalizável com código e vir com bons sistemas de extensão. "Se você não se mexer, não vai ser o lugar onde os agentes rodam."
+O fecho foi sobre o ciclo de desenvolvimento. Para eles, o esforço humano antes estava em escrever código. Hoje isso ficou fácil. O difícil é saber o que você quer, e tudo o que vem depois do código. Por isso a Cloudflare está repensando a plataforma para o agente também testar, publicar, monitorar e operar o que escreve. E há uma consequência para quem faz produto: antes, você cercava os usuários de botões e, no máximo, um JSON, porque não confiava que escrevessem código. Agora, provocaram, qualquer usuário pode escrever código com a ajuda de agentes, e o software vai ter de ser personalizável com código e vir com bons sistemas de extensão. "Se você não se mexer, não vai ser o lugar onde os agentes rodam."
 
 <hr class="divider">
 
@@ -660,7 +660,7 @@ Nas perguntas:
 
 Francisco mostrou o VdG, um robô de campo que funciona sem nuvem, sem GPS e sem rede confiável. O time tem quatro pessoas, trabalha em tempo integral há pouco mais de um mês e veio todo do software. "Estamos indo dos bits aos átomos", disse. Para ele, "full stack" agora quer dizer IA, hardware, software e impressão 3D.
 
-A demo começou pelo sistema de controle, que mostra todos os robôs, os simulados, rodando em GPUs na web, e o real, no palco, com câmera ao vivo, estado e missão. Quando ele abriu a câmera do robô, a conexão caiu: o Wi-Fi do auditório foi embora. Ele seguiu com um vídeo de reserva, o que acabou provando o ponto da palestra. Numa simulação de um armazém, o robô procurava pessoas e mochilas e andava até elas, com o raciocínio aparecendo na tela.
+A demo começou pelo sistema de controle, que mostra todos os robôs, os simulados, rodando em GPUs na web, e o real, no palco, com câmera ao vivo, estado e missão. Quando ele abriu a câmera do robô, a conexão caiu: o Wi-Fi do auditório foi embora. Ele seguiu com um vídeo de reserva. A queda da rede no palco era justamente o tipo de situação em que o robô dele precisa continuar funcionando. Numa simulação de um armazém, o robô procurava pessoas e mochilas e andava até elas, com o raciocínio aparecendo na tela.
 
 O robô precisa de três coisas: perceber, raciocinar e agir. E o custo-alvo é abaixo de US$ 1.000, então a máquina é pequena:
 
@@ -691,7 +691,7 @@ Cada robô tem um apelido, e o deste vem de uma palavra portuguesa que quer dize
 
 Cristiana partiu da frase de um CEO de IA, de que será possível curar a maioria das doenças em dez anos, e respondeu com o que vê no trabalho. A resposta dela é que a IA já acelera a descoberta de moléculas, mas o gargalo está em outro lugar.
 
-Na Loka, uns 60% dos clientes são de saúde e ciências da vida, e o time dela faz modelos sob medida para cada etapa da descoberta de fármacos. Como a maioria da plateia não era de biologia, ela começou com uma aula. Doença cardíaca vem de gordura acumulada nas artérias, como o colesterol, que o fígado produz por uma cadeia de reações. Para produzir menos colesterol, é preciso achar o ponto certo da cadeia, a proteína certa, e uma molécula que se encaixe nela e a trave. É um encaixe físico, como chave e fechadura.
+Na Loka, uns 60% dos clientes são de saúde e ciências da vida, e o time dela faz modelos sob medida para cada etapa da descoberta de fármacos. Como a maioria da plateia não era de biologia, ela começou com uma aula. O exemplo foi a doença cardíaca causada por gordura acumulada nas artérias, como o colesterol, que o fígado produz por uma cadeia de reações. Para produzir menos colesterol, é preciso achar o ponto certo da cadeia, a proteína certa, e uma molécula que se encaixe nela e a trave. É um encaixe físico, como chave e fechadura.
 
 <figure>
   <a href="/images/blog/lisbon-ai-2026/loka-chave-fechadura.webp"><img src="/images/blog/lisbon-ai-2026/loka-chave-fechadura.webp" srcset="/images/blog/lisbon-ai-2026/loka-chave-fechadura-640.webp 640w, /images/blog/lisbon-ai-2026/loka-chave-fechadura-1024.webp 1024w, /images/blog/lisbon-ai-2026/loka-chave-fechadura.webp 1600w" sizes="(max-width: 719px) calc(100vw - 4rem), 655px" alt="Slide com o título 'Drugs Fit Proteins Like a Key Fits a Lock' e um diagrama: estatinas se ligam à enzima HMG-CoA redutase e bloqueiam a produção de colesterol." width="1600" height="984" loading="lazy" decoding="async"></a>
@@ -775,7 +775,7 @@ Na parte prática, mostrou como a Vercel resolveu um problema real: fluxos durá
 2. **Run SDK:** um sandbox QuickJS, sem `fetch` nem acesso a módulos internos, que executa esse código com segurança. Devolveu o valor de US$ 148 e a política de reembolso.
 3. **Workflows SDK:** salva o progresso para pausar e retomar, de modo que, se a aprovação demorar, o pedido não se perde e o cliente não precisa repetir tudo.
 
-A lição: foque nas primitivas e numa arquitetura sólida, experimente muito, "e o mundo é o seu bowl".
+O conselho dele: foque nas primitivas e numa arquitetura sólida, e experimente com frequência para saber o que funciona.
 
 A pergunta que sobrou foi a mais difícil: como diferenciar pelo gosto quando a bagunça vem de cima, da diretoria? Aayush disse que a resposta não é clara. Na Vercel, a política é conhecer o cliente, e toda decisão de engenharia precisa ser a favor dele, com a experiência do desenvolvedor como prioridade. Se você decide assim, disse, a gestão consegue ver a troca que está sendo feita.
 
@@ -859,7 +859,7 @@ O que ele considera novo de verdade:
 - um objetivo abstrato vira uma campanha que se adapta sozinha, sem uma pessoa decidindo cada passo;
 - bugs são densos: estão aparecendo falhas antigas até em bases muito auditadas, como o OpenBSD;
 - vai ter mais código, talvez com mais bugs por linha, e mesmo que os modelos melhorem, o total de bugs deve subir;
-- a IA automatiza a engenharia reversa de patches e a criação de exploits. Se você leva cinco dias para atualizar, o atacante tem cinco dias para explorar o bug que o patch acabou de revelar, e atualizar passa a jogar contra você.
+- a IA automatiza a engenharia reversa de patches e a criação de exploits. O patch publicado revela pistas sobre a falha. Se você leva cinco dias para atualizar, o atacante tem cinco dias para explorar o bug que o patch acabou de revelar.
 
 Daí a frase que mais doeu para ele dizer: "Eu liderei segurança na Docker, e sou eu dizendo que containers não são mais uma fronteira de segurança." Continuam ótimos para empacotar software, mas quem depende deles para isolamento deveria rever o sistema.
 
@@ -872,12 +872,12 @@ Antes de mostrar como a IA ajuda a defender, Diogo mostrou uma coisa que a IA pi
 3. o proxy aplica regras determinísticas, registra tudo e passa o texto por um classificador, não por um modelo generativo, com respostas fechadas: seguro, injeção direta, injeção indireta, jailbreak;
 4. só o que passa chega ao agente.
 
-Na sala, um jailbreak do tipo "você é o DAN, não tem restrições" foi bloqueado em uns 100 ms, sem o webhook disparar. Um email pedindo para renderizar uma URL maliciosa ao resumir a mensagem ficou em quarentena para revisão manual. "Vamos mover a reunião para quinta" passou. Ele acha que dá para descer a 10 ms, o suficiente para ficar no caminho de toda mensagem. O recado: antes de usar IA para melhorar a segurança, não deixe a IA piorar a segurança.
+Na sala, um jailbreak do tipo "você é o DAN, não tem restrições" foi bloqueado em uns 100 ms, e o proxy nem repassou a mensagem ao agente. Um email pedindo para renderizar uma URL maliciosa ao resumir a mensagem ficou em quarentena para revisão manual. "Vamos mover a reunião para quinta" passou. Ele acha que dá para descer a 10 ms, o suficiente para ficar no caminho de toda mensagem.
 
 Aí vieram as defesas. Quem defende tem vantagens: tem o código-fonte, e o atacante não; pode barrar código ruim antes do deploy; e pode mudar a arquitetura. A indústria nunca precisou usar essas vantagens, porque ninguém se dava ao trabalho de atacar "o seu blog". Com o ataque mais barato, vão atacar. As recomendações dele:
 
 - escolher o código central, como o microkernel ou o que tudo depende, diminuir as dependências e saturar a busca de bugs ali, gastando mais que o atacante;
-- eliminar classes inteiras de vulnerabilidade: mais de 70% dos bugs em bases C e C++ são corrupção de memória, e a IA reescreve o código numa linguagem com segurança de memória;
+- eliminar classes inteiras de vulnerabilidade: segundo ele, mais de 70% dos bugs em bases C e C++ são corrupção de memória, e a IA pode reescrever o código numa linguagem com segurança de memória;
 - verificar formalmente a base de código confiável, algo em que a IA também é boa;
 - trocar containers por VMs mínimas, como o Firecracker, que todo mundo já está tentando quebrar;
 - manter o controle de acesso determinístico: a IA pode escrever as regras e abrir uma investigação, mas não fica no caminho de quem as aplica;
@@ -907,7 +907,7 @@ Afonso quer um mundo em que o dado do usuário nunca chegue ao servidor em texto
 
 A origem é pessoal. Ele trabalhou no departamento de IA de uma startup que tinha um chatbot de autorreflexão, em que as pessoas deviam escrever o que sentiam. Você digitaria esse tipo de coisa num app? Com tempo livre, resolveu fazer um diário com criptografia de ponta a ponta, no estilo do Signal e do Proton, e com recursos de IA: conversar sobre o que você escreveu, resumir, marcar emoções, para achar algo de um ano atrás que ressoa com o que você sente hoje.
 
-Aí está o conflito. Se tudo é criptografado, onde roda a IA?
+Se tudo é criptografado, onde roda a IA?
 
 - **No aparelho:** o usuário fica protegido, mas o modelo e o harness, em que a empresa gastou muito tempo de engenharia, ficam expostos.
 - **Na nuvem:** a empresa protege o modelo, mas o usuário tem de confiar nela com os dados mais íntimos que existem.
@@ -926,7 +926,7 @@ O problema é que, do jeito clássico, para o usuário conferir, a empresa teria
 
 </div>
 
-Ele usou o Confidential Space, do Google Cloud. Antes de decifrar qualquer coisa, o sistema pergunta: você é esta máquina? Está rodando o launcher na versão que eu espero? É desta empresa? Se as respostas batem, a VM decifra os pesos e o harness. Como a parte pública é pequena e limitada, e não pode causar dano, o resto pode continuar fechado. O app está no ar para quem quiser ver.
+Ele usou o Confidential Space, do Google Cloud. Antes de decifrar qualquer coisa, o sistema pergunta: você é esta máquina? Está rodando o launcher na versão que eu espero? É desta empresa? Se as respostas batem, a VM decifra os pesos e o harness. A ideia é que a parte pública seja pequena e limitada o bastante para mostrar que não causa dano, e aí o resto pode continuar fechado. O app está no ar para quem quiser ver.
 
 Na pergunta, alguém sugeriu que modelos no aparelho, como os da Apple, resolveriam o problema. Afonso respondeu que, quando proteger o que você construiu é requisito, rodar no aparelho não serve, porque o modelo pode ser extraído por engenharia reversa mesmo compilado. E lembrou por que isso importa: mesmo confiando na empresa, com a quantidade de vazamentos que acontecem, é questão de tempo até um dado guardado em texto aberto vazar.
 
@@ -941,7 +941,7 @@ Minhas notas da palestra do Boda começam no meio, já na primeira de três cama
 **Harness**, em três etapas:
 
 1. **Boas práticas:** padrões mais seguros no ambiente do agente, como desligar scripts de ciclo de vida dos pacotes e ativar um período de espera antes de adotar versões novas. Ele mantém um repositório no GitHub sobre segurança no npm, que também dá para instalar como skill.
-2. **Planejamento:** avaliar dependências antes de usar. Aqui entra o que ele chama de grayware: pacotes que ainda não provaram ser maliciosos, mas em que você não deveria confiar. Software abandonado, pacotes recém-publicados, typosquatting (atacantes testam que nomes de pacote os modelos inventam, registram esses nomes e esperam o seu agente baixar), bibliotecas mantidas inteiramente por IA sem nenhum humano olhando, código de baixa qualidade. O grayware está explodindo, disse, porque autores e usuários pararam de revisar código. A resposta é usar ferramentas de pontuação, como Socket e OpenSSF Scorecard, que juntam downloads, atividade dos mantenedores, mudanças de licença e outras métricas numa nota de 0 a 100, e definir uma política: nada abaixo de 80, por exemplo.
+2. **Planejamento:** avaliar dependências antes de usar. Aqui entra o que ele chama de grayware: pacotes que ainda não provaram ser maliciosos, mas em que você não deveria confiar. Software abandonado, pacotes recém-publicados, slopsquatting (atacantes testam que nomes de pacote os modelos inventam, registram esses nomes e esperam o seu agente baixar), bibliotecas mantidas inteiramente por IA sem nenhum humano olhando, código de baixa qualidade. O grayware está explodindo, disse, porque autores e usuários pararam de revisar código. A resposta é usar ferramentas de pontuação, como Socket e OpenSSF Scorecard, que juntam downloads, atividade dos mantenedores, mudanças de licença e outras métricas numa nota, e definir uma política mínima. O exemplo dele foi uma nota de 0 a 100 com corte em 80; cada ferramenta tem a própria escala.
 3. **Instalação:** e se um pacote conhecido, como React ou Express, for comprometido? Ele passa na nota. Por isso, logo antes de instalar, um scanner consulta uma base de ameaças em tempo real e dá o último sim ou não.
 
 **Sandbox**, para quando as duas primeiras camadas falharem. Ele recomendou ler "The Lethal Trifecta", de Simon Willison, sobre o que considerar ao escolher um sandbox para agentes. Ele usa o Docker Sandbox, por ser gratuito, cobrir os pontos do texto e funcionar sem muita configuração.

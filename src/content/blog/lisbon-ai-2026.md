@@ -78,7 +78,7 @@ The demo was Nativ, an app built on the engine. Prince turned off the Wi-Fi, sai
 
 According to Prince, the engine has passed 7.5 million downloads. Neywa Labs works with Cohere, Google DeepMind, Baidu and Liquid AI to have open models optimized for Apple Silicon on launch day. On an M5 Max with 48 GB, one of those models runs with 256K tokens of context. On a Mac Studio, the engine serves 16 sessions in parallel with 32K tokens each, enough for 16 agents or 16 people on a single machine.
 
-His close: intelligence per watt has gone up over the last three years, the best open models are close to the closed ones, and 70 to 90% of today's use cases already run on your local machine.
+Prince closed by saying that intelligence per watt has gone up over the last three years, that the best open models are close to the closed ones and that, by his estimate, 70 to 90% of today's use cases already run on your local machine.
 
 <hr class="divider">
 
@@ -130,7 +130,7 @@ Today the problem splits into three layers, each solved by a different kind of m
   <figcaption>Understanding, appearance and structure: the three layers that, for Chema, are still solved by different models.</figcaption>
 </figure>
 
-Mundus, Sperid's model, joins the three layers and unifies six computer vision problems in one model. It takes a few photos, a panorama, a video or a text prompt, and returns a structured 3D scene that opens straight in a game engine. It was trained on the content of the whole internet, not only on the few 3D files that exist.
+Mundus, Sperid's model, joins the three layers and unifies six computer vision problems in one model. It takes a few photos, a panorama, a video or a text prompt, and returns a structured 3D scene that opens straight in a game engine. Chema argued for training this kind of model on images and videos from the web, rather than relying only on the few 3D files that exist.
 
 The demos were live. Chema spent the two days before distilling the model so it would run fast enough on stage. From a few perspective photos, Mundus generated a 3D world, filling in what the photos didn't show, and each run came out slightly different. In a scene of a reconstructed house, he emptied the room, picked up a ceramic vase, dropped it on the floor, resized it and moved it around, without opening any 3D engine. The model also understands what it generates: you can search for objects in the scene with text, which is useful for automatically labeling data captured in the real world.
 
@@ -192,7 +192,7 @@ In the Q&A, he said he paid for everything out of his own pocket. Filtering Baga
 
 Sergio wanted to know whether open tools can do what the labs do with their coding agents: train the model inside the harness. In a few months, he said, we went from writing code to using agents, and an agent is always a harness (Claude Code, OpenCode, Codex) plus a model. The frontier model reports show they're trained in reinforcement learning environments built with those harnesses.
 
-His stack used only Hugging Face pieces:
+His stack combined Hugging Face training and infrastructure tools with OpenCode in a Docker container:
 
 - **TRL**, the training library, with the asynchronous version of GRPO;
 - **OpenEnv**, a standard for training environments that Hugging Face develops with Meta, Reflection and other labs;
@@ -247,7 +247,7 @@ The third wave is the one he cares about, when his mother and cousins, who aren'
 Cloudflare's bet, made before agents existed, is isolates, the same V8 technology browsers use. They come in two forms:
 
 - **Workers:** stateless, for request-response APIs. They spin up when needed and scale to billions of requests.
-- **Durable Objects:** stateful. They stay alive after the request, have built-in SQLite, accept WebSockets for several people in the same session, talk to other services without going over the public internet and can wake themselves up with alarms, like a calendar for the agent.
+- **Durable Objects:** stateful. They keep state between requests, have built-in SQLite, accept WebSockets for several people in the same session, talk to other services without going over the public internet and can be woken up by alarms, like a calendar for the agent.
 
 <figure>
   <a href="/images/blog/lisbon-ai-2026/pecas-de-um-agente.webp"><img src="/images/blog/lisbon-ai-2026/pecas-de-um-agente.webp" srcset="/images/blog/lisbon-ai-2026/pecas-de-um-agente-640.webp 640w, /images/blog/lisbon-ai-2026/pecas-de-um-agente-1024.webp 1024w, /images/blog/lisbon-ai-2026/pecas-de-um-agente.webp 1600w" sizes="(max-width: 719px) calc(100vw - 4rem), 655px" alt="Light slide titled 'Pieces of an agent' with five cards side by side: Harness, Filesystem, Bash, Browser and MCP." width="1600" height="1258" loading="lazy" decoding="async"></a>
@@ -306,7 +306,7 @@ Marcelo called his talk a report on his own "AI psychosis": half stubbornness, h
 
 Remote runs payroll in more than 100 countries, with about 2,000 people and almost no offices (only where the law requires one). Almost half the company isn't technical: sales, legal, operations. According to Marcelo, internal AI spend is running at US$10 million a year, and it started with a budget of 1 million.
 
-The culture came before the AI. Being distributed, Remote documents everything, every meeting and every person they meet, first in Obsidian and then in Notion, which "we break" because the knowledge base is so big. At Remote, the engineer, product and designer titles were abolished: everyone is a builder. AI training was mandatory for everyone, and today any lawyer or support person knows how to build an app with AI. Do they know what the code does? "Probably not, but who cares these days?"
+The culture came before the AI. Being distributed, Remote documents everything, every meeting and every person they meet, first in Obsidian and then in Notion, which "we break" because the knowledge base is so big. Marcelo said that in how Remote works, the split between engineering, product and design matters less: everyone is expected to build. AI training was mandatory for everyone, and today any lawyer or support person knows how to build an app with AI. Do they know what the code does? "Probably not, but who cares these days?"
 
 Icarus started as an unnamed agent, built on an open source personal-agent framework. After a few days, Marcelo asked it to pick a name, and it called itself Daniel, after Asimov. Cost was part of the motivation too: Marcelo didn't want 2,000 people using the most expensive model to ask for a pizza recipe or for something already in the docs. With your own harness, you can swap the provider behind it without anyone noticing.
 
@@ -582,7 +582,7 @@ Internally, they built Cloudflare OS. The starting question was how to let anyon
   <figcaption>In Cloudflare's view, the agent uses wrangler, the CLI and MCP to write, test, deploy and observe its own code.</figcaption>
 </figure>
 
-The close was about the development cycle. Human effort used to go into writing code. Now that's easy. The hard part is knowing what you want, and everything that comes after the code. That's why Cloudflare is rethinking the platform so the agent also tests, deploys, monitors and operates what it writes. And there's a consequence for people who build products: you used to surround users with buttons and, at most, a JSON field, because you didn't trust them to write code. Now, in practice, any user writes perfect code on the first try. Software will have to be customizable with code and ship with good extension systems. "If you don't move, you won't be the place where agents run."
+The close was about the development cycle. As they see it, human effort used to go into writing code. Now that's easy. The hard part is knowing what you want, and everything that comes after the code. That's why Cloudflare is rethinking the platform so the agent also tests, deploys, monitors and operates what it writes. And there's a consequence for people who build products: you used to surround users with buttons and, at most, a JSON field, because you didn't trust them to write code. Now, they argued, any user can write code with the help of agents, and software will have to be customizable with code and ship with good extension systems. "If you don't move, you won't be the place where agents run."
 
 <hr class="divider">
 
@@ -660,7 +660,7 @@ In the Q&A:
 
 Francisco showed VdG, a field robot that works without the cloud, without GPS and without a reliable network. The team has four people, has been working full time for a little over a month and came entirely from software. "We're going from bits to atoms," he said. For him, "full stack" now means AI, hardware, software and 3D printing.
 
-The demo started with the control system, which shows all the robots, the simulated ones, running on GPUs on the web, and the real one, on stage, with a live camera, state and mission. When he opened the robot's camera, the connection dropped: the auditorium Wi-Fi went away. He carried on with a backup video, which ended up proving the talk's point. In a simulation of a warehouse, the robot looked for people and backpacks and drove up to them, with its reasoning showing on screen.
+The demo started with the control system, which shows all the robots, the simulated ones, running on GPUs on the web, and the real one, on stage, with a live camera, state and mission. When he opened the robot's camera, the connection dropped: the auditorium Wi-Fi went away. He carried on with a backup video. The network dropping on stage was exactly the kind of situation his robot needs to keep working through. In a simulation of a warehouse, the robot looked for people and backpacks and drove up to them, with its reasoning showing on screen.
 
 The robot needs three things: perceive, reason and act. And the target cost is under US$1,000, so the machine is small:
 
@@ -691,7 +691,7 @@ Each robot has a nickname, and this one's comes from a Portuguese word that mean
 
 Cristiana started from an AI CEO's claim that it will be possible to cure most diseases in ten years, and answered with what she sees at work. Her answer is that AI already speeds up molecule discovery, but the bottleneck is somewhere else.
 
-At Loka, about 60% of customers are in healthcare and life sciences, and her team builds custom models for each stage of drug discovery. Since most of the audience wasn't from biology, she started with a lesson. Heart disease comes from fat building up in the arteries, like cholesterol, which the liver produces through a chain of reactions. To produce less cholesterol, you have to find the right point in the chain, the right protein, and a molecule that fits it and locks it. It's a physical fit, like a key and a lock.
+At Loka, about 60% of customers are in healthcare and life sciences, and her team builds custom models for each stage of drug discovery. Since most of the audience wasn't from biology, she started with a lesson. Her example was heart disease caused by fat building up in the arteries, like cholesterol, which the liver produces through a chain of reactions. To produce less cholesterol, you have to find the right point in the chain, the right protein, and a molecule that fits it and locks it. It's a physical fit, like a key and a lock.
 
 <figure>
   <a href="/images/blog/lisbon-ai-2026/loka-chave-fechadura.webp"><img src="/images/blog/lisbon-ai-2026/loka-chave-fechadura.webp" srcset="/images/blog/lisbon-ai-2026/loka-chave-fechadura-640.webp 640w, /images/blog/lisbon-ai-2026/loka-chave-fechadura-1024.webp 1024w, /images/blog/lisbon-ai-2026/loka-chave-fechadura.webp 1600w" sizes="(max-width: 719px) calc(100vw - 4rem), 655px" alt="Slide titled 'Drugs Fit Proteins Like a Key Fits a Lock' with a diagram: statins bind to the HMG-CoA reductase enzyme and block cholesterol production." width="1600" height="984" loading="lazy" decoding="async"></a>
@@ -775,7 +775,7 @@ In the practical part, he showed how Vercel solved a real problem: durable, dyna
 2. **Run SDK:** a QuickJS sandbox, with no `fetch` and no access to internal modules, that runs that code safely. It returned the US$148 amount and the refund policy.
 3. **Workflows SDK:** saves progress so it can pause and resume, so that if the approval takes a while, the request isn't lost and the customer doesn't have to repeat everything.
 
-The lesson: focus on primitives and a solid architecture, experiment a lot, "and the world is your bowl".
+His advice: focus on primitives and a solid architecture, and experiment often so you know what works.
 
 The remaining question was the hardest: how do you differentiate on taste when the mess comes from above, from leadership? Aayush said the answer isn't clear. At Vercel, the policy is to know your customer, and every engineering decision has to be in their favor, with developer experience as the priority. If you decide that way, he said, management can see the trade-off being made.
 
@@ -859,7 +859,7 @@ What he considers genuinely new:
 - an abstract goal turns into a campaign that adapts on its own, without a person deciding each step;
 - bugs are dense: old flaws are turning up even in heavily audited codebases, like OpenBSD;
 - there will be more code, maybe with more bugs per line, and even if models get better, the total number of bugs should go up;
-- AI automates reverse engineering patches and writing exploits. If you take five days to update, the attacker has five days to exploit the bug the patch just revealed, and updating starts working against you.
+- AI automates reverse engineering patches and writing exploits. Publishing a patch exposes clues about the flaw. If you take five days to update, the attacker has five days to exploit the bug the patch just revealed.
 
 Hence the line that hurt him most to say: "I led security at Docker, and I'm the one telling you containers are no longer a security boundary." They're still great for packaging software, but anyone relying on them for isolation should rethink the system.
 
@@ -872,12 +872,12 @@ Before showing how AI helps defend, Diogo showed something AI makes worse: hooki
 3. the proxy applies deterministic rules, logs everything and runs the text through a classifier, not a generative model, with closed answers: safe, direct injection, indirect injection, jailbreak;
 4. only what passes reaches the agent.
 
-In the room, a "you are DAN, you have no restrictions" style jailbreak was blocked in about 100 ms, without the webhook firing. An email asking the agent to render a malicious URL while summarizing the message was quarantined for manual review. "Let's move the meeting to Thursday" went through. He thinks it can get down to 10 ms, enough to sit in the path of every message. The message: before using AI to improve security, don't let AI make security worse.
+In the room, a "you are DAN, you have no restrictions" style jailbreak was blocked in about 100 ms, and the proxy never passed the message on to the agent. An email asking the agent to render a malicious URL while summarizing the message was quarantined for manual review. "Let's move the meeting to Thursday" went through. He thinks it can get down to 10 ms, enough to sit in the path of every message.
 
 Then came the defenses. Defenders have advantages: they have the source code, and the attacker doesn't; they can block bad code before deploy; and they can change the architecture. The industry never had to use these advantages, because nobody bothered attacking "your blog". With cheaper attacks, they will. His recommendations:
 
 - pick the core code, like the microkernel or whatever everything depends on, cut its dependencies and saturate bug hunting there, spending more than the attacker;
-- eliminate entire vulnerability classes: more than 70% of bugs in C and C++ codebases are memory corruption, and AI can rewrite the code in a memory-safe language;
+- eliminate entire vulnerability classes: according to him, more than 70% of bugs in C and C++ codebases are memory corruption, and AI can rewrite the code in a memory-safe language;
 - formally verify the trusted codebase, something AI is also good at;
 - replace containers with minimal VMs, like Firecracker, which everyone is already trying to break;
 - keep access control deterministic: AI can write the rules and open an investigation, but it doesn't sit in the path of whatever enforces them;
@@ -926,7 +926,7 @@ The problem is that, the classic way, for the user to check, the company would h
 
 </div>
 
-He used Google Cloud's Confidential Space. Before decrypting anything, the system asks: are you this machine? Are you running the launcher at the version I expect? Do you belong to this company? If the answers match, the VM decrypts the weights and the harness. Since the public part is small and limited, and can't do harm, the rest can stay closed. The app is live for anyone who wants to see it.
+He used Google Cloud's Confidential Space. Before decrypting anything, the system asks: are you this machine? Are you running the launcher at the version I expect? Do you belong to this company? If the answers match, the VM decrypts the weights and the harness. The idea is that the public part is small and limited enough to show it does no harm, so the rest can stay closed. The app is live for anyone who wants to see it.
 
 In the Q&A, someone suggested on-device models, like Apple's, would solve the problem. Afonso answered that when protecting what you built is a requirement, running on the device doesn't work, because the model can be extracted by reverse engineering even when compiled. And he reminded the room why this matters: even if you trust the company, with how many breaches happen, it's only a matter of time before data stored in plaintext leaks.
 
@@ -941,7 +941,7 @@ My notes on Boda's talk start in the middle, already on the first of three layer
 **Harness**, in three stages:
 
 1. **Good practices:** safer defaults in the agent's environment, like turning off package lifecycle scripts and enabling a cooldown period before adopting new versions. He maintains a GitHub repository on npm security, which you can also install as a skill.
-2. **Planning:** assess dependencies before using them. This is where what he calls grayware comes in: packages that haven't been proven malicious, but that you shouldn't trust. Abandoned software, freshly published packages, typosquatting (attackers test which package names models make up, register those names and wait for your agent to download them), libraries maintained entirely by AI with no human looking, low-quality code. Grayware is exploding, he said, because authors and users stopped reviewing code. The answer is scoring tools, like Socket and OpenSSF Scorecard, which combine downloads, maintainer activity, license changes and other metrics into a score from 0 to 100, plus a policy: nothing below 80, for example.
+2. **Planning:** assess dependencies before using them. This is where what he calls grayware comes in: packages that haven't been proven malicious, but that you shouldn't trust. Abandoned software, freshly published packages, slopsquatting (attackers test which package names models make up, register those names and wait for your agent to download them), libraries maintained entirely by AI with no human looking, low-quality code. Grayware is exploding, he said, because authors and users stopped reviewing code. The answer is scoring tools, like Socket and OpenSSF Scorecard, which combine downloads, maintainer activity, license changes and other metrics into a score, plus a minimum policy. His example was a 0 to 100 score with a cutoff at 80; each tool has its own scale.
 3. **Install:** what if a well-known package, like React or Express, gets compromised? It passes the score. So, right before installing, a scanner checks a real-time threat database and gives the final yes or no.
 
 **Sandbox**, for when the first two layers fail. He recommended reading Simon Willison's "The Lethal Trifecta" on what to consider when choosing a sandbox for agents. He uses Docker Sandbox, because it's free, covers the points in the post and works without much setup.
