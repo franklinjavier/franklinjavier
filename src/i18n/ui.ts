@@ -27,7 +27,7 @@ export const ui = {
     'speaking.action.podcast': 'Ouvir o episódio',
     'speaking.action.talk': 'Assistir',
     'speaking.invite': 'Para convites de palestra, entre em contato.',
-    'hero.title': 'Um pouco\nsobre mim',
+    'hero.title': 'Oi, eu sou o Frank',
     'hero.bio1':
       'Sou Principal Engineer e trabalho com front-end há 19 anos, em aplicações web e mobile de alta performance. Hoje quase tudo que faço passa por IA: monto harnesses para agentes, cuido da orquestração e crio as ferramentas que deixam agentes de código confiáveis.',
     'hero.bio2':
@@ -87,7 +87,7 @@ export const ui = {
     'speaking.action.podcast': 'Listen to the episode',
     'speaking.action.talk': 'Watch',
     'speaking.invite': 'For speaking invitations, get in touch.',
-    'hero.title': 'A little bit\nabout me',
+    'hero.title': "Hi, I'm Frank",
     'hero.bio1':
       "I'm a Principal Engineer and I've been doing front-end for 19 years, building fast web and mobile apps. These days almost everything I do involves AI: I build agent harnesses, handle orchestration and write the tooling that makes coding agents reliable.",
     'hero.bio2':

@@ -7,7 +7,7 @@ const lang = getLangFromUrl(Astro.url)
 const t = useTranslations(lang)
 
 const homeUrl = lang === 'en' ? '/' : '/pt-br/'
-const aboutUrl = lang === 'en' ? '/#about' : '/pt-br/#about'
+const aboutUrl = lang === 'en' ? '/about/' : '/pt-br/about/'
 const postsUrl = lang === 'en' ? '/blog/' : '/pt-br/blog/'
 const speakingUrl = lang === 'en' ? '/speaking/' : '/pt-br/speaking/'
 ---

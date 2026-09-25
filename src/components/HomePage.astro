@@ -24,14 +24,11 @@ const sortedPosts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.
 
   <main class="pt-32 pb-20">
     <!-- Hero Section -->
-    <section class="mx-auto mb-32 max-w-7xl px-8" id="about">
-      <div class="grid grid-cols-1 items-start gap-16 lg:grid-cols-2">
+    <section class="mx-auto mb-24 max-w-7xl px-8" id="about">
+      <div class="grid grid-cols-1 items-center gap-16 lg:grid-cols-2">
         <div>
-          <h1
-            class="mb-8 text-6xl leading-tight font-bold lg:text-7xl"
-            set:html={t('hero.title').replace('\n', '<br />')}
-          />
-          <div class="max-w-xl space-y-6 text-lg text-gray-700 dark:text-gray-300">
+          <h1 class="mb-6 text-4xl leading-tight font-bold lg:text-5xl">{t('hero.title')}</h1>
+          <div class="max-w-xl space-y-5 text-base text-gray-700 dark:text-gray-300">
             <p>{t('hero.bio1')}</p>
             <p>{t('hero.bio2')}</p>
             <p>{t('hero.bio3')}</p>
@@ -39,8 +36,8 @@ const sortedPosts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.
         </div>
 
         <!-- Photo -->
-        <div class="relative lg:mt-16">
-          <div class="rotate-3 transform shadow-2xl">
+        <div class="relative mx-auto w-full max-w-md">
+          <div class="hero-photo shadow-2xl">
             <img
               src="/img/frank.jpeg"
               alt="Franklin Javier"
@@ -149,3 +146,39 @@ const sortedPosts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.
     </section>
   </main>
 </BaseLayout>
+
+<style>
+  /* Hero photo: settles into its tilt on load, straightens a little on hover.
+     Opacity stays at 1 so the photo (the page's LCP) paints on the first frame. */
+  .hero-photo {
+    --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+    rotate: 3deg;
+    transition:
+      rotate 250ms var(--ease-out),
+      scale 250ms var(--ease-out);
+    /* backwards (not both): once it ends, the hover transition takes over. */
+    animation: hero-photo-in 700ms var(--ease-out) 100ms backwards;
+  }
+
+  @keyframes hero-photo-in {
+    from {
+      rotate: -3deg;
+      scale: 0.94;
+      translate: 0 1.5rem;
+    }
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .hero-photo:hover {
+      rotate: 0deg;
+      scale: 1.02;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-photo {
+      animation: none;
+      transition: none;
+    }
+  }
+</style>
