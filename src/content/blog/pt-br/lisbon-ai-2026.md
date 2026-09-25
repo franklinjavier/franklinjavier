@@ -1,7 +1,7 @@
 ---
 title: 'Lisbon AI 2026: 32 palestras sobre agentes, medição e confiança'
 date: 2026-09-25
-description: 'Relato dos dois dias do Lisbon AI 2026: os temas que apareceram em várias palestras e cada uma das 32 em detalhe, na ordem em que aconteceram.'
+description: 'Os dois dias do Lisbon AI 2026: o que se repetiu entre as palestras e as 32 em detalhe, com demos e perguntas do público.'
 author: Franklin Javier
 tags: ia, agentes, evals, segurança, conferência
 lang: pt-br
@@ -17,7 +17,7 @@ draft: false
 
 Nos dias 23 e 24 de setembro fui ao [Lisbon AI](https://lisbonai.org/), no Centro Champalimaud, em Belém. É a segunda edição de uma conferência feita para quem constrói com IA. O primeiro dia foi de modelos, agentes e evals. O segundo, de IA aplicada e segurança.
 
-Este post é baseado nas minhas anotações das 32 palestras e nas fotos e vídeos que fiz, com nomes conferidos na [página de palestrantes](https://lisbonai.org/speakers/). Primeiro vêm as ideias que apareceram em várias palestras, depois cada palestra em detalhe, na ordem em que aconteceram, com os exemplos, as demos e as perguntas do público. É longo de propósito. Use o índice para ir direto às que interessam.
+Este post é baseado nas minhas anotações das 32 palestras e nas fotos e vídeos que fiz, com nomes conferidos na [página de palestrantes](https://lisbonai.org/speakers/). Primeiro vêm as ideias que apareceram em várias palestras, depois cada palestra em detalhe, com os exemplos, as demos e as perguntas do público. São 32 seções, então use o índice para ir direto às que interessam.
 
 Pouca gente discutiu qual modelo é melhor. Mesmo nas palestras sobre modelos, a conversa ia parar em onde rodar, como medir e o que deixar o agente fazer.
 
@@ -174,7 +174,7 @@ Com ele, o conjunto dobrou para 21,3 bilhões de tokens e passou a incluir sites
 
 Sobre o Amália, Duarte escreveu um post mostrando o lado bom e o ruim. O ruim: o modelo não foi treinado do zero, é um pré-treino continuado do EuroLLM, e só 5,8 bilhões de tokens, cerca de 5% do pré-treino, eram português europeu. O bom, que quase ninguém viu no meio das críticas: a equipe publicou avaliações que antes não existiam, como os exames nacionais do ensino médio de geografia, história e matemática. Agora dá para medir.
 
-Com essas avaliações, ele criou o PT Core, uma nota única inspirada no nanochat do Karpathy, e treinou vários modelos pequenos para comparar. Modelo maior tira nota maior, como se espera. O que chamou atenção foi a qualidade do dado: filtrar só os textos com nota educacional 2 ou mais deu um PT Core de 12,8, cerca de dez vezes acima das outras configurações. O problema é que esse filtro deixa só uns 20% do Bagaço.
+Com essas avaliações, ele criou o PT Core, uma nota única inspirada no nanochat do Karpathy, e treinou vários modelos pequenos para comparar. Modelos maiores tiraram notas maiores. O que chamou atenção foi a qualidade do dado: filtrar só os textos com nota educacional 2 ou mais deu um PT Core de 12,8, cerca de dez vezes acima das outras configurações. O problema é que esse filtro deixa só uns 20% do Bagaço.
 
 Na comparação com o Amália, que tem 9B parâmetros, modelos com metade ou um quarto do tamanho foram melhores nos exames portugueses. Duarte avisou que o gráfico engana um pouco: os que ganham são modelos de raciocínio, que gastam muito mais tokens por resposta, e o Amália não foi treinado para raciocinar.
 
@@ -227,7 +227,7 @@ O treino ensinou dois modos ao mesmo modelo, cada um com um ambiente próprio, f
 - **investigar:** diante de uma pergunta, escolher as ferramentas certas e extrair a evidência; a recompensa olha as ferramentas chamadas;
 - **concluir:** diante de uma proteína ou de um problema difícil, raciocinar e responder de forma estruturada, com fontes.
 
-Eles usaram GRPO combinado com autoresearch, algo raro nessa fase do treino (autoresearch costuma ficar no pré-treino), e otimizaram os prompts dos ambientes com GEPA. A conclusão que Bojan tirou: pesquisa é uma máquina de estados, não um prompt esperto. Depois de uma rodada, o modelo chegou a 81,2% numa avaliação de uso de ferramentas em saúde e a 86,3 num teste de raciocínio sobre proteínas, depois de cem passos. São avaliações diferentes, que não se comparam.
+Eles usaram GRPO combinado com autoresearch, algo raro nessa fase do treino (autoresearch costuma ficar no pré-treino), e otimizaram os prompts dos ambientes com GEPA. Para Bojan, pesquisa é uma máquina de estados, não um prompt esperto. Depois de uma rodada, o modelo chegou a 81,2% numa avaliação de uso de ferramentas em saúde e a 86,3 num teste de raciocínio sobre proteínas, depois de cem passos. São avaliações diferentes, que não se comparam.
 
 O modelo sozinho não basta. O harness tem um agente orquestrador, ferramentas para revisão de literatura, bases de dados de ciências da vida e ligação de proteínas e moléculas, e um agente crítico, porque em ciência você quer alguém do outro lado conferindo. Para Bojan, o cientista de IA é o sistema inteiro: dados, ambientes, modelo e harness. Tudo está aberto, e a próxima versão já estava em treino com a AWS e a Arcee.
 
@@ -339,7 +339,7 @@ A premissa: a única função da memória é entregar à próxima sessão o cont
 - **Encher de tokens.** Sem estrutura, você só queima o limite de uso. Modelos mais espertos vão mais longe, mas também não resolvem a estrutura.
 - **Vector store.** Busca por similaridade não recupera com precisão. Sem entender bem como os trechos são cortados e sobrepostos, não use.
 
-Ele citou um paper de Princeton e do MIT em que um harness com memória levou um modelo de 30% para 95,5% no ARC-AGI, acima da referência humana de 95,4%. O ponto dele: os pesos do modelo você não muda, e a janela de contexto é pequena. A oportunidade está no que o agente salva em disco, de forma estruturada, antes de desligar.
+Ele citou um paper de Princeton e do MIT em que um harness com memória levou um modelo de 30% para 95,5% no ARC-AGI, acima da referência humana de 95,4%. Os pesos do modelo, lembrou, você não muda, e a janela de contexto é pequena. A oportunidade está no que o agente salva em disco, de forma estruturada, antes de desligar.
 
 Duas coisas práticas. O compact, o resumo que roda quando a janela enche, pode ser customizado: você define em que ponto acontece e usa uma skill de passagem de bastão, controlando custo e qualidade. E o comando prometido, o memory bank (não confundir com o do Google):
 
@@ -468,7 +468,7 @@ A solução para o modelo pequeno foi montar o prompt na hora. Um classificador 
 
 Nas perguntas:
 
-- **Por que não otimizar o prompt com GEPA ou DSPy?** Eles testaram vários modelos, e os modernos passam neste caso simples. O objetivo não era marcar a caixa, e sim entender como as partes interagem: o modelo como genética, o prompt como ambiente, e mudar o comportamento de forma previsível.
+- **Por que não otimizar o prompt com GEPA ou DSPy?** Eles testaram vários modelos, e os modernos passam neste caso simples. O objetivo era entender como as partes interagem: o modelo como genética, o prompt como ambiente, e mudar o comportamento de forma previsível.
 - **Um modelo como o Astra não faria isso sozinho?** Thom desconfia que os modelos avançados já escolhem em que parte do prompt prestar atenção, e é por isso que ficam mais difíceis de ajustar. O padrão é ótimo 99% das vezes, mas o último 1%, nos casos estranhos de clínicas com regras complexas, fica mais difícil.
 - **E pôr um modelo grande para coordenar o pequeno?** Foi por onde começaram, com vários agentes coordenados. Mas a PetsApp gera uma sugestão de resposta a cada mensagem que chega, e isso sai caro. O classificador barato deixa até o GPT-3.5 Turbo perto do desempenho de um modelo muito maior.
 
@@ -496,7 +496,7 @@ Mesmo com tudo certo, o resultado pode ser ruim. No exemplo, todas as notas fica
 
 Na Peec AI, que mede a visibilidade de marcas nas respostas de IA, aconteceu de verdade. Eles precisam gerar, para milhares de clientes em várias línguas, as perguntas que vão monitorar, e usaram prompt learning para isso. O otimizador passou a gerar perguntas ultraespecíficas, de nicho, que nenhum usuário faria. A causa foi uma recompensa que pedia cobertura de todo o espectro semântico da marca. As marcas não querem o espectro inteiro, querem as perguntas que os clientes delas fazem de verdade. Uma recompensa de popularidade resolveu.
 
-As conclusões dele: modelos grandes servem para achar o princípio, que depois vira prompt, uma destilação em linguagem em vez de em pesos, mais fácil de ler e de conferir. E montar o loop é fácil. O trabalho de engenharia está nas recompensas, e o loop precisa deixar adicionar e remover recompensas sem esforço.
+Para ele, modelos grandes servem para achar o princípio, que depois vira prompt, uma destilação em linguagem em vez de em pesos, mais fácil de ler e de conferir. E montar o loop é fácil. O trabalho de engenharia está nas recompensas, e o loop precisa deixar adicionar e remover recompensas sem esforço.
 
 Nas perguntas:
 
@@ -532,9 +532,9 @@ Ele ainda desconfiava que havia mais, porque conhecia o código. Pediu três coi
 2. aumentar o intervalo, de uma consulta de 15 minutos para uma de um dia inteiro, para ver se o ganho se mantinha;
 3. desafiar as conclusões: numa sessão nova, pediu ao agente para procurar tudo que pudesse estar errado.
 
-A terceira trouxe a outra mudança. A cada repaint, o flame graph relia o resultado inteiro da consulta à API, acumulando memória. A correção foi copiar os valores de layout para um `Float64Array` e reusar a cada repaint. O resultado final: o render normal foi de 21,4 ms para 5,7 ms, e o invertido, que desenha mais texto e mais retângulos, de uns 44 ms para 7,7 ms.
+A terceira trouxe a outra mudança. A cada repaint, o flame graph relia o resultado inteiro da consulta à API, acumulando memória. A correção foi copiar os valores de layout para um `Float64Array` e reusar a cada repaint. No fim, o render normal foi de 21,4 ms para 5,7 ms, e o invertido, que desenha mais texto e mais retângulos, de uns 44 ms para 7,7 ms.
 
-As lições dele: tenha uma forma de medir antes de aceitar uma ideia de performance da IA, confira o comportamento você mesmo, porque agentes não são perfeitos, e desafie as conclusões. Ele publicou um pacote open source para gravar uma interação numa visualização em Canvas, inspecionar e comparar antes e depois.
+Ele deixou três conselhos: tenha uma forma de medir antes de aceitar uma ideia de performance da IA, confira o comportamento você mesmo, porque agentes não são perfeitos, e desafie as conclusões. Ele publicou um pacote open source para gravar uma interação numa visualização em Canvas, inspecionar e comparar antes e depois.
 
 <hr class="divider">
 
@@ -622,7 +622,7 @@ Depois veio o estilo. Steve se sentiu mal com uma estética que tinha saído pro
 
 O jogo final, em dangerbrave.com, é todo dublado, com milhares de falas: trolls consertando pontes, goblins, personalização do personagem (o cabelo é mascarado a partir de um PNG magenta) e poses de dano. O combate não tem nada a ver com a matemática, e Steve contou que ele mesmo melhorou na conta de cabeça fazendo o projeto. No fim, lembrou que nem toda criança quer lutar com monstros. Com as mesmas regras, uma história nova, arte nova e outra voz, fez uma versão em que você treina cavalos selvagens e, em vez de perder vidas, ganha confiança. Depois, batalhas de dança de ficção científica.
 
-A conclusão dele: o tldraw ainda é a expressão do gosto dele, e ficaria preocupado se deixasse de ser. Ele não lê o código desses projetos, mas quer estar ali como diretor criativo, com boas ferramentas, para que quando alguém entrar no trailer ele saiba o que responder e a resposta volte para o enxame. O convite foi pensar em projetos de escala Manhattan, que não existiriam sem IA, e não em fazer o que já fazemos um pouco mais rápido.
+Steve fechou dizendo que o tldraw ainda é a expressão do gosto dele, e ficaria preocupado se deixasse de ser. Ele não lê o código desses projetos, mas quer estar ali como diretor criativo, com boas ferramentas, para que quando alguém entrar no trailer ele saiba o que responder e a resposta volte para o enxame. O convite foi pensar em projetos de escala Manhattan, que não existiriam sem IA, e não em fazer o que já fazemos um pouco mais rápido.
 
 Na pergunta que sobrou, alguém que tentou algo parecido perguntou como ele não enlouqueceu com o projeto crescendo. Steve respondeu com a escola de arte, onde se aprende a não enlouquecer trabalhando sozinho, numa sala, em algo que ninguém pediu. Ele desenha isso como uma rampa com paredes: você delimita o problema (este tamanho, este tema, este jogo e não aquele), qualquer decisão dentro dos limites vale, e existe um ponto final, uma exposição ou um lançamento. "Você se dá permissão para ir o mais longe possível dentro desses limites." Leva um tempo para aprender, disse.
 
@@ -718,7 +718,7 @@ O gargalo continua nos ensaios clínicos, e ela deu três motivos para a IA aind
 - **os rótulos não refletem a biologia:** diagnósticos vêm de listas de sintomas, e ansiedade e depressão são diagnósticos diferentes com muita sobreposição biológica;
 - **não há retorno:** as escolhas feitas na otimização só mostram consequência uns cinco anos depois, como fazer uma prova e saber a nota cinco anos mais tarde. As medidas de laboratório não se correlacionam bem com o que acontece nos ensaios, e isso nunca volta para os modelos.
 
-Para fechar o ciclo, o modelo que escolhe as moléculas precisaria aprender com os ensaios clínicos. Isso esbarra em política e burocracia, porque quem faz o modelo raramente é quem faz o ensaio, e em dados feitos para aprendizado de máquina que capturem a complexidade do corpo humano. Ela contou que, na véspera, viu o próprio Dario Amodei acrescentar nuance à frase original: seria possível só se a IA fosse aplicada em todas as etapas, o que é um grande "se". A conclusão de Cristiana: otimista, mas com os pés no chão, e com especialistas do domínio decidindo que ferramentas ajudam, em vez de IA pela IA.
+Para fechar o ciclo, o modelo que escolhe as moléculas precisaria aprender com os ensaios clínicos. Isso esbarra em política e burocracia, porque quem faz o modelo raramente é quem faz o ensaio, e em dados feitos para aprendizado de máquina que capturem a complexidade do corpo humano. Ela contou que, na véspera, viu o próprio Dario Amodei acrescentar nuance à frase original: seria possível só se a IA fosse aplicada em todas as etapas, o que é um grande "se". Cristiana se disse otimista, mas com os pés no chão, com especialistas do domínio decidindo que ferramentas ajudam, em vez de IA pela IA.
 
 Nas perguntas:
 
@@ -810,7 +810,7 @@ Na pergunta, alguém observou que todo mundo acha que tem bom gosto e perguntou 
 
 A última fala antes do almoço foi do Pedro, gerente de projeto do CNCA na BSC AI Factory, patrocinadora do evento. Steve o apresentou como a pessoa que dá computação de graça para quem justificar bem.
 
-A BSC AI Factory é uma iniciativa financiada pela União Europeia para fortalecer o ecossistema de inovação em IA. Tudo é gratuito. Há duas máquinas:
+A BSC AI Factory é uma iniciativa financiada pela União Europeia para apoiar projetos de IA na Europa. Tudo é gratuito. Há duas máquinas:
 
 - **MareNostrum 5**, o supercomputador de Barcelona, para equipes mais experientes;
 - **Deucalion**, o supercomputador português, indicado para equipes com menos experiência, porque o time de suporte trabalha praticamente na mesma sala.
@@ -981,7 +981,7 @@ Na pergunta, alguém lembrou que dá para fixar a versão das suas dependências
 
 ### Artur Goulão, Humanos
 
-Artur está construindo uma rede de confiança para agentes. A Humanos, segundo ele, já está em produção em mais de 350 instituições, de saúde a fintechs. O ponto de partida: hoje todo agente age com autorização de uma pessoa, seja para mexer em dinheiro, publicar código ou acessar prontuários. Para ser útil, ou você aprova tudo, ou descobre depois o que ele fez.
+Artur está construindo uma rede de confiança para agentes. A Humanos, segundo ele, já está em produção em mais de 350 instituições, de saúde a fintechs. Hoje, lembrou, todo agente age com autorização de uma pessoa, seja para mexer em dinheiro, publicar código ou acessar prontuários. Para ser útil, ou você aprova tudo, ou descobre depois o que ele fez.
 
 Ele dividiu a confiança em tempo de execução em quatro perguntas:
 

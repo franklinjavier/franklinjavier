@@ -1,7 +1,7 @@
 ---
 title: 'Lisbon AI 2026: 32 talks on agents, measurement and trust'
 date: 2026-09-25
-description: 'A report from the two days of Lisbon AI 2026: the themes that came up across several talks, and each of the 32 in detail, in the order they happened.'
+description: 'Two days of Lisbon AI 2026: what kept coming up across the talks, and all 32 in detail, with demos and audience questions.'
 author: Franklin Javier
 tags: ai, agents, evals, security, conference
 lang: en
@@ -17,7 +17,7 @@ draft: false
 
 On September 23 and 24 I went to [Lisbon AI](https://lisbonai.org/), at the Champalimaud Centre in Belém. It is the second edition of a conference for people who build with AI. Day one covered models, agents and evals. Day two, applied AI and security.
 
-This post is based on my notes from the 32 talks and the photos and videos I took, with names checked against the [speakers page](https://lisbonai.org/speakers/). First come the ideas that showed up across several talks, then each talk in detail, in the order they happened, with the examples, the demos and the audience questions. It is long on purpose. Use the index to jump to the ones you care about.
+This post is based on my notes from the 32 talks and the photos and videos I took, with names checked against the [speakers page](https://lisbonai.org/speakers/). First come the ideas that showed up across several talks, then each talk in detail, with the examples, the demos and the audience questions. There are 32 sections, so use the index to jump to the ones you care about.
 
 Few people argued about which model is best. Even in the model talks, the conversation kept landing on where to run it, how to measure it and what to let the agent do.
 
@@ -174,7 +174,7 @@ With it, the dataset doubled to 21.3 billion tokens and started including sites 
 
 About Amália, Duarte wrote a post showing the good side and the bad. The bad: the model wasn't trained from scratch, it's a continued pre-training of EuroLLM, and only 5.8 billion tokens, about 5% of the pre-training, were European Portuguese. The good, which almost nobody noticed amid the criticism: the team published evaluations that didn't exist before, like the national high school exams in geography, history and math. Now you can measure.
 
-With those evaluations, he created PT Core, a single score inspired by Karpathy's nanochat, and trained several small models to compare. Bigger models score higher, as expected. What stood out was data quality: keeping only texts with an educational score of 2 or more gave a PT Core of 12.8, about ten times higher than the other configurations. The problem is that this filter keeps only about 20% of Bagaço.
+With those evaluations, he created PT Core, a single score inspired by Karpathy's nanochat, and trained several small models to compare. Bigger models scored higher. What stood out was data quality: keeping only texts with an educational score of 2 or more gave a PT Core of 12.8, about ten times higher than the other configurations. The problem is that this filter keeps only about 20% of Bagaço.
 
 Compared with Amália, which has 9B parameters, models half or a quarter its size did better on the Portuguese exams. Duarte warned that the chart is a bit misleading: the winners are reasoning models, which spend far more tokens per answer, and Amália wasn't trained to reason.
 
@@ -227,7 +227,7 @@ Training taught the same model two modes, each with its own environment, built w
 - **investigate:** given a question, pick the right tools and extract the evidence; the reward looks at which tools were called;
 - **conclude:** given a protein or a hard problem, reason and answer in a structured way, with sources.
 
-They used GRPO combined with autoresearch, which is rare at this stage of training (autoresearch usually stays in pre-training), and optimized the environment prompts with GEPA. The conclusion Bojan drew: research is a state machine, not a clever prompt. After one round, the model reached 81.2% on a healthcare tool-use evaluation and 86.3 on a protein reasoning test, after a hundred steps. They're different evaluations and don't compare.
+They used GRPO combined with autoresearch, which is rare at this stage of training (autoresearch usually stays in pre-training), and optimized the environment prompts with GEPA. For Bojan, research is a state machine, not a clever prompt. After one round, the model reached 81.2% on a healthcare tool-use evaluation and 86.3 on a protein reasoning test, after a hundred steps. They're different evaluations and don't compare.
 
 The model alone isn't enough. The harness has an orchestrator agent, tools for literature review, life-science databases and protein-molecule binding, and a critic agent, because in science you want someone on the other side checking. For Bojan, the AI scientist is the whole system: data, environments, model and harness. Everything is open, and the next version was already training with AWS and Arcee.
 
@@ -339,7 +339,7 @@ The premise: memory's only job is to hand the next session the context the task 
 - **Stuffing it with tokens.** Without structure, you're just burning your usage limit. Smarter models go further, but they don't solve structure either.
 - **A vector store.** Similarity search doesn't retrieve precisely. Unless you understand well how chunks are cut and overlapped, don't use it.
 
-He cited a paper from Princeton and MIT in which a harness with memory took a model from 30% to 95.5% on ARC-AGI, above the human baseline of 95.4%. His point: you don't change the model's weights, and the context window is small. The opportunity is in what the agent saves to disk, in a structured way, before shutting down.
+He cited a paper from Princeton and MIT in which a harness with memory took a model from 30% to 95.5% on ARC-AGI, above the human baseline of 95.4%. You don't change the model's weights, he pointed out, and the context window is small. The opportunity is in what the agent saves to disk, in a structured way, before shutting down.
 
 Two practical things. Compaction, the summary that runs when the window fills up, can be customized: you decide at what point it happens and use a handoff skill, controlling cost and quality. And the promised command, the memory bank (not to be confused with Google's):
 
@@ -468,7 +468,7 @@ The fix for the small model was to assemble the prompt on the fly. A lightweight
 
 In the Q&A:
 
-- **Why not optimize the prompt with GEPA or DSPy?** They tested several models, and the modern ones pass this simple case. The goal wasn't to tick the box, but to understand how the parts interact: the model as genetics, the prompt as environment, and changing behavior predictably.
+- **Why not optimize the prompt with GEPA or DSPy?** They tested several models, and the modern ones pass this simple case. The goal was to understand how the parts interact: the model as genetics, the prompt as environment, and changing behavior predictably.
 - **Wouldn't a model like Astra do this on its own?** Thom suspects advanced models already choose which part of the prompt to pay attention to, and that's why they get harder to tune. The default is great 99% of the time, but the last 1%, in the odd cases of clinics with complex rules, gets harder.
 - **What about having a big model coordinate the small one?** That's where they started, with several coordinated agents. But PetsApp generates a suggested reply for every incoming message, and that gets expensive. The cheap classifier brings even GPT-3.5 Turbo close to the performance of a much bigger model.
 
@@ -496,7 +496,7 @@ Even with everything right, the result can be bad. In the example, all the score
 
 At Peec AI, which measures brand visibility in AI answers, it actually happened. They need to generate, for thousands of customers in several languages, the questions they'll monitor, and they used prompt learning for it. The optimizer started generating ultra-specific niche questions that no user would ask. The cause was a reward that asked for coverage of the brand's whole semantic spectrum. Brands don't want the whole spectrum, they want the questions their customers actually ask. A popularity reward fixed it.
 
-His conclusions: big models are for finding the principle, which then becomes a prompt, a distillation in language instead of in weights, easier to read and to check. And building the loop is easy. The engineering work is in the rewards, and the loop has to make adding and removing rewards effortless.
+For him, big models are for finding the principle, which then becomes a prompt, a distillation in language instead of in weights, easier to read and to check. And building the loop is easy. The engineering work is in the rewards, and the loop has to make adding and removing rewards effortless.
 
 In the Q&A:
 
@@ -532,9 +532,9 @@ He still suspected there was more, because he knew the code. He asked for three 
 2. widen the range, from a 15-minute query to a full day, to see if the gain held;
 3. challenge the conclusions: in a new session, he asked the agent to look for everything that might be wrong.
 
-The third brought the other change. On every repaint, the flame graph re-read the entire API query result, piling up memory. The fix was to copy the layout values into a `Float64Array` and reuse it on every repaint. The final result: the normal render went from 21.4 ms to 5.7 ms, and the inverted one, which draws more text and more rectangles, from about 44 ms to 7.7 ms.
+The third brought the other change. On every repaint, the flame graph re-read the entire API query result, piling up memory. The fix was to copy the layout values into a `Float64Array` and reuse it on every repaint. In the end, the normal render went from 21.4 ms to 5.7 ms, and the inverted one, which draws more text and more rectangles, from about 44 ms to 7.7 ms.
 
-His lessons: have a way to measure before accepting a performance idea from AI, check the behavior yourself, because agents aren't perfect, and challenge the conclusions. He published an open source package to record an interaction in a Canvas visualization, inspect it and compare before and after.
+He left three pieces of advice: have a way to measure before accepting a performance idea from AI, check the behavior yourself, because agents aren't perfect, and challenge the conclusions. He published an open source package to record an interaction in a Canvas visualization, inspect it and compare before and after.
 
 <hr class="divider">
 
@@ -622,7 +622,7 @@ Then came the style. Steve felt bad about an aesthetic that had come out of the 
 
 The final game, at dangerbrave.com, is fully voiced, with thousands of lines: trolls fixing bridges, goblins, character customization (the hair is masked from a magenta PNG) and damage poses. The combat has nothing to do with the math, and Steve said he got better at mental arithmetic himself while making the project. At the end, he remembered that not every kid wants to fight monsters. With the same rules, a new story, new art and another voice, he made a version where you train wild horses and, instead of losing lives, you gain trust. Then, sci-fi dance battles.
 
-His conclusion: tldraw is still the expression of his taste, and he'd be worried if it stopped being that. He doesn't read the code of these projects, but he wants to be there as creative director, with good tools, so that when someone walks into the trailer he knows what to answer and the answer goes back to the swarm. The invitation was to think about Manhattan-scale projects, which wouldn't exist without AI, rather than doing what we already do a bit faster.
+Steve closed by saying tldraw is still the expression of his taste, and he'd be worried if it stopped being that. He doesn't read the code of these projects, but he wants to be there as creative director, with good tools, so that when someone walks into the trailer he knows what to answer and the answer goes back to the swarm. The invitation was to think about Manhattan-scale projects, which wouldn't exist without AI, rather than doing what we already do a bit faster.
 
 In the one remaining question, someone who had tried something similar asked how he didn't go crazy as the project grew. Steve answered with art school, where you learn not to go crazy working alone, in a room, on something nobody asked for. He draws it as a ramp with walls: you bound the problem (this size, this theme, this game and not that one), any decision inside the bounds is fine, and there's an end point, a show or a launch. "You give yourself permission to go as far as possible within those bounds." It takes a while to learn, he said.
 
@@ -718,7 +718,7 @@ The bottleneck is still in clinical trials, and she gave three reasons AI hasn't
 - **the labels don't reflect the biology:** diagnoses come from symptom checklists, and anxiety and depression are different diagnoses with a lot of biological overlap;
 - **there's no feedback:** choices made during optimization only show consequences about five years later, like taking an exam and getting the grade five years on. Lab measurements don't correlate well with what happens in trials, and that never flows back into the models.
 
-To close the loop, the model that picks the molecules would need to learn from clinical trials. That runs into politics and bureaucracy, because whoever builds the model is rarely whoever runs the trial, and into the need for data made for machine learning that captures the complexity of the human body. She said that the day before, she saw Dario Amodei himself add nuance to the original claim: it would only be possible if AI were applied at every stage, which is a big "if". Cristiana's conclusion: optimistic, but grounded, with domain experts deciding which tools help, instead of AI for AI's sake.
+To close the loop, the model that picks the molecules would need to learn from clinical trials. That runs into politics and bureaucracy, because whoever builds the model is rarely whoever runs the trial, and into the need for data made for machine learning that captures the complexity of the human body. She said that the day before, she saw Dario Amodei himself add nuance to the original claim: it would only be possible if AI were applied at every stage, which is a big "if". Cristiana called herself optimistic, but grounded, with domain experts deciding which tools help, instead of AI for AI's sake.
 
 In the Q&A:
 
@@ -810,7 +810,7 @@ In the Q&A, someone observed that everyone thinks they have good taste and asked
 
 The last talk before lunch was from Pedro, CNCA project manager at the BSC AI Factory, one of the event's sponsors. Steve introduced him as the person who gives out free compute to anyone who makes a good case for it.
 
-The BSC AI Factory is a European Union-funded initiative to strengthen the AI innovation ecosystem. Everything is free. There are two machines:
+The BSC AI Factory is a European Union-funded initiative to support AI projects in Europe. Everything is free. There are two machines:
 
 - **MareNostrum 5**, the Barcelona supercomputer, for more experienced teams;
 - **Deucalion**, the Portuguese supercomputer, recommended for less experienced teams, because the support team works practically in the same room.
@@ -981,7 +981,7 @@ In the Q&A, someone pointed out that you can pin your own dependencies' versions
 
 ### Artur Goulão, Humanos
 
-Artur is building a trust network for agents. Humanos, according to him, is already in production at more than 350 institutions, from healthcare to fintechs. The starting point: today every agent acts on a person's authority, whether it's moving money, shipping code or accessing medical records. For it to be useful, either you approve everything, or you find out afterward what it did.
+Artur is building a trust network for agents. Humanos, according to him, is already in production at more than 350 institutions, from healthcare to fintechs. Today, he pointed out, every agent acts on a person's authority, whether it's moving money, shipping code or accessing medical records. For it to be useful, either you approve everything, or you find out afterward what it did.
 
 He split runtime trust into four questions:
 
