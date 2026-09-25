@@ -12,11 +12,18 @@ Fora isso, trabalho com arquitetura React e Node.js, performance e observabilida
 
 ## Experiência
 
-- **Principal Engineer** na Stone Giant Studio (2023 - Presente)
+- **Principal Engineer** na Stone Giant Studio (2023 - Presente), onde construí o [Erast](https://erast.us/?utm_source=CV_FranklinJavier&utm_medium=cv), produto de planejamento de equipe e gestão de recursos para escritórios de arquitetura e engenharia, hoje com mais de 1.500 usuários cadastrados
 - **Principal Engineer** no Grupo Boticário (2021 - 2023)
-- **Head de Tecnologia** na Beleza na Web (2018 - 2020)
+- **Sr Digital Product Manager** no Grupo Boticário (2020)
+- **Head de Tecnologia** na Beleza na Web (2015 - 2020)
 
 Também faço mentoria e pair programming, dou palestras e participo de podcasts. Cada participação está listada, com o link original, na [página de palestras](/pt-br/speaking/).
+
+## Projetos paralelos
+
+- [Zelus](https://zelus.sh/?utm_source=CV_FranklinJavier&utm_medium=cv): gestão de condomínios, com acompanhamento de ocorrências e um assistente de IA baseado nos dados do condomínio
+- [Project Campfire](https://projectcampfire.io/?utm_source=CV_FranklinJavier&utm_medium=cv): extrai tarefas, decisões e prazos de conversas, com responsáveis, datas e o rastro até a fonte
+- [Robot Loupe](https://robotloupe.com/?utm_source=CV_FranklinJavier&utm_medium=cv): revisão com humano no loop para mudanças de banco de dados geradas por IA, checando impacto e padrões antes de publicar
 
 ## Open source
 

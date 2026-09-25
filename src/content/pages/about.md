@@ -12,11 +12,18 @@ Beyond that, I work on React and Node.js architecture, web performance and obser
 
 ## Experience
 
-- **Principal Engineer** at Stone Giant Studio (2023 - Present)
+- **Principal Engineer** at Stone Giant Studio (2023 - Present), where I built [Erast](https://erast.us/?utm_source=CV_FranklinJavier&utm_medium=cv), a workforce planning and resource management product for architecture and engineering firms, now with over 1,500 registered users
 - **Principal Engineer** at Grupo Boticário (2021 - 2023)
-- **Head of Technology** at Beleza na Web (2018 - 2020)
+- **Sr Digital Product Manager** at Grupo Boticário (2020)
+- **Head of Technology** at Beleza na Web (2015 - 2020)
 
 I also mentor, pair program, give talks and go on podcasts. Every appearance is listed, with its original link, on the [speaking page](/speaking/).
+
+## Side projects
+
+- [Zelus](https://zelus.sh/?utm_source=CV_FranklinJavier&utm_medium=cv): condominium management, with issue tracking and an AI assistant grounded in the condominium's data
+- [Project Campfire](https://projectcampfire.io/?utm_source=CV_FranklinJavier&utm_medium=cv): pulls tasks, decisions and deadlines out of conversations, with owners, due dates and a trail back to the source
+- [Robot Loupe](https://robotloupe.com/?utm_source=CV_FranklinJavier&utm_medium=cv): human-in-the-loop review for AI-generated database changes, checking impact and standards before they ship
 
 ## Open source
 
