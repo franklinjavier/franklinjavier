@@ -1,14 +1,14 @@
 ---
 title: About
-description: Who Franklin Javier is - Principal Engineer with 16 years of front-end experience, now working on AI-native products and agent tooling.
+description: Who Franklin Javier is - Principal Engineer with 19 years of front-end experience, now working on AI products and agent tooling.
 lang: en
 ---
 
-I'm Franklin Javier, a Principal Engineer with 16 years of front-end development experience, delivering high-performance web and mobile applications. I combine technical expertise with leadership, driving front-end and agentic engineering initiatives across product teams.
+I'm Franklin Javier, a Principal Engineer. I've been doing front-end since 2007, on high-performance web and mobile apps, and today I lead front-end and agentic engineering work across product teams.
 
-Today most of my work is AI-native. I design agent harnesses and orchestration - the skills, evaluation loops and guardrails that make coding agents reliable enough to ship with - across Claude Code, Cursor, Codex and Gemini CLI. This site is built the same way: every page has a markdown twin served through content negotiation, plus an [llms.txt](/llms.txt) guide, so agents can read it as well as browsers can.
+These days almost everything I do involves AI. I build harnesses and orchestration for coding agents across Claude Code, Cursor, Codex and Gemini CLI: the skills, evals and guardrails that make an agent reliable enough to ship with. This site follows the same idea: every page has a markdown version, served through content negotiation, plus an [llms.txt](/llms.txt) guide, so agents can read it as well as a browser can.
 
-The rest of my specialization is React and Node.js architectures, web performance and observability, design systems and web accessibility (a11y). My day-to-day stack includes React, TypeScript, Remix, Node.js, and Tailwind CSS.
+Beyond that, I work on React and Node.js architecture, web performance and observability, design systems and accessibility (a11y). Day to day I use React, TypeScript, Remix, Node.js and Tailwind CSS.
 
 ## Experience
 
@@ -16,11 +16,11 @@ The rest of my specialization is React and Node.js architectures, web performanc
 - **Principal Engineer** at Grupo Boticário (2021 - 2023)
 - **Head of Technology** at Beleza na Web (2018 - 2020)
 
-Beyond technical work, I actively contribute to the front-end community through mentorship, pair programming, and knowledge-sharing. I also speak at tech talks and on podcasts - every appearance is listed, with its original link, on the [speaking page](/speaking/).
+I also mentor, pair program, give talks and go on podcasts. Every appearance is listed, with its original link, on the [speaking page](/speaking/).
 
 ## Open source
 
-I publish work in the open, including projects focused on AI. Most recently [stonegiantstudio/skills](https://github.com/stonegiantstudio/skills), a set of Apache-2.0 skills for AI coding agents, portable across Claude Code, Cursor, Codex and Gemini CLI.
+I publish a lot of my work as open source, including AI projects. Most recently [stonegiantstudio/skills](https://github.com/stonegiantstudio/skills), a set of Apache-2.0 skills for AI coding agents, portable across Claude Code, Cursor, Codex and Gemini CLI.
 
 Older and still in production: [storefront](https://github.com/franklinjavier/storefront), the Node.js and Redis boilerplate we standardised on for e-commerce. It runs the Beleza na Web and Grupo Boticário storefronts, and holds over 1M requests per minute. My other repositories are at [github.com/franklinjavier](https://github.com/franklinjavier).
 

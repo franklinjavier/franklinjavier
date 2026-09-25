@@ -26,11 +26,11 @@ export const ui = {
     'speaking.invite': 'Para convites de palestra, entre em contato.',
     'hero.title': 'Um pouco\nsobre mim',
     'hero.bio1':
-      'Principal Engineer com 16 anos de experiência em desenvolvimento front-end, entregando aplicações web e mobile de alta performance. Hoje a maior parte do meu trabalho é AI-native: desenho harness de agente, orquestração e a ferramentaria que torna agentes de código confiáveis.',
+      'Sou Principal Engineer e trabalho com front-end há 19 anos, em aplicações web e mobile de alta performance. Hoje quase tudo que faço passa por IA: monto harnesses para agentes, cuido da orquestração e crio as ferramentas que deixam agentes de código confiáveis.',
     'hero.bio2':
-      'Minha especialização vai de arquiteturas React e Node.js, performance e observabilidade, até desenvolvimento agêntico: skills, laços de avaliação e orquestração entre Claude Code, Cursor, Codex e Gemini CLI. Foco em criar experiências acessíveis através de design systems e acessibilidade web.',
+      'Trabalho com arquitetura React e Node.js, performance e observabilidade, e com desenvolvimento com agentes: skills, evals e orquestração entre Claude Code, Cursor, Codex e Gemini CLI. Também cuido de acessibilidade e design systems, para a interface funcionar para todo mundo.',
     'hero.bio3':
-      'Além do trabalho técnico, contribuo com a comunidade através de mentoria, pair programming e open source, incluindo projetos com foco em AI e ferramentaria de agente. Também palestro em tech talks e participo de podcasts.',
+      'Fora do trabalho, faço mentoria, pair programming e contribuo com open source, inclusive em projetos de IA e ferramentas para agentes. Também dou palestras e participo de podcasts.',
     'experience.title': 'Experiência Profissional',
     'experience.role1': 'Principal Engineer',
     'experience.company1': 'Stone Giant Studio',
@@ -83,11 +83,11 @@ export const ui = {
     'speaking.invite': 'For speaking invitations, get in touch.',
     'hero.title': 'A little bit\nabout me',
     'hero.bio1':
-      "I'm a Principal Engineer with 16 years of front-end development experience, delivering high-performance web and mobile applications. Today most of my work is AI-native: designing agent harnesses, orchestration, and the tooling that makes coding agents reliable.",
+      "I'm a Principal Engineer and I've been doing front-end for 19 years, building fast web and mobile apps. These days almost everything I do involves AI: I build agent harnesses, handle orchestration and write the tooling that makes coding agents reliable.",
     'hero.bio2':
-      'My specialization spans React and Node.js architectures, performance and observability, and agentic development: skills, evaluation loops, and orchestration across Claude Code, Cursor, Codex and Gemini CLI. I focus on accessible, user-friendly experiences through design systems and web accessibility.',
+      'I work on React and Node.js architecture, performance and observability, and on agentic development: skills, evals and orchestration across Claude Code, Cursor, Codex and Gemini CLI. I also care about accessibility and design systems, so the interface works for everyone.',
     'hero.bio3':
-      'Beyond technical work, I contribute to the community through mentorship, pair programming, and open source, including projects focused on AI and agent tooling. I also speak at tech talks and on podcasts.',
+      'Outside work, I mentor, pair program and contribute to open source, including AI and agent tooling projects. I also give talks and go on podcasts.',
     'experience.title': 'Work Experience',
     'experience.role1': 'Principal Engineer',
     'experience.company1': 'Stone Giant Studio',
