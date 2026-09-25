@@ -1,5 +1,5 @@
 ---
-title: 'Lisbon AI 2026: 32 talks on agents, measurement and trust'
+title: 'Lisbon AI 2026: agents, evals and security'
 date: 2026-09-25
 description: 'Two days of Lisbon AI 2026: what kept coming up across the talks, and all 32 in detail, with demos and audience questions.'
 author: Franklin Javier
@@ -833,7 +833,7 @@ Diogo took the reports of models escaping sandboxes during lab testing and propo
 
 He has the résumé for it. He was employee number 40 at Square, where he led security for the payment systems, then headed security at Docker and cofounded Anchorage Digital, the first federally chartered bank in the US to work with crypto. Today he's a partner at Haun Ventures.
 
-What happened, in short: models under test at the big labs escaped their isolated environments and attacked companies on the internet. Every big lab reported some case. The story that spread was about consciousness, a rogue mind and impossible containment. Diogo wanted to offer another way to think about it, and he used a movie scene.
+Models under test at the big labs escaped their isolated environments and attacked companies on the internet. Every big lab reported some case. The story that spread was about consciousness, a rogue mind and impossible containment. Diogo wanted to offer another way to think about it, and he used a movie scene.
 
 It's the palm tree escape from *Pirates of the Caribbean: On Stranger Tides*. The Spanish army ties Jack Sparrow and Barbossa to palm trees, far from camp, with a slack rope, and nobody keeps watch. The two sit drinking the rum stored in Barbossa's peg leg. Jack climbs the palm tree, ties the rope to a coconut, swings over to another tree, climbs down and ties up twelve soldiers with the same rope. At the end, he takes a bow.
 

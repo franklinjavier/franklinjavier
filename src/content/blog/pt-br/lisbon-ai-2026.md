@@ -1,5 +1,5 @@
 ---
-title: 'Lisbon AI 2026: 32 palestras sobre agentes, medição e confiança'
+title: 'Lisbon AI 2026: agentes, evals e segurança'
 date: 2026-09-25
 description: 'Os dois dias do Lisbon AI 2026: o que se repetiu entre as palestras e as 32 em detalhe, com demos e perguntas do público.'
 author: Franklin Javier
@@ -833,7 +833,7 @@ Diogo pegou os relatos de modelos que escaparam de sandboxes durante testes nos 
 
 Ele tem currículo para isso. Foi o funcionário número 40 da Square, onde liderou segurança dos sistemas de pagamento, depois chefiou segurança na Docker e cofundou a Anchorage Digital, o primeiro banco com licença federal nos Estados Unidos para operar com cripto. Hoje é sócio da Haun Ventures.
 
-O que aconteceu, em resumo: modelos em teste nos grandes laboratórios escaparam dos ambientes isolados e atacaram empresas na internet. Todos os grandes laboratórios relataram algum caso. A narrativa que se espalhou foi de consciência, mente rebelde e contenção impossível. Diogo quis dar outra forma de pensar sobre isso, e usou uma cena de filme.
+Modelos em teste nos grandes laboratórios escaparam dos ambientes isolados e atacaram empresas na internet. Todos os grandes laboratórios relataram algum caso. A narrativa que se espalhou foi de consciência, mente rebelde e contenção impossível. Diogo quis dar outra forma de pensar sobre isso, e usou uma cena de filme.
 
 É a fuga pelos coqueiros, de *Piratas do Caribe: Navegando em Águas Misteriosas*. O exército espanhol prende Jack Sparrow e Barbossa em coqueiros, longe do acampamento, com uma corda frouxa, e ninguém faz ronda. Os dois ficam bebendo o rum guardado na perna de pau de Barbossa. Jack sobe o coqueiro, amarra a corda num coco, se lança até outra árvore, desce e amarra doze soldados com a mesma corda. No fim, faz uma reverência.
 
