@@ -546,11 +546,30 @@ html:has(.gallery[open]) {
   color: inherit;
 }
 
+/*
+ * Scroll shadows: a soft shadow marks the side that still has content.
+ * The page-colored covers scroll with the content (local) and hide the
+ * shadows (scroll) once an edge is reached; nothing shows when it fits.
+ */
 .prose :where(.overflow-x-auto) {
+  --scroll-shadow: oklch(0 0 0 / 0.22);
   overflow-x: auto;
   margin-top: 1.7777777777777777em;
   margin-bottom: 1.7777777777777777em;
   -webkit-overflow-scrolling: touch;
+  background:
+    linear-gradient(to right, var(--tw-prose-page-bg) 30%, transparent) left / 2.5rem 100%
+      no-repeat local,
+    linear-gradient(to left, var(--tw-prose-page-bg) 30%, transparent) right / 2.5rem 100%
+      no-repeat local,
+    radial-gradient(farthest-side at 0 50%, var(--scroll-shadow), transparent) left / 1.125rem
+      100% no-repeat scroll,
+    radial-gradient(farthest-side at 100% 50%, var(--scroll-shadow), transparent) right /
+      1.125rem 100% no-repeat scroll;
+}
+
+.dark .prose :where(.overflow-x-auto) {
+  --scroll-shadow: oklch(1 0 0 / 0.24);
 }
 
 .prose :where(table) {
