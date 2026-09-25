@@ -26,6 +26,8 @@ const { Content } = await render(entry)
 const linkedin = SOCIAL_LINKS.find((link) => link.includes('linkedin.com'))
 const github = SOCIAL_LINKS.find((link) => link.includes('github.com'))
 const site = new URL(SITE_URL).host
+// Same UTM as the project links in cv.md, so visits from the CV show up in analytics.
+const siteUrl = `${SITE_URL}/?utm_source=CV_FranklinJavier&utm_medium=cv`
 ---
 
 <BaseLayout title={entry.data.title} description={entry.data.description} lang={lang}>
@@ -42,7 +44,7 @@ const site = new URL(SITE_URL).host
             <a href={`mailto:${SITE_EMAIL}`}>{SITE_EMAIL}</a>
             {linkedin && <a href={linkedin}>LinkedIn</a>}
             {github && <a href={github}>GitHub</a>}
-            <a href={SITE_URL}>{site}</a>
+            <a href={siteUrl}>{site}</a>
           </p>
         </div>
         <button type="button" class="cv-print" onclick="window.print()">
