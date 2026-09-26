@@ -1,14 +1,20 @@
 import { next, rewrite } from '@vercel/edge'
-import { prefersMarkdown, markdownPathFor, notFoundMarkdown } from './src/lib/negotiation.js'
+import {
+  prefersMarkdown,
+  markdownPathFor,
+  markdownSuffixPage,
+  notFoundMarkdown,
+} from './src/lib/negotiation.js'
 
 // Vercel Edge Middleware: serves the pre-rendered markdown twin of a page
 // (see src/pages/[...path]/index.md.ts) when a client asks for it with
 // `Accept: text/markdown`, per https://acceptmarkdown.com. Paths with no
 // markdown twin get a markdown 404 body so agents can recover.
-// Runs only on extension-less page routes; static assets are excluded.
+// Also serves `<page>.md` (e.g. /blog/foo.md) as the twin of /blog/foo/.
+// Runs on extension-less page routes and .md paths; other assets are excluded.
 
 export const config = {
-  matcher: ['/', '/((?!.*\\.).*)'],
+  matcher: ['/', '/((?!.*\\.).*)', '/(.*)\\.md'],
 }
 
 const MARKDOWN_HEADERS = {
@@ -19,9 +25,17 @@ const MARKDOWN_HEADERS = {
 export default async function middleware(request: Request) {
   const url = new URL(request.url)
 
-  // Legacy /posts/* URLs are handled by the redirects in vercel.json.
-  if (prefersMarkdown(request.headers.get('accept')) && !url.pathname.startsWith('/posts/')) {
-    const markdownUrl = new URL(markdownPathFor(url.pathname), url)
+  // Pre-rendered twins (…/index.md) are static files; serve them as is.
+  if (url.pathname.endsWith('/index.md')) return next()
+
+  const suffixPage = markdownSuffixPage(url.pathname)
+  const wantsMarkdown =
+    suffixPage !== null ||
+    // Legacy /posts/* URLs are handled by the redirects in vercel.json.
+    (prefersMarkdown(request.headers.get('accept')) && !url.pathname.startsWith('/posts/'))
+
+  if (wantsMarkdown) {
+    const markdownUrl = new URL(markdownPathFor(suffixPage ?? url.pathname), url)
 
     let exists = true
     try {

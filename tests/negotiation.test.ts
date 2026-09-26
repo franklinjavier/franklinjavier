@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'bun:test'
-import { prefersMarkdown, markdownPathFor } from '../src/lib/negotiation'
+import { prefersMarkdown, markdownPathFor, markdownSuffixPage } from '../src/lib/negotiation'
 
 describe('prefersMarkdown', () => {
   test('accepts a plain text/markdown request', () => {
@@ -50,5 +50,19 @@ describe('markdownPathFor', () => {
       '/pt-br/blog/avaliando-respostas-openai/index.md',
     )
     expect(markdownPathFor('/about')).toBe('/about/index.md')
+  })
+})
+
+describe('markdownSuffixPage', () => {
+  test('maps <page>.md to the page path', () => {
+    expect(markdownSuffixPage('/pt-br/blog/lisbon-ai-2026.md')).toBe('/pt-br/blog/lisbon-ai-2026')
+    expect(markdownSuffixPage('/about.md')).toBe('/about')
+  })
+
+  test('maps /index.md-style twins and non-markdown paths to null', () => {
+    expect(markdownSuffixPage('/index.md')).toBeNull()
+    expect(markdownSuffixPage('/blog/index.md')).toBeNull()
+    expect(markdownSuffixPage('/blog/')).toBeNull()
+    expect(markdownSuffixPage('/rss.xml')).toBeNull()
   })
 })
