@@ -149,7 +149,7 @@ const sortedPosts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.
       <div class="grid grid-cols-1 gap-8 md:grid-cols-3">
         {SIDE_PROJECTS.map((project) => (
           <article class="group">
-            <a href={project.url} target="_blank" rel="noopener" class="block">
+            <a href={project.url} target="_blank" rel="noopener" class="flex gap-4 md:block">
               <img
                 src={project.image}
                 alt=""
@@ -157,10 +157,12 @@ const sortedPosts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.
                 height="420"
                 loading="lazy"
                 decoding="async"
-                class="mb-4 aspect-[40/21] w-full rounded-2xl border border-gray-100 object-cover dark:border-gray-800"
+                class="aspect-[40/21] w-36 shrink-0 rounded-xl border border-gray-100 object-cover md:mb-4 md:w-full md:rounded-2xl dark:border-gray-800"
               />
-              <h3 class="mb-2 text-xl font-semibold group-hover:underline">{project.name}</h3>
-              <p class="text-gray-700 dark:text-gray-300">{t(`projects.${project.key}`)}</p>
+              <div>
+                <h3 class="mb-2 text-xl font-semibold group-hover:underline">{project.name}</h3>
+                <p class="text-gray-700 dark:text-gray-300">{t(`projects.${project.key}`)}</p>
+              </div>
             </a>
           </article>
         ))}
