@@ -27,7 +27,7 @@ export const ui = {
     'speaking.action.podcast': 'Ouvir o episódio',
     'speaking.action.talk': 'Assistir',
     'speaking.invite': 'Para convites de palestra, entre em contato.',
-    'hero.title': 'Oi, eu sou o Frank',
+    'hero.title': 'Olá, sou Frank',
     'hero.bio1':
       'Principal Engineer, com 19 anos de front-end em aplicações web e mobile de alta performance. Hoje quase todo o trabalho passa por IA: harnesses para agentes, orquestração e as ferramentas que deixam agentes de código confiáveis.',
     'hero.bio2':
