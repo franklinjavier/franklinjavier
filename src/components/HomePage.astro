@@ -150,6 +150,15 @@ const sortedPosts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.
         {SIDE_PROJECTS.map((project) => (
           <article class="group">
             <a href={project.url} target="_blank" rel="noopener" class="block">
+              <img
+                src={project.image}
+                alt=""
+                width="800"
+                height="420"
+                loading="lazy"
+                decoding="async"
+                class="mb-4 aspect-[40/21] w-full rounded-2xl border border-gray-100 object-cover dark:border-gray-800"
+              />
               <h3 class="mb-2 text-xl font-semibold group-hover:underline">{project.name}</h3>
               <p class="text-gray-700 dark:text-gray-300">{t(`projects.${project.key}`)}</p>
             </a>
