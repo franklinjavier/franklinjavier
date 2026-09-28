@@ -12,11 +12,11 @@ Migrei o `franklinjavier.com` de Tailwind CSS para StyleX com uma pergunta simpl
 
 A resposta curta é não.
 
-O site já marcava 100 no PageSpeed, não enviava JavaScript no bundle do Astro, usava a fonte do sistema e tinha apenas uma imagem relevante na página inicial. Depois de reproduzir o mesmo visual com StyleX, o FCP permaneceu em 0,8 s e o LCP não apresentou uma melhora consistente. O CSS ficou menor — cerca de 8% sem compressão e 6% em gzip —, mas isso não se traduziu em uma diferença perceptível de carregamento.
+O site já marcava 100 no PageSpeed, não enviava JavaScript no bundle do Astro, usava a fonte do sistema e tinha apenas uma imagem relevante na página inicial. Depois de reproduzir o mesmo visual com StyleX, o FCP continuou em 0,8 s e o LCP não melhorou de forma consistente. O CSS ficou menor, cerca de 8% sem compressão e 6% em gzip, mas isso não virou diferença perceptível no carregamento.
 
 Por isso, reverti a migração.
 
-O experimento, porém, revelou otimizações que não dependiam do StyleX: o `@tailwindcss/typography` era carregado em páginas que não o utilizavam, o preflight podia ser menor e três scripts podiam virar um. Essas mudanças foram aplicadas mantendo Tailwind.
+Ainda assim, o experimento revelou otimizações que não dependiam do StyleX: o `@tailwindcss/typography` era carregado em páginas que não o utilizavam, o preflight podia ser menor e três scripts podiam virar um. Essas mudanças foram aplicadas mantendo Tailwind.
 
 ## O que motivou o teste
 
@@ -39,7 +39,7 @@ Antes de alterar qualquer código, rodei o PageSpeed cinco vezes em produção, 
 | Nota do PageSpeed | 100 |
 | JavaScript no bundle `_astro` | 0 |
 
-O site ainda não possui dados de INP no CrUX. Portanto, não faria sentido atribuir ao projeto um número de INP baseado apenas em laboratório.
+O site ainda não tem dados de INP no CrUX, então não faria sentido atribuir a ele um número de INP baseado só em laboratório.
 
 O CSS da página inicial era o arquivo `BaseLayout.B8I3ZO9w.css`, com 40.325 bytes sem compressão e entre 6.932 e 6.961 bytes usando gzip nível 6. O cabeçalho do arquivo confirmava o Tailwind CSS 4.3.3.
 
@@ -65,7 +65,7 @@ Reestruturei a implementação seguindo a organização recomendada pela [docume
 - estilos `*.stylex.ts` colocalizados com cada view;
 - tokens compartilhados apenas em `tokens.stylex.ts`;
 - chamadas locais a `stylex.create`, convertidas em classes estáticas;
-- CSS inicial pequeno, sem carregar estilos de forma tardia e provocar uma nova recalculação da página.
+- CSS inicial pequeno, sem carregar estilos tarde e forçar um novo recálculo da página.
 
 Só depois dessa correção e da equivalência visual voltei a medir.
 
@@ -96,9 +96,9 @@ O commit [`d044686`](https://github.com/franklinjavier/franklinjavier/commit/d04
 </table>
 </div>
 
-O StyleX reduziu o CSS, mas não alterou o FCP. O LCP apresentou duas medições melhores, porém não de forma consistente o suficiente para atribuir o resultado à migração. O Lighthouse local também apontava empate.
+O StyleX reduziu o CSS, mas não mexeu no FCP. O LCP teve duas medições melhores, não o bastante para creditar o resultado à migração. O Lighthouse local também apontava empate.
 
-Ao mesmo tempo, embora o HTML sem compressão fosse menor, sua versão comprimida ficou maior.
+E o HTML sem compressão ficou menor, mas a versão comprimida ficou maior.
 
 Para um site que já entregava nota 100, a redução de alguns bytes não justificava trocar todo o sistema de estilos sem um ganho mensurável para o usuário.
 
@@ -141,7 +141,7 @@ Cada célula de tamanho mostra bytes sem compressão e bytes em gzip-6.
 
 A comparação de **A para C** mostra o ganho obtido apenas com a limpeza do Tailwind. Já a comparação de **C para B** isola melhor a diferença entre StyleX e Tailwind depois que ambos recebem os mesmos cortes.
 
-Nesse cenário, o StyleX produz menos CSS. Entretanto, o HTML comprimido da página inicial fica pior: 4.357 bytes contra 4.160 bytes no Tailwind.
+Com os cortes iguais, o StyleX produz menos CSS. Mas o HTML comprimido da página inicial fica pior: 4.357 bytes contra 4.160 bytes no Tailwind.
 
 ## Menos HTML cru não significa menos HTML transferido
 
@@ -149,9 +149,9 @@ Na versão C, a página inicial gerava 13.909 bytes de HTML, ou 4.160 bytes comp
 
 Isso acontece porque as classes geradas pelo StyleX tendem a ser únicas, enquanto as classes utilitárias do Tailwind se repetem pelo documento. Repetição é exatamente o tipo de padrão que gzip comprime bem.
 
-Portanto, olhar apenas o tamanho bruto teria levado à conclusão errada: o HTML do StyleX era menor no arquivo original, mas maior na transferência.
+Olhar só o tamanho bruto teria levado à conclusão errada: o HTML do StyleX era menor no arquivo, mas maior na transferência.
 
-A documentação do StyleX argumenta que o CSS tende a se estabilizar conforme a aplicação cresce. É uma característica interessante para produtos grandes, com muitos componentes e combinações de estilo. Um site pessoal com uma foto e poucas páginas, porém, dificilmente chega ao ponto em que essa vantagem se torna relevante.
+A documentação do StyleX argumenta que o CSS tende a se estabilizar conforme a aplicação cresce. Faz sentido para produtos grandes, com muitos componentes e combinações de estilo. Um site pessoal com uma foto e poucas páginas dificilmente chega ao ponto em que essa vantagem aparece.
 
 ## O que foi publicado
 
@@ -166,14 +166,14 @@ O que entrou em produção foi a versão C, ainda com Tailwind, no [PR #45](http
 
 Hoje, a página inicial serve `BaseLayout.ClV8krB3.css`, com 15.304 bytes sem compressão e 3.519 bytes em gzip. Ela não solicita mais `prose.css`. Os artigos carregam `prose.D-rI_UlP.css`, com 3.507 bytes sem compressão e 929 bytes em gzip, além do CSS base.
 
-Não rodei novamente o PageSpeed depois desse corte. Portanto, não atribuo novos valores de LCP, FCP ou INP à versão que está no ar. O que consigo afirmar é a redução dos recursos transferidos.
+Não rodei o PageSpeed de novo depois desse corte, então não atribuo novos valores de LCP, FCP ou INP à versão que está no ar. O que posso afirmar é que os recursos transferidos diminuíram.
 
 ## Conclusão
 
 O experimento não mostra que StyleX é lento, nem que Tailwind é sempre a melhor escolha. Mostra apenas que, **neste site e com este conteúdo**, a migração não produziu uma melhora de performance que justificasse a troca.
 
-O StyleX gerou menos CSS. Mas o site já tinha JavaScript zero, nota 100 e tempos baixos. Depois que o visual ficou realmente equivalente, o ganho de CSS diminuiu, o HTML comprimido piorou e as métricas de carregamento permaneceram essencialmente iguais.
+O StyleX gerou menos CSS. Mas o site já tinha JavaScript zero, nota 100 e tempos baixos. Depois que o visual ficou realmente equivalente, o ganho de CSS diminuiu, o HTML comprimido piorou e as métricas de carregamento ficaram praticamente iguais.
 
-A parte mais valiosa da migração foi revelar desperdícios que existiam no projeto atual. Corrigi esses problemas sem trocar a ferramenta.
+A parte mais valiosa da migração foi revelar desperdícios que já existiam no projeto. Corrigi esses problemas sem trocar a ferramenta.
 
-Essa foi a principal conclusão do teste: quando o resultado é neutro, reverter também é uma decisão de performance — especialmente se a migração aumenta a complexidade sem melhorar a experiência do usuário.
+Quando o resultado é neutro, reverter também é uma decisão de performance. Ainda mais se a migração aumenta a complexidade sem melhorar a experiência do usuário.

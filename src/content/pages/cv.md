@@ -44,7 +44,7 @@ Flow: Idea → Brainstorming → PRD → Writing plans → Implementation → Co
 
 Mar 2023 – Present · Dallas, TX (remote contractor)
 
-- Built the AEC workforce planning and resource management product end-to-end through its current version, reaching over 1,500 registered users ([erast.us](https://erast.us/?utm_source=CV_FranklinJavier&utm_medium=cv)).
+- Built [Erastus](https://erast.us/?utm_source=CV_FranklinJavier&utm_medium=cv) end-to-end through its current version: practice management software for architecture and engineering firms that puts timesheets, time off, staffing, project scheduling and profitability in one place, with payroll and accounting integrations, now with over 1,500 registered users.
 - Delivered integrated workflows for staffing, capacity planning, time entry, and budget vs. actual tracking to replace disconnected tools with a single source of truth.
 - Partnered closely with database engineering (stored procedures and data logic) to ensure correctness, performance, and clean domain boundaries.
 - Shipped long-range planning experiences that support data-driven staffing decisions for multi-project, multi-office firms.

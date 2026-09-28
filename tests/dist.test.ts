@@ -147,7 +147,7 @@ describe('markdown variants', () => {
 
   test('homepage markdown links to blog, about, contact and privacy', () => {
     const md = read('index.md')
-    for (const path of ['/blog/', '/speaking/', '/about/', '/contact/', '/privacy/']) {
+    for (const path of ['/blog/', '/about/', '/contact/', '/privacy/']) {
       expect(md).toContain(`https://franklinjavier.com${path}`)
     }
   })

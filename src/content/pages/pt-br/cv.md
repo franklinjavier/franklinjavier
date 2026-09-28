@@ -44,7 +44,7 @@ Fluxo: Ideia → Brainstorming → PRD → Planos → Implementação → Code r
 
 Mar 2023 – Presente · Dallas, EUA (remoto, contractor)
 
-- Construí de ponta a ponta o produto de planejamento de equipe e gestão de recursos para AEC, até a versão atual, com mais de 1.500 usuários cadastrados ([erast.us](https://erast.us/?utm_source=CV_FranklinJavier&utm_medium=cv)).
+- Construí de ponta a ponta o [Erastus](https://erast.us/?utm_source=CV_FranklinJavier&utm_medium=cv), até a versão atual: software de gestão para escritórios de arquitetura e engenharia que reúne apontamento de horas, férias e folgas, alocação de equipe, cronograma e rentabilidade dos projetos num só lugar, com integrações de folha de pagamento e contabilidade, hoje com mais de 1.500 usuários cadastrados.
 - Entreguei fluxos integrados de alocação, planejamento de capacidade, registro de horas e orçamento vs. realizado, substituindo ferramentas desconectadas por uma única fonte de verdade.
 - Trabalhei junto com a engenharia de banco de dados (stored procedures e lógica de dados) para garantir correção, performance e fronteiras de domínio claras.
 - Entreguei experiências de planejamento de longo prazo que apoiam decisões de alocação baseadas em dados para empresas com vários projetos e escritórios.

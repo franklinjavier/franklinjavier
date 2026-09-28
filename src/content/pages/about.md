@@ -8,16 +8,16 @@ I'm Franklin Javier, a Principal Engineer. I've been doing front-end since 2007,
 
 These days almost everything I do involves AI. I build harnesses and orchestration for coding agents across Claude Code, Cursor, Codex and Gemini CLI: the skills, evals and guardrails that make an agent reliable enough to ship with. This site follows the same idea: every page has a markdown version, served through content negotiation, plus an [llms.txt](/llms.txt) guide, so agents can read it as well as a browser can.
 
-Beyond that, I work on React and Node.js architecture, web performance and observability, design systems and accessibility (a11y). Day to day I use React, TypeScript, Remix, Node.js and Tailwind CSS.
+Beyond that, I work on React and Node.js architecture, web performance and observability, design systems and accessibility (a11y). Day to day I use React, TypeScript, React Router, Remix, Node.js, Tailwind CSS, Drizzle and Postgres, plus the Vercel AI SDK, Playwright and Vitest.
 
 ## Experience
 
-- **Principal Engineer** at Stone Giant Studio (2023 - Present), where I built [Erast](https://erast.us/?utm_source=CV_FranklinJavier&utm_medium=cv), a workforce planning and resource management product for architecture and engineering firms, now with over 1,500 registered users
+- **Principal Engineer** at Stone Giant Studio (2023 - Present), home of [Erastus](https://erast.us/?utm_source=CV_FranklinJavier&utm_medium=cv), practice management software for architecture and engineering firms that puts timesheets, time off, staffing, project scheduling and profitability in one place, with payroll and accounting integrations, now with over 1,500 registered users
 - **Principal Engineer** at Grupo Boticário (2021 - 2023)
 - **Sr Digital Product Manager** at Grupo Boticário (2020)
 - **Head of Technology** at Beleza na Web (2015 - 2020)
 
-I also mentor, pair program, give talks and go on podcasts. Every appearance is listed, with its original link, on the [speaking page](/speaking/).
+The full history is on the [CV](/cv/).
 
 ## Side projects
 
@@ -31,4 +31,4 @@ I publish a lot of my work as open source, including AI projects. Most recently 
 
 Older and still in production: [storefront](https://github.com/franklinjavier/storefront), the Node.js and Redis boilerplate we standardised on for e-commerce. It runs the Beleza na Web and Grupo Boticário storefronts, and holds over 1M requests per minute. My other repositories are at [github.com/franklinjavier](https://github.com/franklinjavier).
 
-I'm based in Lisbon, Portugal, and I write on this site in both English and Portuguese about front-end development, React, performance, and engineering culture. You can read my articles on the [blog](/blog/), see my [talks and podcast appearances](/speaking/), read my [CV](/cv/), or [get in touch](/contact/).
+I'm based in Lisbon, Portugal, and I write on this site in both English and Portuguese about front-end development, React, performance, and engineering culture. You can read my articles on the [blog](/blog/), read my [CV](/cv/), or [get in touch](/contact/).

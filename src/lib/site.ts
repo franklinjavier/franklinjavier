@@ -37,10 +37,35 @@ export const KNOWS_ABOUT = [
   'Engineering leadership',
 ]
 
+// Side projects, rendered on the homepage and in its markdown twin.
+// Descriptions live in the translations under `projects.<key>`. Thumbs are
+// each site's og:image (Robot Loupe has none, so it is a homepage screenshot),
+// resized to 800x420 webp in public/images/projects/.
+export const SIDE_PROJECTS = [
+  {
+    key: 'zelus',
+    name: 'Zelus',
+    url: 'https://zelus.sh/?utm_source=FranklinJavier&utm_medium=site',
+    image: '/images/projects/zelus.webp',
+  },
+  {
+    key: 'campfire',
+    name: 'Project Campfire',
+    url: 'https://projectcampfire.io/?utm_source=FranklinJavier&utm_medium=site',
+    image: '/images/projects/campfire.webp',
+  },
+  {
+    key: 'robotloupe',
+    name: 'Robot Loupe',
+    url: 'https://robotloupe.com/?utm_source=FranklinJavier&utm_medium=site',
+    image: '/images/projects/robotloupe.webp',
+  },
+] as const
+
 // Day-to-day stack, rendered on the homepage and in its markdown twin.
 export const DEV_STACK = [
   'React / Typescript',
-  'Remix / Node.js',
+  'React Router / Remix / Node.js',
   'Tailwind CSS',
   'Performance Optimization',
   'AI Agents / Orchestration',

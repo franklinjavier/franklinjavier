@@ -27,13 +27,13 @@ export const ui = {
     'speaking.action.podcast': 'Ouvir o episódio',
     'speaking.action.talk': 'Assistir',
     'speaking.invite': 'Para convites de palestra, entre em contato.',
-    'hero.title': 'Oi, eu sou o Frank',
+    'hero.title': 'Olá, sou Frank',
     'hero.bio1':
-      'Sou Principal Engineer e trabalho com front-end há 19 anos, em aplicações web e mobile de alta performance. Hoje quase tudo que faço passa por IA: monto harnesses para agentes, cuido da orquestração e crio as ferramentas que deixam agentes de código confiáveis.',
+      'Principal Engineer, com 19 anos de front-end em aplicações web e mobile de alta performance. Hoje quase todo o trabalho passa por IA: harnesses para agentes, orquestração e as ferramentas que deixam agentes de código confiáveis.',
     'hero.bio2':
-      'Trabalho com arquitetura React e Node.js, performance e observabilidade, e com desenvolvimento com agentes: skills, evals e orquestração entre Claude Code, Cursor, Codex e Gemini CLI. Também cuido de acessibilidade e design systems, para a interface funcionar para todo mundo.',
+      'A base é arquitetura React e Node.js, performance e observabilidade, e desenvolvimento com agentes: skills, evals e orquestração entre Claude Code, Cursor, Codex e Gemini CLI. Acessibilidade e design systems também fazem parte, para a interface funcionar para todo mundo.',
     'hero.bio3':
-      'Fora do trabalho, faço mentoria, pair programming e contribuo com open source, inclusive em projetos de IA e ferramentas para agentes. Também dou palestras e participo de podcasts.',
+      'Fora do trabalho: mentoria, pair programming e open source, inclusive projetos de IA e ferramentas para agentes.',
     'experience.title': 'Experiência Profissional',
     'experience.role1': 'Principal Engineer',
     'experience.company1': 'Stone Giant Studio',
@@ -48,6 +48,13 @@ export const ui = {
     'contact.title': 'Contato',
     'contact.location': 'Lisboa, Portugal',
     'blog.recentPosts': 'Posts Recentes',
+    'projects.title': 'Projetos paralelos',
+    'projects.zelus':
+      'Gestão de condomínios, com acompanhamento de ocorrências e um assistente de IA baseado nos dados do condomínio.',
+    'projects.campfire':
+      'Extrai tarefas, decisões e prazos de conversas, com responsáveis, datas e o rastro até a fonte.',
+    'projects.robotloupe':
+      'Revisão com humano no loop para mudanças de banco de dados geradas por IA, checando impacto e padrões antes de publicar.',
     'blog.title': 'Blog',
     'blog.description': 'Artigos sobre desenvolvimento front-end, React e tecnologias web',
     'blog.articleCount': 'artigo',
@@ -93,7 +100,7 @@ export const ui = {
     'hero.bio2':
       'I work on React and Node.js architecture, performance and observability, and on agentic development: skills, evals and orchestration across Claude Code, Cursor, Codex and Gemini CLI. I also care about accessibility and design systems, so the interface works for everyone.',
     'hero.bio3':
-      'Outside work, I mentor, pair program and contribute to open source, including AI and agent tooling projects. I also give talks and go on podcasts.',
+      'Outside work, I mentor, pair program and contribute to open source, including AI and agent tooling projects.',
     'experience.title': 'Work Experience',
     'experience.role1': 'Principal Engineer',
     'experience.company1': 'Stone Giant Studio',
@@ -108,6 +115,13 @@ export const ui = {
     'contact.title': 'Contact',
     'contact.location': 'Lisbon, Portugal',
     'blog.recentPosts': 'Recent Posts',
+    'projects.title': 'Side projects',
+    'projects.zelus':
+      "Condominium management, with issue tracking and an AI assistant grounded in the condominium's data.",
+    'projects.campfire':
+      'Pulls tasks, decisions and deadlines out of conversations, with owners, due dates and a trail back to the source.',
+    'projects.robotloupe':
+      'Human-in-the-loop review for AI-generated database changes, checking impact and standards before they ship.',
     'blog.title': 'Blog',
     'blog.description': 'Articles about front-end development, React and web technologies',
     'blog.articleCount': 'article',
