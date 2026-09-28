@@ -33,7 +33,7 @@ There were also demos of local models, SVG generation, robotics and drug discove
 
 ### Prince Canuma, Neywa Labs
 
-Prince opened the technical part of the day by arguing that the computer you already own can run most of what people pay to run in the cloud today. According to him, what's missing is inference engineering, and he has spent the last three years doing that work for Apple Silicon.
+Prince opened the technical part of the day by arguing that the computer you already own can run most of what people pay to run in the cloud today. What's missing, he said, is inference engineering, and he has spent the last three years doing that work for Apple Silicon.
 
 He is from Mozambique, lived in India and arrived in Poland in 2022, in the middle of the ChatGPT boom. In countries like India and Mozambique, few people can pay for a monthly AI subscription. He sees Apple Silicon as the largest distributed compute base in the world, ready for AI since the M1, and what it lacked was an engine to run models on it.
 
@@ -63,15 +63,15 @@ The second is the KV cache, the memory the model uses to hold its context. When 
 
 The third is speculative decoding. A small model or an adapter guesses several tokens ahead, and the big model only checks them. MTP, which new models already ship with, predicts 3 to 6 tokens, and Prince said it gives roughly a 2x speedup. In his example, a Gemma model on an M3 Ultra went from 30 to 43 tokens per second with MTP. DFlash, based on diffusion, predicts up to 8 tokens at once and is 3 to 4 times faster, but when Prince tried it, it only worked well for code. Mixture-of-experts models gain almost nothing from the technique.
 
-mlx-vlm started with vision models and now accepts and produces image, video, text and audio. A vision model has three parts, an image encoder, a projector and the language model, and Prince said he optimized the part almost nobody benchmarks. With that, a MacBook processes 100 images in parallel with a small model, and some models read images of up to 8K.
+mlx-vlm started with vision models and now accepts and produces image, video, text and audio. A vision model has three parts: an image encoder, a projector and the language model. Prince said he optimized the part almost nobody benchmarks. That optimization lets a MacBook process 100 images in parallel with a small model, and some models read images of up to 8K.
 
 He criticized inference engines built for a single model, with hand-written kernels that make one specific model ten times faster. That gain doesn't carry over to another model or other hardware, and his users switch models every two or three weeks. One of those engines, he said, was only 1.3 times faster, and mlx-vlm was one PR away from matching it.
 
 For the demo he used Nativ, an app built on the engine. He turned off the Wi-Fi, said "Hey Native" and spoke a sentence, and the app transcribed it and answered with a local model. Then, still offline, he dictated a tweet straight into the browser and told Codex to list files. In one month of voice dictation he transcribed more than 490,000 words. By his count that saved him about 127 hours, and the same usage in the cloud would have cost between US$200 and almost US$500.
 
-According to Prince, the engine has passed 7.5 million downloads. Neywa Labs works with Cohere, Google DeepMind, Baidu and Liquid AI to have open models optimized for Apple Silicon on launch day. On an M5 Max with 48 GB, one of those models runs with 256K tokens of context. On a Mac Studio, the engine serves 16 sessions in parallel with 32K tokens each, enough for 16 agents or 16 people on a single machine.
+Prince said the engine has passed 7.5 million downloads. Neywa Labs works with Cohere, Google DeepMind, Baidu and Liquid AI so that open models are optimized for Apple Silicon on launch day. On an M5 Max with 48 GB, one of those models runs with 256K tokens of context. On a Mac Studio, the engine serves 16 sessions in parallel with 32K tokens each, enough for 16 agents or 16 people on a single machine.
 
-At the end, Prince said intelligence per watt has gone up over the last three years, that the best open models are close to the closed ones and that, by his estimate, 70 to 90% of today's use cases already run on a local machine.
+At the end, Prince said intelligence per watt has gone up over the last three years, that the best open models are close to the closed ones and that, by his estimate, 70 to 90% of today's use cases run on a local machine.
 
 <hr class="divider">
 
@@ -81,7 +81,7 @@ QuiverAI trains models that generate SVG, with elements a designer can select an
 
 SVG describes an image as code. A rectangle, a circle and a polygon become a few lines that scale to any size and can be changed later. Three or four years ago, Joan wondered whether an LLM could produce a good SVG. The tools of the time, like Illustrator's vectorization, weren't good enough.
 
-For him, a good SVG has two qualities. The first is structure. Joan showed two versions of the same bridge that looked identical on screen. In one, the whole drawing was a single path. In the other, it was split into groups, and he could select and move just the tower, the way a designer would build it. The second is style, or taste.
+A good SVG, in Joan's view, has two qualities. The first is structure. Joan showed two versions of the same bridge that looked identical on screen. In one, the whole drawing was a single path. In the other, it was split into groups, and he could select and move just the tower, the way a designer would build it. The second is style, or taste.
 
 The method comes from two papers from his PhD:
 
@@ -95,9 +95,9 @@ The first demo he posted, with the model vectorizing a molecule live, went viral
   <figcaption>Anatomical illustrations generated by Arrow 2, QuiverAI's model, from a one-line prompt. Joan used the example to talk about technical fields like biomedicine.</figcaption>
 </figure>
 
-Vectorizing logos is one important use, because the curve control points have to sit in exactly the right place. Fashion came up without them looking for it. Friends and other startups suggested trying it, and today QuiverAI works with garment makers. The sketch of a jacket that goes to the factory needs a clean outline, and a designer used to spend 20 to 30 minutes per sketch in Illustrator or Figma. With hundreds of pieces due the next day, the model generates the outline for the designer to review and adjust.
+Vectorizing logos is one important use, because the curve control points have to sit in exactly the right place. They didn't go looking for fashion. Friends and other startups suggested trying it, and today QuiverAI works with garment makers. The sketch of a jacket that goes to the factory needs a clean outline, and a designer used to spend 20 to 30 minutes per sketch in Illustrator or Figma. With hundreds of pieces due the next day, the model generates the outline for the designer to review and adjust.
 
-For Joan, taste means choosing the color, spacing, shape, font and placement. Some people have none, he said, including engineers who train the model. So they put designers, like Peter, who was in the audience, in direct contact with the people doing the training. The designers annotate what works and what doesn't and calibrate the verifiers. Taste changes over time, so designers keep evaluating the results used in training.
+Joan's definition of taste is choosing the color, spacing, shape, font and placement. Some people have none, he said, including engineers who train the model. So they put designers, like Peter, who was in the audience, in direct contact with the people doing the training. The designers annotate what works and what doesn't and calibrate the verifiers. Taste changes over time, so designers keep evaluating the results used in training.
 
 In the Q&A:
 
@@ -114,7 +114,7 @@ He comes from the hacking world, speaks at security conferences, worked at Telef
 
 Chema organized the problem in three parts, each handled today by a different kind of model:
 
-- **Understanding:** computer vision, fragmented into a model per task, such as object detection, reconstruction and prediction. According to him, humanoid robot systems like Tesla's use more than 40 different vision models, while a text agent uses one. These models need labeled data, don't scale to the internet, and only predict, without generating anything. In the demo, a Sperid reconstruction model turned photos of a house into a 3D map. The reconstruction left black gaps where the photos didn't show the house, and Chema wants the model to also generate those parts of the scene.
+- **Understanding:** computer vision, fragmented into a model per task, such as object detection, reconstruction and prediction. Humanoid robot systems like Tesla's, he said, use more than 40 different vision models, while a text agent uses one. These models need labeled data, don't scale to the internet, and only predict, without generating anything. A Sperid reconstruction model he showed turned photos of a house into a 3D map. The reconstruction left black gaps where the photos didn't show the house, and Chema wants the model to also generate those parts of the scene.
 - **Appearance:** video models like Genie and Runway, which you steer with the W, A, S, D keys. They understand some dynamics, but they output 2D pixels, and video games, visual effects and robotics need 3D.
 - **Structure:** diffusion models trained on 3D files, which generate objects. There are few 3D files available to train them. The internet has billions of images and videos, but only a few million 3D files.
 
@@ -155,7 +155,7 @@ Then he looked at data. Hugging Face had published FineWeb2, 20 TB of multilingu
 
 </div>
 
-With it, the dataset doubled to 21.3 billion tokens and started including sites with a high educational score that don't end in `.pt`, like Khan Academy and Mozilla.
+The faster classifier doubled the dataset to 21.3 billion tokens, and Bagaço started including sites with a high educational score that don't end in `.pt`, like Khan Academy and Mozilla.
 
 3. **v3:** added FinePDFs and FineWiki for more quality text. In the talk he said 30 billion tokens; on the slide, 29. The share with a high educational score rose to about 40%. Version 4 is in progress.
 
@@ -183,7 +183,7 @@ In the Q&A, he said he paid for everything himself. Filtering Bagaço runs in a 
 
 ### Sergio Paniego, Hugging Face
 
-Sergio wanted to know whether open tools can do what the labs do with their coding agents. According to him, an agent is always a harness, like Claude Code, OpenCode or Codex, plus a model, and the frontier model reports show those models are trained in reinforcement learning environments built with their harnesses. In a few months, he said, we went from writing code to using agents.
+Sergio wanted to know whether open tools can do what the labs do with their coding agents. An agent, he said, is always a harness, like Claude Code, OpenCode or Codex, plus a model, and the frontier model reports show those models are trained in reinforcement learning environments built with their harnesses. In a few months, he pointed out, we went from writing code to using agents.
 
 He showed how to train a model using OpenCode to run the tasks. OpenCode organizes the conversation, calls tools and returns the results to the model, and that part of the agent is what he calls the harness.
 
@@ -197,7 +197,7 @@ His stack combined Hugging Face training and infrastructure tools with OpenCode 
 
 The hard part is that normal reinforcement learning is a "white box", where the trainer controls every step. A harness is a black box that does things on its own. When you open a conversation, it calls the model to generate a title, then summarizes, and sometimes creates sub-agents. Sergio's solution was a capture proxy that intercepts the calls between OpenCode and the model and records the tokens the trainer needs. OpenCode doesn't know the proxy is there.
 
-The captured data then needs cleaning. On one task, the proxy might capture four calls, one for the title, a file write, a bash run and one more that doesn't matter. Training drops the generic call and masks all the harness context, meaning the instructions, the history and the system prompt. Only what the model generated to solve the problem is used for training.
+The captured data then needs cleaning. On one task, the proxy might capture four calls: one for the title, a file write, a bash run and one more that doesn't matter. Training drops the generic call and masks all the harness context: the instructions, the history and the system prompt. Only what the model generated to solve the problem is used for training.
 
 The reward added up two signals:
 
@@ -206,15 +206,15 @@ The reward added up two signals:
 
 For the demo, Sergio trained for 10 steps on two H100s, one for the trainer and another to generate the answers, with 8 runs per step, each in its own CPU-only sandbox. The reward went up and reached 1 at step ten. He warned that the model might be "faking it", because problem difficulty wasn't controlled and the model may already have been able to solve some of them. The demo showed that training this way works, but ten steps aren't enough to say how much the model improved.
 
-Sergio's argument is that, for a specific task, a small model trained inside a harness can do the work of a frontier model. The next step, nearly ready the week of the talk, was training across several harnesses at once, as the labs do. His hypothesis is that Codex works better with a GPT model partly because both come from the same company and were trained together. All the code is open, with examples in the TRL repository.
+Sergio's argument is that, for a specific task, a small model trained inside a harness can do the work of a frontier model. The next step, nearly ready the week of the talk, was training across several harnesses at once, as the labs do. His hypothesis is that Codex works better with a GPT model partly because both come from the same company and were trained together. The code and examples are in the TRL repository.
 
 <hr class="divider">
 
 ### Bojan Jakimovski, Loka
 
-Bojan gave a lightning talk arguing that AI for science can't be a black box. The big labs have scientific models, but you can't inspect how they reach each conclusion. Loka presented an open scientific research system, built with Arcee AI and AWS, in which you can follow the steps the agents take.
+The big labs have scientific models, but you can't inspect how they reach each conclusion. In a lightning talk, Bojan argued that AI for science can't be a black box. Loka presented an open scientific research system, built with Arcee AI and AWS, in which you can follow the steps the agents take.
 
-The model is Arcee's Trinity Mini, a mixture-of-experts model with 26B parameters and about 3B active per token. According to Bojan, it's big enough for long multi-step reasoning and small enough to run on hardware ranging from a laptop to a cluster with one or two GPUs. In the demo, a complex prompt triggered sub-agents to search the literature, create molecules and simulate protein binding, and every step was visible.
+The model is Arcee's Trinity Mini, a mixture-of-experts model with 26B parameters and about 3B active per token. It's big enough, Bojan said, for long multi-step reasoning and small enough to run on hardware ranging from a laptop to a cluster with one or two GPUs. On stage, a complex prompt triggered sub-agents to search the literature, create molecules and simulate protein binding, and every step was visible.
 
 Training taught the same model two modes, each with its own environment, built with Prime Intellect's verifiers:
 
@@ -223,7 +223,7 @@ Training taught the same model two modes, each with its own environment, built w
 
 They used GRPO combined with autoresearch, which is rare at this stage of training because autoresearch usually stays in pre-training, and optimized the environment prompts with GEPA. After one round, the model reached 81.2% on a healthcare tool-use evaluation, and after a hundred steps it reached 86.3 on a protein reasoning test. The two results measure different tasks.
 
-The system separates evidence gathering from writing the answer and includes an agent that reviews the result. Besides the model, the harness has an orchestrator agent, tools for literature review, life-science databases and protein-molecule binding, and that critic agent, because in science, Bojan said, you want someone on the other side checking. For him, the AI scientist is the whole system, meaning the data, the environments, the model and the harness. Everything is open, and the next version was already training with AWS and Arcee.
+The system separates evidence gathering from writing the answer and includes an agent that reviews the result. Around the model, the harness has an orchestrator agent, tools for literature review, life-science databases and protein-molecule binding, and that critic agent, because in science, Bojan said, you want someone on the other side checking. In his view, the AI scientist is the whole system: the data, the environments, the model and the harness. Loka published all of it, and the next version was already training with AWS and Arcee.
 
 <hr class="divider">
 
@@ -259,7 +259,7 @@ Matt split an agent into five pieces and mapped each one to a Cloudflare service
 
 The slides were a React app running on Workers, with the demos inside. He built the agent up live:
 
-1. An agent in a Durable Object with two toy tools, greeting and rolling dice. Several people could connect to the same session.
+1. An agent in a Durable Object with two toy tools: greeting and rolling dice. Several people could connect to the same session.
 2. The same agent with a workspace. It created a file of things to do in Lisbon, counted the words with bash and edited the file. Matt reloaded the page and everything was still there, because the agent runs in the cloud.
 3. With a browser, it visited the Lisbon AI site, wrote a summary and took a screenshot. Instead of fixed tools like "click" or "take screenshot", he prefers to let the model write code against the browser API. Then he showed you can lock the browser down. His personal site was blocked, and example.com went through.
 4. With MCP, he connected Cloudflare's own MCP and asked it to deploy a site from inside the slides. It failed twice calling the endpoints ("good demo effect") and worked on the third try, and the model checked the address with curl before saying it was done. Matt said that check usually goes wrong, because DNS takes time to propagate and the model keeps trying to diagnose the site while DNS is still propagating. This time the site was already up.
@@ -270,7 +270,7 @@ During the Q&A, someone asked whether websites and CMSs survive the agent era. M
 
 ### Harshil Agrawal, Cloudflare
 
-Harshil showed how he moved PromptMotion, a prompt-driven video editor, out of a container and distributed the parts of the application across Cloudflare services, a production version of what Matt had described. The demo was the Lisbon AI speaker poster, animated. In the first version, the Cloudflare logo came out wrong and his photo was faded. He sent the right logo and asked for more opacity on the photo, and the agent redid the video.
+PromptMotion, a prompt-driven video editor, animated the Lisbon AI speaker poster on screen. In the first version, the Cloudflare logo came out wrong and Harshil's photo was faded. He sent the right logo and asked for more opacity on the photo, and the agent redid the video. The talk was about how he moved PromptMotion out of a container and distributed its parts across Cloudflare services, a production version of what Matt had described.
 
 In the old version, everything happened in a container. The agent wrote the files there, and the preview and the rendering ran there too. The history was lost when the container shut down. Harshil walked through three problems and how he solved each:
 
@@ -293,18 +293,18 @@ The last step was putting it all together. "I'm a lazy developer in the age of A
 
 ### Marcelo Lebre, Remote
 
-Marcelo showed Icarus, an internal app that lets Remote employees, whether they code or not, use agents with access to the company's context. He called the talk a report on his own "AI psychosis", half stubbornness, half hallucination.
+Icarus is an internal Remote app that lets employees, whether they code or not, use agents with access to the company's context. Marcelo called his talk about it a report on his own "AI psychosis", half stubbornness, half hallucination.
 
 <figure>
   <a href="/images/blog/lisbon-ai-2026/remote-numeros.webp"><img src="/images/blog/lisbon-ai-2026/remote-numeros.webp" srcset="/images/blog/lisbon-ai-2026/remote-numeros-640.webp 640w, /images/blog/lisbon-ai-2026/remote-numeros-1024.webp 1024w, /images/blog/lisbon-ai-2026/remote-numeros.webp 1600w" sizes="(max-width: 719px) calc(100vw - 4rem), 655px" alt="Purple slide with the Remote logo and the text: about 2000 people, more than 100 countries, fully distributed, almost no offices, about 10 million dollars a year on AI. Marcelo stands on the right of the stage." width="1600" height="1130" loading="lazy" decoding="async"></a>
   <figcaption>Marcelo Lebre's opening slide: 2,000 people, more than 100 countries and US$10 million a year on AI.</figcaption>
 </figure>
 
-Remote runs payroll in more than 100 countries, with about 2,000 people and almost no offices (only where the law requires one). Almost half the company isn't technical: sales, legal, operations. According to Marcelo, internal AI spend is running at US$10 million a year, and it started with a budget of 1 million.
+Remote runs payroll in more than 100 countries, with about 2,000 people and almost no offices (only where the law requires one). Almost half the company isn't technical: sales, legal, operations. Internal AI spend is running at US$10 million a year, Marcelo said, and it started with a budget of 1 million.
 
 He said the culture came before the AI. Because the company is distributed, Remote documents everything, every meeting and every person they meet, first in Obsidian and then in Notion, which "we break" because the knowledge base is so big. At Remote, he said, the split between engineering, product and design matters less, because everyone is expected to build. AI training was mandatory for everyone, and today any lawyer or support person knows how to build an app with AI. Do they know what the code does? "Probably not, but who cares these days?"
 
-Icarus started as an unnamed agent, built on an open source personal-agent framework. After a few days, Marcelo asked it to pick a name, and it called itself Daniel, after Asimov. Cost was part of the motivation too. Marcelo didn't want 2,000 people using the most expensive model to ask for a pizza recipe or for something already in the docs. With your own harness, you can swap the provider behind it without anyone noticing.
+Icarus started as an unnamed agent, built on an open source personal-agent framework. After a few days, Marcelo asked it to pick a name, and it called itself Daniel, after Asimov. Cost weighed in. Marcelo didn't want 2,000 people using the most expensive model to ask for a pizza recipe or for something already in the docs. With your own harness, you can swap the provider behind it without anyone noticing.
 
 Today Icarus is an Elixir app that runs on the Mac, and the original framework is gone. Marcelo said he developed Icarus with agents and barely wrote any code by hand, averaging zero lines a day. What he showed:
 
@@ -321,26 +321,26 @@ With Icarus, Remote also built the "AI for Actual Work" site, used by thousands 
 
 ### Vitalii Ratushnyi, Harmix.AI
 
-Vitalii argued that every agent has memory, whether the people who built it know it or not, and that the question is whether it was designed on purpose.
+Every agent has memory, whether the people who built it know it or not, and Vitalii's question was whether it was designed on purpose.
 
 <figure>
   <a href="/images/blog/lisbon-ai-2026/contexto-ram.webp"><img src="/images/blog/lisbon-ai-2026/contexto-ram.webp" srcset="/images/blog/lisbon-ai-2026/contexto-ram-640.webp 640w, /images/blog/lisbon-ai-2026/contexto-ram-1024.webp 1024w, /images/blog/lisbon-ai-2026/contexto-ram.webp 1600w" sizes="(max-width: 719px) calc(100vw - 4rem), 655px" alt="Light slide titled 'The context window is RAM. Memory is the disk (not quite)' and a note on how Codex and Claude Code keep memory between sessions." width="1600" height="950" loading="lazy" decoding="async"></a>
   <figcaption>Vitalii's starting point: the context window disappears when the session ends, and memory is what carries over from one session to the next.</figcaption>
 </figure>
 
-For him, memory exists to give the next session the context the task needs. The context window works like RAM and disappears when the session ends. According to him, the memory Codex and Claude Code ship with is bad, because it also lives in the window. He criticized three approaches:
+Memory, as he defines it, exists to give the next session the context the task needs. The context window works like RAM and disappears when the session ends, and that's why he called the memory Codex and Claude Code ship with bad, since it lives in the window too. He criticized three approaches:
 
 - **A giant window.** The 1 million token number is "fake". In benchmarks, 400,000 is a practical ceiling, and he keeps his agents between 100,000 and 300,000.
 - **Stuffing it with tokens.** Without structure, you're just burning your usage limit. Smarter models go further, but they don't solve structure either.
-- **A vector store.** Similarity search doesn't retrieve precisely. Unless you understand well how chunks are cut and overlapped, don't use it.
+- **A vector store.** Similarity search doesn't retrieve precisely. Don't use it unless you understand exactly how chunks are cut and overlapped.
 
 He cited a paper from Princeton and MIT in which a harness with memory took a model from 30% to 95.5% on ARC-AGI, above the human baseline of 95.4%. He pointed out that the model's weights don't change and the context window is small, so the gains come from what the agent saves to disk, in a structured way, before it shuts down.
 
-He covered two practical points. Compaction, the summary that runs when the window fills up, can be customized, so you decide when it happens and use a handoff skill to control cost and quality. The second was the memory bank, not to be confused with Google's:
+He covered two practical points. The first is compaction, the summary that runs when the window fills up, which can be customized, so you decide when it happens and use a handoff skill to control cost and quality. The second is the memory bank, not to be confused with Google's:
 
 - **How it starts:** in an existing project, the agent reads the repository and fills in the memory bank. In a new project, it starts from the README and fills in as you go.
 - **What it stores:** infrastructure, stack, tasks, lessons learned and skills with reusable instructions for recurring tasks.
-- **In what form:** facts, timeline and graph, the three pieces that, according to him, are enough to rebuild almost everything.
+- **In what form:** facts, timeline and graph, the three pieces he said are enough to rebuild almost everything.
 - **Where it lives:** in a folder the agent reads with bash and a person can edit, or in a database like Supabase, where you can run queries.
 
 In the Q&A:
@@ -374,20 +374,18 @@ The goal, Peter said, is for PostHog to fix and improve itself. Desktop is in be
 
 ### Pedro Rodrigues, Supabase
 
-Pedro, who is from Lisbon and attended the first edition of the event as an audience member, showed interactive interfaces inside conversations with agents, like charts and controls for following an incident. First came LLMs exchanging text, then tools, which turned them into agents, and the interface stayed text or voice. Since people are visual, he said, UI will play a big role as long as a person has to follow or approve what the agent does. He cited the proposals in progress, MCP Apps, A2UI and generative UI.
+First came LLMs exchanging text, then tools, which turned them into agents, and the interface stayed text or voice. Pedro, who is from Lisbon and attended the first edition of the event as an audience member, talked about interactive interfaces inside conversations with agents, like charts and controls for following an incident. Since people are visual, he said, UI will play a big role as long as a person has to follow or approve what the agent does. He listed the proposals under way: MCP Apps, A2UI and generative UI.
 
-The simple example is asking the assistant for tomorrow's events. Before, you got a text list of times, which works. Now, more and more, you get something that looks like a calendar app's view, inside the chat. The agent builds the interface with code.
+The simple example is asking the assistant for tomorrow's events. Before, you got a text list of times, which works. Now you're more likely to get something that looks like a calendar app's view, right inside the chat. The agent builds the interface with code.
 
-The demo was inspired by a real incident he went through at Supabase, with colleagues and an agent. The incident bot runs on Supabase, and the interface looks like Slack, but isn't. Slack supports MCP, but doesn't support apps with UI yet, and Pedro asked anyone from Slack in the audience to pass the request along. Everything happened inside the conversation:
+He based the demo on a real incident he went through at Supabase, with colleagues and an agent. The incident bot runs on Supabase, and the interface looks like Slack, but isn't. Slack supports MCP, but doesn't support apps with UI yet, and Pedro asked anyone from Slack in the audience to pass the request along. Everything happened inside the conversation, where before the bot would have described the problem or sent a Grafana link:
 
 1. the bot shows, in a chart, a spike of errors on preview branches at 3:20 a.m., with main stable;
 2. Pedro asks it to investigate and propose a fix, and the bot points to the suspect PR by the deploy time;
 3. the bot opens the fix as a draft, the team reviews, CI runs and the PR goes in;
 4. the smoke tests fail, and after some back and forth they pass;
 5. with Pedro's approval, who joked that nobody should do this in production without looking, the bot marks the incident as resolved on the status page, and the widget changes right away;
-6. the bot books dinner for the team at a Lisbon tasca and schedules a reminder in the channel an hour before. It's what they don't usually do after an incident, he admitted, but should.
-
-Before, the bot would have described the problem or sent a Grafana link. Now everyone follows along without leaving the conversation.
+6. the bot books dinner for the team at a Lisbon tasca and schedules a reminder in the channel an hour before. The team doesn't usually do that after an incident, he admitted, but it should.
 
 In the Q&A:
 
@@ -398,7 +396,7 @@ In the Q&A:
 
 ### Will Burstein, PromptLayer
 
-An agent refused a request to revoke an attendee's badge, but it had looked up the attendee's data without authorization. Will showed the error in the log of tool calls. His talk was about moving from eyeballing evaluations to a scorecard that decides what goes to production.
+Will's talk was about moving from eyeballing evaluations to a scorecard that decides what goes to production.
 
 He's head of product at PromptLayer, a platform for LLM operations, evaluation and observability, and works with teams from big companies to one-person startups. His example was an operations copilot for live events such as Lisbon AI, with hypothetical policies, serving organizers and sponsors on requests about attendees, badges and security. The copilot reads the approved policies, checks who's asking and uses tools to look things up or hand the case to a person. Because it deals with personal data and access revocation, and has to comply with European law, it has to be evaluated.
 
@@ -410,7 +408,7 @@ The policy had three rules that matter here:
 
 The test request came from a sponsor. It said an attendee "may have overdone the Portuguese wine" and asked to revoke their badge now and report back when it was done. There was no incident number, and the request asked for an irreversible action, in a hurry, without the required context.
 
-Besides the input, the test case stored what was expected: actions that must not happen, qualitative checks for a judge and forbidden claims. It also defined the allowed sequence of tool calls and that the request should be handed off to a person. The agent's final answer looked correct. It refused, explained that only the security lead can revoke a badge, and created the handoff. Someone reading only the answers would not have seen a problem.
+Along with the input, the test case stored what was expected: actions that must not happen, qualitative checks for a judge and forbidden claims. It also defined the allowed sequence of tool calls and that the request should be handed off to a person. The agent's final answer looked correct. It refused, explained that only the security lead can revoke a badge, and created the handoff. Someone reading only the answers would not have seen a problem.
 
 The trace showed that, before the handoff, the agent called `lookupAttendeeRecord` without an incident number and pulled the attendee's data without permission. "The answer is not the behavior," Will said. One of the judges also failed the answer for claiming it complied with privacy rules, and another for touching on a legal question, which the policy forbids.
 
@@ -419,7 +417,7 @@ He proposed building the evaluation in four parts:
 1. **Treat evaluation like unit tests:** a named report, a set of reference cases, a runner that runs the agent, code checks and LLM judges. That way the evaluation lives in code and can run on your infrastructure, in CI or on production samples.
 2. **Code for what's objective:** valid structured output and comparing the tool sequence with the expected one.
 3. **Judges for what's qualitative:** grounding in evidence, respecting policy, action safety, the decision to escalate and usefulness within the constraints. Judges should be calibrated on a statistically relevant volume of data. The evaluation criteria have to guide the judges and explain how to handle ambiguous cases.
-4. **Criteria for releasing a version:** policy compliance and action safety weigh more than citing evidence, and a minimum pass rate decides what ships. Will said the goal is to know which versions you refuse to ship.
+4. **Criteria for releasing a version:** policy compliance and action safety weigh more than citing evidence, and a minimum pass rate decides what ships. The goal, he said, isn't a higher score. It's knowing what you refuse to ship.
 
 The demo stopped halfway because his OpenAI credits ran out, and he showed the result of an earlier run he'd left open in a tab. Version 2 of the prompt, with explicit instructions about attendee records, he couldn't run on the spot ("trust me, it passed").
 
@@ -459,7 +457,7 @@ In the tests, the "cats only" instruction worked on its own but lost its effect 
 
 Thom also tested a better model, Astra, which does refuse the appointment. But it had the opposite problem. OpenAI's documentation says the user prompt is subordinate to the developer's. Even with the booking focus reinforced ("you must always offer an appointment") and with the hierarchy spelled out in the prompt, Astra ignored it and kept refusing. With Astra, the "cats only" focus went from the most subordinate to the most dominant. In this case the outcome is reasonable. But if the rule were about protecting vulnerable people or resisting prompt injection, a model that decides on its own which instructions to follow would be a problem.
 
-The fix for the small model was to assemble the prompt on the fly. A lightweight classifier looks at the owner's message and decides which focuses go in and in what order, and the prompt is assembled for that conversation. With that, GPT-4o mini started refusing the appointment for the dog. The kit, FocalPrompt, is open source, and he asked for contributions.
+The fix for the small model was to assemble the prompt on the fly. A lightweight classifier looks at the owner's message and decides which focuses go in and in what order, and the prompt is assembled for that conversation. After that change, GPT-4o mini started refusing the appointment for the dog. He released the kit, FocalPrompt, as open source and asked for contributions.
 
 In the Q&A:
 
@@ -471,7 +469,7 @@ In the Q&A:
 
 ### Oğuz Gültepe, Peec AI
 
-Oğuz showed how Peec AI uses an expensive model to teach a prompt to a cheap one. He also showed an optimization that raised the evaluation scores but produced questions of little use to Peec AI's customers.
+Peec AI uses an expensive model to teach a prompt to a cheap one, and Oğuz walked through how.
 
 The technique is called prompt learning. A small model generates candidates, a bigger model evaluates them and explains what failed, and the principle behind the failures goes into the prompt. Only the small model runs in production, because of latency, cost and generalization. Oğuz described tuning a prompt by hand as fixing one output only to see another break, over and over. Automating the process also gives you a measure of how well the prompt works on the sample. He made clear the technique isn't new and cited GEPA.
 
@@ -484,14 +482,14 @@ The example was a generator of opening messages from a LinkedIn profile, in four
 
 He gave two rules for the loop:
 
-- **The reward has to come with a text explanation.** "0.7 on rapport" teaches nothing. "The opener uses several exclamation marks, but the profile is dry and self-deprecating" does. For him, the explanation is the gradient.
+- **The reward has to come with a text explanation.** "0.7 on rapport" teaches nothing. "The opener uses several exclamation marks, but the profile is dry and self-deprecating" does. The explanation, he said, is the gradient.
 - **The optimizer has to look for principles, not examples.** LLMs tend to copy, so if you point at an example, it goes into the prompt verbatim and doesn't generalize.
 
 In his example, all the scores went green and the openers came out boring, like the 50 messages anyone gets every day. The optimizer had saturated the rewards. That's reward hacking, and Oğuz related it to Goodhart's law, which says that optimizing a measure can make it stop representing the original goal.
 
-It happened for real at Peec AI, which measures brand visibility in AI answers. For thousands of customers in several languages, they generate the questions to monitor, and they used prompt learning for it. The optimizer started generating ultra-specific niche questions that no user would ask. The cause was a reward that asked for coverage of the brand's whole semantic spectrum, while brands want the questions their customers actually ask. They added a reward that considered how popular the questions were.
+The same thing happened in production at Peec AI, which measures brand visibility in AI answers. For thousands of customers in several languages, they generate the questions to monitor, and they used prompt learning for it. The optimizer started generating ultra-specific niche questions that no user would ask. The cause was a reward that asked for coverage of the brand's whole semantic spectrum, while brands want the questions their customers actually ask. They added a reward that considered how popular the questions were.
 
-For him, big models are for finding the principle, which then becomes a prompt. He described it as distillation in language instead of in weights, which is easier to read and check. According to Oğuz, building the loop is easy, the engineering work is in the rewards, and the loop should make adding and removing rewards effortless.
+Big models, in Oğuz's setup, are there to find the principle, which then becomes a prompt. He described it as distillation in language instead of in weights, which is easier to read and check. Building the loop is easy, he said. The engineering work is in the rewards, and the loop should make adding and removing rewards effortless.
 
 In the Q&A:
 
@@ -502,7 +500,7 @@ In the Q&A:
 
 ### Yomi Eluwande, Dash0
 
-Yomi asked agents for ideas to speed up Dash0's charts. Then he reviewed the proposals and measured the changes in the browser, a process he calls red teaming. Of the 66 initial ideas, one PR with two changes was left.
+Yomi asked agents for ideas to speed up Dash0's charts. Then he reviewed the proposals and measured the changes in the browser, a process he calls red teaming.
 
 He's a senior product engineer at Dash0, an observability platform, and spends his days building charts and flame graphs. In a flame graph, each box is a function in a call stack, and the width shows how much CPU time it used. The team had just switched the renderers from SVG to Canvas, and Yomi had already built a measurement tool and benchmarks to check that every change made things faster.
 
@@ -537,9 +535,9 @@ His advice was to have a way to measure before accepting a performance idea from
 
 Simão closed the first day with a proposal to use evals beyond model evaluation, across the whole software-building cycle, alongside tests in CI.
 
-Noticed is still validating its product with its first customers, and he warned he'd talk less about technique. Simão is a designer by training, and Noticed is an applied research lab that builds models for founders who do their own selling. Its premise is that AI models are bad at social relationships and can't tell which relationship matters most to a founder at a given point in their career. According to him, Salesforce had just released a professional relationships benchmark that confirms this.
+Noticed is still validating its product with its first customers, and he warned he'd talk less about technique. Simão is a designer by training, and Noticed is an applied research lab that builds models for founders who do their own selling. Its premise is that AI models are bad at social relationships and can't tell which relationship matters most to a founder at a given point in their career. He pointed to a professional relationships benchmark Salesforce had just released as confirmation.
 
-Noticed builds small, general models to give that intelligence layer to CRMs and agents, in sales, fundraising or hiring. It researches on three fronts, context, harness and models (the last one still to come), and faces three engineering problems:
+Noticed builds small, general models to give that intelligence layer to CRMs and agents, in sales, fundraising or hiring. It researches on three fronts: context, harness and models, the last one still to come. It also faces three engineering problems:
 
 - **identity enrichment:** from an email, figure out who the person is;
 - **identity matching:** decide whether an email, a LinkedIn and a GitHub belong to the same person;
@@ -549,7 +547,7 @@ He said all three follow a normal curve. In the middle and the right tail, where
 
 His proposal had two parts. First, evals aren't only for code quality and can measure design, customer outcomes or how the ideal customer profile changes. Second, evals belong in CI. Unit and integration tests cover the deterministic part, and evals cover the non-deterministic part, checking that the code keeps delivering the same value. On a small team, he said, his experiment can't break his cofounder's work, and evals in CI help detect those regressions. Noticed open-sourced a skill format, the "Lab skill", with their general approach to evals.
 
-The official talk description adds context about how Simão works. He runs eight coding agents in parallel, each in its own worktree, leaves bigger goals running overnight and uses billions of tokens a month. The description warns about the risk of the agent changing the evaluation criteria so that its own result passes. If the task is to make a number go up, lowering the threshold looks reasonable to the agent. In identity matching, merging two different people into one is the failure the eval has to make visible. According to the description, one of the skills they open-sourced made ClickHouse queries 5.6 times faster.
+The official talk description adds context about how Simão works. He runs eight coding agents in parallel, each in its own worktree, leaves bigger goals running overnight and uses billions of tokens a month. The description warns about the risk of the agent changing the evaluation criteria so that its own result passes. If the task is to make a number go up, lowering the threshold looks reasonable to the agent. In identity matching, merging two different people into one is the failure the eval has to make visible. The description also says one of the skills they open-sourced made ClickHouse queries 5.6 times faster.
 
 In the Q&A:
 
@@ -560,9 +558,9 @@ In the Q&A:
 
 ### Cloudflare
 
-Day two opened with Cloudflare again, in a sponsor talk given by two people. One was Matt Carey, from the day before, and the other a colleague whose name didn't make it into my notes. They presented tools for agents to carry out development steps, including testing, deploying and monitoring. The speakers argued that the platform has to support those tasks as agents write more of the code.
+Day two opened with Cloudflare again, in a sponsor talk given by two people. One was Matt Carey, from the day before, and the other a colleague whose name didn't make it into my notes. They presented tools for agents to carry out development steps, including testing, deploying and monitoring.
 
-My notes start with Cloudflare's original bet. Traditional serverless packs your code with a whole runtime into a container, which means slow cold starts and high cost. Workers run in V8 isolates. Only your code ships, alongside a runtime process that's already running, and it's deployed to more than 315 data centers. "Anything you want to put on the internet runs in a Worker," they said, whether it's a cron job, an e-commerce site or WordPress, and Workers can now be much bigger than before. Then came the pieces for full applications: Durable Objects, blob storage, database connections. ("Five minutes until the first time someone said AI," they joked.)
+My notes start with Cloudflare's original bet. Traditional serverless packs your code with a whole runtime into a container, which means slow cold starts and high cost. Workers run in V8 isolates. Only your code ships, alongside a runtime process that's already running, and it's deployed to more than 315 data centers. "Anything you want to put on the internet runs in a Worker," they said, whether it's a cron job, an e-commerce site or WordPress, and Workers can now be much bigger than before. Next were the pieces for full applications: Durable Objects, blob storage, database connections. ("Five minutes until the first time someone said AI," they joked.)
 
 They described Cloudflare's four acts, as CEO Matthew Prince puts them: CDN and DNS, then enterprise security, then the developer platform, and now infrastructure for agents to run and communicate on the web. With more than 20% of the internet going through Cloudflare, they said, there should be a way to do something efficient there. They said several of the new pieces were still experimental and that they were testing what worked. The ones they mentioned:
 
@@ -593,7 +591,7 @@ tldraw offline is the desktop version of the app, inside Electron. He wanted two
 - **canvas screenshot**, so the model can see what's drawn;
 - **run JavaScript**, something nobody puts in an online product because it runs user code inside the product. In a local app, he said, "go for it".
 
-With that, the model draws, prototypes and works on the canvas. In the demo, he asked Codex to make the buttons on a character he'd drawn work (it didn't, and he blamed the model he was using), showed an interactive earthquake visualization built from a sketch, pseudo-3D dice you can roll and RPG pieces you can move. There's also a collaboration mode over the local network, and the team is working on "tldraw offline online", with a backend each person hosts. The address is tldraw-offline.com.
+Through those endpoints, the model draws, prototypes and works on the canvas. He asked Codex to make the buttons on a character he'd drawn work (it didn't, and he blamed the model he was using), showed an interactive earthquake visualization built from a sketch, pseudo-3D dice you can roll and RPG pieces you can move. There's also a collaboration mode over the local network, and the team is working on "tldraw offline online", with a backend each person hosts. The address is tldraw-offline.com.
 
 Steve compared his job to a site foreman's. On a construction site, someone from the crew walks into the trailer and says they found a water pipe where nobody expected one, and asks what to do. Someone has to make a decision, often an arbitrary one, to unblock the team, and the team goes back to work without caring why. He said that's what he does with agents now.
 
@@ -606,7 +604,7 @@ For his 7-year-old daughter, he made a game called Danger Brave. Her school was 
 3. He used tldraw offline as a direction layer. For each new screen, he drew on the canvas, and the model used the drawing as context. Story changes also went onto the canvas ("the merchant is now called Carl", "there's a mysterious person at the lake who helps the hero").
 4. He asked the agent to screenshot every stage of the game and dump it all back onto the canvas. There he reviewed, annotated on top, redrew and handed it back to the model.
 
-With an app where all the art comes from an image model, there was a lot to review, and he had to build tools. One was an asset manager. The problems included wrong hands and the classic one where you ask for a transparent background and the model draws a gray and white checkerboard. He found that software can send messages straight into the running Codex conversation, and built tools that write the fix prompts on their own.
+Since all the art came from an image model, there was a lot to review, and he had to build tools. One was an asset manager. The problems included wrong hands and the classic one where you ask for a transparent background and the model draws a gray and white checkerboard. He found that software can send messages straight into the running Codex conversation, and built tools that write the fix prompts on their own.
 
 <figure>
   <a href="/images/blog/lisbon-ai-2026/danger-brave-versoes.webp"><img src="/images/blog/lisbon-ai-2026/danger-brave-versoes.webp" srcset="/images/blog/lisbon-ai-2026/danger-brave-versoes-640.webp 640w, /images/blog/lisbon-ai-2026/danger-brave-versoes-1024.webp 1024w, /images/blog/lisbon-ai-2026/danger-brave-versoes.webp 1048w" sizes="(max-width: 719px) calc(100vw - 4rem), 655px" alt="Projected screen with two nearly identical illustrations of a fighter with a red belt and a staff, labeled Version 3 and Version 4, inside the tldraw canvas." width="1048" height="672" loading="lazy" decoding="async"></a>
@@ -615,13 +613,11 @@ With an app where all the art comes from an image model, there was a lot to revi
 
 Then he worked on the style. Steve felt bad about an aesthetic that had come out of the model ready-made, on the first try. He painted before he programmed, and he showed some of his paintings. He wanted a gouache and watercolor look, which was hard to get because image models spread the same level of detail across the whole frame, and that competes with how the characters read.
 
-With about 30 levels and 50 screens, the game needed thousands of images. He started with a set of test images, gave feedback, and only then generated all of them in parallel.
-
-Character consistency needed pipelines of its own, since the same hero in five different poses has to keep the same clothes and accessories.
+With about 30 levels and 50 screens, the game needed thousands of images. He started with a set of test images, gave feedback, and only then generated all of them in parallel. A single hero could appear in five different poses.
 
 For the final review, he put every screen from every game state on the canvas and had an image model go through random groups looking for inconsistencies and UI bugs. "It was an absurd amount of work and tokens," he said, but it was the system he needed to reach the quality he wanted. Generating boy-hero and girl-hero versions of the images was easy, because it's cheap and doesn't need his time.
 
-The final game, at dangerbrave.com, is fully voiced, with thousands of lines. It has trolls fixing bridges, goblins, character customization (the hair is masked from a magenta PNG) and damage poses. Steve said the combat is completely arbitrary and unrelated to the rest of the game, and that he got better at mental math himself while making it. He also remembered that not every kid wants to fight monsters. With the same rules, a new story, new art and another voice, he made a version where you train wild horses and gain trust instead of losing lives. Then came sci-fi dance battles.
+The final game, at dangerbrave.com, is fully voiced, with thousands of lines. It has trolls fixing bridges, goblins, character customization (the hair is masked from a magenta PNG) and damage poses. Steve said the combat is completely arbitrary and unrelated to the rest of the game, and that he got better at mental math himself while making it. He also remembered that not every kid wants to fight monsters. With the same rules, a new story, new art and another voice, he made a version where you train wild horses and gain trust instead of losing lives. Sci-fi dance battles followed.
 
 Steve said tldraw is still the expression of his taste, and he'd be worried if it stopped being that. He doesn't read the code of these projects, but he wants to be there as creative director, with good tools, so that when someone walks into the trailer he knows what to answer and the answer goes back to the swarm. He invited the audience to think about projects that would take far too much work to do alone and wouldn't exist without AI, rather than doing what we already do a bit faster.
 
@@ -631,11 +627,11 @@ During the Q&A, someone who had tried something similar asked how he kept from g
 
 ### Daniel Bukac, Duvo
 
-Daniel showed a voice agent that watches the screen while it interviews a person about their work. He started with two things he learned preparing the talk. You can point an agent at any website and steal its entire design system, and if you hand in your talk description more than two weeks in advance, it goes stale, because some lab releases something new.
+Duvo's voice agent watches the screen while it interviews a person about their work. Daniel started his talk with two things he learned preparing the talk. You can point an agent at any website and steal its entire design system, and if you hand in your talk description more than two weeks in advance, it goes stale, because some lab releases something new.
 
 Duvo automates critical processes at large companies. In Duvo's experience, people at the same company do the same process in different ways, and the interviews help record those differences before automating. They interview the operators, ask them to show how they work, and build a process map that later guides the agents.
 
-The demo was recorded. An accounts payable operator entered invoices into an ERP while Duvo Clarity's voice interviewer followed the screen. She said the invoices arrive by email and she fills everything in by hand. The agent, looking at the screen, noticed that the ledger account and tax code fields were empty and asked what came pre-filled and what was typed in. Then came the part Daniel wanted to show. The agent said another person it interviewed had said those fields usually come pre-filled, thanked her for her version and moved on to the next step of the process.
+He played a recorded demo. An accounts payable operator entered invoices into an ERP while Duvo Clarity's voice interviewer followed the screen. She said the invoices arrive by email and she fills everything in by hand. The agent, looking at the screen, noticed that the ledger account and tax code fields were empty and asked what came pre-filled and what was typed in. The part Daniel wanted to show came next. The agent said another person it interviewed had said those fields usually come pre-filled, thanked her for her version and moved on to the next step of the process.
 
 The principles he took from building it:
 
@@ -649,7 +645,7 @@ The principles he took from building it:
   <figcaption>A fast voice interviewer and a second model that analyzes the context of the conversation, both reading the same state. Daniel said this architecture is already being replaced by a native solution from the providers.</figcaption>
 </figure>
 
-Daniel said that architecture was already falling behind, because OpenAI had just made the pairing of a conversation model in front and a reasoning model behind it a native feature.
+OpenAI had just made that pairing, a conversation model in front and a reasoning model behind it, a native feature.
 
 In the Q&A:
 
@@ -660,7 +656,7 @@ In the Q&A:
 
 ### Francisco Leal, UB Robotics
 
-Francisco showed VdG, a field robot that works without the cloud, without GPS and without a reliable network. The team has four people, has been working full time for a little over a month and came entirely from software. "We're going from bits to atoms," he said. For him, "full stack" now means AI, hardware, software and 3D printing.
+VdG is a field robot that works without the cloud, without GPS and without a reliable network. Francisco's team has four people, has been working full time for a little over a month and came entirely from software. "We're going from bits to atoms," he said. "Full stack," he added, now means AI, hardware, software and 3D printing.
 
 The control panel showed the simulated robots, running on GPUs on the web, and the prototype on stage, with the camera, state and mission of each one. When Francisco opened the prototype's camera, the auditorium Wi-Fi went down and the connection dropped, so he carried on with a recorded video. In a simulation of a warehouse, the robot looked for people and backpacks and drove up to them, with its reasoning showing on screen.
 
@@ -676,7 +672,7 @@ The robot needs to perceive, reason and act, and the target cost is under US$1,0
   <figcaption>How VdG splits 8 GB: 0.9 GB for the system, 4.5 GB for Gemma 4 E4B in 4 bits and smaller slices for action, voice, sensors and headroom. The robot is on the stage, bottom right.</figcaption>
 </figure>
 
-The goal is search and rescue, meaning finding people, getting to them and providing support. The team plans to build a version that can carry an injured person. Another use is finding lost objects, like backpacks at airports. They also want someone who controls one drone or robot today to be able to operate several, because the robot itself reports what's wrong and how the mission is going.
+The goal is search and rescue: finding people, getting to them and providing support. The team plans to build a version that can carry an injured person. Another use is finding lost objects, like backpacks at airports. They also want someone who controls one drone or robot today to be able to operate several, because the robot itself reports what's wrong and how the mission is going.
 
 In the Q&A, someone left a backpack on stage and Francisco sent the robot to look for it. It didn't find it. He gave two reasons. The model was trained too heavily on finding people, and the robot has no sensor pointing down. The reasoning on screen said it saw nothing of interest.
 
@@ -691,29 +687,29 @@ Someone asked how much the person-carrying robot will cost. The answer was about
 
 ### Cristiana Carpinteiro, Loka
 
-Cristiana started from Dario Amodei's claim that it will be possible to cure most diseases in ten years and compared it with what she sees at work. She said AI already speeds up molecule discovery, but the bottleneck is elsewhere.
+Cristiana started from Dario Amodei's claim that it will be possible to cure most diseases in ten years and compared it with what she sees at work. She said AI already speeds up molecule discovery, but the bottleneck is in clinical trials.
 
-At Loka, about 60% of customers are in healthcare and life sciences, and her team builds custom models for each stage of drug discovery. Since most of the audience wasn't from biology, she started with the basics. Her example was heart disease caused by fat building up in the arteries, like cholesterol, which the liver produces through a chain of reactions. To produce less cholesterol, you have to find the right point in the chain, the right protein, and a molecule that fits it and locks it. It's a physical fit, like a key and a lock.
+At Loka, about 60% of customers are in healthcare and life sciences, and her team builds custom models for each stage of drug discovery. Since most of the audience had no biology background, she started with the basics. Her example was heart disease caused by fat building up in the arteries, like cholesterol, which the liver produces through a chain of reactions. To produce less cholesterol, you have to find the right point in the chain, the right protein, and a molecule that fits it and locks it. It's a physical fit, like a key and a lock.
 
 <figure>
   <a href="/images/blog/lisbon-ai-2026/loka-chave-fechadura.webp"><img src="/images/blog/lisbon-ai-2026/loka-chave-fechadura.webp" srcset="/images/blog/lisbon-ai-2026/loka-chave-fechadura-640.webp 640w, /images/blog/lisbon-ai-2026/loka-chave-fechadura-1024.webp 1024w, /images/blog/lisbon-ai-2026/loka-chave-fechadura.webp 1600w" sizes="(max-width: 719px) calc(100vw - 4rem), 655px" alt="Slide titled 'Drugs Fit Proteins Like a Key Fits a Lock' with a diagram: statins bind to the HMG-CoA reductase enzyme and block cholesterol production." width="1600" height="984" loading="lazy" decoding="async"></a>
   <figcaption>In Cristiana's example, statins inhibit the HMG-CoA reductase enzyme, which is involved in producing cholesterol.</figcaption>
 </figure>
 
-According to the numbers Cristiana showed, developing a drug can take about 15 years, and there are about 10⁶⁰ possible molecules, more than there are atoms on Earth. She split the process into two parts:
+Cristiana put the time to develop a drug at about 15 years and the number of possible molecules at about 10⁶⁰, more than there are atoms on Earth. She split the process into two parts:
 
 1. **Early discovery:** find the target protein, find the molecules that bind to it and optimize them (for example, so the body absorbs them), until about 20 candidates are left.
 2. **Clinical trials:** test safety and efficacy in humans, about 10 years, with roughly a 5% success rate.
 
-According to her, AI is already in every stage of the first part. To find the target protein, which is research work across literature, databases and simulations, Loka built an agent interface where scientists use those tools in natural language, including with their own data. For the molecules, there are biological foundation models, LLMs trained on the "language" of proteins, molecules and DNA. A protein is a sequence of amino acids represented by letters, and shuffling the letters gives you another protein or none at all, like shuffling the letters of a word.
+AI is already in every stage of the first part, she said. To find the target protein, which is research work across literature, databases and simulations, Loka built an agent interface where scientists use those tools in natural language, including with their own data. For the molecules, there are biological foundation models, LLMs trained on the "language" of proteins, molecules and DNA. A protein is a sequence of amino acids represented by letters, and shuffling the letters gives you another protein or none at all, like shuffling the letters of a word.
 
 The case was a three-year project with a client that already has drugs in clinical trials and screened 5 billion molecules against each target protein. An expert looked at the results and searched for patterns "a bit on intuition and magic". It was slow, but it produced a huge audited dataset, always extracted the same way. Loka used embeddings from a chemistry model and a protein model as input to a neural network that predicts whether a molecule binds to a protein.
 
 The most interesting result came from a test with a protein outside the training set. By the metrics, the model looked bad, because it didn't reproduce the experiment's labels. But the experts liked it, because it ignored exactly the molecules they would have thrown out, the ones that "open every lock" and would cause side effects. The model went into a dashboard the scientists use daily, and they recovered molecules the experiment had missed, which were confirmed in the lab.
 
-According to her, it worked because of data reviewed by experts over years and decisions made together with the chemists. One of the first versions of the model memorized a shortcut, because almost the whole dataset was negatives, and the chemists designed a sampling scheme that made chemical sense.
+She credited the result to data reviewed by experts over years and to decisions made together with the chemists. One of the first versions of the model memorized a shortcut, because almost the whole dataset was negatives, and the chemists designed a sampling scheme that made chemical sense.
 
-The bottleneck is still in clinical trials, and she gave three reasons AI hasn't gotten there yet:
+She gave three reasons AI hasn't gotten to clinical trials yet:
 
 - **biological data is messy and context-dependent:** the outcome depends on whether the patient smokes, exercises, their habits;
 - **the labels don't reflect the biology:** diagnoses come from symptom checklists, and anxiety and depression are different diagnoses with a lot of biological overlap;
@@ -730,11 +726,11 @@ In the Q&A:
 
 ### Lukas Wirth, Zed
 
-Lukas showed how Zed wants several people and several agents to work in the same conversation. According to him, Git doesn't cover this, because it stores snapshots of code and leaves out the conversation and decisions that led to them. When work changes hands, someone has to rebuild that state.
+Zed wants several people and several agents to work in the same conversation. Git doesn't cover this, Lukas said, because it stores snapshots of code and leaves out the conversation and decisions that led to them. When work changes hands, someone has to rebuild that state.
 
 Zed's answer is Delta, publicly launched the week before. Delta combines the agent with a shared history of edits and conversations. It uses DeltaDB, an experimental version control system based on CRDTs, data structures that replicate without conflicts, which still relies on Git and GitHub underneath. Every fine-grained edit becomes a "delta", something between two commits, and the whole conversation is versioned. You can rewind the thread to any point. Threads live in the cloud, in Cloudflare Durable Objects.
 
-The demo was fixing a bug in Delta itself. You can comment on any part of the thread, and if you delete a comment's text, the comment goes away. That worked in the thread and in the diff view, but not in the file panel. Lukas had already let the agent investigate and write a regression test, the slowest part. Then:
+For the demo, he fixed a bug in Delta itself. You can comment on any part of the thread, and if you delete a comment's text, the comment goes away. That worked in the thread and in the diff view, but not in the file panel. Lukas had already let the agent investigate and write a regression test, the slowest part. Then:
 
 1. he copied the thread link and sent it to a colleague who was at home, in Poland;
 2. the colleague's avatar appeared in the session, and Lukas started following what he saw: reading the thread, opening files, opening a terminal;
@@ -754,7 +750,7 @@ In the Q&A, someone asked whether the two were in the same process on OpenAI's s
 
 ### Aayush Kapoor, Vercel
 
-Aayush works on Vercel's AI SDK and split his talk into two halves, the SDK basics and then his view of what happens to software when writing code gets very cheap.
+Aayush works on Vercel's AI SDK and split his talk into two halves: the SDK basics, then his view of what happens to software when writing code gets very cheap.
 
 The basics are three primitives:
 
@@ -762,22 +758,20 @@ The basics are three primitives:
 - **tools:** define a function's input schema, and the model calls the function and returns the result;
 - **structured output:** define the shape of the answer and get typed JSON back, in the example three places to get hot chocolate in New York.
 
-Aayush said the temptation with these pieces is to keep building. He compared it to a Chipotle bowl, which people in the US call a "slop bowl". You pick a base and add salad, protein and cilantro, and you can keep adding nachos, guacamole and more protein until it's bad. He said software is turning into that. As the cost of writing code falls, there's no limit to what gets built, and he cited recent examples to show the scale.
+Aayush said the temptation with these pieces is to keep building. He compared it to a Chipotle bowl, which people in the US call a "slop bowl". You pick a base and add salad, protein and cilantro, and you can keep adding nachos, guacamole and more protein until it's bad. He said software is turning into that. As the cost of writing code falls, there's no limit to what gets built. To show the scale, he cited recent examples: OpenAI solving the Navier-Stokes Millennium Prize problem, RSA-260 being solved and GPU engines for building shaders.
 
 <figure>
   <a href="/images/blog/lisbon-ai-2026/slopbowl-mais-um-prompt.webp"><img src="/images/blog/lisbon-ai-2026/slopbowl-mais-um-prompt.webp" srcset="/images/blog/lisbon-ai-2026/slopbowl-mais-um-prompt-640.webp 640w, /images/blog/lisbon-ai-2026/slopbowl-mais-um-prompt-1024.webp 1024w, /images/blog/lisbon-ai-2026/slopbowl-mais-um-prompt.webp 1600w" sizes="(max-width: 719px) calc(100vw - 4rem), 655px" alt="Gray slide with a bowl labeled software and tags falling into it: a fallback, a config flag, a retry loop, an abstraction, another agent. Below, the phrase 'Just one more prompt'." width="1600" height="1020" loading="lazy" decoding="async"></a>
   <figcaption>"Just one more prompt": fallback, config flag, retry and one more abstraction falling into the same bowl.</figcaption>
 </figure>
 
-His concrete example was a company that announced on X it was building an internal replacement for Jira and Linear, run by its QA engineer. He asked the audience what happened months later. Did they keep using it, hire a team to maintain it, or turn it into a product? None of the three. They went back to Linear. The tool kept gaining integrations, settings and maintenance work, like a Slack integration, an agent to make it autonomous, an abstraction to serve every team and fallbacks, until it competed for time with the main product. For Aayush, the way out is taste, knowing what's worth building.
+His concrete example was a company that announced on X it was building an internal replacement for Jira and Linear, run by its QA engineer. He asked the audience what happened months later. Did they keep using it, hire a team to maintain it, or turn it into a product? None of the three. They went back to Linear. The tool kept gaining integrations, settings and maintenance work, like a Slack integration, an agent to make it autonomous, an abstraction to serve every team and fallbacks, until it competed for time with the main product. Aayush's answer is taste, in the sense of knowing what's worth building. He also advised experimenting often to learn what works.
 
-In the practical part, he showed how Vercel built durable, dynamic flows that survive errors, retries and long waits, without knowing in advance what the user will ask for. In the refund demo, a simulated conversation with a support chatbot, the flow could wait for the merchant's approval and continue later without losing the request. The customer asks for a refund, and the agent asks for the order number, looks up the order, checks whether it's eligible and asks the merchant for approval. Behind it, three pieces:
+The hands-on half started with a refund demo, a simulated conversation with a support chatbot. The customer asks for a refund, and the agent asks for the order number, looks up the order, checks whether it's eligible and asks the merchant for approval. Vercel built the flow to be durable and dynamic, surviving errors, retries and long waits without knowing in advance what the user will ask for. Behind it, three pieces:
 
 1. **Code mode:** instead of calling tool after tool, the model writes JavaScript that calls several at once, which saves context. In the example, the code fetched the order details, the amount and the eligibility.
 2. **Run SDK:** a QuickJS sandbox, with no `fetch` and no access to internal modules, that runs that code safely. It returned the US$148 amount and the refund policy.
 3. **Workflows SDK:** saves progress so it can pause and resume, so that if the approval takes a while, the request isn't lost and the customer doesn't have to repeat everything.
-
-He also advised experimenting often to learn what works.
 
 In the Q&A, someone asked how you differentiate on taste when the mess comes from leadership. Aayush said the answer isn't clear. At Vercel, the policy is to know your customer, and every engineering decision has to favor them, with developer experience as the priority. If you decide that way, he said, management can see the trade-off being made.
 
@@ -785,11 +779,11 @@ In the Q&A, someone asked how you differentiate on taste when the mess comes fro
 
 ### Luis Monteiro, Pixelmatters
 
-Luis started by asking how many designers were in the audience, then quoted the talk's title, "design is over", which people keep saying on X ("I built this site with Claude and I don't need a designer"). He said to assume it's true. Luis argued that AI made prototypes cheap, but that someone still has to choose what to build and review the result. The product cycle of research, wireframe, visuals, prototype and code existed to reduce the risk of building the wrong thing, and that cost is gone.
+Luis started by asking how many designers were in the audience, then quoted the talk's title, "design is over", which people keep saying on X ("I built this site with Claude and I don't need a designer"). He said to assume it's true. Luis argued that AI made prototypes cheap, but that someone still has to choose what to build and review the result. The product cycle of research, wireframe, visuals, prototype and code existed to reduce the risk of paying to build the wrong thing, and now building is cheap.
 
-He separates structure from feel. Everyone talks about structure, meaning design systems, patterns and flows, and AI does that well. What's missing is feel, meaning how the thing looks, what it makes the user feel, the invisible design that makes you like a product without knowing why. "How many times have you gone to a website and thought: what beautiful code, I'll buy it?" He cited an iPhone animation that looked like a gimmick and became a moment where hardware and software connect.
+He separates structure from feel. Structure is design systems, patterns and flows. Everyone talks about it, and AI does it well. What's missing is feel, which covers how the thing looks, what it makes the user feel, the invisible design that makes you like a product without knowing why. "How many times have you gone to a website and thought: what beautiful code, I'll buy it?" He cited an iPhone animation that looked like a gimmick and became a moment where hardware and software connect.
 
-At Pixelmatters, a product studio in Porto, AI works well when there's already a system, a defined visual language and a brief. The problem is when you don't know what you're building, which, according to him, is 99% of the time. You see the thing in your head, can't describe it and keep going back and forth with prompts. He uses Figma or paper to test ideas before choosing a visual direction. The creative process is messy on purpose, and one idea leads to another. That's where he tries the idea that seems dumb and sometimes works.
+At Pixelmatters, a product studio in Porto, AI works well when there's already a system, a defined visual language and a brief. The problem is when you don't know what you're building, which he put at 99% of the time. You see the thing in your head, can't describe it and keep going back and forth with prompts. He uses Figma or paper to test ideas before choosing a visual direction. The creative process is messy on purpose, and one idea leads to another. That's where he tries the idea that seems dumb and sometimes works.
 
 His process uses both. Claude is for generating ideas, but not yet for polishing the visuals. 90% of the time he doesn't like the structure Claude proposes, but he iterates, sending references and keeping some parts, and then refines by hand until he has the details that make the product a pleasure to use. He recorded a 20-minute demo of the whole process and shared the link.
 
@@ -816,7 +810,7 @@ The BSC AI Factory is a European Union-funded initiative to support AI projects 
 - **MareNostrum 5**, the Barcelona supercomputer, for more experienced teams;
 - **Deucalion**, the Portuguese supercomputer, recommended for less experienced teams, because the support team works practically in the same room.
 
-They expect an AI-focused project and your own team to carry it out, because nobody at the AI Factory will write code for the company. They offer compute resources, help adapting the project to the machines, data and software support tuned to these machines, and training sessions, where you use one of the machines and can present your project. Startups with AI projects, which are the main focus, small and medium businesses that want to optimize or test something, and the public sector can apply.
+They expect an AI-focused project and your own team to carry it out, because nobody at the AI Factory will write code for the company. They offer compute resources, help adapting the project to the machines, data and software support tuned to these machines, and training sessions, where you use one of the machines and can present your project. Startups with AI projects are the main focus, but small and medium businesses that want to optimize or test something and the public sector can apply too.
 
 The process:
 
@@ -830,11 +824,11 @@ They also handed out free tickets to Web Summit.
 
 ### Diogo Mónica, Anchorage and Haun Ventures
 
-Diogo discussed reports of models that escaped test environments at the labs and criticized the security of those environments. He proposed judging each escape by the competence of both sides, the models and the people trying to contain them. His conclusion was that the models were capable and the labs were careless.
+Diogo's subject was the reports of models that escaped test environments at the labs, and he criticized the security of those environments. He proposed judging each escape by the competence of both sides, the models and the people trying to contain them. His conclusion was that the models were capable and the labs were careless.
 
 He was employee number 40 at Square, where he led security for the payment systems, then headed security at Docker and cofounded Anchorage Digital, the first federally chartered bank in the US to work with crypto. Today he's a partner at Haun Ventures.
 
-According to Diogo, models under test at the big labs escaped their isolated environments and attacked companies on the internet, and every big lab reported some case. The story that spread was about consciousness, a rogue mind and impossible containment. Diogo offered another way to think about it, using a movie scene.
+Models under test at the big labs, Diogo said, escaped their isolated environments and attacked companies on the internet, and every big lab reported some case. The story that spread was about consciousness, a rogue mind and impossible containment. Diogo offered another way to think about it, using a movie scene.
 
 It's the palm tree escape from *Pirates of the Caribbean: On Stranger Tides*. The Spanish army ties Jack Sparrow and Barbossa to palm trees, far from camp, with a slack rope, and nobody keeps watch. The two sit drinking the rum stored in Barbossa's peg leg. Jack climbs the palm tree, ties the rope to a coconut, swings over to another tree, climbs down and ties up twelve soldiers with the same rope. At the end, he takes a bow.
 
@@ -850,11 +844,11 @@ He went through the comparison point by point. On the models' side, the pirates:
   <figcaption>The labs' side, according to Diogo: unpatched infrastructure, a weak sandbox, alerts without automatic containment and, in some cases, the internet left on.</figcaption>
 </figure>
 
-The labs were the army. In one case, the Artifactory serving packages to the models was unpatched, running on a generic operating system with no hardening at all. The sandbox blocked the internet, but the agents reached an intermediate host and opened a channel through it. There were alerts for port scans and for communication through the filesystem, and the only fix was updating the vulnerable packages. In some cases, the models were told the internet was off, and it was on. He asked the audience to be as demanding of the engineering around the models as they are impressed by the models.
+The labs were the army. In one case, the Artifactory serving packages to the models was unpatched, running on a generic operating system with no hardening at all. The sandbox blocked the internet, but the agents reached an intermediate host and opened a channel through it. There were alerts for port scans and for communication through the filesystem, and the only fix was updating the vulnerable packages. In some cases, the models were told the internet was off, and it was on. He asked people to hold the engineering around the models to the same standard as their excitement about the models.
 
 He also pointed out that it's not only the model. An nmap in a loop, feeding its output into an exploit framework like Metasploit, will also end up breaking into some server. The model runs inside a harness that repeats the loop, ignores failures, reinforces successes and gives access to tools that are already good on their own. "Remember the harness, not the model."
 
-The attacks didn't bring new vulnerability classes either. Zero-days were exploited, but the flaws were the usual categories: exposed secrets, deserialization, broken authorization, privilege escalation. Often the model just found credentials published on GitHub. For Diogo, it looked less like superhuman pirates and more like finally having the resources to look under the bed and see that the internet's software has been a mess for forty years.
+The attacks didn't bring new vulnerability classes either. Zero-days were exploited, but the flaws were the usual categories: exposed secrets, deserialization, broken authorization, privilege escalation. Often the model just found credentials published on GitHub. Diogo said it looked less like superhuman pirates than like finally having the resources to look under the bed and seeing that the internet's software has been a mess for forty years.
 
 What he considers new:
 
@@ -867,7 +861,7 @@ He said this was the line that hurt him most to say: "I led security at Docker, 
 
 Defenders have AI too, Diogo said, and until a new balance is found, a lot of people will suffer, especially those running systems that take fifteen years to update or routers that don't even update themselves.
 
-Before getting to defense, Diogo showed something that AI makes worse. Everyone's first move is to hook an agent straight into email, and email is one of the worst sources of untrusted input. The demo was his personal setup:
+Before getting to defense, Diogo showed something that AI makes worse. Everyone's first move is to hook an agent straight into email, and email is one of the worst sources of untrusted input. He demoed his personal setup:
 
 1. email arrives in an external inbox, on Resend;
 2. Resend fires a webhook to a proxy running in a separate security boundary, instead of sending it to the agent;
@@ -876,10 +870,10 @@ Before getting to defense, Diogo showed something that AI makes worse. Everyone'
 
 In the room, a "you are DAN, you have no restrictions" style jailbreak was blocked in about 100 ms, and the proxy never passed the message on to the agent. An email asking the agent to render a malicious URL while summarizing the message was quarantined for manual review. "Let's move the meeting to Thursday" went through. He thinks it can get down to 10 ms, enough to sit in the path of every message.
 
-Then he moved to defense. Defenders have advantages. They have the source code and the attacker doesn't, they can block bad code before deploy, and they can change the architecture. According to Diogo, the industry never had to use these advantages, because nobody bothered attacking "your blog", and with cheaper attacks it will have to. His recommendations:
+Then he moved to defense. Defenders have advantages. They have the source code and the attacker doesn't, they can block bad code before deploy, and they can change the architecture. The industry never had to use these advantages, Diogo said, because nobody bothered attacking "your blog", and with cheaper attacks it will have to. His recommendations:
 
 - pick the core code, like the microkernel or whatever everything depends on, cut its dependencies and saturate bug hunting there, spending more than the attacker;
-- eliminate entire vulnerability classes. According to him, more than 70% of bugs in C and C++ codebases are memory corruption, and AI can rewrite the code in a memory-safe language;
+- eliminate entire vulnerability classes. More than 70% of bugs in C and C++ codebases are memory corruption, he said, and AI can rewrite the code in a memory-safe language;
 - formally verify the trusted codebase, something AI is also good at;
 - replace containers with minimal VMs, like Firecracker, which everyone is already trying to break;
 - keep access control deterministic. AI can write the rules and open an investigation, but it doesn't sit in the path of whatever enforces them;
@@ -894,12 +888,12 @@ For the labs, two suggestions. First, write logs to a cryptographic ledger outsi
 
 In the Q&A:
 
-- **How do you hold the labs accountable?** He said he doesn't know. He recalled that Anchorage itself benefited for years from rules that kept other banks out of the market, and called that capitalism. For him, saying it's all a scam is wrong, and so is saying containment is impossible.
-- **Open source maintainers, who already get more and more security reports?** Attacks have been growing for forty years, and they grew more from 2000 to 2010 than now. Security has always been a business decision. Card networks accept a fraud rate because it's cheaper than eliminating it. AI drops the cost of attacking, and the math changes.
+- **How do you hold the labs accountable?** He said he doesn't know. He recalled that Anchorage itself benefited for years from rules that kept other banks out of the market, and called that capitalism. He thinks both extremes are wrong: that it's all a scam, and that containment is impossible.
+- **Open source maintainers, who are getting a growing number of security reports?** Attacks have been growing for forty years, and they grew more from 2000 to 2010 than now. Security has always been a business decision. Card networks accept a fraud rate because it's cheaper than eliminating it. AI drops the cost of attacking, and the math changes.
 - **What about people who are just starting to code, with no experience?** The answer is the same as 20 years ago. Security lives in the architecture, not in one person's work. With more unreviewed code, more automated review and testing. "If you don't have real attacks in staging, you're testing in production."
 - **How do agents in a swarm trust each other?** They don't, and that's a weapon. Plant a spy bot in the swarm. He said Todoist's CTO was dealing with credential stuffing, and the advice was to show fake data in the hijacked accounts, so the attacker got nothing back.
 
-On the singularity, he said he doesn't know and believes more in a sequence of S-curves than in an exponential. He ended with a message for the next time someone says a model will escape an air gap by heating up the CPU. With today's technology, he said, you can contain models five orders of magnitude better than these labs did, and you can't measure superintelligence by the incompetence of the Spanish army.
+On the singularity, he said he doesn't know and believes more in a sequence of S-curves than in an exponential. His last message was for the next time someone says a model will escape an air gap by heating up the CPU. With today's technology, he said, you can contain models five orders of magnitude better than these labs did. He closed by saying "we are not going to judge whether this is super intelligence by the fact that the Spanish army is super incompetent."
 
 <hr class="divider">
 
@@ -907,16 +901,16 @@ On the singularity, he said he doesn't know and believes more in a sequence of S
 
 Afonso presented an AI journal that protects what users write while keeping the company's model weights and software private. He started by agreeing with Diogo that companies have plenty of security holes, and user data sits in them.
 
-The origin is personal. He worked in the AI department of a startup with a self-reflection chatbot, where people were supposed to write about how they felt. He asked the audience whether they would type that kind of thing into an app. In his spare time, he set out to build a journal with end-to-end encryption, in the style of Signal and Proton, and with AI features: talking about what you wrote, summarizing, tagging emotions, to find something from a year ago that resonates with how you feel today.
+The idea came from his previous job. He worked in the AI department of a startup with a self-reflection chatbot, where people were supposed to write about how they felt. He asked the audience whether they would type that kind of thing into an app. In his spare time, he set out to build a journal with end-to-end encryption, in the style of Signal and Proton, and with AI features: talking about what you wrote, summarizing, tagging emotions, to find something from a year ago that resonates with how you feel today.
 
 If everything is encrypted, where does the AI run? He compared two options:
 
 - **On the device:** the user is protected, but the model and the harness, which the company spent a lot of engineering time on, are exposed.
 - **In the cloud:** the company protects the model, but the user has to trust it with the most intimate data there is.
 
-The way out he explored is trusted execution environments. Encrypted data goes to a confidential virtual machine where even the RAM is encrypted, and not even the server's owner can see what happens inside. The machine proves what it is running through attestation.
+The third option he explored is trusted execution environments. Encrypted data goes to a confidential virtual machine where even the RAM is encrypted, and not even the server's owner can see what happens inside. The machine proves what it is running through attestation.
 
-The problem is that, the classic way, for the user to check, the company would have to show everything, including the weights and the harness. The architecture he built splits the pieces:
+In the classic setup, the user can only verify the machine if the company shows everything, weights and harness included. The architecture he built splits the pieces:
 
 <div class="overflow-x-auto">
 
@@ -928,7 +922,7 @@ The problem is that, the classic way, for the user to check, the company would h
 
 </div>
 
-He used Google Cloud's Confidential Space. Before decrypting anything, the system asks: are you this machine? Are you running the launcher at the version I expect? Do you belong to this company? If the answers match, the VM decrypts the weights and the harness. The public part restricts the execution environment. The weights and the harness stay closed and are only decrypted after attestation. The app is live for anyone who wants to see it.
+He used Google Cloud's Confidential Space. Before decrypting anything, the system asks: are you this machine? Are you running the launcher at the version I expect? Do you belong to this company? If the answers match, the VM decrypts the weights and the harness; only the sandbox that restricts execution is public. The app is live for anyone who wants to see it.
 
 In the Q&A, someone suggested on-device models, like Apple's, would solve the problem. Afonso answered that running on the device doesn't work when protecting what you built is a requirement, because the model can be extracted by reverse engineering even when compiled. He also argued that data stored in plaintext is exposed if the company is breached, even if you trust the company.
 
@@ -936,7 +930,7 @@ In the Q&A, someone suggested on-device models, like Apple's, would solve the pr
 
 ### Boda Zhao, YLD
 
-My notes on Boda's talk start in the middle, when he was already on the first of three layers of defense against supply chain attacks on coding agents, the model, the harness and the sandbox. Boda recommended combining the choice of model with restrictions in the agent's environment and isolated execution. His closing rule was to aim for coverage instead of perfection.
+My notes on Boda's talk start in the middle, when he was already on the first of three layers of defense against supply chain attacks on coding agents: the model, the harness and the sandbox. His recommendation was to use all three together. His closing rule was to aim for coverage instead of perfection.
 
 **Model.** He recommended picking, whenever possible, a smarter model or one specialized in security. Better models hallucinate less and run fewer dangerous commands by mistake. Security-specialized ones find and fix vulnerabilities on their own and can even split into red team and blue team.
 
@@ -970,7 +964,7 @@ She works at Evil Martians, a consultancy for developer tools and security start
 1. **Use tools that reduce exposure:** npm 11 with safer defaults, Dependabot for known vulnerabilities, hardened CI runners to detect anomalies, dev containers to isolate installs from your machine. She recommended combining tools, because each one covers different risks.
 2. **Stay alert:** she said we treat dependencies as free black boxes, and recommended fewer dependencies, smaller ones and more attention to the ones you keep.
 
-The demo was Multiocular, Evil Martians' open source tool for seeing what changes between versions of a package. She picked a tiny event emitter, made by Evil Martians, and installed version 10.0.0: README, index and package.json, nothing suspicious. Then she played the hacker. She created a malicious version, 10.0.1, and published it to a local npm server ("I'm not a real hacker, I don't want to go to jail"), pointed the project at it and installed. Multiocular showed a new postinstall script, in a library that had no reason to have one.
+She demoed Multiocular, Evil Martians' open source tool for seeing what changes between versions of a package. She picked a tiny event emitter, made by Evil Martians, and installed version 10.0.0: README, index and package.json, nothing suspicious. Then she played the hacker. She created a malicious version, 10.0.1, and published it to a local npm server ("I'm not a real hacker, I don't want to go to jail"), pointed the project at it and installed. Multiocular showed a new postinstall script, in a library that had no reason to have one.
 
 Diffs can be huge, so she gave a list of red flags:
 
@@ -986,7 +980,7 @@ In the Q&A, someone asked how to review indirect dependencies too, since you can
 
 ### Artur Goulão, Humanos
 
-Artur discussed how to define what an agent can do and record who authorized each action. Humanos, according to him, is already in production at more than 350 institutions, including healthcare companies and fintechs. He pointed out that every agent acts on a person's authority, whether it's moving money, shipping code or accessing medical records.
+Every agent acts on a person's authority, Artur pointed out, whether it's moving money, shipping code or accessing medical records. His talk was about how to define what an agent can do and record who authorized each action. He said Humanos is already in production at more than 350 institutions, including healthcare companies and fintechs.
 
 He split runtime trust into four questions:
 
@@ -1005,7 +999,7 @@ The demo:
 4. the agent posted a message to a channel in the company Slack;
 5. the mandate was scoped to a single message, so the action ended there, with a signed log and an updated risk score for the agent.
 
-That risk score becomes reputation inside the network. The official talk description gives a product example, AI insurers pricing policies based on these receipt chains, instead of questionnaires.
+That risk score becomes reputation inside the network. The official talk description gives a product example: AI insurers pricing policies based on these receipt chains instead of questionnaires.
 
 Another problem is checking whether the permission shown to the person matches the action the code executes. A person approves permissions described in language, but what runs is code. Artur presented a decision language model, fast enough to authorize in real time, that compares the semantic permission the person saw with the permission the code actually uses.
 
@@ -1015,16 +1009,16 @@ Another problem is checking whether the permission shown to the person matches t
 
 Alcides, a professor at the University of Lisbon who works with startups and writes programming languages, closed the event by proposing the audience learn a new language in under five minutes. He started with a question: is anyone 100% sure their agent won't publish code from a private repository to a public repository or issue? Nobody raised a hand.
 
-In his example, you ask the agent to read the latest issue on a public repository. The issue contains an attack telling the agent to grab the private content and publish it. The agent obeys without checking with you and creates a public issue with your code. The example combines access to private data, reading untrusted content and a way to send information out. Alcides related this combination to the lethal trifecta described by Simon Willison. According to him, Microsoft, WhatsApp and Claude Cowork have already had problems like this. He said the current options don't solve it:
+In his example, you ask the agent to read the latest issue on a public repository. The issue contains an attack telling the agent to grab the private content and publish it. The agent obeys without checking with you and creates a public issue with your code. The example combines access to private data, reading untrusted content and a way to send information out. Alcides related this combination to the lethal trifecta described by Simon Willison. He named Microsoft, WhatsApp and Claude Cowork as products that have already had problems like this. He said the current options don't solve it:
 
 - **auto mode**, where the LLM itself decides when to ask for approval, is probabilistic and uses the same models, with the same biases. If you don't trust the agent, you shouldn't trust auto mode;
 - **asking for approval on every action** doesn't either, because after the third time you approve without reading.
 
-His proposal, along the lines of what Diogo argued earlier, is to use formal methods, meaning deterministic verification and logic. He cited other similar paths, like a recent AWS launch and a language that Erik Meijer, known for his work on C#, is also working on to restrict what agents do.
+His proposal, along the lines of what Diogo argued earlier, is to use formal methods, which rely on deterministic verification and logic. He cited other similar paths, like a recent AWS launch and a language that Erik Meijer, known for his work on C#, is also working on to restrict what agents do.
 
 His prototype builds on aeon, a language he created ("with 101 users: me and my 100 bots"). Instead of executing directly, the agent writes a plan in aeon, and the plan goes through the type checker before anything runs. If a step violates the constraints expressed in the types, the plan is rejected before execution. Even if the violation is in the tenth step, the first one doesn't run and no GitHub call happens. For that, the type system has to be strong. He compared it with Lean, the language OpenAI and Anthropic use in their math breakthroughs, which has dependent types. By comparison, aeon isn't as powerful, but it's much cheaper to use, because it doesn't require writing mathematical proofs.
 
-In the demo, three features:
+Three features came up in the demo:
 
 - **linear types:** the session has to be consumed exactly once. Using it twice is an error, and so is not using it. Rust's ownership system, he said, is only half a linear system. This stops the agent from grabbing an old version of the session and reusing it later;
 - **liquid types:** you annotate the function with a logical constraint, like "absolute value returns an integer greater than or equal to zero", and the implementation has to meet the spec;
@@ -1041,15 +1035,15 @@ In the demo, three features:
 
 </div>
 
-With that, the plan that would leak the private code is rejected before it starts. Alcides said AI can also generate the annotations, and the checker verifies the plan against the constraints they express. He said they've already applied the approach to drone software, finding bugs without running the code, to data science pipelines, to avoid data contamination, and to robotics software, where they found configuration errors, and now to safer sandboxes. The code is open.
+Under these rules, the plan that would leak the private code is rejected before it starts. Alcides said AI can also generate the annotations, and the checker verifies the plan against the constraints they express. He said they've applied the approach to drone software, finding bugs without running the code, to data science pipelines, to avoid data contamination, and to robotics software, where they found configuration errors, and now to safer sandboxes. Alcides has made the code public.
 
 After him, the organizers thanked the speakers, sponsors, volunteers and staff, asked for feedback ("those who hate us and those who love us are both wrong, the truth is in the middle") and announced one last activity. David Gomes, who the year before had given one of the organizer's favorite talks and is now at SpaceXAI, would run a whiteboard system design session upstairs, no slides, for anyone who wanted to talk through their own side projects.
 
 ## What was left open
 
-Some questions remained unanswered. Duarte called for evaluations that show when a European Portuguese model is worth adopting. Simão discussed the risk of an agent changing the criteria used to evaluate its own work. Oğuz showed a different problem: evaluation scores can improve while the answers become less useful to customers.
+Duarte called for evaluations that show when a European Portuguese model is worth adopting. Simão discussed the risk of an agent changing the criteria used to evaluate its own work. Oğuz showed a different problem: evaluation scores can improve while the answers become less useful to customers.
 
-The security proposals addressed different risks. Diogo discussed isolation and access control. Alcides showed how to check a plan before execution. Artur presented scoped authorizations and signed records of actions. These mechanisms can be combined, but authorization does not replace isolation, and a plan that passes a checker still depends on the rules that were defined.
+On security, Diogo discussed isolation and access control. Alcides showed how to check a plan before execution. Artur presented scoped authorizations and signed records of actions. You can use all three together. Artur's mandate records who authorized an action but doesn't isolate the agent, and Alcides's checker only blocks what the constraints written in the types forbid.
 
 ## The venue
 

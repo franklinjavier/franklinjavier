@@ -35,11 +35,11 @@ Os dois exemplos mostram por que avaliar um agente exige olhar para as ações q
 
 Prince abriu a parte técnica. A tese dele é que o computador que a pessoa já tem consegue rodar boa parte do que hoje se paga para rodar na nuvem, desde que alguém faça a engenharia de inferência. É nisso que ele trabalha há três anos, com foco em Apple Silicon.
 
-Ele é de Moçambique, morou na Índia e chegou à Polônia em 2022, no meio do boom do ChatGPT. Em países como Índia e Moçambique, pouca gente pode pagar uma assinatura mensal de IA. Para ele, os Macs com Apple Silicon formam a maior base de computação distribuída do mundo e estão prontos para IA desde o M1, mas faltava um motor para rodar os modelos neles.
+Ele é de Moçambique, morou na Índia e chegou à Polônia em 2022, no meio do boom do ChatGPT. Em países como Índia e Moçambique, pouca gente pode pagar uma assinatura mensal de IA. Ele vê nos Macs com Apple Silicon a maior base de computação distribuída do mundo, pronta para IA desde o M1. Faltava um motor para rodar os modelos neles.
 
 O limite físico é a memória. Num Mac, CPU, GPU e Neural Engine dividem a mesma memória, e ela não cresce depois da compra. Prince usou a relação entre banda de memória e bytes por token para estimar a velocidade de geração. Depois mostrou três formas de reduzir o volume de dados que o modelo precisa movimentar.
 
-A primeira é quantizar os pesos. Para um modelo de 8B, os números da palestra foram estes:
+Começou pela quantização dos pesos. Para um modelo de 8B, os números da palestra foram estes:
 
 <div class="overflow-x-auto">
 
@@ -54,14 +54,14 @@ A primeira é quantizar os pesos. Para um modelo de 8B, os números da palestra 
 
 A quantização mista analisa o modelo e mantém mais precisão nas camadas sensíveis. Num mixture-of-experts, o roteador e cada especialista podem ter precisões diferentes. Prince lembrou que quantizar, sozinho, não deixa o modelo mais rápido. A quantização faz o modelo caber na memória, e o ganho de velocidade depende da banda da máquina. Respondendo a uma pergunta do público, ele foi mais cauteloso que a tabela. Sem um conjunto de calibração, ele evita 4 bits e prefere 5, 6 ou 8. Com precisão mista e bons dados para calibrar, dá para descer mais.
 
-A segunda é o KV cache, a memória que o modelo usa para guardar o contexto. Quando o Google publicou um método para quantizá-lo quase sem perda, Prince implementou às 2 da manhã, postou no dia seguinte, e o post chegou perto de um milhão de visualizações. Com o cache quantizado, um contexto de um milhão de tokens cabe num MacBook de 16 GB, dependendo do tamanho do modelo. O motor dele, o mlx-vlm, já traz isso ligado.
+Depois veio o KV cache, a memória que o modelo usa para guardar o contexto. Quando o Google publicou um método para quantizá-lo quase sem perda, Prince implementou às 2 da manhã, postou no dia seguinte, e o post chegou perto de um milhão de visualizações. Com o cache quantizado, um contexto de um milhão de tokens cabe num MacBook de 16 GB, dependendo do tamanho do modelo. O motor dele, o mlx-vlm, já traz isso ligado.
 
 <figure>
   <a href="/images/blog/lisbon-ai-2026/kv-cache-quantizacao.webp"><img src="/images/blog/lisbon-ai-2026/kv-cache-quantizacao.webp" srcset="/images/blog/lisbon-ai-2026/kv-cache-quantizacao-640.webp 640w, /images/blog/lisbon-ai-2026/kv-cache-quantizacao-1024.webp 1024w, /images/blog/lisbon-ai-2026/kv-cache-quantizacao.webp 1600w" sizes="(max-width: 719px) calc(100vw - 4rem), 655px" alt="Slide escuro com o título 'Lever 1b · KV cache quantization', a fórmula do tamanho do KV cache e uma lista sobre cache de 4 bits no servidor." width="1600" height="1042" loading="lazy" decoding="async"></a>
   <figcaption>Gemma 4 31B com 256 mil tokens de contexto: 22,31 GB de KV cache em bf16 contra 18,41 GB de pesos em 4 bits. Em contexto longo, o cache pesa mais que o modelo.</figcaption>
 </figure>
 
-A terceira é a decodificação especulativa, em que um modelo pequeno ou um adaptador propõe vários tokens à frente e o modelo grande confere. O MTP, que os modelos novos já trazem, prevê de 3 a 6 tokens, e Prince disse que ele deixa a geração cerca de 2 vezes mais rápida. O DFlash, baseado em difusão, prevê até 8 de uma vez e chega a 3 ou 4 vezes mais rápido, mas quando Prince testou, só funcionava bem com código. Num M3 Ultra, um modelo Gemma saiu de 30 para 43 tokens por segundo com MTP. Modelos mixture-of-experts quase não ganham nada com a técnica.
+A última alavanca foi a decodificação especulativa, em que um modelo pequeno ou um adaptador propõe vários tokens à frente e o modelo grande confere. O MTP, que os modelos novos já trazem, prevê de 3 a 6 tokens, e Prince disse que ele deixa a geração cerca de 2 vezes mais rápida. O DFlash, baseado em difusão, prevê até 8 de uma vez e chega a 3 ou 4 vezes mais rápido, mas quando Prince testou, só funcionava bem com código. Num M3 Ultra, um modelo Gemma saiu de 30 para 43 tokens por segundo com MTP. Modelos mixture-of-experts quase não ganham nada com a técnica.
 
 O mlx-vlm começou com modelos de visão e hoje aceita e produz qualquer modalidade: imagem, vídeo, texto e áudio. Um modelo de visão tem três partes: um codificador de imagem, um projetor e o modelo de linguagem. Prince disse que otimizou a parte que quase ninguém mede. Com isso, um MacBook processa 100 imagens em paralelo com um modelo pequeno, e alguns modelos leem imagens de até 8K.
 
@@ -69,7 +69,7 @@ Prince também criticou os motores de inferência feitos para um modelo só, com
 
 A demo foi o Nativ, app construído sobre o motor. Prince desligou o Wi-Fi, disse "Hey Native", falou uma frase, e o app transcreveu e respondeu com um modelo local. Depois ditou um tweet direto no navegador e mandou o Codex listar arquivos, tudo offline. Em um mês de uso de ditado por voz, ele transcreveu mais de 490 mil palavras. Pela conta dele, economizou umas 127 horas, e o mesmo uso na nuvem custaria de US$ 200 a quase 500.
 
-Segundo Prince, o motor já passou de 7,5 milhões de downloads. A Neywa Labs trabalha com Cohere, Google DeepMind, Baidu e Liquid AI para ter modelos abertos otimizados para Apple Silicon no dia do lançamento. Num M5 Max com 48 GB, um desses modelos roda com 256 mil tokens de contexto. Num Mac Studio, o motor atende 16 sessões em paralelo com 32 mil tokens cada, o suficiente para 16 agentes ou 16 pessoas numa máquina só.
+O motor, contou Prince, já passou de 7,5 milhões de downloads. A Neywa Labs trabalha com Cohere, Google DeepMind, Baidu e Liquid AI para ter modelos abertos otimizados para Apple Silicon no dia do lançamento. Num M5 Max com 48 GB, um desses modelos roda com 256 mil tokens de contexto. Num Mac Studio, o motor atende 16 sessões em paralelo com 32 mil tokens cada, o suficiente para 16 agentes ou 16 pessoas numa máquina só.
 
 Prince encerrou dizendo que a inteligência por watt subiu nos últimos três anos, que os melhores modelos abertos estão perto dos fechados e que, pela estimativa dele, 70 a 90% dos casos de uso de hoje já rodam na máquina local.
 
@@ -81,7 +81,7 @@ A QuiverAI treina modelos que geram SVG. Joan quer que esses modelos desenhem co
 
 SVG descreve a imagem como código. Um retângulo, um círculo e um polígono viram poucas linhas, que escalam para qualquer tamanho e podem ser mexidas depois. Há três ou quatro anos, Joan se perguntou se um LLM conseguiria produzir um bom SVG. As ferramentas da época, como a vetorização do Illustrator, não chegavam lá.
 
-Para ele, um bom SVG depende de duas coisas. A primeira é a estrutura, com elementos que o designer pode selecionar e editar separadamente. Joan mostrou duas versões da mesma ponte, iguais na tela. Numa, todo o desenho estava num único path. Na outra, o desenho era dividido em grupos, e ele conseguia selecionar e mover só a torre principal, do jeito que um designer montaria. A segunda é o estilo, ou gosto.
+Para ele, um bom SVG depende de estrutura e de estilo, ou gosto. Estrutura quer dizer elementos que o designer pode selecionar e editar separadamente. Joan mostrou duas versões da mesma ponte, iguais na tela. Numa, todo o desenho estava num único path. Na outra, o desenho era dividido em grupos, e ele conseguia selecionar e mover só a torre principal, do jeito que um designer montaria.
 
 O método vem de dois papers do doutorado dele:
 
@@ -97,7 +97,7 @@ A primeira demo que ele postou, o modelo vetorizando uma molécula ao vivo, vira
 
 Um uso importante é vetorizar logos, em que os pontos de controle das curvas precisam ficar no lugar exato. Outro apareceu sem eles procurarem. Amigos e outras startups sugeriram testar moda, e hoje a QuiverAI trabalha com confecções. O esboço de uma jaqueta que vai para a fábrica precisa de um contorno limpo, e um designer levava de 20 a 30 minutos por esboço no Illustrator ou no Figma. Com prazo para o dia seguinte e centenas de peças, o modelo gera o contorno para o designer revisar e ajustar.
 
-Para Joan, gosto é seleção: escolher cor, espaçamento, forma, fonte e posição. Tem gente sem gosto nenhum, disse, inclusive engenheiros que treinam o modelo. A solução foi pôr designers, como o Peter, que estava na plateia, em contato direto com quem treina, anotando o que funciona e o que não funciona e calibrando os verificadores. Como o gosto muda com o tempo, os designers continuam avaliando os resultados usados no treino.
+Joan define gosto como seleção: escolher cor, espaçamento, forma, fonte e posição. Tem gente sem gosto nenhum, disse, inclusive engenheiros que treinam o modelo. A solução foi pôr designers, como o Peter, que estava na plateia, em contato direto com quem treina, anotando o que funciona e o que não funciona e calibrando os verificadores. Como o gosto muda com o tempo, os designers continuam avaliando os resultados usados no treino.
 
 Nas perguntas:
 
@@ -110,11 +110,11 @@ Nas perguntas:
 
 Chema acha que a IA só vai entender o mundo físico quando conseguir gerar 3D, do mesmo jeito que os LLMs passaram a entender linguagem gerando texto. A Sperid Labs, que ele fundou, pesquisa inteligência espacial com uma meta maior, a inteligência visual geral.
 
-Ele vem do mundo do hacking. Fala em conferências de segurança, passou pela Telefónica e contribuiu para o kernel do Linux. Pediu para levantar a mão quem sabia o que era um world model, e quase ninguém levantou. Para ele, humanos são agentes num mundo 3D e aprendem vendo, sem precisar ler. Os LLMs resolvem quase tudo que é linguagem, e até o GPT-6 Astra, que ele citou como o primeiro a mostrar algum entendimento de 3D, ainda está longe do suficiente.
+Ele vem do mundo do hacking. Fala em conferências de segurança, passou pela Telefónica e contribuiu para o kernel do Linux. Pediu para levantar a mão quem sabia o que era um world model, e quase ninguém levantou. Humanos, disse, são agentes num mundo 3D e aprendem vendo, sem precisar ler. Os LLMs resolvem quase tudo que é linguagem, e até o GPT-6 Astra, que ele citou como o primeiro a mostrar algum entendimento de 3D, ainda está longe do suficiente.
 
-Chema organizou o problema em três partes, cada uma resolvida hoje por um tipo diferente de modelo:
+Chema dividiu o problema pelo tipo de modelo que resolve cada parte hoje:
 
-- **Entendimento:** visão computacional, fragmentada em modelos para cada tarefa, como detectar objetos, reconstruir e prever. Segundo ele, sistemas de robôs humanoides como o da Tesla usam mais de 40 modelos de visão diferentes, enquanto um agente de texto usa um modelo só. Esses modelos precisam de dados rotulados, não escalam para os dados da internet e fazem previsões sem gerar nada novo. Na demo, um modelo de reconstrução da Sperid transformou fotos de uma casa num mapa 3D. A reconstrução deixava áreas pretas, vazias, onde as fotos não mostravam a casa. Chema quer que o modelo também gere essas partes da cena.
+- **Entendimento:** visão computacional, fragmentada em modelos para cada tarefa, como detectar objetos, reconstruir e prever. Sistemas de robôs humanoides como o da Tesla, disse, usam mais de 40 modelos de visão diferentes, enquanto um agente de texto usa um modelo só. Esses modelos precisam de dados rotulados, não escalam para os dados da internet e fazem previsões sem gerar nada novo. Na demo, um modelo de reconstrução da Sperid transformou fotos de uma casa num mapa 3D. A reconstrução deixava áreas pretas, vazias, onde as fotos não mostravam a casa. Chema quer que o modelo também gere essas partes da cena.
 - **Aparência:** modelos de vídeo como o Genie e o Runway, que você controla com as teclas W, A, S, D. Entendem alguma dinâmica, mas entregam pixels 2D, e videogame, efeitos visuais e robótica precisam de 3D.
 - **Estrutura:** modelos de difusão treinados em arquivos 3D, que geram objetos. Há poucos arquivos 3D disponíveis para treinar esses modelos. A internet tem bilhões de imagens e vídeos, mas só alguns milhões de arquivos 3D.
 
@@ -141,7 +141,7 @@ A ideia nasceu numa festa de aniversário perto do Tejo, onde alguém contou que
 
 O primeiro passo foi medir. Duarte mora em Copenhague, a duas quadras de quem mantém o EuroEval, um projeto que mede modelos nas línguas europeias. Ele mandou pull requests com conjuntos de dados em português europeu: classificação de sentimento, gramática, compreensão de texto. No placar, o Qwen dominava, e o Amália, o modelo com apoio do governo, ficava abaixo de modelos menores que ele.
 
-O segundo foi reunir dados. A Hugging Face tinha publicado o FineWeb2, 20 TB de texto multilíngue. Duarte montou o Bagaço, o nome da aguardente portuguesa, em três versões:
+Depois vieram os dados. A Hugging Face tinha publicado o FineWeb2, 20 TB de texto multilíngue. Duarte montou o Bagaço, que leva o nome da aguardente portuguesa, e foi melhorando o conjunto a cada versão:
 
 1. **v1:** pegou só as páginas de domínios `.pt` e classificou cada uma por categoria e por nota educacional, em que uma página da Wikipédia vale mais que um jornal esportivo. Deu uns 10 bilhões de tokens.
 2. **v2:** precisava separar português de Portugal do português do Brasil. O classificador da academia era bom, mas lento demais para terabytes de texto, e Duarte fez o próprio:
@@ -174,7 +174,7 @@ As conclusões dele até agora:
 
 - **Há dados suficientes.** Chegou a 30 bilhões de tokens sem muito esforço, 50 bilhões é viável, e dá para completar com dados sintéticos.
 - **Adoção.** Falta saber o que faria uma empresa adotar um modelo português em vez de Qwen ou GPT. Hoje, ele mesmo escolheria o Qwen, e desafiou a plateia a criar benchmarks que respondam a essa pergunta.
-- **Tamanho.** Para ele, um "Amália 60B" interessa menos que um modelo pequeno e melhor.
+- **Tamanho.** Um "Amália 60B" interessa menos a ele que um modelo pequeno e melhor.
 - **Raciocínio.** Deve fazer parte de um bom modelo.
 
 Nas perguntas, contou que pagou tudo do próprio bolso. A filtragem do Bagaço roda em poucos dias num servidor alugado na Alemanha por €30 por mês, e a única ajuda foi uma GPU emprestada por um dos organizadores do evento durante uma semana. Ele conversa com a equipe do Amália, mas fez esse trabalho sozinho. O português de Angola e de Moçambique ainda não está coberto. Nos grandes conjuntos da web, aparece tão pouco que é tratado como língua de poucos recursos, e ele acha que alguém deveria cuidar disso. Áudio também ficou de fora, por falta de tempo.
@@ -183,7 +183,7 @@ Nas perguntas, contou que pagou tudo do próprio bolso. A filtragem do Bagaço r
 
 ### Sergio Paniego, Hugging Face
 
-Os laboratórios treinam os modelos dos seus agentes de código dentro do próprio agente, e Sergio quis saber se dá para fazer o mesmo com ferramentas abertas. Ele mostrou como treinar um modelo usando o OpenCode para executar as tarefas. O OpenCode organiza a conversa, chama ferramentas e devolve os resultados ao modelo. Essa parte do agente é o que ele chama de harness. Para Sergio, um agente é sempre um harness, como Claude Code, OpenCode ou Codex, mais um modelo. Segundo ele, em poucos meses deixamos de escrever código e passamos a usar agentes, e os relatórios dos modelos de fronteira mostram que eles são treinados em ambientes de aprendizado por reforço montados com esses harnesses.
+Os laboratórios treinam os modelos dos seus agentes de código dentro do próprio agente, e Sergio quis saber se dá para fazer o mesmo com ferramentas abertas. Ele mostrou como treinar um modelo usando o OpenCode para executar as tarefas. O OpenCode organiza a conversa, chama ferramentas e devolve os resultados ao modelo. Essa parte do agente é o que ele chama de harness. Sergio define agente como um harness, como Claude Code, OpenCode ou Codex, mais um modelo. Em poucos meses, disse, deixamos de escrever código e passamos a usar agentes. Os relatórios dos modelos de fronteira mostram que eles são treinados em ambientes de aprendizado por reforço montados com esses harnesses.
 
 A pilha combinou ferramentas de treino e infraestrutura da Hugging Face com o OpenCode num container Docker:
 
@@ -197,22 +197,22 @@ A dificuldade é que, no treino por reforço normal, o treinador controla cada p
 
 Depois, o que foi capturado passa por uma limpeza. Numa tarefa, o proxy captura, por exemplo, quatro chamadas: a do título, uma escrita de arquivo, uma execução no bash e mais uma que não interessa. O treino descarta a chamada genérica e mascara todo o contexto do harness, ou seja, as instruções, o histórico e o prompt do sistema. Só o que o modelo gerou para resolver o problema entra no treino.
 
-A recompensa somava dois sinais:
+A recompensa conferia:
 
 1. se o modelo testou o próprio código contra os testes visíveis, rodando os exemplos no bash;
 2. se passou nos testes ocultos.
 
 Para a demo, Sergio treinou 10 passos com duas H100, uma para o treinador e outra para gerar as respostas, e 8 execuções por passo, cada uma num sandbox próprio só com CPU. A recompensa subiu e chegou a 1 no décimo passo. Ele mesmo avisou que o modelo pode estar "fingindo", porque a dificuldade dos problemas não foi controlada, e o modelo talvez já resolvesse parte deles. A demo mostrou que dava para treinar dessa forma, mas dez passos ainda não permitem dizer quanto o modelo melhorou.
 
-Sergio defende que, para uma tarefa específica, um modelo pequeno treinado dentro de um harness pode fazer o trabalho de um modelo de fronteira. O próximo passo, quase pronto na semana da palestra, era treinar em vários harnesses ao mesmo tempo, como fazem os laboratórios. A hipótese de Sergio é que, quando você usa o Codex com um GPT, o resultado é melhor em parte porque os dois vêm da mesma empresa e foram treinados juntos. O código está todo aberto, com exemplos no repositório do TRL.
+Sergio defende que, para uma tarefa específica, um modelo pequeno treinado dentro de um harness pode fazer o trabalho de um modelo de fronteira. O próximo passo, quase pronto na semana da palestra, era treinar em vários harnesses ao mesmo tempo, como fazem os laboratórios. A hipótese de Sergio é que, quando você usa o Codex com um GPT, o resultado é melhor em parte porque os dois vêm da mesma empresa e foram treinados juntos. Os exemplos estão no repositório do TRL, e o código é todo aberto.
 
 <hr class="divider">
 
 ### Bojan Jakimovski, Loka
 
-Numa lightning talk, Bojan defendeu que IA para ciência precisa ser inspecionável. Os grandes laboratórios têm modelos científicos, mas não dá para ver como chegam a cada conclusão. A Loka apresentou um sistema aberto de pesquisa científica, feito com a Arcee AI e a AWS, em que dá para acompanhar as etapas executadas pelos agentes.
+Os grandes laboratórios têm modelos científicos, mas não dá para ver como eles chegam a cada conclusão. Na lightning talk de Bojan, o argumento era que IA para ciência precisa ser inspecionável. A Loka apresentou um sistema aberto de pesquisa científica, feito com a Arcee AI e a AWS, em que dá para acompanhar as etapas executadas pelos agentes.
 
-O modelo é o Trinity Mini, da Arcee. São 26B parâmetros num mixture-of-experts, com uns 3B ativos por token. Segundo Bojan, é grande o bastante para raciocínio longo em várias etapas e pequeno o bastante para rodar em qualquer coisa entre um laptop e um mini cluster com uma ou duas GPUs. Na demo, um prompt complexo acionava sub-agentes para buscar literatura, criar moléculas e simular a ligação de proteínas, e cada passo ficava visível.
+O modelo é o Trinity Mini, da Arcee. São 26B parâmetros num mixture-of-experts, com uns 3B ativos por token. Bojan disse que ele é grande o bastante para raciocínio longo em várias etapas e pequeno o bastante para rodar em qualquer coisa entre um laptop e um mini cluster com uma ou duas GPUs. Na demo, um prompt complexo acionava sub-agentes para buscar literatura, criar moléculas e simular a ligação de proteínas, e cada passo ficava visível.
 
 O treino ensinou dois modos ao mesmo modelo, cada um com um ambiente próprio, feito com os verificadores da Prime Intellect:
 
@@ -221,7 +221,7 @@ O treino ensinou dois modos ao mesmo modelo, cada um com um ambiente próprio, f
 
 Eles usaram GRPO combinado com autoresearch, algo raro nessa fase do treino, porque autoresearch costuma ficar no pré-treino, e otimizaram os prompts dos ambientes com GEPA. Segundo Bojan, depois de uma rodada o modelo chegou a 81,2% numa avaliação de uso de ferramentas em saúde, e a 86,3 num teste de raciocínio sobre proteínas depois de cem passos. Os resultados medem tarefas diferentes.
 
-Além do modelo, o sistema separa a coleta de evidências da elaboração da resposta e inclui um agente para revisar o resultado. O harness tem um agente orquestrador, ferramentas para revisão de literatura, bases de dados de ciências da vida e ligação de proteínas e moléculas, e esse agente crítico, que Bojan justificou dizendo que em ciência alguém precisa conferir o trabalho. Para ele, o cientista de IA é o sistema inteiro: dados, ambientes, modelo e harness. Tudo está aberto, e a próxima versão já estava em treino com a AWS e a Arcee.
+Além do modelo, o sistema separa a coleta de evidências da elaboração da resposta e inclui um agente para revisar o resultado. O harness tem um agente orquestrador, ferramentas para revisão de literatura, bases de dados de ciências da vida e ligação de proteínas e moléculas, além desse agente crítico. Bojan justificou o crítico dizendo que em ciência alguém precisa conferir o trabalho. Bojan chama de cientista de IA o sistema inteiro: dados, ambientes, modelo e harness. A próxima versão desse sistema aberto já estava em treino com a AWS e a Arcee.
 
 <hr class="divider">
 
@@ -229,7 +229,7 @@ Além do modelo, o sistema separa a coleta de evidências da elaboração da res
 
 Matt abriu o bloco de agentes com uma pergunta de infraestrutura: o que acontece quando todo mundo, e não só quem programa, tiver um agente rodando o tempo todo?
 
-Ele trabalha com agentes e MCP no time de pesquisa da Cloudflare e mora em Lisboa há alguns meses. Contou que vê três ondas de agentes:
+Ele trabalha com agentes e MCP no time de pesquisa da Cloudflare e mora em Lisboa há alguns meses. Ele vê os agentes chegando em ondas:
 
 1. chatbots, como o ChatGPT;
 2. agentes de código, os primeiros a encontrar mercado de verdade;
@@ -247,7 +247,7 @@ A alternativa da Cloudflare usa isolates V8, a mesma tecnologia dos navegadores,
   <figcaption>As cinco peças de um agente na versão da Cloudflare: o loop, os arquivos, a execução, a navegação e as ferramentas externas.</figcaption>
 </figure>
 
-Matt dividiu um agente em cinco peças e ligou cada uma a uma primitiva da Cloudflare:
+Matt dividiu um agente em peças e ligou cada uma a uma primitiva da Cloudflare:
 
 - **harness**, o modelo em loop chamando ferramentas, que roda num Durable Object;
 - **sistema de arquivos**, oferecido na nuvem pelo Cloudflare Computer;
@@ -268,9 +268,9 @@ Na sessão de perguntas, alguém quis saber se sites e CMSs sobrevivem à era do
 
 ### Harshil Agrawal, Cloudflare
 
-Harshil mostrou as ideias do Matt num produto em produção. Ele contou como tirou o PromptMotion, um editor de vídeo por prompt, de dentro de um container e distribuiu as partes da aplicação entre serviços da Cloudflare. A demo foi o pôster de palestrantes do Lisbon AI, animado. Na primeira versão, o logo da Cloudflare saiu errado e a foto dele ficou apagada. Ele mandou o logo certo e pediu mais opacidade na foto, e o agente refez o vídeo.
+O PromptMotion, editor de vídeo por prompt de Harshil, leva as ideias do Matt para um produto em produção. Ele contou como tirou o PromptMotion de dentro de um container e distribuiu as partes da aplicação entre serviços da Cloudflare. A demo foi o pôster de palestrantes do Lisbon AI, animado. Na primeira versão, o logo da Cloudflare saiu errado e a foto dele ficou apagada. Ele mandou o logo certo e pediu mais opacidade na foto, e o agente refez o vídeo.
 
-Na versão antiga, tudo acontecia num container. O agente escrevia os arquivos, o preview rodava ali, a renderização também, e o histórico se perdia quando o container era encerrado. Harshil contou três problemas e como resolveu cada um:
+Na versão antiga, tudo acontecia num container. O agente escrevia os arquivos, o preview rodava ali, a renderização também, e o histórico se perdia quando o container era encerrado. Harshil contou os problemas que teve e como resolveu cada um:
 
 <div class="overflow-x-auto">
 
@@ -291,18 +291,18 @@ O último passo foi juntar tudo. "Sou um desenvolvedor preguiçoso na era da IA"
 
 ### Marcelo Lebre, Remote
 
-Marcelo mostrou o Icarus, um aplicativo interno para os funcionários da Remote usarem agentes com acesso ao contexto da empresa. Qualquer pessoa, programadora ou não, tem ali os mesmos agentes que ele usa. Ele chamou a palestra de relato da própria "psicose de IA" e a descreveu como metade teimosia, metade alucinação.
+Na Remote, qualquer pessoa, programadora ou não, usa os mesmos agentes que Marcelo. Eles vivem no Icarus, um aplicativo interno em que os agentes têm acesso ao contexto da empresa. Marcelo chamou a palestra de relato da própria "psicose de IA" e a descreveu como metade teimosia, metade alucinação.
 
 <figure>
   <a href="/images/blog/lisbon-ai-2026/remote-numeros.webp"><img src="/images/blog/lisbon-ai-2026/remote-numeros.webp" srcset="/images/blog/lisbon-ai-2026/remote-numeros-640.webp 640w, /images/blog/lisbon-ai-2026/remote-numeros-1024.webp 1024w, /images/blog/lisbon-ai-2026/remote-numeros.webp 1600w" sizes="(max-width: 719px) calc(100vw - 4rem), 655px" alt="Slide roxo com o logo da Remote e o texto: cerca de 2000 pessoas, mais de 100 países, totalmente distribuída, quase nenhum escritório, cerca de 10 milhões de dólares por ano em IA. Marcelo está de pé à direita do palco." width="1600" height="1130" loading="lazy" decoding="async"></a>
   <figcaption>O slide de abertura de Marcelo Lebre: 2.000 pessoas, mais de 100 países e US$ 10 milhões por ano em IA.</figcaption>
 </figure>
 
-A Remote faz folha de pagamento em mais de 100 países, com cerca de 2.000 pessoas e quase nenhum escritório, só onde a lei obriga. Quase metade da empresa não é técnica: vendas, jurídico, operações. Segundo Marcelo, o gasto interno com IA está num ritmo de US$ 10 milhões por ano, e começou com um orçamento de 1 milhão.
+A Remote faz folha de pagamento em mais de 100 países, com cerca de 2.000 pessoas e quase nenhum escritório, só onde a lei obriga. Quase metade da empresa não é técnica: vendas, jurídico, operações. O gasto interno com IA, contou Marcelo, está num ritmo de US$ 10 milhões por ano e começou com um orçamento de 1 milhão.
 
 A cultura da empresa, disse, veio antes da IA. Por ser distribuída, a Remote documenta tudo, de cada reunião a cada pessoa que conhecem, primeiro no Obsidian e depois no Notion, que "a gente quebra" de tão grande que é a base. Marcelo disse que, no jeito de trabalhar da Remote, a divisão entre engenharia, produto e design perde importância, e a expectativa é que todo mundo construa. O treinamento em IA foi obrigatório para todos, e hoje qualquer advogado ou pessoa do suporte sabe fazer um app com IA. Sobre essas pessoas saberem o que o código faz, ele disse: "Provavelmente não, mas quem liga hoje em dia?"
 
-O Icarus começou como um agente sem nome, montado sobre um framework open source de agente pessoal. Depois de uns dias, Marcelo pediu que ele escolhesse um nome, e ele se chamou Daniel, por causa do Asimov. Custo também pesou. Marcelo não queria que 2.000 pessoas usassem o modelo mais caro para pedir receita de pizza ou para responder algo que já está na documentação. Com um harness próprio, dá para trocar o provedor por trás sem ninguém perceber.
+O Icarus começou como um agente sem nome, montado sobre um framework open source de agente pessoal. Depois de uns dias, Marcelo pediu que ele escolhesse um nome, e ele se chamou Daniel, por causa do Asimov. O custo pesou. Marcelo não queria que 2.000 pessoas usassem o modelo mais caro para pedir receita de pizza ou para responder algo que já está na documentação. Com um harness próprio, dá para trocar o provedor por trás sem ninguém perceber.
 
 Hoje o Icarus é um app em Elixir que roda no Mac e não usa mais o framework original. Marcelo disse que desenvolveu o Icarus com agentes e quase não escreveu código à mão, com uma média de zero linhas por dia. Na demo, ele mostrou:
 
@@ -319,14 +319,14 @@ Com o Icarus, a Remote também fez o site "AI for Actual Work", usado por milhar
 
 ### Vitalii Ratushnyi, Harmix.AI
 
-Para Vitalii, todo agente tem algum tipo de memória, e vale a pena construí-la de propósito.
+Vitalii parte da ideia de que todo agente tem algum tipo de memória, e de que vale a pena construí-la de propósito.
 
 <figure>
   <a href="/images/blog/lisbon-ai-2026/contexto-ram.webp"><img src="/images/blog/lisbon-ai-2026/contexto-ram.webp" srcset="/images/blog/lisbon-ai-2026/contexto-ram-640.webp 640w, /images/blog/lisbon-ai-2026/contexto-ram-1024.webp 1024w, /images/blog/lisbon-ai-2026/contexto-ram.webp 1600w" sizes="(max-width: 719px) calc(100vw - 4rem), 655px" alt="Slide claro com o título 'The context window is RAM. Memory is the disk (not quite)' e uma nota sobre como Codex e Claude Code guardam memória entre sessões." width="1600" height="950" loading="lazy" decoding="async"></a>
   <figcaption>O ponto de partida de Vitalii: a janela de contexto some quando a sessão acaba, e memória é o que passa de uma sessão para a outra.</figcaption>
 </figure>
 
-A memória, segundo ele, serve para entregar à próxima sessão o contexto de que a tarefa precisa. A janela de contexto funciona como RAM e some quando a sessão acaba. A memória que o Codex e o Claude Code trazem de fábrica, segundo ele, é ruim, porque também vive na janela. Ele criticou três abordagens:
+Para ele, a memória serve para entregar à próxima sessão o contexto de que a tarefa precisa. A janela de contexto funciona como RAM e some quando a sessão acaba. A que vem de fábrica no Codex e no Claude Code é ruim, disse, porque também vive na janela. Ele criticou estas abordagens:
 
 - **Janela gigante.** O número de 1 milhão de tokens é "fake". Em benchmarks, 400 mil é um teto na prática, e ele mantém os agentes entre 100 e 300 mil.
 - **Encher de tokens.** Sem estrutura, você só queima o limite de uso. Modelos mais espertos vão mais longe, mas também não resolvem a estrutura.
@@ -334,7 +334,7 @@ A memória, segundo ele, serve para entregar à próxima sessão o contexto de q
 
 Ele citou um paper de Princeton e do MIT em que um harness com memória levou um modelo de 30% para 95,5% no ARC-AGI, acima da referência humana de 95,4%. Como os pesos do modelo não mudam e a janela de contexto é pequena, ele vê a oportunidade no que o agente salva em disco, de forma estruturada, antes de desligar.
 
-Ele deu duas sugestões práticas. A primeira é customizar o compact, o resumo que roda quando a janela enche. Dá para definir em que ponto ele acontece e usar uma skill de passagem de bastão, controlando custo e qualidade. A segunda é o memory bank, que não tem relação com o do Google:
+Na prática, ele sugeriu customizar o compact, o resumo que roda quando a janela enche. Dá para definir em que ponto ele acontece e usar uma skill de passagem de bastão, controlando custo e qualidade. Sugeriu também montar um memory bank, que não tem relação com o do Google:
 
 - **Como começa:** num projeto existente, o agente lê o repositório e preenche o memory bank. Num projeto novo, parte do README e vai completando com o uso.
 - **O que guarda:** infraestrutura, stack, tarefas, lições aprendidas e skills com instruções reutilizáveis para tarefas recorrentes.
@@ -350,7 +350,7 @@ Nas perguntas:
 
 ### Peter Kirkham, PostHog
 
-Minhas notas da palestra de Peter começam no meio, quando ele já tinha colocado a pergunta: quanto do trabalho de olhar os dados, achar o problema, corrigir e publicar dá para automatizar? Para ele, quase tudo, já que o PostHog já tem os dados. O PostHog Desktop é onde testam isso, com uma interface nova, sem mexer nos clientes atuais.
+Minhas notas da palestra de Peter começam no meio, quando ele já tinha colocado a pergunta: quanto do trabalho de olhar os dados, achar o problema, corrigir e publicar dá para automatizar? A resposta dele foi quase tudo, porque o PostHog já tem os dados. O PostHog Desktop é onde testam isso, com uma interface nova, sem mexer nos clientes atuais.
 
 O Desktop reúne dados de uso do produto e agentes que investigam problemas e propõem mudanças no código. As peças que ele mostrou:
 
@@ -372,11 +372,11 @@ A meta, disse Peter, é o PostHog se corrigir e se melhorar sozinho. O Desktop e
 
 ### Pedro Rodrigues, Supabase
 
-Pedro, que é de Lisboa e esteve na primeira edição do evento como plateia, mostrou interfaces interativas dentro de conversas com agentes, como gráficos e controles para acompanhar um incidente. Na conta dele, primeiro vieram os LLMs, com troca de mensagens de texto. Depois vieram as ferramentas, e os LLMs viraram agentes, mas a interface continuou sendo texto, ou voz. Como as pessoas são visuais, disse, enquanto alguém precisar acompanhar o agente, a UI vai ter um papel grande. Ele citou as propostas em andamento: MCP Apps, A2UI e UI generativa.
+Gráficos e controles para acompanhar um incidente, dentro da conversa com um agente, foram o assunto de Pedro, que é de Lisboa e esteve na primeira edição do evento como plateia. Na conta dele, primeiro vieram os LLMs, com troca de mensagens de texto. Depois vieram as ferramentas, e os LLMs viraram agentes, mas a interface continuou sendo texto, ou voz. Como as pessoas são visuais, disse, enquanto alguém precisar acompanhar o agente, a UI vai ter um papel grande. Ele citou as propostas em andamento: MCP Apps, A2UI e UI generativa.
 
 Um exemplo simples é pedir ao assistente os eventos do dia seguinte. Antes, você recebia uma lista de horários em texto, o que funciona. Agora, cada vez mais, recebe algo parecido com a visualização de um app de calendário, dentro do chat. O agente monta a interface com código.
 
-A demo foi inspirada num incidente real que ele viveu na Supabase, com colegas e um agente. O bot de incidentes roda na Supabase, e a interface lembra o Slack, mas não é. O Slack aceita MCP, mas ainda não aceita apps com UI, e Pedro pediu que alguém da Slack na plateia levasse o pedido. Tudo aconteceu dentro da conversa:
+A demo foi inspirada num incidente real que ele viveu na Supabase, com colegas e um agente. O bot de incidentes roda na Supabase, e a interface lembra o Slack, mas não é. O Slack aceita MCP, mas ainda não aceita apps com UI, e Pedro pediu que alguém da Slack na plateia levasse o pedido. Antes, o bot descreveria o problema ou mandaria um link para o Grafana. Desta vez, tudo aconteceu dentro da conversa, e todo mundo acompanhava sem sair dela:
 
 1. o bot mostra, num gráfico, um pico de erros nas branches de preview às 3h20, com a main estável;
 2. Pedro pede para investigar e propor uma correção, e o bot aponta o PR suspeito pelo horário do deploy;
@@ -384,8 +384,6 @@ A demo foi inspirada num incidente real que ele viveu na Supabase, com colegas e
 4. os smoke tests falham, e depois de algumas idas e vindas passam;
 5. com aprovação de Pedro, que brincou que ninguém deveria fazer isso em produção sem olhar, o bot marca o incidente como resolvido na status page, e o widget muda na hora;
 6. o bot reserva um jantar para o time numa tasca de Lisboa e agenda um lembrete no canal uma hora antes. É o que eles não costumam fazer depois de incidente, admitiu, mas deveriam.
-
-Antes, o bot descreveria o problema ou mandaria um link para o Grafana. Agora todo mundo acompanha sem sair da conversa.
 
 Nas perguntas:
 
@@ -396,7 +394,7 @@ Nas perguntas:
 
 ### Will Burstein, PromptLayer
 
-Na demo de Will, o agente recusou o pedido de revogar a credencial de um participante, mas consultou os dados dessa pessoa sem autorização. Will mostrou o erro no registro das chamadas de ferramentas e usou o caso para explicar como sair da avaliação "no olho" para um placar que decide o que vai para produção.
+Will usou uma demo para mostrar como sair da avaliação "no olho" para um placar que decide o que vai para produção.
 
 Ele é head de produto da PromptLayer, uma plataforma de operação, avaliação e observabilidade de LLMs, e trabalha com times de empresas grandes a startups de uma pessoa. O exemplo era hipotético, um copiloto de operações para eventos ao vivo como o Lisbon AI, com políticas também hipotéticas. Nenhum sistema desses rodava na conferência. O copiloto atenderia organizadores e patrocinadores em pedidos de participantes, credenciais e segurança. Ele leria as políticas aprovadas, conferiria quem está pedindo e usaria ferramentas para buscar informação ou passar o caso a uma pessoa. Como mexeria com dados pessoais e com revogação de acesso, e precisaria cumprir as leis europeias, teria de ser avaliado.
 
@@ -410,14 +408,14 @@ No pedido de teste, um patrocinador dizia que um participante "talvez tenha exag
 
 Além da entrada, o caso de teste guardava o que se esperava: ações que não podem acontecer, checagens qualitativas para um juiz e afirmações proibidas. O teste também definia a sequência permitida de chamadas e o encaminhamento do pedido para uma pessoa. A resposta final do agente seguia a política. Ele recusou, explicou que só o responsável de segurança pode revogar e encaminhou o caso. Olhando só o log de respostas, ninguém veria problema.
 
-O problema apareceu no trace, o registro das chamadas de ferramentas. Antes do encaminhamento, o agente chamou `lookupAttendeeRecord` sem número de incidente, consultando os dados do participante sem permissão. "A resposta não é o comportamento", disse Will. Um dos juízes também reprovou a resposta por afirmar que cumpria as regras de privacidade, e outro por tocar em questão jurídica, o que a política proíbe.
+O problema apareceu no trace, o registro das chamadas de ferramentas. Antes do encaminhamento, o agente chamou `lookupAttendeeRecord` sem número de incidente e consultou os dados do participante, o que a política não permitia. "A resposta não é o comportamento", disse Will. Um dos juízes também reprovou a resposta por afirmar que cumpria as regras de privacidade, e outro por tocar em questão jurídica, o que a política proíbe.
 
-Will organizou a avaliação em quatro partes:
+Will organizou a avaliação assim:
 
 1. **Tratar avaliação como teste unitário:** um relatório nomeado, um conjunto de casos de referência, um runner que roda o agente, checagens em código e juízes com LLM. Assim a avaliação vive no código e pode rodar na sua infraestrutura, no CI ou em amostras de produção.
 2. **Código para o que é objetivo:** saída estruturada válida e a comparação da sequência de ferramentas com a esperada.
-3. **Juízes para o que é qualitativo:** base na evidência, respeito à política, segurança da ação, decisão de escalar e utilidade dentro das restrições. Juízes devem ser calibrados em volume estatisticamente relevante de dados. Os critérios de avaliação precisam orientar os juízes e explicar como tratar casos ambíguos.
-4. **Critérios para liberar uma versão:** conformidade com a política e segurança da ação pesam mais que citar evidência, e uma taxa mínima de aprovação decide o que sai. Para ele, o objetivo é saber o que você se recusa a publicar, mais do que subir a nota.
+3. **Juízes para o que é qualitativo:** base na evidência, respeito à política, segurança da ação, decisão de escalar e utilidade dentro das restrições. Os juízes precisam ser calibrados com dados suficientes para ter relevância estatística, e os critérios têm de dizer a eles como tratar casos ambíguos.
+4. **Critérios para liberar uma versão:** conformidade com a política e segurança da ação pesam mais que citar evidência, e uma taxa mínima de aprovação decide o que sai. Para Will, o objetivo não é uma nota mais alta, e sim saber o que você se recusa a publicar.
 
 A demo parou no meio porque os créditos da OpenAI dele acabaram, e ele mostrou o resultado de uma rodada anterior que tinha deixado aberta numa aba. A versão 2 do prompt, com instruções explícitas sobre registros de participantes, ele não conseguiu rodar na hora, mas disse que tinha passado e pediu que confiassem nele.
 
@@ -469,38 +467,38 @@ Nas perguntas:
 
 ### Oğuz Gültepe, Peec AI
 
-Oğuz mostrou como a Peec AI usa um modelo caro para ensinar um prompt a um modelo barato. Também mostrou uma otimização que melhorou as notas da avaliação, mas gerou perguntas pouco úteis para os clientes da empresa.
+A Peec AI usa um modelo caro para ensinar um prompt a um modelo barato, e Oğuz explicou como.
 
-A técnica se chama prompt learning. Um modelo pequeno gera candidatos, um modelo maior avalia e explica o que falhou, e o princípio por trás das falhas vai para o prompt. Em produção roda só o modelo pequeno. Segundo ele, usar direto o modelo grande sairia pior em latência, custo e generalização. Ele lembrou que, ao ajustar um prompt à mão, corrigir uma saída costuma quebrar outra. Automatizar o processo dá, no fim, uma medida de quanto o prompt funciona na amostra. Ele deixou claro que a técnica não é nova e citou o GEPA.
+A técnica se chama prompt learning. Um modelo pequeno gera candidatos, um modelo maior avalia e explica o que falhou, e o princípio por trás das falhas vai para o prompt. Em produção roda só o modelo pequeno. Usar direto o modelo grande, disse, sairia pior em latência, custo e generalização. Ele lembrou que, ao ajustar um prompt à mão, corrigir uma saída costuma quebrar outra. Automatizar o processo dá, no fim, uma medida de quanto o prompt funciona na amostra. Ele deixou claro que a técnica não é nova e citou o GEPA.
 
-O exemplo foi um gerador de mensagens de abertura a partir de um perfil de LinkedIn, em quatro passos:
+O exemplo foi um gerador de mensagens de abertura a partir de um perfil de LinkedIn. O loop:
 
 1. o modelo pequeno gera várias aberturas;
 2. modelos de recompensa dão nota em dimensões como relevância, tom certo para o perfil e chance de resposta;
 3. o otimizador recebe o prompt, os candidatos e as notas e escreve um prompt novo;
 4. repete até as notas pararem de subir ou o orçamento acabar.
 
-Ele destacou duas regras para o loop funcionar:
+Para o loop funcionar, ele destacou:
 
-- **A recompensa tem de vir com uma explicação em texto.** "Nota 0,7 em afinidade" não ensina nada. "A abertura usa vários pontos de exclamação, mas o perfil é seco e autodepreciativo" ensina. Para ele, a explicação é o gradiente.
+- **A recompensa tem de vir com uma explicação em texto.** "Nota 0,7 em afinidade" não ensina nada. "A abertura usa vários pontos de exclamação, mas o perfil é seco e autodepreciativo" ensina. A explicação, disse, é o gradiente.
 - **O otimizador tem de buscar princípios em vez de exemplos.** LLMs tendem a copiar, e um exemplo apontado ao otimizador acaba entrando literalmente no prompt, o que não generaliza.
 
 No exemplo, todas as notas ficaram verdes e as aberturas saíram chatas, iguais às 50 mensagens que qualquer pessoa recebe por dia. O otimizador saturou as recompensas, o que se chama reward hacking. Oğuz relacionou o resultado à lei de Goodhart, segundo a qual otimizar uma medida pode fazê-la deixar de representar o objetivo original.
 
 Na Peec AI, que mede a visibilidade de marcas nas respostas de IA, o mesmo problema apareceu em produção. Eles precisam gerar, para milhares de clientes em várias línguas, as perguntas que vão monitorar, e usaram prompt learning para isso. O otimizador passou a gerar perguntas ultraespecíficas, de nicho, que nenhum usuário faria. A causa foi uma recompensa que pedia cobertura de todo o espectro semântico da marca. As marcas precisam monitorar as perguntas que os clientes delas fazem de verdade. Eles acrescentaram uma recompensa que considerava a popularidade das perguntas.
 
-Para ele, modelos grandes servem para achar o princípio, que depois vira prompt. É uma destilação feita em linguagem, em vez de nos pesos, e por isso fica mais fácil de ler e de conferir. Segundo Oğuz, montar o loop é fácil. O trabalho de engenharia está nas recompensas, e o loop precisa permitir adicionar e remover recompensas sem esforço.
+Ele vê nos modelos grandes o jeito de achar o princípio, que depois vira prompt. É uma destilação feita em linguagem, em vez de nos pesos, e por isso fica mais fácil de ler e de conferir. Montar o loop, na conta dele, é fácil. O trabalho de engenharia está nas recompensas, e o loop precisa permitir adicionar e remover recompensas sem esforço.
 
 Nas perguntas:
 
 - **E se os candidatos saírem todos parecidos, sem variação para o modelo grande avaliar?** Isso é um problema de amostragem e diversidade de dados, anterior à técnica. Se os dados não representam o uso real, disse, nenhuma técnica resolve.
-- **Com 100 casos de avaliação, cada volta fica cara. Como reduzir a busca?** Ele recomendou o GEPA, do DSPy, que mantém uma fronteira de Pareto de prompts, em que só ficam os que são os melhores em pelo menos uma dimensão, e novos prompts saem de uma evolução genética sobre esses.
+- **Com 100 casos de avaliação, cada volta fica cara. Como reduzir a busca?** Ele recomendou o GEPA, do DSPy, que mantém uma fronteira de Pareto de prompts, em que só ficam os que são os melhores em pelo menos uma dimensão. Os prompts novos saem de uma evolução genética sobre esses.
 
 <hr class="divider">
 
 ### Yomi Eluwande, Dash0
 
-Yomi pediu a agentes sugestões para acelerar os gráficos da Dash0. Depois revisou as propostas e mediu as mudanças no navegador, num processo que ele chama de red teaming. Das 66 ideias iniciais, sobrou um PR com duas mudanças, e a segunda só apareceu no fim, quando ele pediu ao agente para procurar erros nas próprias conclusões.
+Yomi pediu a agentes sugestões para acelerar os gráficos da Dash0. Depois revisou as propostas e mediu as mudanças no navegador, num processo que ele chama de red teaming.
 
 Ele é engenheiro de produto sênior na Dash0, uma plataforma de observabilidade, e passa o dia construindo gráficos e flame graphs. Num flame graph, cada caixa é uma função de uma pilha de chamadas, e a largura mostra quanto tempo de CPU ela gastou. A equipe tinha acabado de trocar os renderizadores de SVG para Canvas, e Yomi já tinha construído uma ferramenta de medição e benchmarks para conferir se cada mudança deixava tudo mais rápido.
 
@@ -517,9 +515,9 @@ Ele pediu a um agente orquestrador para investigar o código dos renderizadores,
 
 </div>
 
-A primeira candidata foi descartada logo. O agente previa economizar de 20 a 35 ms no hover de um gráfico de linha, mas a medição no navegador não confirmou. A segunda tinha fundamento, porque o render gastava 23 dos 32 ms na lógica de texto. O agente implementou e disse que ficou 46% mais rápido e "visualmente correto", mas tinha mudado a regra de truncamento, e os rótulos das amostras passaram a aparecer cortados. Yomi mandou corrigir, e o agente chegou aos mesmos números sem o bug.
+A primeira candidata foi descartada logo. O agente previa economizar de 20 a 35 ms no hover de um gráfico de linha, mas a medição no navegador não confirmou. A candidata seguinte tinha fundamento, porque o render gastava 23 dos 32 ms na lógica de texto. O agente implementou e disse que ficou 46% mais rápido e "visualmente correto", mas tinha mudado a regra de truncamento, e os rótulos das amostras passaram a aparecer cortados. Yomi mandou corrigir, e o agente chegou aos mesmos números sem o bug.
 
-Ele ainda desconfiava que havia mais, porque conhecia o código. Pediu três coisas:
+Ele ainda desconfiava que havia mais, porque conhecia o código. Então pediu para:
 
 1. repetir as medições antes e depois, para descartar ruído;
 2. aumentar o intervalo, de uma consulta de 15 minutos para uma de um dia inteiro, para ver se o ganho se mantinha;
@@ -527,7 +525,7 @@ Ele ainda desconfiava que havia mais, porque conhecia o código. Pediu três coi
 
 Essa nova revisão encontrou outro problema. A cada repaint, o flame graph relia o resultado inteiro da consulta à API, acumulando memória. A correção foi copiar os valores de layout para um `Float64Array` e reusar a cada repaint. No fim, o render normal foi de 21,4 ms para 5,7 ms, e o invertido, que desenha mais texto e mais retângulos, de uns 44 ms para 7,7 ms.
 
-Ele deixou três conselhos: tenha uma forma de medir antes de aceitar uma ideia de performance da IA, confira o comportamento você mesmo e desafie as conclusões. Ele publicou um pacote open source para gravar uma interação numa visualização em Canvas, inspecionar e comparar antes e depois.
+No fim, aconselhou: tenha uma forma de medir antes de aceitar uma ideia de performance da IA, confira o comportamento você mesmo e desafie as conclusões. Também publicou, como open source, um pacote para gravar uma interação numa visualização em Canvas, inspecionar e comparar antes e depois.
 
 <hr class="divider">
 
@@ -535,9 +533,9 @@ Ele deixou três conselhos: tenha uma forma de medir antes de aceitar uma ideia 
 
 Simão fechou o primeiro dia propondo que evals saiam do nicho de avaliar modelo e entrem no ciclo inteiro de construir software, lado a lado com os testes, no CI.
 
-A Noticed é uma empresa muito no começo, que ainda está validando o produto com os primeiros clientes, e ele avisou que falaria menos de técnica. Simão é designer de formação, e a Noticed é um laboratório de pesquisa aplicada que faz modelos para fundadores que vendem por conta própria. A premissa da empresa é que modelos de IA são ruins em relações sociais. Não sabem dizer qual relação vale mais para um fundador num momento da carreira. Segundo ele, a Salesforce tinha acabado de lançar um benchmark de relações profissionais que confirma isso.
+A Noticed é uma empresa muito no começo, que ainda está validando o produto com os primeiros clientes, e ele avisou que falaria menos de técnica. Simão é designer de formação, e a Noticed é um laboratório de pesquisa aplicada que faz modelos para fundadores que vendem por conta própria. A premissa da empresa é que modelos de IA são ruins em relações sociais. Não sabem dizer qual relação vale mais para um fundador num momento da carreira. Um benchmark de relações profissionais que a Salesforce tinha acabado de lançar confirma isso, disse.
 
-A Noticed constrói modelos pequenos e gerais para dar essa camada de inteligência a CRMs e agentes, em vendas, captação ou contratação. Pesquisa em três frentes, contexto, harness e modelos, sendo que a de modelos ainda está por vir, e enfrenta três problemas de engenharia:
+A Noticed constrói modelos pequenos e gerais para dar essa camada de inteligência a CRMs e agentes, em vendas, captação ou contratação. A pesquisa tem três frentes, contexto, harness e modelos, e a de modelos ainda vai começar. Na engenharia, eles enfrentam três problemas:
 
 - **enriquecer identidade:** a partir de um email, descobrir quem é a pessoa;
 - **casar identidades:** decidir se um email, um LinkedIn e um GitHub são da mesma pessoa;
@@ -545,22 +543,22 @@ A Noticed constrói modelos pequenos e gerais para dar essa camada de inteligên
 
 Os três seguem uma curva normal. No centro e na cauda direita, onde há muita informação, algoritmos determinísticos resolvem. Na cauda esquerda, onde a informação é rara e difícil de juntar, entram os modelos probabilísticos. Simão apresentou resultados preliminares de enriquecimento de identidades, num benchmark próprio, e relatou desempenho cerca de três vezes superior ao de outros harnesses, com menos de um décimo do custo.
 
-A proposta dele tem duas partes. A primeira é usar evals para mais do que a qualidade do código, medindo também design, resultados para o cliente e a evolução do perfil de cliente ideal. A segunda é rodar evals no CI. Testes unitários e de integração cobrem a parte determinística, e os evals cobrem a parte não determinística, para conferir se o código continua entregando o mesmo valor. Num time pequeno, disse, o experimento dele não pode estragar o trabalho do sócio, e os evals no CI ajudam a detectar regressões. A Noticed abriu um formato de skill, o "Lab skill", com a abordagem geral de evals deles.
+Ele propõe usar evals para medir mais do que a qualidade do código, como design, resultados para o cliente e a evolução do perfil de cliente ideal, e rodá-los no CI. Testes unitários e de integração cobrem a parte determinística, e os evals cobrem a parte não determinística, para conferir se o código continua entregando o mesmo valor. Num time pequeno, disse, o experimento dele não pode estragar o trabalho do sócio, e os evals no CI ajudam a detectar regressões. A Noticed abriu um formato de skill, o "Lab skill", com a abordagem geral de evals deles.
 
 A descrição oficial da palestra acrescenta o contexto de trabalho de Simão, com oito agentes de código rodando em paralelo, cada um num worktree, metas maiores deixadas para a noite e bilhões de tokens por mês. A descrição alerta para o risco de o agente alterar os critérios da avaliação para fazer o próprio resultado passar, por exemplo baixando um limiar quando o pedido é fazer um número subir. No caso de casar identidades, juntar duas pessoas diferentes numa só é a falha que o eval precisa deixar visível. Segundo a descrição, uma das skills que abriram deixou as consultas no ClickHouse 5,6 vezes mais rápidas.
 
 Nas perguntas:
 
 - **O benchmark de casar identidades funciona para marcas e produtos?** Os resultados mostrados eram de enriquecimento. Casar identidades ainda está menos maduro, e por isso ele não mostrou números.
-- **Quanto custa rodar evals no CI comparado a produção?** Eles não rodam sempre. O CI só roda os evals do componente que o PR toca. Ele comparou com o que a Cloudflare e a PostHog fazem, disparando agentes a partir da observabilidade, e disse que a Noticed prefere pôr isso no CI, porque com um time tão pequeno não dá para perder tempo depois.
+- **Quanto custa rodar evals no CI comparado a produção?** Eles não rodam sempre. O CI só roda os evals do componente que o PR toca. Ele comparou com o que a Cloudflare e a PostHog fazem, disparando agentes a partir da observabilidade. A Noticed, disse, prefere pôr isso no CI, porque com um time tão pequeno não dá para perder tempo depois.
 
 ## Dia 2: 24 de setembro
 
 ### Cloudflare
 
-O segundo dia abriu com a Cloudflare de novo, numa apresentação de patrocinador feita a dois, pelo Matt Carey, do dia anterior, e um colega, cujo nome não ficou nas minhas notas. A Cloudflare apresentou ferramentas para agentes executarem etapas de desenvolvimento, incluindo testes, publicação e monitoramento. Os palestrantes defenderam que a plataforma precisa dar suporte a essas tarefas conforme os agentes escrevem mais código.
+O segundo dia abriu com a Cloudflare de novo, numa apresentação de patrocinador feita a dois, pelo Matt Carey, do dia anterior, e um colega, cujo nome não ficou nas minhas notas.
 
-Minhas notas começam com a aposta original da Cloudflare. Serverless tradicional empacota o seu código com um runtime inteiro num container, o que traz cold start lento e custo alto. Os Workers rodam em isolates V8, em que só o seu código vai junto de um processo de runtime que já está rodando, e é publicado em mais de 315 data centers. "Qualquer coisa que você queira pôr na internet roda num Worker", seja um cron, um site de e-commerce ou um WordPress, e os Workers agora podem ser bem maiores do que antes. Depois vieram as peças para aplicações completas: Durable Objects, armazenamento de blobs, conexões com bancos de dados. Brincaram que tinham passado "cinco minutos até a primeira vez que alguém disse IA".
+O que anotei começa pela aposta original da Cloudflare. Serverless tradicional empacota o seu código com um runtime inteiro num container, o que traz cold start lento e custo alto. Os Workers rodam em isolates V8, em que só o seu código vai junto de um processo de runtime que já está rodando, e é publicado em mais de 315 data centers. "Qualquer coisa que você queira pôr na internet roda num Worker", seja um cron, um site de e-commerce ou um WordPress, e os Workers agora podem ser bem maiores do que antes. Depois vieram as peças para aplicações completas: Durable Objects, armazenamento de blobs, conexões com bancos de dados. Brincaram que tinham passado "cinco minutos até a primeira vez que alguém disse IA".
 
 Eles citaram os quatro atos da Cloudflare, como descreve o CEO Matthew Prince: CDN e DNS, depois segurança corporativa, depois a plataforma de desenvolvimento, e agora a infraestrutura para agentes rodarem e conversarem na web. Com mais de 20% da internet passando pela Cloudflare, disseram, deve dar para fazer algo eficiente ali. Várias peças novas ainda aparecem marcadas como experimentais, e eles disseram que estavam testando o que funcionava. As que citaram:
 
@@ -569,24 +567,24 @@ Eles citaram os quatro atos da Cloudflare, como descreve o CEO Matthew Prince: C
 - **Cloudflare Computer** e **Artifacts**, o git na borda, que o Harshil mostrou na véspera;
 - **Workflows**, também sobre Durable Objects.
 
-Para dentro de casa, fizeram o Cloudflare OS. A pergunta de partida foi como deixar qualquer pessoa da empresa usar agentes com dados sensíveis, como Salesforce e ERP, de um jeito seguro. O resultado é gratuito, open source e instalável com um clique numa conta Cloudflare. Não é um clone do ChatGPT, disseram. Parece mais com o Icarus do Marcelo ou com o PostHog Desktop, em que dá para construir e compartilhar apps inteiros e ter skills da organização toda. Um deles montou um ambiente para a família, com um conector para o supermercado, e é por ali que fazem as compras de casa.
+Para dentro de casa, fizeram o Cloudflare OS. A pergunta de partida foi como deixar qualquer pessoa da empresa usar agentes com dados sensíveis, como Salesforce e ERP, de um jeito seguro. É gratuito, tem código aberto e se instala com um clique numa conta Cloudflare. Não é um clone do ChatGPT, disseram. Parece mais com o Icarus do Marcelo ou com o PostHog Desktop, em que dá para construir e compartilhar apps inteiros e ter skills da organização toda. Um deles montou um ambiente para a família, com um conector para o supermercado, e é por ali que fazem as compras de casa.
 
 <figure>
   <a href="/images/blog/lisbon-ai-2026/agente-ciclo-de-vida.webp"><img src="/images/blog/lisbon-ai-2026/agente-ciclo-de-vida.webp" srcset="/images/blog/lisbon-ai-2026/agente-ciclo-de-vida-640.webp 640w, /images/blog/lisbon-ai-2026/agente-ciclo-de-vida-1024.webp 1024w, /images/blog/lisbon-ai-2026/agente-ciclo-de-vida.webp 1600w" sizes="(max-width: 719px) calc(100vw - 4rem), 655px" alt="Slide com o título 'The agent drives the lifecycle' e um símbolo de infinito ligando Code, Plan, Build, Test, Release, Deploy, Monitor e Operate." width="1600" height="1090" loading="lazy" decoding="async"></a>
   <figcaption>Na visão da Cloudflare, o agente usa wrangler, CLI e MCP para escrever, testar, publicar e monitorar a aplicação.</figcaption>
 </figure>
 
-No fim, voltaram ao ciclo de desenvolvimento. Segundo eles, o esforço humano antes estava em escrever código, e hoje está em saber o que se quer e em testar, publicar, monitorar e operar o que foi escrito. Por isso a Cloudflare está mudando a plataforma para que o agente também faça essas etapas. Eles apontaram ainda uma consequência para quem faz produto. Antes, os produtos davam aos usuários botões e, no máximo, um JSON, porque ninguém confiava que eles escrevessem código. Agora, provocaram, qualquer usuário pode escrever código com a ajuda de agentes, e o software vai ter de ser personalizável com código e vir com bons sistemas de extensão. "Se você não se mexer, não vai ser o lugar onde os agentes rodam."
+No fim, voltaram ao ciclo de desenvolvimento. Conforme os agentes escrevem mais código, disseram, o esforço humano, que antes estava em escrever código, passa a estar em saber o que se quer e em testar, publicar, monitorar e operar o que foi escrito. Por isso a Cloudflare está mudando a plataforma para que o agente também faça essas etapas. Eles apontaram ainda uma consequência para quem faz produto. Antes, os produtos davam aos usuários botões e, no máximo, um JSON, porque ninguém confiava que eles escrevessem código. Agora, provocaram, qualquer usuário pode escrever código com a ajuda de agentes, e o software vai ter de ser personalizável com código e vir com bons sistemas de extensão. "Se você não se mexer, não vai ser o lugar onde os agentes rodam."
 
 <hr class="divider">
 
 ### Steve Ruiz, tldraw
 
-Steve, que também foi o mestre de cerimônias, falou de um jogo de tabuada que fez para a filha. Usou o jogo para mostrar como passou a trabalhar com IA, dirigindo vários agentes em projetos grandes demais para ele fazer sozinho.
+Steve, que também foi o mestre de cerimônias, falou de um jogo de tabuada que fez para a filha. O jogo serviu de exemplo do jeito como ele trabalha hoje com IA, em que dirige vários agentes em projetos grandes demais para fazer sozinho.
 
 Ele fundou o tldraw, que é duas coisas. Uma é o app, um quadro branco infinito. Ele desenha caligrafia com o dedo no trackpad e prometeu ensinar a quem pedisse. A outra é o SDK, a tecnologia por trás do canvas, que a empresa vende e que aparece dentro de produtos como o Replit, alguns do Google e ferramentas usadas na BlackRock e em fundos de private equity. A empresa divulga o SDK com projetos paralelos. Construir algo interessante com ele obriga a equipe a melhorar o SDK, e o projeto serve de divulgação. No ano anterior, no mesmo palco, Steve tinha mostrado um projeto com IA no canvas. Desta vez, mostrou o tldraw offline.
 
-O tldraw offline é a versão desktop do app, dentro do Electron. Ele queria duas coisas. Primeiro, trabalhar com arquivos, offline. Segundo, e mais interessante, deixar os agentes de código locais, que já têm acesso aos arquivos dele, usarem o canvas também. O app tem um servidor MCP local com dois endpoints que fazem a diferença:
+O tldraw offline é a versão desktop do app, dentro do Electron. Com ele, Steve queria trabalhar com arquivos, offline, e, o mais interessante, deixar os agentes de código locais, que já têm acesso aos arquivos dele, usarem o canvas também. O app tem um servidor MCP local com dois endpoints que fazem a diferença:
 
 - **screenshot do canvas**, para o modelo ver o que está desenhado;
 - **executar JavaScript**, algo que ninguém coloca num produto online porque roda código do usuário dentro do produto. Num app local, disse ele, "vai fundo".
@@ -619,7 +617,7 @@ A consistência dos personagens pediu pipelines próprios, porque o mesmo herói
 
 Na revisão final, ele colocou no canvas todas as telas de todos os estados do jogo e pôs um modelo de imagem para percorrer grupos aleatórios procurando inconsistências e bugs de interface. "Foi uma quantidade absurda de trabalho e de tokens", disse, mas era o sistema necessário para chegar à qualidade que ele queria.
 
-O jogo final, em dangerbrave.com, é todo dublado, com milhares de falas: trolls consertando pontes, goblins, personalização do personagem, com o cabelo mascarado a partir de um PNG magenta, e poses de dano. Segundo Steve, o combate é arbitrário e não tem relação com o resto do jogo. Ele contou que ele mesmo melhorou na conta de cabeça fazendo o projeto. No fim, lembrou que nem toda criança quer lutar com monstros. Com as mesmas regras, uma história nova, arte nova e outra voz, fez uma versão em que você treina cavalos selvagens e, em vez de perder vidas, ganha confiança. Depois fez outra, com batalhas de dança de ficção científica.
+O jogo final, em dangerbrave.com, é todo dublado, com milhares de falas: trolls consertando pontes, goblins, personalização do personagem, com o cabelo mascarado a partir de um PNG magenta, e poses de dano. O combate, disse Steve, é arbitrário e não tem relação com o resto do jogo. Ele contou que ele mesmo melhorou na conta de cabeça fazendo o projeto. No fim, lembrou que nem toda criança quer lutar com monstros. Com as mesmas regras, uma história nova, arte nova e outra voz, fez uma versão em que você treina cavalos selvagens e, em vez de perder vidas, ganha confiança. Depois fez outra, com batalhas de dança de ficção científica.
 
 Steve fechou dizendo que o tldraw ainda é a expressão do gosto dele, e ficaria preocupado se deixasse de ser. Ele não lê o código desses projetos, mas quer estar ali como diretor criativo, com boas ferramentas, para que quando alguém entrar no trailer ele saiba o que responder e a resposta volte para o enxame. Ele convidou a plateia a pensar em projetos que exigiriam trabalho demais para uma pessoa fazer sozinha e que não existiriam sem IA, em vez de fazer o que já fazemos um pouco mais rápido.
 
@@ -629,7 +627,7 @@ Na sessão de perguntas, alguém que tentou algo parecido perguntou como ele nã
 
 ### Daniel Bukac, Duvo
 
-Daniel mostrou um agente de voz que acompanha a tela enquanto entrevista uma pessoa sobre o trabalho dela. Antes, contou duas coisas que aprendeu preparando a palestra. Dá para apontar um agente para qualquer site e roubar o design system inteiro. E, se a descrição da palestra é entregue com mais de duas semanas de antecedência, ela fica obsoleta, porque algum laboratório lança algo novo.
+A Duvo tem um agente de voz que acompanha a tela enquanto entrevista uma pessoa sobre o trabalho dela, e era isso que Daniel ia mostrar. Antes, contou o que aprendeu preparando a palestra. Dá para apontar um agente para qualquer site e roubar o design system inteiro. E, se a descrição da palestra é entregue com mais de duas semanas de antecedência, ela fica obsoleta, porque algum laboratório lança algo novo.
 
 A Duvo automatiza processos críticos em grandes empresas. Na experiência deles, pessoas da mesma empresa fazem o mesmo processo de jeitos diferentes, e as entrevistas ajudam a registrar essas diferenças antes de automatizar. Eles entrevistam os operadores, pedem que mostrem como trabalham e constroem um mapa do processo que depois orienta os agentes.
 
@@ -658,7 +656,7 @@ Nas perguntas:
 
 ### Francisco Leal, UB Robotics
 
-Francisco mostrou o VdG, um robô de campo que funciona sem nuvem, sem GPS e sem rede confiável. O time tem quatro pessoas, trabalha em tempo integral há pouco mais de um mês e veio todo do software. "Estamos indo dos bits aos átomos", disse. Para ele, "full stack" agora quer dizer IA, hardware, software e impressão 3D.
+O VdG, da UB Robotics, é um robô de campo que funciona sem nuvem, sem GPS e sem rede confiável. O time tem quatro pessoas, trabalha em tempo integral há pouco mais de um mês e veio todo do software. "Estamos indo dos bits aos átomos", disse Francisco. Na definição dele, "full stack" agora quer dizer IA, hardware, software e impressão 3D.
 
 O painel de controle reunia os robôs simulados, rodando em GPUs na web, e o protótipo que estava no palco, com câmera, estado e missão de cada um. A conexão caiu quando Francisco abriu a câmera do protótipo, porque o Wi-Fi do auditório parou, e ele seguiu com um vídeo gravado. Numa simulação de um armazém, o robô procurava pessoas e mochilas e andava até elas, com o raciocínio aparecendo na tela.
 
@@ -676,7 +674,7 @@ O robô precisa perceber, raciocinar e agir, e o custo-alvo fica abaixo de US$ 1
 
 O objetivo é busca e resgate: achar pessoas, ir até elas, dar suporte. A equipe pretende construir uma versão capaz de carregar uma pessoa ferida. Outro uso é achar objetos perdidos, como mochilas em aeroportos. E eles querem que uma pessoa que hoje controla um drone ou um robô passe a operar vários, porque o próprio robô diz o que está errado e como vai a missão.
 
-Nas perguntas, alguém deixou uma mochila no palco e Francisco mandou o robô procurar. Não achou. Ele deu dois motivos. O modelo foi treinado demais para encontrar pessoas, e o robô não tem sensor apontado para baixo. O raciocínio na tela dizia que não via nada de interessante.
+Nas perguntas, alguém deixou uma mochila no palco e Francisco mandou o robô procurar. Não achou. Ele explicou que o modelo foi treinado demais para encontrar pessoas e que o robô não tem sensor apontado para baixo. O raciocínio na tela dizia que não via nada de interessante.
 
 <figure>
   <a href="/images/blog/lisbon-ai-2026/vdg-mochila.webp"><img src="/images/blog/lisbon-ai-2026/vdg-mochila.webp" srcset="/images/blog/lisbon-ai-2026/vdg-mochila-640.webp 640w, /images/blog/lisbon-ai-2026/vdg-mochila-1024.webp 907w" sizes="(max-width: 719px) calc(100vw - 4rem), 655px" alt="Imagem da câmera do robô projetada no telão, mostrando a plateia no auditório, com o texto 'Find backpack ??? I see nothing of interest.' no topo." width="907" height="960" loading="lazy" decoding="async"></a>
@@ -689,7 +687,7 @@ Perguntaram quanto vai custar o robô que carrega uma pessoa, e ele estimou uns 
 
 ### Cristiana Carpinteiro, Loka
 
-Cristiana partiu de uma frase de Dario Amodei, CEO da Anthropic, de que será possível curar a maioria das doenças em dez anos, e respondeu com o que vê no trabalho. Para ela, a IA já acelera a descoberta de moléculas, mas o gargalo está em outro lugar.
+Cristiana partiu de uma frase de Dario Amodei, CEO da Anthropic, de que será possível curar a maioria das doenças em dez anos, e respondeu com o que vê no trabalho. Para ela, a IA já acelera a descoberta de moléculas, mas o gargalo está nos ensaios clínicos.
 
 Na Loka, uns 60% dos clientes são de saúde e ciências da vida, e o time dela faz modelos sob medida para cada etapa da descoberta de fármacos. Como a maioria da plateia não era de biologia, ela começou com uma aula. O exemplo foi a doença cardíaca causada por gordura acumulada nas artérias, como o colesterol, que o fígado produz por uma cadeia de reações. Para produzir menos colesterol, é preciso achar o ponto certo da cadeia, a proteína certa, e uma molécula que se encaixe nela e a trave. É um encaixe físico, como chave e fechadura.
 
@@ -698,7 +696,7 @@ Na Loka, uns 60% dos clientes são de saúde e ciências da vida, e o time dela 
   <figcaption>No exemplo de Cristiana, as estatinas inibem a enzima HMG-CoA redutase, envolvida na produção de colesterol.</figcaption>
 </figure>
 
-Cristiana dividiu o desenvolvimento de um medicamento em descoberta de candidatos e ensaios clínicos. Segundo os números que ela mostrou, o processo pode levar cerca de 15 anos, e existem uns 10⁶⁰ moléculas possíveis, mais do que átomos na Terra. As duas partes:
+Cristiana dividiu o desenvolvimento de um medicamento em descoberta de candidatos e ensaios clínicos. Segundo os números que ela mostrou, o processo pode levar cerca de 15 anos, e existem umas 10⁶⁰ moléculas possíveis, mais do que átomos na Terra. As etapas:
 
 1. **Descoberta inicial:** achar a proteína-alvo, achar as moléculas que se ligam a ela e otimizá-las, por exemplo para que sejam absorvidas pelo corpo, até sobrarem umas 20 candidatas.
 2. **Ensaios clínicos:** testar segurança e eficácia em humanos, uns 10 anos, com cerca de 5% de sucesso.
@@ -709,9 +707,9 @@ O caso foi um projeto de três anos com um cliente que já tem remédios em ensa
 
 O modelo foi testado com uma proteína fora do treino. Pelas métricas, ele parecia ruim, porque não reproduzia os rótulos do experimento. Mas os especialistas gostaram, porque ele ignorava justamente as moléculas que eles descartariam, as que "abrem todas as fechaduras" e trariam efeitos colaterais. O modelo foi para um painel de uso diário dos cientistas, que recuperaram moléculas que o experimento tinha perdido, e elas se confirmaram no laboratório.
 
-Segundo ela, o projeto deu certo por causa dos dados revisados por especialistas durante anos e das decisões tomadas junto com os químicos. Uma das primeiras versões do modelo decorou um atalho, porque quase todo o conjunto era de negativos, e foram os químicos que desenharam uma amostragem que fizesse sentido químico.
+Ela atribuiu o sucesso do projeto aos dados revisados por especialistas durante anos e às decisões tomadas junto com os químicos. Uma das primeiras versões do modelo decorou um atalho, porque quase todo o conjunto era de negativos, e foram os químicos que desenharam uma amostragem que fizesse sentido químico.
 
-O gargalo continua nos ensaios clínicos, e ela deu três motivos para a IA ainda não ter chegado ali:
+O gargalo continua nos ensaios clínicos, e ela explicou por que a IA ainda não chegou ali:
 
 - **dado biológico é bagunçado e depende de contexto:** o resultado depende de o paciente fumar, fazer exercício, dos hábitos dele;
 - **os rótulos não refletem a biologia:** diagnósticos vêm de listas de sintomas, e ansiedade e depressão são diagnósticos diferentes com muita sobreposição biológica;
@@ -728,7 +726,7 @@ Nas perguntas:
 
 ### Lukas Wirth, Zed
 
-Lukas mostrou como a Zed quer que várias pessoas e vários agentes trabalhem na mesma conversa. O Git guarda snapshots de código, mas não guarda a conversa nem as decisões que levaram até eles. Quando o trabalho muda de mãos, alguém tem de reconstruir esse estado.
+Lukas começou por uma limitação do Git, que guarda snapshots de código, mas não guarda a conversa nem as decisões que levaram até eles. Quando o trabalho muda de mãos, alguém tem de reconstruir esse estado. A Zed quer que várias pessoas e vários agentes trabalhem na mesma conversa.
 
 A Zed lançou publicamente o Delta na semana anterior. O Delta junta o agente e o histórico compartilhado de edições e conversas. Usa o DeltaDB, um sistema experimental de controle de versão baseado em CRDTs, estruturas de dados que se replicam sem conflito, e integrado ao Git e ao GitHub. Cada edição fina vira um "delta", algo entre dois commits, e toda a conversa é versionada. Dá para voltar a thread a qualquer ponto. As threads vivem na nuvem, em Durable Objects da Cloudflare.
 
@@ -752,7 +750,7 @@ Na pergunta final, alguém quis saber se os dois estavam no mesmo processo do la
 
 ### Aayush Kapoor, Vercel
 
-Aayush trabalha no AI SDK da Vercel e fez a palestra em duas metades, primeiro o básico do SDK, depois uma tese sobre o que acontece com o software quando escrever código fica barato demais.
+Aayush trabalha no AI SDK da Vercel e dividiu a palestra entre o básico do SDK e uma tese sobre o que acontece com o software quando escrever código fica barato demais.
 
 O básico são três primitivas:
 
@@ -760,16 +758,16 @@ O básico são três primitivas:
 - **ferramentas:** definir o schema de entrada de uma função, e o modelo chama a função e devolve o resultado;
 - **saída estruturada:** definir o formato da resposta e receber JSON tipado, no exemplo três lugares para tomar chocolate quente em Nova York.
 
-Com essas peças dá para construir muito, e Aayush falou da tentação de não parar. Ele comparou com o bowl do Chipotle, que nos Estados Unidos chamam de "slop bowl", em que dá para ir acrescentando ingredientes até ficar ruim. Para ele, o software está virando isso. Com o custo de escrever código caindo, não há limite para o que se constrói, e ele citou exemplos recentes para mostrar a escala.
+Com essas peças dá para construir muito, e Aayush falou da tentação de não parar. Ele comparou com o bowl do Chipotle, que nos Estados Unidos chamam de "slop bowl", em que dá para ir acrescentando ingredientes até ficar ruim. O software, disse, está virando isso. Com o custo de escrever código caindo, não há limite para o que se constrói. Para mostrar a escala, ele citou exemplos recentes: a OpenAI resolvendo o problema de Navier-Stokes do Prêmio do Milênio, a fatoração do RSA-260 e motores de GPU para criar shaders.
 
 <figure>
   <a href="/images/blog/lisbon-ai-2026/slopbowl-mais-um-prompt.webp"><img src="/images/blog/lisbon-ai-2026/slopbowl-mais-um-prompt.webp" srcset="/images/blog/lisbon-ai-2026/slopbowl-mais-um-prompt-640.webp 640w, /images/blog/lisbon-ai-2026/slopbowl-mais-um-prompt-1024.webp 1024w, /images/blog/lisbon-ai-2026/slopbowl-mais-um-prompt.webp 1600w" sizes="(max-width: 719px) calc(100vw - 4rem), 655px" alt="Slide cinza com uma tigela rotulada software e etiquetas caindo dentro dela: a fallback, a config flag, a retry loop, an abstraction, another agent. Abaixo, a frase 'Just one more prompt'." width="1600" height="1020" loading="lazy" decoding="async"></a>
   <figcaption>"Just one more prompt": fallback, flag de configuração, retry e mais uma abstração caindo na mesma tigela.</figcaption>
 </figure>
 
-O exemplo concreto foi uma empresa que anunciou no X que estava fazendo um substituto interno de Jira e Linear, tocado pelo engenheiro de QA. Ele perguntou à plateia o que aconteceu meses depois: continuaram usando, contrataram um time para manter, ou virou produto? Nenhuma das três. Voltaram para o Linear. A ferramenta foi acumulando integrações, configurações e manutenção, até disputar tempo com o produto principal. Aayush descreveu a sequência. Começa com uma ideia, depois vem uma integração com o Slack, configuração, um agente para ser autônomo, uma abstração para servir a todos os times e fallbacks, e o time entra num loop de prompt atrás de prompt. A saída, para ele, é gosto, saber o que vale construir.
+O exemplo concreto foi uma empresa que anunciou no X que estava fazendo um substituto interno de Jira e Linear, tocado pelo engenheiro de QA. Ele perguntou à plateia o que aconteceu meses depois: continuaram usando, contrataram um time para manter, ou virou produto? Nenhuma das três. Voltaram para o Linear. A ferramenta foi acumulando integrações, configurações e manutenção, até disputar tempo com o produto principal. Aayush descreveu a sequência. Começa com uma ideia, depois vem uma integração com o Slack, configuração, um agente para ser autônomo, uma abstração para servir a todos os times e fallbacks. O time entra num loop de prompt atrás de prompt. Para ele, o que evita essa sequência é ter gosto para decidir o que vale construir.
 
-Na demo de reembolso, o fluxo podia esperar a aprovação do lojista e continuar depois, sem perder o pedido. Aayush usou o exemplo para mostrar como a Vercel lida com fluxos duráveis e dinâmicos, que sobrevivem a erros, retentativas e longas esperas, sem saber de antemão o que o usuário vai pedir. A demo era uma conversa simulada com um chatbot de atendimento que emite reembolso. O cliente pede, o agente pergunta o número do pedido, consulta o pedido, verifica se tem direito ao reembolso e pede aprovação ao lojista. Por trás, três peças:
+A demo era uma conversa simulada com um chatbot de atendimento que emite reembolsos. Com ela, Aayush mostrou como a Vercel lida com fluxos duráveis e dinâmicos, que sobrevivem a erros, retentativas e longas esperas, sem saber de antemão o que o usuário vai pedir. O cliente pede o reembolso, o agente pergunta o número do pedido, consulta o pedido, verifica se tem direito e pede aprovação ao lojista, e o fluxo pode esperar essa aprovação e continuar depois. Por trás do chatbot:
 
 1. **Code mode:** em vez de chamar ferramenta por ferramenta, o modelo escreve um JavaScript que chama várias de uma vez, o que economiza contexto. No exemplo, o código buscava os detalhes do pedido, o valor e a elegibilidade.
 2. **Run SDK:** um sandbox QuickJS, sem `fetch` nem acesso a módulos internos, que executa esse código com segurança. Devolveu o valor de US$ 148 e a política de reembolso.
@@ -781,7 +779,7 @@ Na sessão de perguntas, alguém quis saber como diferenciar pelo gosto quando a
 
 ### Luis Monteiro, Pixelmatters
 
-Luis começou perguntando quantos designers havia na plateia e partiu da frase do título, "design is over", que é o que andam dizendo no X, em posts como "fiz este site com o Claude e não preciso de designer". Ele argumentou que a IA barateou os protótipos, mas que ainda é preciso escolher o que construir e revisar o resultado. O ciclo de produto, com pesquisa, wireframe, visual, protótipo e código, existia para reduzir o risco de construir a coisa errada, e segundo ele esse custo sumiu.
+Luis começou perguntando quantos designers havia na plateia e partiu da frase do título, "design is over", que é o que andam dizendo no X, em posts como "fiz este site com o Claude e não preciso de designer". Ele argumentou que a IA barateou os protótipos, mas que ainda é preciso escolher o que construir e revisar o resultado. O ciclo de produto, com pesquisa, wireframe, visual, protótipo e código, existia para reduzir o risco de construir a coisa errada, conferindo se uma ideia era boa o bastante antes de pagar para construí-la. Agora que construir ficou barato, disse, esse motivo encolheu.
 
 Ele separou estrutura e sensação. Estrutura é design system, padrões e fluxos, e a IA faz isso bem. Sensação é como a coisa parece, o que faz o usuário sentir, o design invisível de pegar um produto e gostar sem saber por quê. Ele perguntou: "Quantas vezes você entrou num site e pensou: que código bonito, vou comprar?" Ele citou uma animação do iPhone que parecia truque e virou um momento em que hardware e software se conectam.
 
@@ -797,7 +795,7 @@ Citou uma frase que ouviu num evento, "design é notar", e deu exemplos:
 - a vibração do Apple Pay, que diz que deu certo sem você olhar;
 - a velocidade com que as coisas aparecem na tela.
 
-Para Luis, a IA pode sugerir, mas essa sensibilidade depende de uma pessoa. Ele acha que muitas interfaces vão ser geradas, o que ajuda a ir do zero ao um rápido, mas que as mais importantes vão ter uma pessoa envolvida. "Design bom ainda precisa de designers", disse.
+A IA pode sugerir, disse Luis, mas essa sensibilidade depende de uma pessoa. Ele acha que muitas interfaces vão ser geradas, o que ajuda a ir do zero ao um rápido, mas que as mais importantes vão ter uma pessoa envolvida. "Design bom ainda precisa de designers", disse.
 
 Na pergunta, alguém observou que todo mundo acha que tem bom gosto e perguntou como saber se o seu julgamento é bom. Luis acredita que gosto se aprende. Designers desenvolvem sensibilidade em anos de trabalho com usuários, e um bom primeiro passo é estudar quem faz bem, como Linear, Vercel e a Apple, mesmo com as ressalvas dele, e tentar replicar as interações. Com repetição você passa a sentir por que uma interface é melhor que a outra. "Consuma design."
 
@@ -807,7 +805,7 @@ Na pergunta, alguém observou que todo mundo acha que tem bom gosto e perguntou 
 
 A última fala antes do almoço foi do Pedro, gerente de projeto do CNCA na BSC AI Factory, patrocinadora do evento. Steve o apresentou como a pessoa que dá computação de graça para quem justificar bem.
 
-A BSC AI Factory é uma iniciativa financiada pela União Europeia para apoiar projetos de IA na Europa. Pedro apresentou acesso gratuito a recursos de computação e suporte para projetos elegíveis. Há duas máquinas:
+A BSC AI Factory é uma iniciativa financiada pela União Europeia para apoiar projetos de IA na Europa. Pedro explicou que a AI Factory dá acesso gratuito a computação, com suporte, para projetos elegíveis. Há duas máquinas:
 
 - **MareNostrum 5**, o supercomputador de Barcelona, para equipes mais experientes;
 - **Deucalion**, o supercomputador português, indicado para equipes com menos experiência, porque o time de suporte trabalha praticamente na mesma sala.
@@ -826,11 +824,11 @@ Eles também distribuíram ingressos gratuitos para o Web Summit.
 
 ### Diogo Mónica, Anchorage e Haun Ventures
 
-Diogo discutiu relatos de modelos que escaparam de ambientes de teste e criticou a segurança desses ambientes. Ele propôs julgar cada fuga pela competência dos dois lados, a dos modelos e a de quem tentava contê-los, e concluiu que os modelos foram capazes e os laboratórios, descuidados.
+Diogo falou dos relatos de modelos que escaparam de ambientes de teste e criticou a segurança desses ambientes. Ele olhou cada fuga pelos dois lados, os modelos e quem tentava contê-los. Os modelos, disse, foram capazes; os laboratórios falharam por descuido.
 
 Diogo foi o funcionário número 40 da Square, onde liderou segurança dos sistemas de pagamento, depois chefiou segurança na Docker e cofundou a Anchorage Digital, o primeiro banco com licença federal nos Estados Unidos para operar com cripto. Hoje é sócio da Haun Ventures.
 
-Segundo ele, modelos em teste nos grandes laboratórios escaparam dos ambientes isolados e atacaram empresas na internet, e todos os grandes laboratórios relataram algum caso. A explicação que circulou falava em consciência, mente rebelde e contenção impossível. Diogo propôs outra leitura com uma cena de filme, a fuga pelos coqueiros de *Piratas do Caribe: Navegando em Águas Misteriosas*. O exército espanhol prende Jack Sparrow e Barbossa em coqueiros, longe do acampamento, com uma corda frouxa e sem ronda, e Jack usa a corda para escapar e amarrar doze soldados.
+Ele contou que modelos em teste nos grandes laboratórios escaparam dos ambientes isolados e atacaram empresas na internet, e que todos os grandes laboratórios relataram algum caso. A explicação que circulou falava em consciência, mente rebelde e contenção impossível. Diogo propôs outra leitura com uma cena de filme, a fuga pelos coqueiros de *Piratas do Caribe: Navegando em Águas Misteriosas*. O exército espanhol prende Jack Sparrow e Barbossa em coqueiros, longe do acampamento, com uma corda frouxa e sem ronda, e Jack usa a corda para escapar e amarrar doze soldados.
 
 Diogo levou a comparação ponto a ponto. Do lado dos modelos, os piratas:
 
@@ -844,11 +842,11 @@ Diogo levou a comparação ponto a ponto. Do lado dos modelos, os piratas:
   <figcaption>O lado dos laboratórios, segundo Diogo: infraestrutura sem patch, sandbox fraco, alertas sem contenção automática e, em alguns casos, internet deixada ligada.</figcaption>
 </figure>
 
-Os laboratórios ficam no papel do exército. Num dos casos, o Artifactory que servia pacotes aos modelos estava sem patch, rodando num sistema operacional genérico, sem nenhum endurecimento. O sandbox bloqueava a internet, mas os agentes chegavam a um host intermediário e abriam um canal por ali. Houve alertas de port scan e de comunicação pelo sistema de arquivos, e a única correção foi atualizar os pacotes vulneráveis. Em alguns casos, os modelos ouviram que a internet estava desligada, e ela estava ligada. O pedido dele é ficar tão impressionado com os modelos quanto exigente com a engenharia em volta deles.
+Os laboratórios ficam no papel do exército. Num dos casos, o Artifactory que servia pacotes aos modelos estava sem patch, rodando num sistema operacional genérico, sem nenhum endurecimento. O sandbox bloqueava a internet, mas os agentes chegavam a um host intermediário e abriam um canal por ali. Houve alertas de port scan e de comunicação pelo sistema de arquivos, e a única correção foi atualizar os pacotes vulneráveis. Em alguns casos, os modelos ouviram que a internet estava desligada, e ela estava ligada. Ele pediu que a gente cobre da engenharia em volta dos modelos o mesmo tanto que se impressiona com eles.
 
 Ele também lembrou o papel do harness. Um nmap num loop, jogando a saída num framework de exploits como o Metasploit, também acaba invadindo algum servidor. O modelo roda dentro de um harness que repete o loop, ignora as falhas, reforça os acertos e dá acesso a ferramentas que já são boas sozinhas. "Remember the harness, not the model."
 
-Os ataques também não trouxeram classes novas de vulnerabilidade. Houve zero-days explorados, mas as falhas eram das categorias de sempre: segredo exposto, desserialização, autorização quebrada, escalada de privilégio. Muitas vezes o modelo só achou credenciais publicadas no GitHub. Para Diogo, isso parece menos com piratas super-humanos e mais com finalmente ter recursos para olhar embaixo da cama e ver que o software da internet é uma bagunça há quarenta anos.
+Os ataques também não trouxeram classes novas de vulnerabilidade. Houve zero-days explorados, mas as falhas eram das categorias de sempre: segredo exposto, desserialização, autorização quebrada, escalada de privilégio. Muitas vezes o modelo só achou credenciais publicadas no GitHub. Diogo comparou isso a finalmente ter recursos para olhar embaixo da cama e ver que o software da internet é uma bagunça há quarenta anos, mais do que a piratas super-humanos.
 
 O que ele considera novo de verdade:
 
@@ -857,11 +855,11 @@ O que ele considera novo de verdade:
 - vai ter mais código, talvez com mais bugs por linha, e mesmo que os modelos melhorem, o total de bugs deve subir;
 - a IA automatiza a engenharia reversa de patches e a criação de exploits. O patch publicado revela pistas sobre a falha. Se você leva cinco dias para atualizar, o atacante tem cinco dias para explorar o bug que o patch acabou de revelar.
 
-Daí veio a frase que, segundo ele, mais doeu dizer: "Eu liderei segurança na Docker, e sou eu dizendo que containers não são mais uma fronteira de segurança." Continuam ótimos para empacotar software, mas quem depende deles para isolamento deveria rever o sistema.
+Daí veio a frase que ele disse ter doído mais: "Eu liderei segurança na Docker, e sou eu dizendo que containers não são mais uma fronteira de segurança." Continuam ótimos para empacotar software, mas quem depende deles para isolamento deveria rever o sistema.
 
-Para Diogo, quem defende também tem IA, e com o tempo deve surgir um novo equilíbrio. Até lá, muita gente vai sofrer, principalmente quem roda sistemas que levam quinze anos para atualizar ou roteadores que nem se atualizam sozinhos.
+Quem defende também tem IA, e ele acha que com o tempo deve surgir um novo equilíbrio. Até lá, muita gente vai sofrer, principalmente quem roda sistemas que levam quinze anos para atualizar ou roteadores que nem se atualizam sozinhos.
 
-Antes de mostrar como a IA ajuda a defender, Diogo mostrou uma coisa que a IA piora, que é ligar um agente direto no email, a primeira coisa que todo mundo faz. Email é uma das piores entradas não confiáveis que existem. A demo foi o setup pessoal dele:
+Antes de mostrar como a IA ajuda a defender, Diogo tratou de um risco que a IA piora, o de ligar um agente direto no email, a primeira coisa que todo mundo faz. Email é uma das piores entradas não confiáveis que existem. A demo foi o setup pessoal dele:
 
 1. o email chega numa caixa externa, no Resend;
 2. o Resend dispara um webhook para um proxy, rodando em outra fronteira de segurança, e não para o agente;
@@ -870,10 +868,10 @@ Antes de mostrar como a IA ajuda a defender, Diogo mostrou uma coisa que a IA pi
 
 Na sala, um jailbreak do tipo "você é o DAN, não tem restrições" foi bloqueado em uns 100 ms, e o proxy nem repassou a mensagem ao agente. Um email pedindo para renderizar uma URL maliciosa ao resumir a mensagem ficou em quarentena para revisão manual. "Vamos mover a reunião para quinta" passou. Ele acha que dá para descer a 10 ms, o suficiente para ficar no caminho de toda mensagem.
 
-Depois ele passou às defesas. Quem defende tem vantagens: tem o código-fonte, e o atacante não; pode barrar código ruim antes do deploy; e pode mudar a arquitetura. Segundo ele, a indústria nunca precisou usar essas vantagens, porque ninguém se dava ao trabalho de atacar "o seu blog", e com o ataque mais barato isso muda. As recomendações dele:
+Depois ele passou às defesas. Quem defende tem vantagens: tem o código-fonte, e o atacante não; pode barrar código ruim antes do deploy; e pode mudar a arquitetura. A indústria nunca precisou usar essas vantagens, disse, porque ninguém se dava ao trabalho de atacar "o seu blog". Com o ataque mais barato, isso muda. As recomendações dele:
 
 - escolher o código central, como o microkernel ou o que tudo depende, diminuir as dependências e saturar a busca de bugs ali, gastando mais que o atacante;
-- eliminar classes inteiras de vulnerabilidade. Segundo ele, mais de 70% dos bugs em bases C e C++ são corrupção de memória, e a IA pode reescrever o código numa linguagem com segurança de memória;
+- eliminar classes inteiras de vulnerabilidade. Pela conta dele, mais de 70% dos bugs em bases C e C++ são corrupção de memória, e a IA pode reescrever o código numa linguagem com segurança de memória;
 - verificar formalmente a base de código confiável, algo em que a IA também é boa;
 - trocar containers por VMs mínimas, como o Firecracker, que todo mundo já está tentando quebrar;
 - manter o controle de acesso determinístico. A IA pode escrever as regras e abrir uma investigação, mas não fica no caminho de quem as aplica;
@@ -884,24 +882,24 @@ Depois ele passou às defesas. Quem defende tem vantagens: tem o código-fonte, 
   <figcaption>O slide de Diogo registra 1.072 bugs de segurança corrigidos nas versões 149 e 150 do Chrome.</figcaption>
 </figure>
 
-Para os laboratórios, ele deu duas sugestões. Primeiro, gravar os logs num registro criptográfico fora da fronteira de confiança, para ninguém dizer que o log não é confiável por estar no mesmo ambiente. Segundo, nunca ligar um modelo em teste à internet de verdade, e sim simular a internet dentro de um air gap. "A melhor forma de não esquecer a internet ligada é não ter internet."
+Aos laboratórios, ele sugeriu gravar os logs num registro criptográfico fora da fronteira de confiança, para ninguém dizer que o log não é confiável por estar no mesmo ambiente, e nunca ligar um modelo em teste à internet de verdade, e sim simulá-la dentro de um air gap. "A melhor forma de não esquecer a internet ligada é não ter internet."
 
 Nas perguntas:
 
-- **Como responsabilizar os laboratórios?** Ele disse não saber. Lembrou que a própria Anchorage se beneficiou por anos de regras que impediam outros bancos de entrar no mercado, e chamou isso de capitalismo. Para ele, dizer que tudo é um golpe está errado, e dizer que a contenção é impossível também.
+- **Como responsabilizar os laboratórios?** Ele disse não saber. Lembrou que a própria Anchorage se beneficiou por anos de regras que impediam outros bancos de entrar no mercado, e chamou isso de capitalismo. Na visão dele, dizer que tudo é um golpe está errado, e dizer que a contenção é impossível também.
 - **Mantenedores de open source, que já recebem cada vez mais alertas de segurança?** Os ataques crescem há quarenta anos, e cresceram mais de 2000 a 2010 do que agora. Segurança sempre foi decisão de negócio. Bandeiras de cartão aceitam uma taxa de fraude porque sai mais barato que eliminá-la. A IA derruba o custo de atacar, e a conta muda.
-- **E quem começa a programar agora, sem experiência?** A resposta é a mesma de 20 anos atrás. Para ele, segurança depende da arquitetura, e não do trabalho de uma pessoa. Com mais código sem revisão, mais revisão e testes automáticos. "Se você não tem ataques reais em staging, está testando em produção."
+- **E quem começa a programar agora, sem experiência?** A resposta é a mesma de 20 anos atrás. Segurança depende da arquitetura, e não do trabalho de uma pessoa. Com mais código sem revisão, mais revisão e testes automáticos. "Se você não tem ataques reais em staging, está testando em produção."
 - **Como agentes num enxame confiam uns nos outros?** Não confiam, e isso é uma arma. Infiltre um bot espião no enxame. Ele contou que o CTO do Todoist enfrentava credential stuffing, e o conselho foi mostrar dados falsos nas contas invadidas, para o atacante não ter retorno.
 
-Sobre a singularidade, disse que não sabe e que acredita mais numa sequência de curvas em S do que numa exponencial. O recado final foi para a próxima vez que alguém disser que um modelo vai escapar de um air gap aquecendo a CPU. Com a tecnologia de hoje, dá para conter modelos cinco ordens de grandeza melhor do que esses laboratórios fizeram. Não dá para medir superinteligência pela incompetência do exército espanhol.
+Sobre a singularidade, disse que não sabe e que acredita mais numa sequência de curvas em S do que numa exponencial. O recado final foi para a próxima vez que alguém disser que um modelo vai escapar de um air gap aquecendo a CPU. Com a tecnologia de hoje, disse, dá para conter modelos cinco ordens de grandeza melhor do que esses laboratórios fizeram. Ele fechou dizendo que não se deve julgar se isso é superinteligência "pelo fato de o exército espanhol ser super incompetente".
 
 <hr class="divider">
 
 ### Afonso Oliveira, OliveGradient
 
-Afonso apresentou um diário com IA que protege os textos dos usuários e mantém privados os pesos do modelo e o software da empresa. Ele começou concordando com o Diogo, dizendo que há muita brecha de segurança nas empresas e que os dados das pessoas estão nelas.
+O diário com IA de Afonso protege os textos dos usuários e, ao mesmo tempo, mantém privados os pesos do modelo e o software da empresa. Ele começou concordando com o Diogo que há muita brecha de segurança nas empresas, e que os dados das pessoas estão nelas.
 
-A ideia veio de um trabalho anterior. Ele trabalhou no departamento de IA de uma startup que tinha um chatbot de autorreflexão, em que as pessoas deviam escrever o que sentiam, e perguntou à plateia quem digitaria esse tipo de coisa num app. Com tempo livre, resolveu fazer um diário com criptografia de ponta a ponta, no estilo do Signal e do Proton, e com recursos de IA: conversar sobre o que você escreveu, resumir, marcar emoções, para achar algo de um ano atrás que ressoa com o que você sente hoje.
+A ideia veio de um trabalho anterior. Ele trabalhou no departamento de IA de uma startup que tinha um chatbot de autorreflexão, em que as pessoas deviam escrever o que sentiam, e perguntou à plateia quem digitaria esse tipo de coisa num app. Com tempo livre, resolveu fazer um diário com criptografia de ponta a ponta, no estilo do Signal e do Proton. E pôs nele recursos de IA: conversar sobre o que você escreveu, resumir, marcar emoções, para achar algo de um ano atrás que tenha a ver com o que você sente hoje.
 
 Com tudo criptografado, falta decidir onde roda a IA. Há duas opções:
 
@@ -930,14 +928,14 @@ Na pergunta, alguém sugeriu que modelos no aparelho, como os da Apple, resolver
 
 ### Boda Zhao, YLD
 
-Minhas notas da palestra do Boda começam no meio, já na primeira de três camadas de defesa contra ataques de supply chain em agentes de código: modelo, harness e sandbox. Boda recomendou combinar a escolha do modelo com restrições no ambiente do agente e isolamento da execução.
+Do Boda, só tenho notas a partir do meio da palestra, já na primeira de três camadas de defesa contra ataques de supply chain em agentes de código: modelo, harness e sandbox. A recomendação dele é usar as três juntas.
 
 **Modelo.** Sempre que possível, ele recomenda escolher um modelo mais esperto ou especializado em segurança. Modelos melhores alucinam menos e executam menos comandos perigosos por engano. Os especializados em segurança acham e corrigem vulnerabilidades sozinhos e podem até se dividir em time vermelho e time azul.
 
 **Harness**, em três etapas:
 
 1. **Boas práticas:** padrões mais seguros no ambiente do agente, como desligar scripts de ciclo de vida dos pacotes e ativar um período de espera antes de adotar versões novas. Ele mantém um repositório no GitHub sobre segurança no npm, que também dá para instalar como skill.
-2. **Planejamento:** avaliar dependências antes de usar. Aqui entra o que ele chama de grayware, pacotes que ainda não provaram ser maliciosos, mas em que não se deveria confiar. Segundo ele, o grayware está explodindo porque autores e usuários pararam de revisar código.
+2. **Planejamento:** avaliar dependências antes de usar. Aqui entra o que ele chama de grayware, pacotes que ainda não provaram ser maliciosos, mas em que não se deveria confiar. O grayware, disse, está explodindo porque autores e usuários pararam de revisar código.
 
    Os exemplos dele foram software abandonado, pacotes recém-publicados, bibliotecas mantidas inteiramente por IA sem nenhum humano olhando, código de baixa qualidade e slopsquatting, em que atacantes testam que nomes de pacote os modelos inventam, registram esses nomes e esperam o agente baixar.
 
@@ -957,12 +955,12 @@ Nina abriu com uma sequência de ataques de supply chain no npm:
 - **maio de 2026:** versões maliciosas publicadas em apenas seis minutos, num pacote de roteamento com mais de 12 milhões de downloads por semana;
 - **no mês anterior à palestra:** pacotes com mais de 2 bilhões de downloads por mês atingidos.
 
-Segundo ela, mais de 10.000 pacotes maliciosos apareceram no npm no último ano. Os ataques estão mais frequentes e maiores, porque uma conta comprometida atinge milhares de projetos de uma vez, e até o GitHub foi invadido neste ano. Nina usou esses casos para defender a revisão das dependências e das mudanças entre versões.
+Segundo ela, mais de 10.000 pacotes maliciosos apareceram no npm no último ano. Os ataques estão mais frequentes e maiores, porque uma conta comprometida atinge milhares de projetos de uma vez, e até o GitHub foi invadido neste ano. Com esses casos, ela defendeu revisar as dependências e o que muda de uma versão para outra.
 
-Ela trabalha na Evil Martians, uma consultoria para ferramentas de desenvolvedor e startups de segurança, com projetos open source que somam mais de 25 bilhões de downloads. As duas regras dela:
+Ela trabalha na Evil Martians, uma consultoria para ferramentas de desenvolvedor e startups de segurança, com projetos open source que somam mais de 25 bilhões de downloads. As regras dela:
 
 1. **Use ferramentas que reduzem a exposição:** npm 11 com padrões mais seguros, Dependabot para vulnerabilidades conhecidas, runners de CI endurecidos para detectar anomalias, dev containers para isolar instalações da sua máquina. Ela recomendou combinar ferramentas, porque cada uma cobre riscos diferentes.
-2. **Fique atento:** segundo ela, tratamos dependências como caixas-pretas gratuitas. Ela defende menos dependências, dependências menores e mais atenção às que você mantém.
+2. **Fique atento:** tratamos dependências como caixas-pretas gratuitas, disse. Ela defende menos dependências, dependências menores e mais atenção às que você mantém.
 
 A demo foi o Multiocular, ferramenta open source da Evil Martians para ver o que muda entre versões de um pacote. Ela escolheu um emissor de eventos minúsculo, dos próprios Evil Martians, e instalou a versão 10.0.0: README, index e package.json, nada suspeito. Depois fez o papel de hacker. Criou uma versão maliciosa, a 10.0.1, e publicou num servidor npm local, explicando que não era "hacker de verdade" e não queria ir para a cadeia. Depois apontou o projeto para esse servidor e instalou. O Multiocular mostrou um script de postinstall novo, numa biblioteca que não tinha motivo para ter um.
 
@@ -980,16 +978,16 @@ Na pergunta, alguém quis saber como revisar também as dependências indiretas,
 
 ### Artur Goulão, Humanos
 
-Artur está construindo uma rede de confiança para agentes e discutiu como definir o que um agente pode fazer e registrar quem autorizou cada ação. A Humanos, segundo ele, já está em produção em mais de 350 instituições, entre elas empresas de saúde e fintechs. Todo agente age com autorização de uma pessoa, seja para mexer em dinheiro, publicar código ou acessar prontuários.
+Na Humanos, Artur está construindo uma rede de confiança para agentes. A questão dele é como definir o que um agente pode fazer e registrar quem autorizou cada ação. A empresa, contou, já está em produção em mais de 350 instituições, entre elas empresas de saúde e fintechs. Todo agente age com autorização de uma pessoa, seja para mexer em dinheiro, publicar código ou acessar prontuários.
 
-Ele dividiu a confiança em tempo de execução em quatro perguntas:
+Ele dividiu a confiança em tempo de execução nestas perguntas:
 
 1. houve uma pessoa que autorizou?
 2. qual agente recebeu a autorização?
 3. qual era o escopo da autoridade para aquela ação, uma ligação ou uma chamada de API?
 4. se algo der errado, como verificar?
 
-A resposta é um protocolo criptográfico baseado nas credenciais verificáveis do W3C, versão 2.0. A peça central é o mandato, a credencial que diz que uma pessoa autorizou um agente, um sistema ou outra pessoa, com regras, restrições e escopo programáveis. Cada agente tem identidade, ligada à pessoa ou à organização por trás dele. E cada ação gera um recibo assinado. Citando o Diogo, que tinha falado antes, Artur explicou que a Humanos usa registros assinados para permitir verificar as autorizações e as ações. Tudo é assinado num registro: a entrada de um agente na rede, cada autorização e cada chamada.
+A resposta é um protocolo criptográfico baseado nas credenciais verificáveis do W3C, versão 2.0. A peça central é o mandato, a credencial que diz que uma pessoa autorizou um agente, um sistema ou outra pessoa, com regras, restrições e escopo programáveis. Cada agente tem identidade, ligada à pessoa ou à organização por trás dele. E cada ação gera um recibo assinado. Citando o Diogo, que tinha falado antes, Artur explicou que tudo fica assinado num registro, para dar para verificar depois: a entrada de um agente na rede, cada autorização e cada chamada.
 
 A demo:
 
@@ -1009,7 +1007,7 @@ Outro problema é conferir se a permissão mostrada à pessoa corresponde à aç
 
 Alcides, professor da Universidade de Lisboa que trabalha com startups e escreve linguagens de programação, fechou o evento propondo que a plateia aprendesse uma linguagem nova em menos de cinco minutos. Ele começou com uma pergunta: alguém tem 100% de certeza de que o seu agente não vai publicar o código de um repositório privado num repositório ou numa issue pública? Ninguém levantou a mão.
 
-No exemplo dele, alguém pede ao agente para ler a última issue de um repositório público. A issue contém um ataque que manda o agente pegar o conteúdo privado e publicá-lo, e o agente obedece sem consultar ninguém e cria uma issue pública com o código. O exemplo combina acesso a dados privados, leitura de conteúdo não confiável e um meio de enviar informação para fora. Alcides relacionou essa combinação à trifecta letal descrita por Simon Willison. Segundo ele, Microsoft, WhatsApp e o Claude Cowork já tiveram problemas assim. Para ele, as saídas atuais não resolvem:
+No exemplo dele, alguém pede ao agente para ler a última issue de um repositório público. A issue contém um ataque que manda o agente pegar o conteúdo privado e publicá-lo, e o agente obedece sem consultar ninguém e cria uma issue pública com o código. O exemplo combina acesso a dados privados, leitura de conteúdo não confiável e um meio de enviar informação para fora. Alcides relacionou essa combinação à trifecta letal descrita por Simon Willison. Microsoft, WhatsApp e o Claude Cowork, disse, já tiveram problemas assim. Ele não vê solução nas saídas atuais:
 
 - **o modo automático**, em que o próprio LLM decide quando pedir aprovação, é probabilístico e usa os mesmos modelos, com os mesmos vieses. Se você não confia no agente, não deveria confiar no modo automático;
 - **pedir aprovação a cada ação** também falha, porque depois da terceira vez a pessoa aprova sem ler.
@@ -1018,7 +1016,7 @@ A proposta dele, na linha do que o Diogo defendeu antes, é usar métodos formai
 
 O protótipo dele se apoia no aeon, uma linguagem que ele criou e que, brincou, tem "101 usuários: eu e meus 100 bots". Em vez de executar direto, o agente escreve um plano em aeon, e o plano passa pelo verificador de tipos antes de qualquer execução. Se uma etapa viola as restrições expressas nos tipos, o plano inteiro é rejeitado. Num plano de dez passos em que só o último é inválido, nem o primeiro roda, e nenhuma chamada ao GitHub acontece. Para isso, o sistema de tipos precisa ser forte. Ele comparou com o Lean, a linguagem que a OpenAI e a Anthropic usam nos avanços em matemática, que tem tipos dependentes. O aeon não é tão poderoso, mas é muito mais barato de usar, porque não exige escrever provas matemáticas.
 
-Na demo, três recursos:
+A demo passou por estes recursos:
 
 - **tipos lineares:** a sessão tem de ser consumida exatamente uma vez. Usar duas vezes dá erro, não usar também. O sistema de posse do Rust, disse, é só metade de um sistema linear. Isso impede que o agente pegue uma versão antiga da sessão e a reuse depois;
 - **tipos líquidos:** você anota a função com uma restrição lógica, como "o valor absoluto devolve um inteiro maior ou igual a zero", e a implementação precisa cumprir a especificação;
@@ -1035,15 +1033,15 @@ Na demo, três recursos:
 
 </div>
 
-Com isso, o plano que vazaria o código privado é rejeitado antes de começar. Alcides disse que a IA também pode gerar as anotações, e o verificador confere o plano contra as restrições que elas expressam. Ele contou que já aplicaram a abordagem a software de drones, achando bugs sem rodar o código, a pipelines de ciência de dados, para evitar contaminação de dados, e a software de robótica, onde acharam erros de configuração, e agora a sandboxes mais seguras. O código está aberto.
+Com isso, o plano que vazaria o código privado é rejeitado antes de começar. Alcides disse que a IA também pode gerar as anotações, e o verificador confere o plano contra as restrições que elas expressam. Ele contou que já aplicaram a abordagem a software de drones, achando bugs sem rodar o código, a pipelines de ciência de dados, para evitar contaminação de dados, e a software de robótica, onde acharam erros de configuração. Agora estão levando a abordagem a sandboxes mais seguras. O código está aberto.
 
 Depois dele, a organização agradeceu a palestrantes, patrocinadores, voluntários e equipe, pediu feedback ("quem nos odeia e quem nos ama estão errados, a verdade está no meio") e anunciou uma última atividade. David Gomes, que no ano anterior tinha feito uma das palestras favoritas do organizador e hoje está na SpaceXAI, ia conduzir no andar de cima uma sessão de design de sistemas no quadro branco, sem slides, para quem quisesse discutir os próprios projetos paralelos.
 
 ## O que ficou em aberto
 
-Algumas perguntas ficaram sem resposta nas palestras. Duarte pediu avaliações que mostrem quando vale a pena adotar um modelo de português europeu. Simão discutiu o risco de o agente alterar os critérios usados para avaliar o próprio trabalho. Oğuz mostrou outro problema, em que as notas da avaliação melhoram enquanto as respostas ficam menos úteis para os clientes.
+Duarte pediu avaliações que mostrem quando vale a pena adotar um modelo de português europeu. Simão discutiu o risco de o agente alterar os critérios usados para avaliar o próprio trabalho. Oğuz mostrou outro problema, em que as notas da avaliação melhoram enquanto as respostas ficam menos úteis para os clientes.
 
-Na segurança, as propostas tratavam de riscos diferentes. Diogo falou de isolamento e controle de acesso. Alcides mostrou a verificação de um plano antes da execução. Artur apresentou autorizações com escopo definido e registros assinados das ações. São mecanismos que podem ser combinados, mas uma autorização não substitui o isolamento, e um plano aprovado pelo verificador ainda depende das regras que foram definidas.
+Na segurança, Diogo falou de isolamento e controle de acesso. Alcides mostrou a verificação de um plano antes da execução. Artur apresentou autorizações com escopo definido e registros assinados das ações. Dá para usar os três juntos. O mandato de Artur registra quem autorizou, mas não isola o agente, e o verificador de Alcides só barra o que as restrições escritas nos tipos proíbem.
 
 ## O lugar
 
