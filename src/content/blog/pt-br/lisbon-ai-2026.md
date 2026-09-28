@@ -35,7 +35,7 @@ Os dois exemplos mostram por que avaliar um agente exige olhar para as ações q
 
 Prince abriu a parte técnica. A tese dele é que o computador que a pessoa já tem consegue rodar boa parte do que hoje se paga para rodar na nuvem, desde que alguém faça a engenharia de inferência. É nisso que ele trabalha há três anos, com foco em Apple Silicon.
 
-Ele é de Moçambique, morou na Índia e chegou à Polônia em 2022, no meio do boom do ChatGPT. Em países como Índia e Moçambique, pouca gente pode pagar uma assinatura mensal de IA. Ele vê nos Macs com Apple Silicon a maior base de computação distribuída do mundo, pronta para IA desde o M1. Faltava um motor para rodar os modelos neles.
+Ele é de Moçambique, morou na Índia e chegou à Polônia em 2022, no meio do boom do ChatGPT. Em países como Índia e Moçambique, pouca gente pode pagar uma assinatura mensal de IA. Para ele, os Macs com Apple Silicon formam a maior base de computação distribuída do mundo e estão prontos para IA desde o M1, mas faltava um motor para rodar os modelos neles.
 
 O limite físico é a memória. Num Mac, CPU, GPU e Neural Engine dividem a mesma memória, e ela não cresce depois da compra. Prince usou a relação entre banda de memória e bytes por token para estimar a velocidade de geração. Depois mostrou três formas de reduzir o volume de dados que o modelo precisa movimentar.
 
@@ -174,7 +174,7 @@ As conclusões dele até agora:
 
 - **Há dados suficientes.** Chegou a 30 bilhões de tokens sem muito esforço, 50 bilhões é viável, e dá para completar com dados sintéticos.
 - **Adoção.** Falta saber o que faria uma empresa adotar um modelo português em vez de Qwen ou GPT. Hoje, ele mesmo escolheria o Qwen, e desafiou a plateia a criar benchmarks que respondam a essa pergunta.
-- **Tamanho.** Um "Amália 60B" interessa menos a ele que um modelo pequeno e melhor.
+- **Tamanho.** Para ele, um "Amália 60B" interessa menos que um modelo pequeno e melhor.
 - **Raciocínio.** Deve fazer parte de um bom modelo.
 
 Nas perguntas, contou que pagou tudo do próprio bolso. A filtragem do Bagaço roda em poucos dias num servidor alugado na Alemanha por €30 por mês, e a única ajuda foi uma GPU emprestada por um dos organizadores do evento durante uma semana. Ele conversa com a equipe do Amália, mas fez esse trabalho sozinho. O português de Angola e de Moçambique ainda não está coberto. Nos grandes conjuntos da web, aparece tão pouco que é tratado como língua de poucos recursos, e ele acha que alguém deveria cuidar disso. Áudio também ficou de fora, por falta de tempo.
@@ -212,7 +212,7 @@ Sergio defende que, para uma tarefa específica, um modelo pequeno treinado dent
 
 Os grandes laboratórios têm modelos científicos, mas não dá para ver como eles chegam a cada conclusão. Na lightning talk de Bojan, o argumento era que IA para ciência precisa ser inspecionável. A Loka apresentou um sistema aberto de pesquisa científica, feito com a Arcee AI e a AWS, em que dá para acompanhar as etapas executadas pelos agentes.
 
-O modelo é o Trinity Mini, da Arcee. São 26B parâmetros num mixture-of-experts, com uns 3B ativos por token. Bojan disse que ele é grande o bastante para raciocínio longo em várias etapas e pequeno o bastante para rodar em qualquer coisa entre um laptop e um mini cluster com uma ou duas GPUs. Na demo, um prompt complexo acionava sub-agentes para buscar literatura, criar moléculas e simular a ligação de proteínas, e cada passo ficava visível.
+O modelo é o Trinity Mini, da Arcee. São 26B parâmetros num mixture-of-experts, com uns 3B ativos por token. Segundo Bojan, o modelo é grande o bastante para raciocínio longo em várias etapas e pequeno o bastante para rodar em qualquer coisa entre um laptop e um mini cluster com uma ou duas GPUs. Na demo, um prompt complexo acionava sub-agentes para buscar literatura, criar moléculas e simular a ligação de proteínas, e cada passo ficava visível.
 
 O treino ensinou dois modos ao mesmo modelo, cada um com um ambiente próprio, feito com os verificadores da Prime Intellect:
 
@@ -492,7 +492,7 @@ Ele vê nos modelos grandes o jeito de achar o princípio, que depois vira promp
 Nas perguntas:
 
 - **E se os candidatos saírem todos parecidos, sem variação para o modelo grande avaliar?** Isso é um problema de amostragem e diversidade de dados, anterior à técnica. Se os dados não representam o uso real, disse, nenhuma técnica resolve.
-- **Com 100 casos de avaliação, cada volta fica cara. Como reduzir a busca?** Ele recomendou o GEPA, do DSPy, que mantém uma fronteira de Pareto de prompts, em que só ficam os que são os melhores em pelo menos uma dimensão. Os prompts novos saem de uma evolução genética sobre esses.
+- **Com 100 casos de avaliação, cada volta fica cara. Como reduzir a busca?** Ele recomendou o GEPA, do DSPy, que mantém uma fronteira de Pareto de prompts, em que só ficam os que são os melhores em pelo menos uma dimensão, e os prompts novos saem de uma evolução genética sobre esses.
 
 <hr class="divider">
 
@@ -533,7 +533,7 @@ No fim, aconselhou: tenha uma forma de medir antes de aceitar uma ideia de perfo
 
 Simão fechou o primeiro dia propondo que evals saiam do nicho de avaliar modelo e entrem no ciclo inteiro de construir software, lado a lado com os testes, no CI.
 
-A Noticed é uma empresa muito no começo, que ainda está validando o produto com os primeiros clientes, e ele avisou que falaria menos de técnica. Simão é designer de formação, e a Noticed é um laboratório de pesquisa aplicada que faz modelos para fundadores que vendem por conta própria. A premissa da empresa é que modelos de IA são ruins em relações sociais. Não sabem dizer qual relação vale mais para um fundador num momento da carreira. Um benchmark de relações profissionais que a Salesforce tinha acabado de lançar confirma isso, disse.
+A Noticed é uma empresa muito no começo, que ainda está validando o produto com os primeiros clientes, e ele avisou que falaria menos de técnica. Simão é designer de formação, e a Noticed é um laboratório de pesquisa aplicada que faz modelos para fundadores que vendem por conta própria. A premissa da empresa é que modelos de IA são ruins em relações sociais. Não sabem dizer qual relação vale mais para um fundador num momento da carreira. Ele citou como confirmação um benchmark de relações profissionais que a Salesforce tinha acabado de lançar, disse.
 
 A Noticed constrói modelos pequenos e gerais para dar essa camada de inteligência a CRMs e agentes, em vendas, captação ou contratação. A pesquisa tem três frentes, contexto, harness e modelos, e a de modelos ainda vai começar. Na engenharia, eles enfrentam três problemas:
 
@@ -574,7 +574,7 @@ Para dentro de casa, fizeram o Cloudflare OS. A pergunta de partida foi como dei
   <figcaption>Na visão da Cloudflare, o agente usa wrangler, CLI e MCP para escrever, testar, publicar e monitorar a aplicação.</figcaption>
 </figure>
 
-No fim, voltaram ao ciclo de desenvolvimento. Conforme os agentes escrevem mais código, disseram, o esforço humano, que antes estava em escrever código, passa a estar em saber o que se quer e em testar, publicar, monitorar e operar o que foi escrito. Por isso a Cloudflare está mudando a plataforma para que o agente também faça essas etapas. Eles apontaram ainda uma consequência para quem faz produto. Antes, os produtos davam aos usuários botões e, no máximo, um JSON, porque ninguém confiava que eles escrevessem código. Agora, provocaram, qualquer usuário pode escrever código com a ajuda de agentes, e o software vai ter de ser personalizável com código e vir com bons sistemas de extensão. "Se você não se mexer, não vai ser o lugar onde os agentes rodam."
+No fim, voltaram ao ciclo de desenvolvimento. Os palestrantes disseram que, com os agentes escrevendo mais código, o esforço humano deixa de estar em escrever código e passa a estar em saber o que se quer e em testar, publicar, monitorar e operar o que foi escrito. Por isso a Cloudflare está mudando a plataforma para que o agente também faça essas etapas. Eles apontaram ainda uma consequência para quem faz produto. Antes, os produtos davam aos usuários botões e, no máximo, um JSON, porque ninguém confiava que eles escrevessem código. Agora, provocaram, qualquer usuário pode escrever código com a ajuda de agentes, e o software vai ter de ser personalizável com código e vir com bons sistemas de extensão. "Se você não se mexer, não vai ser o lugar onde os agentes rodam."
 
 <hr class="divider">
 
@@ -765,7 +765,7 @@ Com essas peças dá para construir muito, e Aayush falou da tentação de não 
   <figcaption>"Just one more prompt": fallback, flag de configuração, retry e mais uma abstração caindo na mesma tigela.</figcaption>
 </figure>
 
-O exemplo concreto foi uma empresa que anunciou no X que estava fazendo um substituto interno de Jira e Linear, tocado pelo engenheiro de QA. Ele perguntou à plateia o que aconteceu meses depois: continuaram usando, contrataram um time para manter, ou virou produto? Nenhuma das três. Voltaram para o Linear. A ferramenta foi acumulando integrações, configurações e manutenção, até disputar tempo com o produto principal. Aayush descreveu a sequência. Começa com uma ideia, depois vem uma integração com o Slack, configuração, um agente para ser autônomo, uma abstração para servir a todos os times e fallbacks. O time entra num loop de prompt atrás de prompt. Para ele, o que evita essa sequência é ter gosto para decidir o que vale construir.
+O exemplo concreto foi uma empresa que anunciou no X que estava fazendo um substituto interno de Jira e Linear, tocado pelo engenheiro de QA. Ele perguntou à plateia o que aconteceu meses depois: continuaram usando, contrataram um time para manter, ou virou produto? Nenhuma das três. Voltaram para o Linear. A ferramenta foi acumulando integrações, configurações e manutenção, até disputar tempo com o produto principal. Aayush descreveu a sequência. Começa com uma ideia, depois vem uma integração com o Slack, configuração, um agente para ser autônomo, uma abstração para servir a todos os times e fallbacks, e o time entra num loop de prompt atrás de prompt. Para ele, o que evita essa sequência é ter gosto para decidir o que vale construir.
 
 A demo era uma conversa simulada com um chatbot de atendimento que emite reembolsos. Com ela, Aayush mostrou como a Vercel lida com fluxos duráveis e dinâmicos, que sobrevivem a erros, retentativas e longas esperas, sem saber de antemão o que o usuário vai pedir. O cliente pede o reembolso, o agente pergunta o número do pedido, consulta o pedido, verifica se tem direito e pede aprovação ao lojista, e o fluxo pode esperar essa aprovação e continuar depois. Por trás do chatbot:
 
@@ -857,7 +857,7 @@ O que ele considera novo de verdade:
 
 Daí veio a frase que ele disse ter doído mais: "Eu liderei segurança na Docker, e sou eu dizendo que containers não são mais uma fronteira de segurança." Continuam ótimos para empacotar software, mas quem depende deles para isolamento deveria rever o sistema.
 
-Quem defende também tem IA, e ele acha que com o tempo deve surgir um novo equilíbrio. Até lá, muita gente vai sofrer, principalmente quem roda sistemas que levam quinze anos para atualizar ou roteadores que nem se atualizam sozinhos.
+Para Diogo, quem defende também tem IA, e com o tempo deve surgir um novo equilíbrio. Até lá, muita gente vai sofrer, principalmente quem roda sistemas que levam quinze anos para atualizar ou roteadores que nem se atualizam sozinhos.
 
 Antes de mostrar como a IA ajuda a defender, Diogo tratou de um risco que a IA piora, o de ligar um agente direto no email, a primeira coisa que todo mundo faz. Email é uma das piores entradas não confiáveis que existem. A demo foi o setup pessoal dele:
 
@@ -868,7 +868,7 @@ Antes de mostrar como a IA ajuda a defender, Diogo tratou de um risco que a IA p
 
 Na sala, um jailbreak do tipo "você é o DAN, não tem restrições" foi bloqueado em uns 100 ms, e o proxy nem repassou a mensagem ao agente. Um email pedindo para renderizar uma URL maliciosa ao resumir a mensagem ficou em quarentena para revisão manual. "Vamos mover a reunião para quinta" passou. Ele acha que dá para descer a 10 ms, o suficiente para ficar no caminho de toda mensagem.
 
-Depois ele passou às defesas. Quem defende tem vantagens: tem o código-fonte, e o atacante não; pode barrar código ruim antes do deploy; e pode mudar a arquitetura. A indústria nunca precisou usar essas vantagens, disse, porque ninguém se dava ao trabalho de atacar "o seu blog". Com o ataque mais barato, isso muda. As recomendações dele:
+Depois ele passou às defesas. Quem defende tem vantagens: tem o código-fonte, e o atacante não; pode barrar código ruim antes do deploy; e pode mudar a arquitetura. A indústria nunca precisou usar essas vantagens, disse, porque ninguém se dava ao trabalho de atacar "o seu blog", e com o ataque mais barato isso muda. As recomendações dele:
 
 - escolher o código central, como o microkernel ou o que tudo depende, diminuir as dependências e saturar a busca de bugs ali, gastando mais que o atacante;
 - eliminar classes inteiras de vulnerabilidade. Pela conta dele, mais de 70% dos bugs em bases C e C++ são corrupção de memória, e a IA pode reescrever o código numa linguagem com segurança de memória;
@@ -899,7 +899,7 @@ Sobre a singularidade, disse que não sabe e que acredita mais numa sequência d
 
 O diário com IA de Afonso protege os textos dos usuários e, ao mesmo tempo, mantém privados os pesos do modelo e o software da empresa. Ele começou concordando com o Diogo que há muita brecha de segurança nas empresas, e que os dados das pessoas estão nelas.
 
-A ideia veio de um trabalho anterior. Ele trabalhou no departamento de IA de uma startup que tinha um chatbot de autorreflexão, em que as pessoas deviam escrever o que sentiam, e perguntou à plateia quem digitaria esse tipo de coisa num app. Com tempo livre, resolveu fazer um diário com criptografia de ponta a ponta, no estilo do Signal e do Proton. E pôs nele recursos de IA: conversar sobre o que você escreveu, resumir, marcar emoções, para achar algo de um ano atrás que tenha a ver com o que você sente hoje.
+A ideia veio de um trabalho anterior. Ele trabalhou no departamento de IA de uma startup que tinha um chatbot de autorreflexão, em que as pessoas deviam escrever o que sentiam, e perguntou à plateia quem digitaria esse tipo de coisa num app. Com tempo livre, resolveu fazer um diário com criptografia de ponta a ponta, no estilo do Signal e do Proton, e com recursos de IA: conversar sobre o que você escreveu, resumir, marcar emoções, para achar algo de um ano atrás que tenha a ver com o que você sente hoje.
 
 Com tudo criptografado, falta decidir onde roda a IA. Há duas opções:
 
