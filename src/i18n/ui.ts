@@ -48,6 +48,13 @@ export const ui = {
     'contact.title': 'Contato',
     'contact.location': 'Lisboa, Portugal',
     'blog.recentPosts': 'Posts Recentes',
+    'projects.title': 'Projetos paralelos',
+    'projects.zelus':
+      'Gestão de condomínios, com acompanhamento de ocorrências e um assistente de IA baseado nos dados do condomínio.',
+    'projects.campfire':
+      'Extrai tarefas, decisões e prazos de conversas, com responsáveis, datas e o rastro até a fonte.',
+    'projects.robotloupe':
+      'Revisão com humano no loop para mudanças de banco de dados geradas por IA, checando impacto e padrões antes de publicar.',
     'blog.title': 'Blog',
     'blog.description': 'Artigos sobre desenvolvimento front-end, React e tecnologias web',
     'blog.articleCount': 'artigo',
@@ -108,6 +115,13 @@ export const ui = {
     'contact.title': 'Contact',
     'contact.location': 'Lisbon, Portugal',
     'blog.recentPosts': 'Recent Posts',
+    'projects.title': 'Side projects',
+    'projects.zelus':
+      "Condominium management, with issue tracking and an AI assistant grounded in the condominium's data.",
+    'projects.campfire':
+      'Pulls tasks, decisions and deadlines out of conversations, with owners, due dates and a trail back to the source.',
+    'projects.robotloupe':
+      'Human-in-the-loop review for AI-generated database changes, checking impact and standards before they ship.',
     'blog.title': 'Blog',
     'blog.description': 'Articles about front-end development, React and web technologies',
     'blog.articleCount': 'article',

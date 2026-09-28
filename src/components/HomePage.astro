@@ -3,7 +3,7 @@ import { getCollection } from 'astro:content'
 import BaseLayout from '../layouts/BaseLayout.astro'
 import Navigation from '../components/Navigation.astro'
 import { useTranslations, formatDate, getPostUrl, getLocalizedPath } from '../i18n/utils'
-import { DEV_STACK } from '../lib/site'
+import { DEV_STACK, SIDE_PROJECTS } from '../lib/site'
 
 interface Props {
   lang: 'pt-br' | 'en'
@@ -140,6 +140,21 @@ const sortedPosts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.
             </article>
           )
         })}
+      </div>
+    </section>
+
+    <!-- Side Projects Section -->
+    <section class="mx-auto mt-32 max-w-7xl px-8" id="projects">
+      <h2 class="mb-12 text-3xl font-bold">{t('projects.title')}</h2>
+      <div class="grid grid-cols-1 gap-8 md:grid-cols-3">
+        {SIDE_PROJECTS.map((project) => (
+          <article class="group">
+            <a href={project.url} target="_blank" rel="noopener" class="block">
+              <h3 class="mb-2 text-xl font-semibold group-hover:underline">{project.name}</h3>
+              <p class="text-gray-700 dark:text-gray-300">{t(`projects.${project.key}`)}</p>
+            </a>
+          </article>
+        ))}
       </div>
     </section>
   </main>

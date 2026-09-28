@@ -3,7 +3,7 @@
 // callers pass plain data extracted from content collections.
 
 import { ui } from '../i18n/ui'
-import { SITE_TITLE, SITE_DESCRIPTION, SITE_EMAIL, SITE_URL, SOCIAL_LINKS, DEV_STACK } from './site'
+import { SITE_TITLE, SITE_DESCRIPTION, SITE_EMAIL, SITE_URL, SOCIAL_LINKS, DEV_STACK, SIDE_PROJECTS } from './site'
 import { APPEARANCES, speakingUrl } from './speaking'
 
 export type Lang = 'en' | 'pt-br'
@@ -74,7 +74,11 @@ ${DEV_STACK.join(', ')}
 
 ${postList(recent)}
 
-[${t['nav.blog']}](${absolute(`${prefix}/blog/`)}) · [${t['nav.speaking']}](${absolute(`${prefix}/speaking/`)}) · [${t['nav.about']}](${absolute(`${prefix}/about/`)}) · [${t['nav.contact']}](${absolute(`${prefix}/contact/`)}) · [${t['nav.privacy']}](${absolute(`${prefix}/privacy/`)})
+## ${t['projects.title']}
+
+${SIDE_PROJECTS.map((project) => `- [${project.name}](${project.url}): ${t[`projects.${project.key}`]}`).join('\n')}
+
+[${t['nav.blog']}](${absolute(`${prefix}/blog/`)}) · [${t['nav.about']}](${absolute(`${prefix}/about/`)}) · [${t['nav.contact']}](${absolute(`${prefix}/contact/`)}) · [${t['nav.privacy']}](${absolute(`${prefix}/privacy/`)})
 
 ${footerNote(lang)}
 `

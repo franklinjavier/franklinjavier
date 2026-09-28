@@ -4,7 +4,7 @@ description: Como entrar em contato com Franklin Javier - email, LinkedIn, GitHu
 lang: pt-br
 ---
 
-A melhor forma de falar comigo é por email. Leio tudo o que chega na minha caixa de entrada e faço o possível para responder mensagens genuínas sobre engenharia, consultoria, palestras, mentoria ou problemas interessantes de front-end.
+A melhor forma de falar comigo é por email. Leio tudo o que chega na minha caixa de entrada e faço o possível para responder mensagens genuínas sobre engenharia, consultoria, mentoria ou problemas interessantes de front-end.
 
 ## Canais
 
@@ -18,7 +18,6 @@ A melhor forma de falar comigo é por email. Leio tudo o que chega na minha caix
 - Vagas e consultoria de engenharia front-end em nível principal/staff
 - Liderança técnica, revisões de arquitetura e auditorias de performance em aplicações React e Node.js
 - Desenvolvimento agêntico: harness de agentes, skills, evals e como deixar agentes de código confiáveis num codebase real
-- Palestras em tech talks, conferências e eventos de comunidade
 - Mentoria e pair programming para pessoas desenvolvedoras front-end
 - Feedback sobre algum artigo publicado neste blog
 

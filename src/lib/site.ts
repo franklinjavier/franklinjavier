@@ -37,6 +37,22 @@ export const KNOWS_ABOUT = [
   'Engineering leadership',
 ]
 
+// Side projects, rendered on the homepage and in its markdown twin.
+// Descriptions live in the translations under `projects.<key>`.
+export const SIDE_PROJECTS = [
+  { key: 'zelus', name: 'Zelus', url: 'https://zelus.sh/?utm_source=FranklinJavier&utm_medium=site' },
+  {
+    key: 'campfire',
+    name: 'Project Campfire',
+    url: 'https://projectcampfire.io/?utm_source=FranklinJavier&utm_medium=site',
+  },
+  {
+    key: 'robotloupe',
+    name: 'Robot Loupe',
+    url: 'https://robotloupe.com/?utm_source=FranklinJavier&utm_medium=site',
+  },
+] as const
+
 // Day-to-day stack, rendered on the homepage and in its markdown twin.
 export const DEV_STACK = [
   'React / Typescript',
