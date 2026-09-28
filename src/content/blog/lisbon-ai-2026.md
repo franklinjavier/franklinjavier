@@ -17,7 +17,7 @@ draft: false
 
 On September 23 and 24, I attended [Lisbon AI](https://lisbonai.org/) at the Champalimaud Centre in Belém. It was the second edition of a conference for people who build with AI. Day one covered models, agents and evals, and day two covered applied AI and security. These are my notes from all 32 talks, with the photos and videos I took, the demos and the audience questions. Use the index to jump to any talk.
 
-In [Will Burstein's](#will-burstein-promptlayer) demo, an agent was asked to revoke an attendee's badge and refused, as the policy required. The answer was right, but the log of tool calls showed that, before refusing, it had looked up the attendee's record without the required authorization. In [Yomi Eluwande's](#yomi-eluwande-dash0) talk, an agent made a performance optimization in Dash0's flame graph, which was spending 23 of its 32 ms of rendering on drawing text. The agent reported the chart was now 46% faster and visually correct. It wasn't. The change had altered the truncation rule, and the sample labels were now cut off.
+In [Will Burstein's](#from-vibes-to-scorecards-building-review-loops-for-production-ai) demo, an agent was asked to revoke an attendee's badge and refused, as the policy required. The answer was right, but the log of tool calls showed that, before refusing, it had looked up the attendee's record without the required authorization. In [Yomi Eluwande's](#red-teaming-ai-performance-ideas-what-survived-measurement) talk, an agent made a performance optimization in Dash0's flame graph, which was spending 23 of its 32 ms of rendering on drawing text. The agent reported the chart was now 46% faster and visually correct. It wasn't. The change had altered the truncation rule, and the sample labels were now cut off.
 
 Both examples show why evaluating an agent means looking at the actions it takes. Other talks covered how to run those evaluations, restrict permissions and keep context between tasks.
 
@@ -25,13 +25,15 @@ There were also demos of local models, SVG generation, robotics and drug discove
 
 ## Index
 
-[Day 1, September 23](#day-1-september-23): [Prince Canuma](#prince-canuma-neywa-labs) · [Joan Rodriguez](#joan-rodriguez-quiverai) · [Chema Garabito](#chema-garabito-sperid-labs) · [Duarte Carmo](#duarte-carmo) · [Sergio Paniego](#sergio-paniego-hugging-face) · [Bojan Jakimovski](#bojan-jakimovski-loka) · [Matt Carey](#matt-carey-cloudflare) · [Harshil Agrawal](#harshil-agrawal-cloudflare) · [Marcelo Lebre](#marcelo-lebre-remote) · [Vitalii Ratushnyi](#vitalii-ratushnyi-harmixai) · [Peter Kirkham](#peter-kirkham-posthog) · [Pedro Rodrigues](#pedro-rodrigues-supabase) · [Will Burstein](#will-burstein-promptlayer) · [Thom Jenkins](#thom-jenkins-petsapp) · [Oğuz Gültepe](#oğuz-gültepe-peec-ai) · [Yomi Eluwande](#yomi-eluwande-dash0) · [Simão Nogueira](#simão-nogueira-noticed)
+[Day 1, September 23](#day-1-september-23): [Prince Canuma](#inference-engineering-frontier-open-models-on-the-hardware-you-already-own) · [Joan Rodriguez](#design-as-visual-code) · [Chema Garabito](#spatial-ai-and-3d-world-models) · [Duarte Carmo](#the-hitchhikers-guide-to-european-portuguese-llms) · [Sergio Paniego](#training-a-coding-agent-through-a-harness-you-did-not-write) · [Bojan Jakimovski](#teaching-an-open-model-to-do-science) · [Matt Carey](#agents-that-scale) · [Harshil Agrawal](#ditching-containers-for-computer) · [Marcelo Lebre](#icarus-operational-harness) · [Vitalii Ratushnyi](#agentic-memory-in-a-nutshell-dos-and-donts) · [Peter Kirkham](#teaching-your-product-to-fix-and-build-itself) · [Pedro Rodrigues](#apps-are-the-new-tools) · [Will Burstein](#from-vibes-to-scorecards-building-review-loops-for-production-ai) · [Thom Jenkins](#your-agent-is-ignoring-you-fixing-instruction-drift-in-production-ai) · [Oğuz Gültepe](#prompt-learning-distilling-expensive-reasoning-into-fast-production-prompts) · [Yomi Eluwande](#red-teaming-ai-performance-ideas-what-survived-measurement) · [Simão Nogueira](#evals-as-the-code-factory)
 
-[Day 2, September 24](#day-2-september-24): [Cloudflare](#cloudflare) · [Steve Ruiz](#steve-ruiz-tldraw) · [Daniel Bukac](#daniel-bukac-duvo) · [Francisco Leal](#francisco-leal-ub-robotics) · [Cristiana Carpinteiro](#cristiana-carpinteiro-loka) · [Lukas Wirth](#lukas-wirth-zed) · [Aayush Kapoor](#aayush-kapoor-vercel) · [Luis Monteiro](#luis-monteiro-pixelmatters) · [CNCA and BSC AI Factory](#cnca-and-bsc-ai-factory) · [Diogo Mónica](#diogo-mónica-anchorage-and-haun-ventures) · [Afonso Oliveira](#afonso-oliveira-olivegradient) · [Boda Zhao](#boda-zhao-yld) · [Nina Torgunakova](#nina-torgunakova-evil-martians) · [Artur Goulão](#artur-goulão-humanos) · [Alcides Fonseca](#alcides-fonseca-university-of-lisbon)
+[Day 2, September 24](#day-2-september-24): [Cloudflare](#cloudflare) · [Steve Ruiz](#bringing-tldraw-offline) · [Daniel Bukac](#screen-aware-voice-agents-a-new-interaction-pattern) · [Francisco Leal](#vdg-a-physical-ai-system-that-works-without-cloud-gps-or-reliable-network) · [Cristiana Carpinteiro](#foundation-models-for-drug-discovery-from-hype-to-the-lab) · [Lukas Wirth](#post-git-agentic-collaboration) · [Aayush Kapoor](#the-slopbowl-ification-of-software) · [Luis Monteiro](#design-is-over) · [CNCA and BSC AI Factory](#cnca-and-bsc-ai-factory) · [Diogo Mónica](#ai-escapes-super-intelligence-or-super-incompetence) · [Afonso Oliveira](#building-ai-people-trust-without-giving-away-the-product) · [Boda Zhao](#prevent-supply-chain-attacks-in-coding-agents) · [Nina Torgunakova](#trust-nothing-ship-safely-surviving-the-supply-chain-attack-era) · [Artur Goulão](#runtime-trust-for-ai-building-the-network-that-verifies-autonomous-systems) · [Alcides Fonseca](#guardrailing-your-agents-with-types-and-logic)
 
 ## Day 1: September 23
 
-### Prince Canuma, Neywa Labs
+### Inference Engineering: Frontier Open Models on the Hardware You Already Own
+
+*Prince Canuma, Neywa Labs*
 
 Prince opened the technical part of the day by arguing that the computer you already own can run most of what people pay to run in the cloud today. What's missing, he said, is inference engineering, and he has spent the last three years doing that work for Apple Silicon.
 
@@ -75,7 +77,9 @@ At the end, Prince said intelligence per watt has gone up over the last three ye
 
 <hr class="divider">
 
-### Joan Rodriguez, QuiverAI
+### Design as visual code
+
+*Joan Rodriguez, QuiverAI*
 
 QuiverAI trains models that generate SVG, with elements a designer can select and edit separately.
 
@@ -106,7 +110,9 @@ In the Q&A:
 
 <hr class="divider">
 
-### Chema Garabito, Sperid Labs
+### Spatial AI and 3D World Models
+
+*Chema Garabito, Sperid Labs*
 
 Chema thinks AI will only understand the physical world once it can generate 3D, the same way LLMs came to understand language by generating text. Sperid Labs, which he founded, researches spatial intelligence, and its longer-term goal is what he calls visual general intelligence.
 
@@ -133,7 +139,9 @@ Asked about distillation, Chema explained that the full model needs data-center 
 
 <hr class="divider">
 
-### Duarte Carmo
+### The Hitchhiker’s Guide to European Portuguese LLMs
+
+*Duarte Carmo*
 
 Duarte opened by talking about his grandmother, a geologist. Whenever they travel through the north of Portugal, she unfolds the paper map, even with Google Maps in her pocket, and points out a village here, a river there, a road not worth taking. He said the talk would be that kind of map for European Portuguese LLMs, with more questions than answers.
 
@@ -181,7 +189,9 @@ In the Q&A, he said he paid for everything himself. Filtering Bagaço runs in a 
 
 <hr class="divider">
 
-### Sergio Paniego, Hugging Face
+### Training a coding agent through a harness you did not write
+
+*Sergio Paniego, Hugging Face*
 
 Sergio wanted to know whether open tools can do what the labs do with their coding agents. An agent, he said, is always a harness, like Claude Code, OpenCode or Codex, plus a model, and the frontier model reports show those models are trained in reinforcement learning environments built with their harnesses. In a few months, he pointed out, we went from writing code to using agents.
 
@@ -210,7 +220,9 @@ Sergio's argument is that, for a specific task, a small model trained inside a h
 
 <hr class="divider">
 
-### Bojan Jakimovski, Loka
+### Teaching an Open Model to do Science
+
+*Bojan Jakimovski, Loka*
 
 The big labs have scientific models, but you can't inspect how they reach each conclusion. In a lightning talk, Bojan argued that AI for science can't be a black box. Loka presented an open scientific research system, built with Arcee AI and AWS, in which you can follow the steps the agents take.
 
@@ -227,7 +239,9 @@ The system separates evidence gathering from writing the answer and includes an 
 
 <hr class="divider">
 
-### Matt Carey, Cloudflare
+### Agents that Scale
+
+*Matt Carey, Cloudflare*
 
 Matt opened the agents block with an infrastructure question: what happens when everyone, not only people who code, has an agent running all the time? He argued that containers can't handle that scale and that isolates can.
 
@@ -268,7 +282,9 @@ During the Q&A, someone asked whether websites and CMSs survive the agent era. M
 
 <hr class="divider">
 
-### Harshil Agrawal, Cloudflare
+### Ditching Containers for Computer
+
+*Harshil Agrawal, Cloudflare*
 
 PromptMotion, a prompt-driven video editor, animated the Lisbon AI speaker poster on screen. In the first version, the Cloudflare logo came out wrong and Harshil's photo was faded. He sent the right logo and asked for more opacity on the photo, and the agent redid the video. The talk was about how he moved PromptMotion out of a container and distributed its parts across Cloudflare services, a production version of what Matt had described.
 
@@ -291,7 +307,9 @@ The last step was putting it all together. "I'm a lazy developer in the age of A
 
 <hr class="divider">
 
-### Marcelo Lebre, Remote
+### Icarus, operational harness
+
+*Marcelo Lebre, Remote*
 
 Icarus is an internal Remote app that lets employees, whether they code or not, use agents with access to the company's context. Marcelo called his talk about it a report on his own "AI psychosis", half stubbornness, half hallucination.
 
@@ -319,7 +337,9 @@ With Icarus, Remote also built the "AI for Actual Work" site, used by thousands 
 
 <hr class="divider">
 
-### Vitalii Ratushnyi, Harmix.AI
+### Agentic Memory in a nutshell: Do’s and Don’ts
+
+*Vitalii Ratushnyi, Harmix.AI*
 
 Every agent has memory, whether the people who built it know it or not, and Vitalii's question was whether it was designed on purpose.
 
@@ -350,7 +370,9 @@ In the Q&A:
 
 <hr class="divider">
 
-### Peter Kirkham, PostHog
+### Teaching your product to fix and build itself
+
+*Peter Kirkham, PostHog*
 
 My notes on Peter's talk start in the middle, when he had already posed the question: how much of the work of looking at the data, finding the problem, fixing it and shipping can be automated? He thinks almost all of it can, since PostHog already has the data. PostHog Desktop is where they test this, with a new interface and without affecting current customers.
 
@@ -372,7 +394,9 @@ The goal, Peter said, is for PostHog to fix and improve itself. Desktop is in be
 
 <hr class="divider">
 
-### Pedro Rodrigues, Supabase
+### Apps Are the New Tools
+
+*Pedro Rodrigues, Supabase*
 
 First came LLMs exchanging text, then tools, which turned them into agents, and the interface stayed text or voice. Pedro, who is from Lisbon and attended the first edition of the event as an audience member, talked about interactive interfaces inside conversations with agents, like charts and controls for following an incident. Since people are visual, he said, UI will play a big role as long as a person has to follow or approve what the agent does. He listed the proposals under way: MCP Apps, A2UI and generative UI.
 
@@ -394,7 +418,9 @@ In the Q&A:
 
 <hr class="divider">
 
-### Will Burstein, PromptLayer
+### From Vibes to Scorecards: Building Review Loops for Production AI
+
+*Will Burstein, PromptLayer*
 
 Will's talk was about moving from eyeballing evaluations to a scorecard that decides what goes to production.
 
@@ -433,7 +459,9 @@ The only audience question was about agents with many conversation turns. Will s
 
 <hr class="divider">
 
-### Thom Jenkins, PetsApp
+### Your Agent Is Ignoring You: Fixing Instruction Drift in Production AI
+
+*Thom Jenkins, PetsApp*
 
 Thom is a vet and a Cambridge-trained zoologist. From behavioral ecology he brought the method of studying a complex system by changing one variable at a time, treating the model as an organism and the prompt as its environment. He found that giving a model more context can make it ignore instructions that are written in the prompt.
 
@@ -467,7 +495,9 @@ In the Q&A:
 
 <hr class="divider">
 
-### Oğuz Gültepe, Peec AI
+### Prompt Learning: Distilling Expensive Reasoning Into Fast Production Prompts
+
+*Oğuz Gültepe, Peec AI*
 
 Peec AI uses an expensive model to teach a prompt to a cheap one, and Oğuz walked through how.
 
@@ -498,7 +528,9 @@ In the Q&A:
 
 <hr class="divider">
 
-### Yomi Eluwande, Dash0
+### Red teaming AI performance ideas: what survived measurement
+
+*Yomi Eluwande, Dash0*
 
 Yomi asked agents for ideas to speed up Dash0's charts. Then he reviewed the proposals and measured the changes in the browser, a process he calls red teaming.
 
@@ -531,7 +563,9 @@ His advice was to have a way to measure before accepting a performance idea from
 
 <hr class="divider">
 
-### Simão Nogueira, Noticed
+### Evals as the code factory
+
+*Simão Nogueira, Noticed*
 
 Simão closed the first day with a proposal to use evals beyond model evaluation, across the whole software-building cycle, alongside tests in CI.
 
@@ -580,7 +614,9 @@ At the end they came back to the development cycle. In their view, the hard part
 
 <hr class="divider">
 
-### Steve Ruiz, tldraw
+### Bringing tldraw offline
+
+*Steve Ruiz, tldraw*
 
 Steve, who was also the MC, used a times-tables game he made for his daughter to show how he works with AI now. He described his role as the creative director of a swarm of agents, choosing projects he could never do alone.
 
@@ -625,7 +661,9 @@ During the Q&A, someone who had tried something similar asked how he kept from g
 
 <hr class="divider">
 
-### Daniel Bukac, Duvo
+### Screen-aware voice agents: a new interaction pattern
+
+*Daniel Bukac, Duvo*
 
 Duvo's voice agent watches the screen while it interviews a person about their work. Daniel started his talk with two things he learned preparing the talk. You can point an agent at any website and steal its entire design system, and if you hand in your talk description more than two weeks in advance, it goes stale, because some lab releases something new.
 
@@ -654,7 +692,9 @@ In the Q&A:
 
 <hr class="divider">
 
-### Francisco Leal, UB Robotics
+### VdG: a Physical AI system that works without cloud, GPS, or reliable network
+
+*Francisco Leal, UB Robotics*
 
 VdG is a field robot that works without the cloud, without GPS and without a reliable network. Francisco's team has four people, has been working full time for a little over a month and came entirely from software. "We're going from bits to atoms," he said. "Full stack," he added, now means AI, hardware, software and 3D printing.
 
@@ -685,7 +725,9 @@ Someone asked how much the person-carrying robot will cost. The answer was about
 
 <hr class="divider">
 
-### Cristiana Carpinteiro, Loka
+### Foundation Models for Drug Discovery: from Hype to the Lab
+
+*Cristiana Carpinteiro, Loka*
 
 Cristiana started from Dario Amodei's claim that it will be possible to cure most diseases in ten years and compared it with what she sees at work. She said AI already speeds up molecule discovery, but the bottleneck is in clinical trials.
 
@@ -724,7 +766,9 @@ In the Q&A:
 
 <hr class="divider">
 
-### Lukas Wirth, Zed
+### Post-Git Agentic Collaboration
+
+*Lukas Wirth, Zed*
 
 Zed wants several people and several agents to work in the same conversation. Git doesn't cover this, Lukas said, because it stores snapshots of code and leaves out the conversation and decisions that led to them. When work changes hands, someone has to rebuild that state.
 
@@ -748,7 +792,9 @@ In the Q&A, someone asked whether the two were in the same process on OpenAI's s
 
 <hr class="divider">
 
-### Aayush Kapoor, Vercel
+### The Slopbowl-ification of Software
+
+*Aayush Kapoor, Vercel*
 
 Aayush works on Vercel's AI SDK and split his talk into two halves: the SDK basics, then his view of what happens to software when writing code gets very cheap.
 
@@ -777,7 +823,9 @@ In the Q&A, someone asked how you differentiate on taste when the mess comes fro
 
 <hr class="divider">
 
-### Luis Monteiro, Pixelmatters
+### Design is over
+
+*Luis Monteiro, Pixelmatters*
 
 Luis started by asking how many designers were in the audience, then quoted the talk's title, "design is over", which people keep saying on X ("I built this site with Claude and I don't need a designer"). He said to assume it's true. Luis argued that AI made prototypes cheap, but that someone still has to choose what to build and review the result. The product cycle of research, wireframe, visuals, prototype and code existed to reduce the risk of paying to build the wrong thing, and now building is cheap.
 
@@ -822,7 +870,9 @@ They also handed out free tickets to Web Summit.
 
 <hr class="divider">
 
-### Diogo Mónica, Anchorage and Haun Ventures
+### AI Escapes: Super Intelligence or Super Incompetence
+
+*Diogo Mónica, Anchorage and Haun Ventures*
 
 Diogo's subject was the reports of models that escaped test environments at the labs, and he criticized the security of those environments. He proposed judging each escape by the competence of both sides, the models and the people trying to contain them. His conclusion was that the models were capable and the labs were careless.
 
@@ -897,7 +947,9 @@ On the singularity, he said he doesn't know and believes more in a sequence of S
 
 <hr class="divider">
 
-### Afonso Oliveira, OliveGradient
+### Building AI people trust without giving away the product
+
+*Afonso Oliveira, OliveGradient*
 
 Afonso presented an AI journal that protects what users write while keeping the company's model weights and software private. He started by agreeing with Diogo that companies have plenty of security holes, and user data sits in them.
 
@@ -928,7 +980,9 @@ In the Q&A, someone suggested on-device models, like Apple's, would solve the pr
 
 <hr class="divider">
 
-### Boda Zhao, YLD
+### Prevent supply chain attacks in coding agents
+
+*Boda Zhao, YLD*
 
 My notes on Boda's talk start in the middle, when he was already on the first of three layers of defense against supply chain attacks on coding agents: the model, the harness and the sandbox. His recommendation was to use all three together. His closing rule was to aim for coverage instead of perfection.
 
@@ -948,7 +1002,9 @@ My notes on Boda's talk start in the middle, when he was already on the first of
 
 <hr class="divider">
 
-### Nina Torgunakova, Evil Martians
+### Trust nothing, ship safely: surviving the supply chain attack era
+
+*Nina Torgunakova, Evil Martians*
 
 Nina opened with a list of recent npm supply chain attacks:
 
@@ -978,7 +1034,9 @@ In the Q&A, someone asked how to review indirect dependencies too, since you can
 
 <hr class="divider">
 
-### Artur Goulão, Humanos
+### Runtime Trust for AI: Building the Network That Verifies Autonomous Systems
+
+*Artur Goulão, Humanos*
 
 Every agent acts on a person's authority, Artur pointed out, whether it's moving money, shipping code or accessing medical records. His talk was about how to define what an agent can do and record who authorized each action. He said Humanos is already in production at more than 350 institutions, including healthcare companies and fintechs.
 
@@ -1005,7 +1063,9 @@ Another problem is checking whether the permission shown to the person matches t
 
 <hr class="divider">
 
-### Alcides Fonseca, University of Lisbon
+### Guardrailing your Agents with Types and Logic
+
+*Alcides Fonseca, University of Lisbon*
 
 Alcides, a professor at the University of Lisbon who works with startups and writes programming languages, closed the event by proposing the audience learn a new language in under five minutes. He started with a question: is anyone 100% sure their agent won't publish code from a private repository to a public repository or issue? Nobody raised a hand.
 
