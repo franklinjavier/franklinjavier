@@ -17,9 +17,9 @@ draft: false
 
 Nos dias 23 e 24 de setembro fui ao [Lisbon AI](https://lisbonai.org/), no Centro Champalimaud, em Belém. É a segunda edição de uma conferência feita para quem constrói com IA. O primeiro dia foi sobre modelos, agentes e evals, e o segundo, sobre IA aplicada e segurança.
 
-Reuni aqui minhas notas das 32 palestras, com as fotos e os vídeos que fiz, as demos e as perguntas do público. Os nomes foram conferidos na [página de palestrantes](https://lisbonai.org/speakers/). O índice permite ir direto a cada palestra.
+Reuni aqui minhas notas das 32 palestras, com as fotos e os vídeos que fiz, as demos e as perguntas do público. O índice permite ir direto a cada palestra.
 
-Na apresentação de [Will Burstein](#will-burstein-promptlayer), um agente recusou um pedido para revogar a credencial de um participante. A resposta estava de acordo com a política, mas o registro de execução mostrou que ele já tinha consultado dados que não podia acessar. Na de [Yomi Eluwande](#yomi-eluwande-dash0), uma alteração acelerou um gráfico e também mudou o corte dos textos, e o agente tinha dito que o resultado estava visualmente correto.
+Na demo de [Will Burstein](#will-burstein-promptlayer), um agente recebeu o pedido de revogar a credencial de um participante e recusou, como a política mandava. A resposta estava certa, mas o registro das chamadas de ferramentas mostrou que, antes de recusar, ele tinha consultado o cadastro do participante sem a autorização necessária. Na palestra de [Yomi Eluwande](#yomi-eluwande-dash0), um agente fez uma otimização de performance no flame graph da Dash0, que gastava 23 dos 32 ms de renderização desenhando texto. O agente disse que o gráfico tinha ficado 46% mais rápido e visualmente correto. Não estava. A mudança alterou a regra de truncamento, e os rótulos das amostras passaram a aparecer cortados.
 
 Os dois exemplos mostram por que avaliar um agente exige olhar para as ações que ele executa. Outras palestras trataram de como organizar essa avaliação, limitar permissões e preservar o contexto entre tarefas. Houve também demos de modelos locais, geração de SVG, robótica e descoberta de medicamentos.
 

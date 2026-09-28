@@ -15,9 +15,9 @@ draft: false
   <figcaption>The Champalimaud Centre auditorium a few minutes before the opening on September 23. The window faces the Tagus.</figcaption>
 </figure>
 
-On September 23 and 24, I attended [Lisbon AI](https://lisbonai.org/) at the Champalimaud Centre in Belém. It was the second edition of a conference for people who build with AI. Day one covered models, agents and evals, and day two covered applied AI and security. These are my notes from all 32 talks, with the photos and videos I took, the demos and the audience questions. I checked the names against the [speakers page](https://lisbonai.org/speakers/). Use the index to jump to any talk.
+On September 23 and 24, I attended [Lisbon AI](https://lisbonai.org/) at the Champalimaud Centre in Belém. It was the second edition of a conference for people who build with AI. Day one covered models, agents and evals, and day two covered applied AI and security. These are my notes from all 32 talks, with the photos and videos I took, the demos and the audience questions. Use the index to jump to any talk.
 
-In [Will Burstein's](#will-burstein-promptlayer) presentation, an agent refused a request to revoke an attendee's badge. Its answer followed the policy, but the execution trace showed that it had already accessed a record it wasn't allowed to read. In [Yomi Eluwande's](#yomi-eluwande-dash0) talk, a change made a chart faster while also changing how its labels were truncated. The agent had reported that the result was visually correct.
+In [Will Burstein's](#will-burstein-promptlayer) demo, an agent was asked to revoke an attendee's badge and refused, as the policy required. The answer was right, but the log of tool calls showed that, before refusing, it had looked up the attendee's record without the required authorization. In [Yomi Eluwande's](#yomi-eluwande-dash0) talk, an agent made a performance optimization in Dash0's flame graph, which was spending 23 of its 32 ms of rendering on drawing text. The agent reported the chart was now 46% faster and visually correct. It wasn't. The change had altered the truncation rule, and the sample labels were now cut off.
 
 Both examples show why evaluating an agent means looking at the actions it takes. Other talks covered how to run those evaluations, restrict permissions and keep context between tasks.
 
