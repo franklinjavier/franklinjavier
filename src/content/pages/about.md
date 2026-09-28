@@ -12,7 +12,7 @@ Beyond that, I work on React and Node.js architecture, web performance and obser
 
 ## Experience
 
-- **Principal Engineer** at Stone Giant Studio (2023 - Present), home of [Erastus](https://erast.us/?utm_source=CV_FranklinJavier&utm_medium=cv), a workforce planning and resource management product for architecture and engineering firms, now with over 1,500 registered users
+- **Principal Engineer** at Stone Giant Studio (2023 - Present), home of [Erastus](https://erast.us/?utm_source=CV_FranklinJavier&utm_medium=cv), practice management software for architecture and engineering firms that puts timesheets, time off, staffing, project scheduling and profitability in one place, with payroll and accounting integrations, now with over 1,500 registered users
 - **Principal Engineer** at Grupo Boticário (2021 - 2023)
 - **Sr Digital Product Manager** at Grupo Boticário (2020)
 - **Head of Technology** at Beleza na Web (2015 - 2020)
