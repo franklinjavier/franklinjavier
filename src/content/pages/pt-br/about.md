@@ -4,11 +4,11 @@ description: Quem é Franklin Javier - Principal Engineer com 19 anos de experi�
 lang: pt-br
 ---
 
-Sou Franklin Javier, Principal Engineer. Trabalho com front-end desde 2007, em aplicações web e mobile de alta performance, e hoje lidero iniciativas de front-end e de engenharia com agentes em times de produto.
+Sou Franklin Javier, Principal Engineer, com front-end desde 2007 em aplicações web e mobile de alta performance. Hoje o foco é liderar iniciativas de front-end e de engenharia com agentes em times de produto.
 
-Hoje quase tudo que faço passa por IA. Monto harnesses e orquestração para agentes de código no Claude Code, Cursor, Codex e Gemini CLI: as skills, os evals e os limites que deixam um agente confiável o bastante para ir para produção. Este site segue a mesma ideia: cada página tem uma versão em markdown, servida por negociação de conteúdo, e um guia [llms.txt](/llms.txt), para que agentes leiam o site tão bem quanto um navegador.
+Quase tudo passa por IA agora. Harnesses e orquestração para agentes de código no Claude Code, Cursor, Codex e Gemini CLI: as skills, os evals e os limites que deixam um agente confiável o bastante para ir para produção. Este site segue a mesma ideia: cada página tem uma versão em markdown, servida por negociação de conteúdo, e um guia [llms.txt](/llms.txt), para que agentes leiam o site tão bem quanto um navegador.
 
-Fora isso, trabalho com arquitetura React e Node.js, performance e observabilidade, design systems e acessibilidade (a11y). No dia a dia uso React, TypeScript, Remix, Node.js e Tailwind CSS.
+Fora isso, tenho experiência com arquitetura React e Node.js, performance e observabilidade, design systems e acessibilidade (a11y). Stack do dia a dia: React, TypeScript, React Router, Remix, Node.js, Tailwind CSS, Drizzle e Postgres, além de Vercel AI SDK, Playwright e Vitest.
 
 ## Experiência
 
@@ -17,7 +17,7 @@ Fora isso, trabalho com arquitetura React e Node.js, performance e observabilida
 - **Sr Digital Product Manager** no Grupo Boticário (2020)
 - **Head de Tecnologia** na Beleza na Web (2015 - 2020)
 
-Também faço mentoria e pair programming, dou palestras e participo de podcasts. Cada participação está listada, com o link original, na [página de palestras](/pt-br/speaking/).
+Mentoria, pair programming, [palestras e podcasts](/pt-br/speaking/) também entram na conta.
 
 ## Projetos paralelos
 
@@ -31,4 +31,4 @@ Publico boa parte do que faço em código aberto, inclusive projetos de IA. Mais
 
 Mais antigo e ainda em produção: o [storefront](https://github.com/franklinjavier/storefront), o boilerplate em Node.js e Redis que a gente padronizou para e-commerce. Ele roda as lojas da Beleza na Web e do Grupo Boticário, e aguenta mais de 1M de requisições por minuto. Meus outros repositórios estão em [github.com/franklinjavier](https://github.com/franklinjavier).
 
-Moro em Lisboa, Portugal, e escrevo neste site em inglês e português sobre desenvolvimento front-end, React, performance e cultura de engenharia. Você pode ler meus artigos no [blog](/pt-br/blog/), ver minhas [palestras e podcasts](/pt-br/speaking/), ver meu [currículo](/pt-br/cv/) ou [entrar em contato](/pt-br/contact/).
+Moro em Lisboa, Portugal, e escrevo neste site em inglês e português sobre desenvolvimento front-end, React, performance e cultura de engenharia. Você pode ler meus artigos no [blog](/pt-br/blog/), ver minhas [palestras e podcasts](/pt-br/speaking/), abrir meu [currículo](/pt-br/cv/) ou [entrar em contato](/pt-br/contact/).

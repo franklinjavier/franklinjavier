@@ -8,7 +8,7 @@ I'm Franklin Javier, a Principal Engineer. I've been doing front-end since 2007,
 
 These days almost everything I do involves AI. I build harnesses and orchestration for coding agents across Claude Code, Cursor, Codex and Gemini CLI: the skills, evals and guardrails that make an agent reliable enough to ship with. This site follows the same idea: every page has a markdown version, served through content negotiation, plus an [llms.txt](/llms.txt) guide, so agents can read it as well as a browser can.
 
-Beyond that, I work on React and Node.js architecture, web performance and observability, design systems and accessibility (a11y). Day to day I use React, TypeScript, Remix, Node.js and Tailwind CSS.
+Beyond that, I work on React and Node.js architecture, web performance and observability, design systems and accessibility (a11y). Day to day I use React, TypeScript, React Router, Remix, Node.js, Tailwind CSS, Drizzle and Postgres, plus the Vercel AI SDK, Playwright and Vitest.
 
 ## Experience
 

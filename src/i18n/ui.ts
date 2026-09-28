@@ -29,11 +29,11 @@ export const ui = {
     'speaking.invite': 'Para convites de palestra, entre em contato.',
     'hero.title': 'Oi, eu sou o Frank',
     'hero.bio1':
-      'Sou Principal Engineer e trabalho com front-end há 19 anos, em aplicações web e mobile de alta performance. Hoje quase tudo que faço passa por IA: monto harnesses para agentes, cuido da orquestração e crio as ferramentas que deixam agentes de código confiáveis.',
+      'Principal Engineer, com 19 anos de front-end em aplicações web e mobile de alta performance. Hoje quase todo o trabalho passa por IA: harnesses para agentes, orquestração e as ferramentas que deixam agentes de código confiáveis.',
     'hero.bio2':
-      'Trabalho com arquitetura React e Node.js, performance e observabilidade, e com desenvolvimento com agentes: skills, evals e orquestração entre Claude Code, Cursor, Codex e Gemini CLI. Também cuido de acessibilidade e design systems, para a interface funcionar para todo mundo.',
+      'A base é arquitetura React e Node.js, performance e observabilidade, e desenvolvimento com agentes: skills, evals e orquestração entre Claude Code, Cursor, Codex e Gemini CLI. Acessibilidade e design systems também fazem parte, para a interface funcionar para todo mundo.',
     'hero.bio3':
-      'Fora do trabalho, faço mentoria, pair programming e contribuo com open source, inclusive em projetos de IA e ferramentas para agentes. Também dou palestras e participo de podcasts.',
+      'Fora do trabalho: mentoria, pair programming e open source, inclusive projetos de IA e ferramentas para agentes. Palestras e podcasts entram nessa conta também.',
     'experience.title': 'Experiência Profissional',
     'experience.role1': 'Principal Engineer',
     'experience.company1': 'Stone Giant Studio',

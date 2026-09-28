@@ -40,7 +40,7 @@ export const KNOWS_ABOUT = [
 // Day-to-day stack, rendered on the homepage and in its markdown twin.
 export const DEV_STACK = [
   'React / Typescript',
-  'Remix / Node.js',
+  'React Router / Remix / Node.js',
   'Tailwind CSS',
   'Performance Optimization',
   'AI Agents / Orchestration',
