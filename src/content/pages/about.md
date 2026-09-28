@@ -17,7 +17,7 @@ Beyond that, I work on React and Node.js architecture, web performance and obser
 - **Sr Digital Product Manager** at Grupo Boticário (2020)
 - **Head of Technology** at Beleza na Web (2015 - 2020)
 
-I also mentor, pair program, give talks and go on podcasts. Every appearance is listed, with its original link, on the [speaking page](/speaking/).
+I also mentor and pair program.
 
 ## Side projects
 

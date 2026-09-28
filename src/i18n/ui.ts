@@ -33,7 +33,7 @@ export const ui = {
     'hero.bio2':
       'A base é arquitetura React e Node.js, performance e observabilidade, e desenvolvimento com agentes: skills, evals e orquestração entre Claude Code, Cursor, Codex e Gemini CLI. Acessibilidade e design systems também fazem parte, para a interface funcionar para todo mundo.',
     'hero.bio3':
-      'Fora do trabalho: mentoria, pair programming e open source, inclusive projetos de IA e ferramentas para agentes. Palestras e podcasts entram nessa conta também.',
+      'Fora do trabalho: mentoria, pair programming e open source, inclusive projetos de IA e ferramentas para agentes.',
     'experience.title': 'Experiência Profissional',
     'experience.role1': 'Principal Engineer',
     'experience.company1': 'Stone Giant Studio',
@@ -93,7 +93,7 @@ export const ui = {
     'hero.bio2':
       'I work on React and Node.js architecture, performance and observability, and on agentic development: skills, evals and orchestration across Claude Code, Cursor, Codex and Gemini CLI. I also care about accessibility and design systems, so the interface works for everyone.',
     'hero.bio3':
-      'Outside work, I mentor, pair program and contribute to open source, including AI and agent tooling projects. I also give talks and go on podcasts.',
+      'Outside work, I mentor, pair program and contribute to open source, including AI and agent tooling projects.',
     'experience.title': 'Work Experience',
     'experience.role1': 'Principal Engineer',
     'experience.company1': 'Stone Giant Studio',

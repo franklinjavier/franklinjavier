@@ -17,7 +17,7 @@ Fora isso, tenho experiência com arquitetura React e Node.js, performance e obs
 - **Sr Digital Product Manager** no Grupo Boticário (2020)
 - **Head de Tecnologia** na Beleza na Web (2015 - 2020)
 
-Mentoria, pair programming, [palestras e podcasts](/pt-br/speaking/) também entram na conta.
+Mentoria e pair programming também entram na conta.
 
 ## Projetos paralelos
 
