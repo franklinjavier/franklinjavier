@@ -12,7 +12,7 @@ Fora isso, tenho experiência com arquitetura React e Node.js, performance e obs
 
 ## Experiência
 
-- **Principal Engineer** na Stone Giant Studio (2023 - Presente), onde nasceu o [Erast](https://erast.us/?utm_source=CV_FranklinJavier&utm_medium=cv), produto de planejamento de equipe e gestão de recursos para escritórios de arquitetura e engenharia, hoje com mais de 1.500 usuários cadastrados
+- **Principal Engineer** na Stone Giant Studio (2023 - Presente), onde nasceu o [Erastus](https://erast.us/?utm_source=CV_FranklinJavier&utm_medium=cv), produto de planejamento de equipe e gestão de recursos para escritórios de arquitetura e engenharia, hoje com mais de 1.500 usuários cadastrados
 - **Principal Engineer** no Grupo Boticário (2021 - 2023)
 - **Sr Digital Product Manager** no Grupo Boticário (2020)
 - **Head de Tecnologia** na Beleza na Web (2015 - 2020)
