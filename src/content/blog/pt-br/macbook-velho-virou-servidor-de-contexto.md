@@ -1,7 +1,7 @@
 ---
 title: MacBook velho virou servidor de contexto
 date: 2026-10-08
-description: Um MacBook Pro de 2017, de tampa fechada na tomada, passou a guardar o contexto de trabalho entre máquinas, projetos e agentes. Do celular eu abro uma sessão de código, e qualquer agente retoma de onde o outro parou.
+description: Um MacBook Pro de 2017, de tampa fechada na tomada, passou a guardar o contexto de trabalho entre máquinas, projetos e agentes. Começo uma task no celular, e qualquer agente pega dali, com o mesmo contexto, sem eu repetir nada.
 author: Franklin Javier
 tags: ia, agentes, self-hosting, tooling, produtividade
 lang: pt-br
