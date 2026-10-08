@@ -111,6 +111,8 @@ Uses Tailwind CSS 4 with CSS-first configuration:
 
 Posts must be created in BOTH languages. Follow these steps:
 
+When writing or editing a blog post, follow `.claude/skills/human-ai` (English) and `.claude/skills/humanizar` (PT-BR). Both are Apache 2.0, from https://github.com/fabricioctelles/skills.
+
 1. Create English version in `src/content/blog/{slug}.md`:
 
 ```markdown
