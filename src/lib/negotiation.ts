@@ -46,6 +46,37 @@ export function markdownPathFor(pathname: string): string {
 }
 
 /**
+ * Absolute URL of a page's markdown twin. Shared by the
+ * <link rel="alternate" type="text/markdown"> in BaseLayout and the
+ * `Link` response header set by the middleware, so both stay identical.
+ */
+export function markdownUrlFor(pathname: string): string {
+  return `${SITE_URL}${markdownPathFor(pathname)}`
+}
+
+/**
+ * Value of the RFC 8288 `Link` header that advertises a page's markdown twin.
+ */
+export function markdownLinkHeader(pathname: string): string {
+  return `<${markdownUrlFor(pathname)}>; rel="alternate"; type="text/markdown"`
+}
+
+/** Shape of every built post slug: lowercase ASCII letters, digits, hyphens. */
+export const POST_SLUG_PATTERN = /^[a-z0-9-]+$/
+
+/**
+ * True for blog post pages (/blog/<slug> and /pt-br/blog/<slug>, with or
+ * without trailing slash) whose slug matches POST_SLUG_PATTERN. Excludes the
+ * blog indexes, tag pages and files such as .md twins. Percent-encoded,
+ * uppercase or other characters return false, so the middleware emits no
+ * Link header rather than one that differs from the page's own head link.
+ */
+export function isPostPath(pathname: string): boolean {
+  const match = /^(?:\/pt-br)?\/blog\/([^/]+)\/?$/.exec(pathname)
+  return match !== null && match[1] !== 'tag' && POST_SLUG_PATTERN.test(match[1]!)
+}
+
+/**
  * Maps a `<page>.md` URL (e.g. /blog/foo.md) to its page path (/blog/foo),
  * so the markdown twin is also reachable by appending .md to a page URL.
  * Returns null for the twins themselves (…/index.md) and any other path.

@@ -4,6 +4,8 @@ import {
   markdownPathFor,
   markdownSuffixPage,
   notFoundMarkdown,
+  isPostPath,
+  markdownLinkHeader,
 } from './src/lib/negotiation.js'
 
 // Vercel Edge Middleware: serves the pre-rendered markdown twin of a page
@@ -11,6 +13,9 @@ import {
 // `Accept: text/markdown`, per https://acceptmarkdown.com. Paths with no
 // markdown twin get a markdown 404 body so agents can recover.
 // Also serves `<page>.md` (e.g. /blog/foo.md) as the twin of /blog/foo/.
+// HTML responses for blog posts also get a `Link: <…/index.md>; rel="alternate";
+// type="text/markdown"` header, the same URL as the <link rel="alternate"> in
+// the page head. The homepages get their Link header from vercel.json instead.
 // Runs on extension-less page routes and .md paths; other assets are excluded.
 
 export const config = {
@@ -60,7 +65,10 @@ export default async function middleware(request: Request) {
     return rewrite(markdownUrl, { headers: MARKDOWN_HEADERS })
   }
 
-  return next({
-    headers: { Vary: 'Accept' },
-  })
+  const headers: Record<string, string> = { Vary: 'Accept' }
+  // Path-based on purpose (no per-request lookup): an unknown post slug, an
+  // HTML 404, still advertises a twin that 404s.
+  if (isPostPath(url.pathname)) headers.Link = markdownLinkHeader(url.pathname)
+
+  return next({ headers })
 }

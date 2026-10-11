@@ -7,11 +7,10 @@ import {
   SITE_DESCRIPTION,
   SITE_IMAGE,
   SITE_X_HANDLE,
-  SITE_URL,
   absoluteUrl,
   baseJsonLd,
 } from '../lib/site'
-import { markdownPathFor } from '../lib/negotiation'
+import { markdownUrlFor } from '../lib/negotiation'
 import { hreflangLinks, translationPair } from '../lib/alternates'
 
 interface Props {
@@ -62,7 +61,7 @@ const ogImage = absoluteUrl(image ?? SITE_IMAGE, Astro.site)
 const ogLocale = lang === 'pt-br' ? 'pt_BR' : 'en_US'
 const pageLang = lang === 'pt-br' ? 'pt-br' : 'en'
 const alternates = hreflangLinks(translationPair(pageLang, Astro.url.pathname, alternate))
-const markdownUrl = markdownTwin ? `${SITE_URL}${markdownPathFor(Astro.url.pathname)}` : undefined
+const markdownUrl = markdownTwin ? markdownUrlFor(Astro.url.pathname) : undefined
 ---
 
 <!doctype html>
