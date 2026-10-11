@@ -10,7 +10,7 @@ translationKey: always-on-agents
 
 Assisti à aula [How always-on agents work, do Lee Robinson (@leerob)](https://x.com/leerob/status/2108650243365736855), apresentada em Stanford CS146S em 8 de outubro de 2026. Quero construir um agente assim em um projeto meu: receber uma tarefa pelo chat, continuar trabalhando quando eu fechar o computador e voltar quando tiver algo importante para dizer.
 
-Os slides trazem os números 2 minutos, 15 segundos, 4.000 caracteres, 100 fatos, 30 eventos, 1280x800 e 100 mil tokens, e a regra dos 90% no mesmo padrão de shell. A espera de cerca de 10 minutos e a janela de cache de 10 a 60 minutos também vêm da aula. No plano ao final, a janela de 2 a 3 segundos, a interrupção em menos de 1 segundo e a meta de cache hit acima de 90% são propostas minhas.
+Os slides trazem os números 2 minutos, 15 segundos, 4.000 caracteres, 100 fatos, 30 eventos, 1280x800 e 100 mil tokens. A regra dos 90% no mesmo padrão de shell, a espera de cerca de 10 minutos e a janela de cache de 10 a 60 minutos também vêm da aula. No plano ao final, a janela de 2 a 3 segundos, a interrupção em menos de 1 segundo e a meta de cache hit acima de 90% são propostas minhas.
 
 ## O loop de terminal é o ponto de partida
 
@@ -33,7 +33,7 @@ O modelo recebe mensagens, pede tools e lê os resultados até terminar. Para tr
 <table>
 <thead><tr><th>Comportamento</th><th>Agente de terminal</th><th>Agente sempre ligado</th></tr></thead>
 <tbody>
-<tr><th scope="row">Execução</th><td>Para quando o laptop fecha.</td><td>Continua no servidor, atravessando falhas e deploys.</td></tr>
+<tr><th scope="row">Execução</th><td>Para quando o laptop fecha.</td><td>Continua no servidor e sobrevive a falhas e deploys.</td></tr>
 <tr><th scope="row">Computador</th><td>Usa o seu laptop.</td><td>Tem uma VM na nuvem, com desktop, browser e arquivos.</td></tr>
 <tr><th scope="row">Memória</th><td>Lembra da lista de mensagens.</td><td>Salva estado, memória e skills, e resume mensagens antigas.</td></tr>
 <tr><th scope="row">Resposta</th><td>Imprime o texto do modelo.</td><td>Envia mensagem por uma tool e pode ficar quieto.</td></tr>
@@ -47,7 +47,7 @@ O modelo recebe mensagens, pede tools e lê os resultados até terminar. Para tr
 
 A arquitetura tem três partes. Os apps recebem mensagens e mostram progresso. O servidor valida entradas, organiza a fila e executa o loop do agente. A VM executa as tools que precisam de um computador.
 
-O cliente cuida da interface; o servidor concentra o trabalho. O loop fica no servidor, separado tanto do app quanto da VM. Isso permite trocar de dispositivo, continuar com o laptop fechado e deixar trabalhos pesados, como transcrição e imagem, no servidor. Um deploy do loop também não depende da revisão da App Store.
+O cliente cuida da interface; o servidor concentra o trabalho. O loop fica no servidor, separado tanto do app quanto da VM. Isso permite trocar de dispositivo, continuar com o laptop fechado e deixar trabalhos pesados, como transcrição e imagem, no servidor. Um deploy do loop também não depende da revisão da App Store. Essa separação permite escalar com crescimento rápido. Um agente que trabalha por meses não pode viver no aparelho.
 
 Lee resume a regra de persistência assim:
 
@@ -63,17 +63,17 @@ Quando nada acontece, nada roda. Conversas, memória, rotinas e skills estão sa
 
 ## Cada conversa tem uma fila
 
-Uma mensagem sua é só uma das entradas. O sistema também recebe rotinas, webhooks, menções e threads no Slack, ligações, reuniões, mensagens de outro agente e avisos de trabalho em background concluído. Check-ins agendados também podem acordá-lo.
+Uma mensagem sua é só uma das entradas. O sistema também recebe rotinas, webhooks, menções, DMs e threads no Slack, ligações, reuniões, mensagens de outro agente e avisos de trabalho em background concluído. Check-ins agendados também podem acordá-lo.
 
 O caminho de entrada é este:
 
 1. O roteador descarta duplicatas e escolhe a conversa.
 2. A fila da conversa permite um turno por vez.
-3. O agente trabalha e decide se tem algo que justifique uma mensagem.
+3. O agente trabalha e decide se tem algo que valha dizer.
 
 Toda ativação registra a origem. O agente consegue distinguir um pedido seu de uma rotina ou de um webhook.
 
-No chat individual, sua mensagem entra na frente e pode interromper ou parar o turno atual. Grupos, Slack, rotinas e helpers entram no fim da fila. Mensagens rápidas são agrupadas em um lote, e cada lote vira um turno. O agente trabalha um lote por vez. Uma correção como “na verdade, faz na quinta” interrompe o trabalho e continua o mesmo pedido.
+No chat individual, sua mensagem entra na frente e interrompe ou para o turno atual. Grupos, Slack, rotinas e helpers entram no fim da fila. Mensagens rápidas são agrupadas em um lote, e cada lote vira um turno. O agente trabalha um lote por vez. Uma correção como “na verdade, faz na quinta” interrompe o trabalho e continua o mesmo pedido.
 
 ## O envio sobrevive a falhas
 
@@ -81,7 +81,7 @@ Quando você aperta enviar, o app mostra a mensagem imediatamente e a salva loca
 
 A mensagem segue para a fila. Durante o turno, o servidor salva cada passo no banco, incluindo a interação com o modelo e as tools.
 
-Para atualizar os dispositivos, o servidor manda um sinal mínimo de que algo mudou. Os apps buscam as mensagens novas no banco. A notificação não carrega os dados da conversa, então perder esse sinal não significa perder o conteúdo salvo.
+Para atualizar os dispositivos, o servidor manda um sinal mínimo de que algo mudou. Os apps buscam as mensagens novas no banco. A notificação não carrega os dados da conversa. Se o sinal se perde, as mensagens continuam no banco.
 
 Cada atualização tem um número de sequência. Os apps aplicam as mudanças em ordem e recarregam do banco quando falta uma sequência.
 
@@ -158,7 +158,7 @@ Se o modelo passa 90% do tempo no mesmo padrão de shell, esse padrão vira uma 
 
 Um modelo separado revisa ações arriscadas antes da execução. Se essa revisão automática bloquear a ação, o usuário recebe um pedido de aprovação. Sem resposta em 15 segundos, ela continua bloqueada.
 
-A origem do texto também importa. O sistema marca conteúdo de email e webhook como não confiável. Memória é informação, não instrução: um fato salvo não ganha autoridade para mandar o agente agir.
+A origem do texto também importa. O sistema marca conteúdo de email e webhook como não confiável. Memória é informação, não instrução.
 
 O sistema não envia email nem mensagem a terceiros sem um pedido do usuário. Rotinas novas precisam de aprovação. Envios irreversíveis, como email e Slack, passam por rascunho e confirmação de envio.
 
@@ -187,9 +187,9 @@ Quando o usuário abre o chat ou começa a digitar, o servidor já prepara o pro
 </table>
 </div>
 
-Um turno grande termina com mais de 100 mil tokens no prompt. Passam cerca de 10 minutos, e o sistema resume enquanto o cache do provedor ainda está quente, numa janela de 10 a 60 minutos. O resumo reaproveita o prefixo, e a próxima mensagem começa com contexto menor.
+Um turno grande termina com mais de 100 mil tokens no prompt. Passam cerca de 10 minutos, e o sistema resume enquanto o cache do provedor ainda está quente, numa janela de 10 a 60 minutos. O resumo é escrito reaproveitando o mesmo prefixo, e a próxima mensagem começa desse resumo curto.
 
-Essa compactação é pulada se um trabalho em background já estiver para acordar o agente. As últimas mensagens enviadas ao usuário são preservadas palavra por palavra. Também é possível resumir no meio de um turno longo demais.
+O sistema pula essa compactação quando um trabalho em background já vai acordar o agente. As últimas mensagens enviadas ao usuário são preservadas palavra por palavra. Também é possível resumir no meio de um turno longo demais.
 
 A aula lembra: "Toda compressão perde informação". O algoritmo de resumo é o ponto difícil.
 
@@ -252,7 +252,7 @@ Os blocos básicos vão além do loop: workflows duráveis, uso de computador, m
 8. Colocaria auto-review antes de shell, envio e pagamento, com bloqueio no timeout. Marcaria entradas externas com `<untrusted source=...>`, guardaria segredos em variáveis de ambiente e exigiria rascunho e confirmação para ações irreversíveis.
 9. Cada falha real viraria uma eval desde o início: tool errada, falou quando devia ficar quieto, cache miss ou ignorou a interrupção do usuário.
 
-Para aceitar a implementação, incluindo a suspensão por snapshot, eu exigiria estes resultados. São critérios propostos por mim:
+Eu só aceito a implementação, incluindo a suspensão por snapshot, quando estes resultados aparecerem. São critérios propostos por mim:
 
 - Fechar o cliente durante uma tarefa e reabrir mostra o progresso sem passos repetidos.
 - Matar o worker durante um turno permite retomar do último passo.

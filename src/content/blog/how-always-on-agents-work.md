@@ -10,7 +10,7 @@ translationKey: always-on-agents
 
 I want to give an agent a task over chat, close my laptop, and come back to work that has continued without me. Lee Robinson (@leerob) explains the engineering behind that behavior in [How always-on agents work](https://x.com/leerob/status/2108650243365736855), his Stanford CS146S lecture from October 8, 2026.
 
-The slide numbers are 2 minutes, 15 seconds, 4,000 characters, 100 facts, 30 events, 1280x800, and 100k tokens, along with the 90% shell rule below. The roughly 10-minute delay and 10-to-60-minute cache window also come from the lecture. The final section is my own plan: its example 2-to-3-second batch window, interruption under 1 second, and cache-hit target above 90% are my proposals.
+The figures shown on the slides are 2 minutes, 15 seconds, 4,000 characters, 100 facts, 30 events, 1280x800, and 100k tokens. The 90% shell rule below, the roughly 10-minute delay, and the 10-to-60-minute cache window also come from the lecture. The final section is my own plan: its example 2-to-3-second batch window, interruption under 1 second, and cache-hit target above 90% are my proposals.
 
 ## Start with the loop we already know
 
@@ -43,15 +43,15 @@ The model reads messages, requests tools, and uses their results to decide what 
 </table>
 </div>
 
-The intended interaction feels like messaging a colleague. You direct the work and can change course while it's running. A correction such as “actually, do it Thursday” interrupts the work and continues the same request. The agent should send useful updates and stay quiet otherwise. A separate model reviews risky actions so that routine work doesn't require approval for every command.
+The intended interaction feels like messaging a colleague. You direct the work and can change course while it's running. A correction that moves the task to Thursday interrupts the work and continues the same request. The agent should send useful updates and stay quiet otherwise. A separate model reviews risky actions so that routine work doesn't require approval for every command.
 
 ## Put the loop on the server
 
 The architecture separates the apps, the agent server, and the agent's computer. Apps accept input and display progress. The server validates and routes events, manages conversation queues, calls the model, and saves state. The VM runs tools that need a computer.
 
-The loop belongs on the server. That lets a user switch from desktop to phone without moving the work, and allows server changes to ship without waiting for App Store review. Heavy work such as transcription and image processing also stays off the client. An agent that works for months can't depend on keeping one device open.
+The loop belongs on the server. That lets a user switch from desktop to phone without moving the work, and allows server changes to ship without waiting for App Store review. Heavy work such as transcription and image processing also stays off the client. This separation lets the system scale as it grows rapidly. An agent that works for months can't depend on keeping one device open.
 
-The same separation applies to the VM. Conversations, memory, routines, and skills live in server-side storage. If a zero-day vulnerability needs a patch, the VM must be rebuilt without losing the agent's work. Putting the loop inside that machine would tie its lifetime to a resource the system needs to replace or shut down.
+The same separation applies to the VM. Conversations, memory, routines, and skills live in server-side storage. If a zero-day vulnerability needs a patch, the VM must be rebuilt without losing the agent's work. If the loop ran on the VM, rebuilding or shutting down that VM would stop the agent.
 
 ### Stop the process when it’s idle
 
@@ -59,17 +59,17 @@ After completing a turn, the agent process stops after 2 idle minutes. The VM sa
 
 When nothing happens, nothing runs. The saved state lets the next trigger bring the agent back. A scheduled routine that doesn't need computer access can finish while the VM stays asleep.
 
-## Events need a queue and a priority policy
+## Each conversation has a queue
 
-User messages can arrive through different apps. Other triggers include schedules, webhooks, Slack mentions and threads, calls, meetings, another agent, a completed background task, and scheduled check-ins.
+User messages can arrive through different apps. Other triggers include schedules, webhooks, Slack mentions, DMs, and threads, calls, meetings, another agent, a completed background task, and scheduled check-ins.
 
 A router deduplicates those events and chooses the conversation. Each conversation has a queue, with a single turn running at a time. Every activation records its source so the agent can distinguish a user request from a routine or an external service.
 
-The queue treats a direct message from the owner differently from other input. In a one-to-one chat, that message can interrupt or stop the current turn and move to the front. Group messages, Slack events, routines, and helpers go to the back. Rapid messages become one turn. The agent processes one batch at a time.
+The queue treats a direct message from the owner differently from other input. In a one-to-one chat, that message interrupts or stops the current turn and moves to the front. Group messages, Slack events, routines, and helpers go to the back. Rapid messages become one turn. The agent processes one batch at a time.
 
-Once activated, the agent still decides whether it has anything useful to say. Receiving an event doesn't oblige it to send a message.
+Once activated, the agent still decides whether it has anything useful to say. Getting an event doesn't mean the agent has to reply.
 
-## Make retries safe and updates recoverable
+## Retries and sync
 
 Sending begins on the client. The app displays the message immediately and stores it locally with a unique ID. The server ignores IDs it has already received, allowing the client to retry without creating duplicate messages.
 
@@ -103,7 +103,7 @@ The harness is the code and tool interface around the model. In the lecture, the
 
 The tool supports text, files, multiple-choice controls, and secure password input. New clients need to understand that output interface. The final send can also end the turn directly, saving another model call.
 
-Tool payloads can produce controls for each action. The lecture's login flow uses 1Password to fill only the open site; the model never receives the password. A Stripe Link payment waits for the user's allow-or-deny decision. An email draft shows the entire message with send and discard controls. Sometimes an emoji is enough.
+The client intercepts the payload and shows a control for that action. The lecture's login flow uses 1Password to fill only the open site; the model never receives the password. A Stripe Link payment waits for the user's allow-or-deny decision. An email draft shows the entire message with send and discard controls. Sometimes an emoji is enough.
 
 ### Load tool definitions when needed
 
@@ -126,13 +126,13 @@ For web pages, the agent can inspect the accessibility tree or DOM and target bu
 
 The main agent answers quick questions itself and delegates longer work so it remains available in chat. It sends a complete task description and gets a short report back. Helpers handle general work (shell, web, connectors, and cloud agents), browser and desktop use, and watching and reviewing video files. The cloud coding agent changes code on the same per-user VM. The computer-use helper takes one task at a time, handles clicks, and keeps screenshots out of the main agent's context. A task list tracks requests, and the main agent can check a helper, message it, or stop it.
 
-Keep the tool set stable between turns. An unavailable tool returns a clear error. Each tool's description and schema stay under 4,000 characters. State changes use a dedicated tool so a reviewer can inspect the change directly. If the model spends 90% of its time on the same shell pattern, that pattern becomes a tool.
+Keep the tool set stable between turns. An unavailable tool returns a clear error. Each tool's description and schema stay under 4,000 characters. Save state with a dedicated tool instead of shell, so the reviewer sees the change directly. If the model spends 90% of its time on the same shell pattern, that pattern becomes a tool.
 
 Errors should tell the agent how to proceed. The lecture supplies this example:
 
 > The computer is asleep. Use Shell or Read to wake it, then try again.
 
-## Review actions and preserve the source of instructions
+## Risky actions need a check
 
 A separate model checks risky actions before execution. If it blocks an action, the user receives an approval request. No response within 15 seconds leaves the action blocked.
 
@@ -157,13 +157,13 @@ Caching helps with repeated input, but the main agent still needs to limit what 
 <tr><th scope="row">Long tool output</th><td>A path to the file containing it.</td></tr>
 <tr><th scope="row">Tool-heavy work</th><td>A short helper report.</td></tr>
 <tr><th scope="row">Old messages</th><td>A summary.</td></tr>
-<tr><th scope="row">Older memories</th><td>Selected facts, with the rest available through search.</td></tr>
+<tr><th scope="row">Older memories</th><td>The most important facts; the rest stay searchable.</td></tr>
 <tr><th scope="row">Task instructions</th><td>A one-line pointer to a skill.</td></tr>
 </tbody>
 </table>
 </div>
 
-A large turn ends with more than 100k tokens in the prompt. About 10 minutes pass, then the system summarizes while the provider cache is still warm. The lecture gives a cache window of 10 to 60 minutes. Reusing the prefix for that summary lets the next user message start with less context.
+A large turn ends with more than 100k tokens in the prompt. About 10 minutes pass, then the system summarizes while the provider cache is still warm. The lecture gives a cache window of 10 to 60 minutes. The summary is written reusing that same prefix, and the next message starts from the short summary.
 
 This compaction is skipped when background work is about to wake the agent anyway. The latest messages sent to the user remain verbatim, and an excessively long turn can also be compacted before it ends. Compression loses information. The summary algorithm is the hard part.
 
@@ -204,9 +204,9 @@ Routines are prompts with cron-style schedules. Show the agent a task on its com
 
 ## Training and evaluation keep changing the implementation
 
-The lecture discusses training models for the harness. Supervised fine-tuning teaches tool formats and when to answer quickly. Reinforcement learning targets long instructions, choosing among hundreds of skills, accurate clicks, and collaboration with other agents. The main agent is tuned to answer in seconds; helpers are tuned to finish hours of work reliably.
+The lecture discusses training models for the harness. Supervised fine-tuning teaches the harness's tools and formats, and when to answer quickly. Reinforcement learning teaches the model to follow long instructions, pick the right skill among hundreds, click the right place, and work with other agents. The main agent is tuned to answer in seconds; helpers are tuned to finish hours of work reliably.
 
-Errors feed a daily development cycle: turn a failure into an evaluation case, change the harness, prompt, or inference, run the evaluations, and publish. The next model is then trained against the harness and those evaluations.
+Errors feed a daily development cycle: turn a failure into an evaluation case, change the harness, prompt, or inference, run the evaluations, and publish. The next model is trained on that harness and those evals.
 
 "Delete the product" is Lee's direction for reducing the code around the model as the model becomes able to do more of the work itself. The remaining problems include evaluating agents over weeks, replacing stale memories, honoring requests to forget, avoiding invented memories, prompt injection, deciding when to speak, coordinating agents that share a computer and memory (classic distributed-systems problems), and keeping idle costs close to zero.
 
@@ -230,7 +230,7 @@ I'd accept the implementation, including idle suspension, only when it met these
 
 - Closing the client during a task and reopening it shows progress without repeated steps.
 - Killing the worker during a turn resumes work from the last recorded step.
-- A correction such as “actually, do it Thursday” interrupts the active turn in less than 1 second.
+- A correction that moves the task to Thursday interrupts the active turn in less than 1 second.
 - Three rapid messages produce a single turn.
 - The prefix cache-hit rate stays above my 90% target over a long conversation: a hit means the next call reuses the prefix. Section hashes identify where the prefix changed.
 - An idle agent has no running process or VM.
