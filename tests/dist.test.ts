@@ -5,6 +5,8 @@ import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs'
 import { join, sep } from 'node:path'
 import { Window } from 'happy-dom'
 import { SERIES } from '../src/data/series'
+import middleware from '../middleware'
+import { isPostPath, POST_SLUG_PATTERN } from '../src/lib/negotiation'
 
 const DIST = join(import.meta.dir, '..', 'dist')
 
@@ -667,6 +669,40 @@ describe('markdown alternate link', () => {
     }
     for (const twin of twins) expect(pages).toContain(twin.replace(/index\.md$/, 'index.html'))
   })
+
+  test('every built post slug gets the middleware Link header', () => {
+    let count = 0
+    for (const base of ['blog', 'pt-br/blog']) {
+      for (const entry of readdirSync(join(DIST, base), { withFileTypes: true })) {
+        if (!entry.isDirectory() || entry.name === 'tag') continue
+        const path = `/${base}/${entry.name}/`
+        expect({ path, slug: POST_SLUG_PATTERN.test(entry.name) }).toEqual({ path, slug: true })
+        expect({ path, post: isPostPath(path) }).toEqual({ path, post: true })
+        count++
+      }
+    }
+    expect(count).toBeGreaterThan(10)
+  })
+
+  for (const path of [
+    '/blog/how-always-on-agents-work/',
+    '/pt-br/blog/como-funciona-um-agente-sempre-ligado/',
+  ]) {
+    test(`middleware Link header on ${path} matches the HTML alternate`, async () => {
+      const [href] = markdownAlternates(read(`${path.slice(1)}index.html`))
+      expect(href).toBeDefined()
+      const response = await middleware(
+        new Request(`https://franklinjavier.com${path}`, {
+          headers: {
+            accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+          },
+        }),
+      )
+      const linkUrl = /^<([^>]+)>/.exec(response.headers.get('link') ?? '')?.[1]
+      expect(linkUrl).toBe(href)
+      expect(existsSync(join(DIST, new URL(href).pathname))).toBe(true)
+    })
+  }
 })
 
 describe('inline diagrams', () => {

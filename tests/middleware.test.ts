@@ -123,4 +123,75 @@ describe('edge middleware', () => {
     expect(response.headers.get('x-middleware-next')).toBe('1')
     expect(response.headers.get('vary')).toBe('Accept')
   })
+
+  describe('Link header on post HTML', () => {
+    const BROWSER_ACCEPT = 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
+    const posts = [
+      '/blog/how-always-on-agents-work/',
+      '/pt-br/blog/como-funciona-um-agente-sempre-ligado/',
+    ]
+
+    for (const path of posts) {
+      test(`adds the markdown Link header to ${path}`, async () => {
+        stubFetch([])
+        const response = await middleware(
+          new Request(`https://franklinjavier.com${path}`, {
+            headers: { accept: BROWSER_ACCEPT },
+          }),
+        )
+        expect(response.headers.get('link')).toBe(
+          `<https://franklinjavier.com${path}index.md>; rel="alternate"; type="text/markdown"`,
+        )
+        expect(response.headers.get('vary')).toBe('Accept')
+        expect(response.headers.get('x-middleware-next')).toBe('1')
+      })
+
+      test(`omits the Link header when ${path} is served as markdown`, async () => {
+        const twin = `${path}index.md`
+        stubFetch([twin])
+        const negotiated = await middleware(
+          new Request(`https://franklinjavier.com${path}`, {
+            headers: { accept: 'text/markdown' },
+          }),
+        )
+        expect(negotiated.headers.get('x-middleware-rewrite')).toBe(
+          `https://franklinjavier.com${twin}`,
+        )
+        expect(negotiated.headers.get('link')).toBeNull()
+
+        const suffixed = await middleware(
+          new Request(`https://franklinjavier.com${path.slice(0, -1)}.md`),
+        )
+        expect(suffixed.headers.get('x-middleware-rewrite')).toBe(
+          `https://franklinjavier.com${twin}`,
+        )
+        expect(suffixed.headers.get('link')).toBeNull()
+      })
+    }
+
+    for (const path of ['/', '/pt-br/', '/blog/', '/pt-br/blog/', '/blog/tag/ai/']) {
+      test(`does not add a Link header to ${path}`, async () => {
+        stubFetch([])
+        const response = await middleware(
+          new Request(`https://franklinjavier.com${path}`, {
+            headers: { accept: BROWSER_ACCEPT },
+          }),
+        )
+        expect(response.headers.get('x-middleware-next')).toBe('1')
+        expect(response.headers.get('link')).toBeNull()
+      })
+    }
+
+    test('does not add a Link header to a percent-encoded post path', async () => {
+      stubFetch([])
+      const response = await middleware(
+        new Request('https://franklinjavier.com/blog/%68ow-always-on-agents-work/', {
+          headers: { accept: BROWSER_ACCEPT },
+        }),
+      )
+      expect(response.headers.get('x-middleware-next')).toBe('1')
+      expect(response.headers.get('vary')).toBe('Accept')
+      expect(response.headers.get('link')).toBeNull()
+    })
+  })
 })
