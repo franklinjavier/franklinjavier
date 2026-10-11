@@ -13,12 +13,15 @@ const links = [
 ]
 ---
 
-<footer class="border-t border-gray-100 dark:border-gray-800">
-  <div class="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-x-6 gap-y-2 px-8 py-8 text-sm text-gray-500 dark:text-gray-400">
+<footer class="border-t border-rule">
+  <div class="site-container flex flex-wrap items-center justify-between gap-x-6 gap-y-2 py-8 text-meta text-muted">
     <p>© {new Date().getFullYear()} Franklin Javier</p>
     <div class="flex flex-wrap gap-x-6 gap-y-2">
       {links.map((link) => (
-        <a href={link.href} class="transition hover:text-gray-900 dark:hover:text-gray-100">
+        <a
+          href={link.href}
+          class="underline decoration-muted underline-offset-3 transition-colors duration-200 ease-smooth hover:text-ink"
+        >
           {link.label}
         </a>
       ))}

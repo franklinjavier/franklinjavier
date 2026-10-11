@@ -2,6 +2,7 @@
 title: Currículo
 description: Currículo de Franklin Javier, Principal Engineer (Frontend) em Lisboa, com 19 anos construindo e escalando produtos web e mobile.
 lang: pt-br
+updated: 2026-09-28
 ---
 
 ## Resumo

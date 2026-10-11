@@ -1,7 +1,9 @@
+import { ui } from '../i18n/ui'
+import type { Lang } from './markdown'
+
 export const SITE_URL = 'https://franklinjavier.com'
 export const SITE_TITLE = 'Franklin Javier'
-export const SITE_DESCRIPTION =
-  "I'm a Principal Engineer with 19 years of front-end development experience, now building AI products and the agent harnesses behind them."
+export const SITE_DESCRIPTION = ui.en['home.description']
 export const SITE_AUTHOR = 'Franklin Javier'
 export const SITE_EMAIL = 'franklinjalves@gmail.com'
 export const SITE_IMAGE = '/img/frank.jpeg'
@@ -77,14 +79,14 @@ export function absoluteUrl(path: string, site?: URL | string): string {
   return new URL(path, site ?? SITE_URL).href
 }
 
-export function personJsonLd() {
+export function personJsonLd(lang: Lang = 'en') {
   return {
     '@type': 'Person',
     '@id': `${SITE_URL}/#person`,
     name: SITE_AUTHOR,
     url: `${SITE_URL}/`,
     image: absoluteUrl(SITE_IMAGE),
-    description: SITE_DESCRIPTION,
+    description: ui[lang]['home.description'],
     jobTitle: SITE_JOB_TITLE,
     email: `mailto:${SITE_EMAIL}`,
     worksFor: { '@type': 'Organization', name: CURRENT_EMPLOYER },
@@ -107,22 +109,23 @@ export function personJsonLd() {
   }
 }
 
-export function websiteJsonLd() {
+export function websiteJsonLd(lang: Lang = 'en') {
   return {
     '@type': 'WebSite',
     '@id': `${SITE_URL}/#website`,
     name: SITE_TITLE,
     url: `${SITE_URL}/`,
-    description: SITE_DESCRIPTION,
+    description: ui[lang]['home.description'],
     inLanguage: ['en', 'pt-BR'],
     author: { '@id': `${SITE_URL}/#person` },
   }
 }
 
-export function baseJsonLd() {
+/** Person + WebSite graph, described in the page's language. */
+export function baseJsonLd(lang: Lang = 'en') {
   return {
     '@context': 'https://schema.org',
-    '@graph': [personJsonLd(), websiteJsonLd()],
+    '@graph': [personJsonLd(lang), websiteJsonLd(lang)],
   }
 }
 
@@ -130,6 +133,8 @@ export function blogPostingJsonLd(post: {
   title: string
   description?: string
   date: Date
+  /** Last meaningful edit (`updated` frontmatter); defaults to `date`. */
+  updated?: Date
   url: string
   lang: string
   tags?: string[]
@@ -141,6 +146,7 @@ export function blogPostingJsonLd(post: {
     headline: post.title,
     ...(post.description ? { description: post.description } : {}),
     datePublished: post.date.toISOString(),
+    dateModified: (post.updated ?? post.date).toISOString(),
     inLanguage: post.lang === 'pt-br' ? 'pt-BR' : 'en',
     url: absoluteUrl(post.url),
     mainEntityOfPage: absoluteUrl(post.url),

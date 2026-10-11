@@ -3,15 +3,7 @@
 // callers pass plain data extracted from content collections.
 
 import { ui } from '../i18n/ui'
-import {
-  SITE_TITLE,
-  SITE_DESCRIPTION,
-  SITE_EMAIL,
-  SITE_URL,
-  SOCIAL_LINKS,
-  DEV_STACK,
-  SIDE_PROJECTS,
-} from './site'
+import { SITE_TITLE, SITE_EMAIL, SITE_URL, SOCIAL_LINKS, DEV_STACK, SIDE_PROJECTS } from './site'
 import { APPEARANCES, speakingUrl } from './speaking'
 import { describeDiagrams } from '../diagrams'
 import { seriesMarker, seriesNextLabel, seriesPartLabel, type SeriesNav } from './series'
@@ -207,5 +199,5 @@ export function staticPageMarkdown(page: {
 }
 
 export function siteDescriptionFor(lang: Lang): string {
-  return lang === 'en' ? SITE_DESCRIPTION : ui['pt-br']['hero.bio1']
+  return ui[lang]['home.description']
 }

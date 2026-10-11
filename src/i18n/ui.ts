@@ -27,6 +27,9 @@ export const ui = {
     'speaking.action.podcast': 'Ouvir o episódio',
     'speaking.action.talk': 'Assistir',
     'speaking.invite': 'Para convites de palestra, entre em contato.',
+    'home.title': 'Principal Engineer em Lisboa, Portugal',
+    'home.description':
+      'Sou Principal Engineer com 19 anos de experiência em front-end. Hoje construo produtos de IA e os harnesses que coordenam seus agentes e ferramentas.',
     'hero.title': 'Olá, sou Frank',
     'hero.bio1':
       'Principal Engineer, com 19 anos de front-end em aplicações web e mobile de alta performance. Hoje quase todo o trabalho passa por IA: harnesses para agentes, orquestração e as ferramentas que deixam agentes de código confiáveis.',
@@ -56,7 +59,8 @@ export const ui = {
     'projects.robotloupe':
       'Revisão com humano no loop para mudanças de banco de dados geradas por IA, checando impacto e padrões antes de publicar.',
     'blog.title': 'Blog',
-    'blog.description': 'Artigos sobre desenvolvimento front-end, React e tecnologias web',
+    'blog.description':
+      'Textos sobre agentes de IA e a engenharia por trás deles, além de performance web, ferramentas e experiências de trabalho com front-end.',
     'blog.articleCount': 'artigo',
     'blog.articlesCount': 'artigos',
     'blog.readMore': 'Ler mais →',
@@ -66,6 +70,14 @@ export const ui = {
     'blog.closeImage': 'Fechar imagem',
     'blog.readTranslation': 'Read in English',
     'blog.onThisPage': 'Nesta página',
+    'blog.minRead': 'min de leitura',
+    'blog.copySectionLink': 'Copiar link da seção:',
+    'blog.linkCopied': 'Link copiado',
+    'blog.linkCopyFailed': 'Não deu para copiar, o link está na barra de endereço',
+    'theme.toggle': 'Alternar modo escuro',
+    'nav.label': 'Principal',
+    'lang.switch': 'Mudar para Português',
+    'lang.short': 'PT',
     'blog.noPostsFound': 'Nenhum post encontrado',
     'series.nav': 'Série de posts',
     'series.navNext': 'Próxima parte da série',
@@ -100,6 +112,9 @@ export const ui = {
     'speaking.action.podcast': 'Listen to the episode',
     'speaking.action.talk': 'Watch',
     'speaking.invite': 'For speaking invitations, get in touch.',
+    'home.title': 'Principal Engineer',
+    'home.description':
+      "I'm a Principal Engineer with 19 years of front-end development experience, now building AI products and the agent harnesses behind them.",
     'hero.title': "Hi, I'm Frank",
     'hero.bio1':
       "I'm a Principal Engineer and I've been doing front-end for 19 years, building fast web and mobile apps. These days almost everything I do involves AI: I build agent harnesses, handle orchestration and write the tooling that makes coding agents reliable.",
@@ -129,7 +144,8 @@ export const ui = {
     'projects.robotloupe':
       'Human-in-the-loop review for AI-generated database changes, checking impact and standards before they ship.',
     'blog.title': 'Blog',
-    'blog.description': 'Articles about front-end development, React and web technologies',
+    'blog.description':
+      'Notes on AI agents and the engineering behind them, alongside web performance, tooling, and lessons from years of front-end work.',
     'blog.articleCount': 'article',
     'blog.articlesCount': 'articles',
     'blog.readMore': 'Read more →',
@@ -139,6 +155,14 @@ export const ui = {
     'blog.closeImage': 'Close image',
     'blog.readTranslation': 'Leia em português',
     'blog.onThisPage': 'On this page',
+    'blog.minRead': 'min read',
+    'blog.copySectionLink': 'Copy link to section:',
+    'blog.linkCopied': 'Link copied',
+    'blog.linkCopyFailed': "Couldn't copy, the link is in the address bar",
+    'theme.toggle': 'Toggle dark mode',
+    'nav.label': 'Main',
+    'lang.switch': 'Switch to English',
+    'lang.short': 'EN',
     'blog.noPostsFound': 'No posts found',
     'series.nav': 'Post series',
     'series.navNext': 'Next part of the series',

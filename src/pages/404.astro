@@ -18,20 +18,20 @@ const helpLinks = [
 <BaseLayout title={t('404.title')} lang={lang}>
   <main class="flex min-h-screen items-center justify-center px-8">
     <div class="text-center">
-      <h1 class="glitch text-9xl font-bold text-gray-900 dark:text-gray-100" data-text="404">
+      <h1 class="glitch text-9xl font-bold text-ink" data-text="404">
         404
       </h1>
 
-      <p class="mt-8 text-xl text-gray-600 dark:text-gray-400">{t('404.message')}</p>
+      <p class="mt-8 text-lg text-ink-2">{t('404.message')}</p>
 
-      <p class="mt-8 text-sm text-gray-500 dark:text-gray-400">{t('404.help')}</p>
+      <p class="mt-8 text-sm text-muted">{t('404.help')}</p>
 
       <ul class="mt-4 space-y-2 text-sm">
         {helpLinks.map((link) => (
           <li>
             <a
               href={link.href}
-              class="text-gray-700 underline hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-100"
+              class="text-ink-2 underline decoration-muted underline-offset-3 hover:text-ink"
             >
               {link.label}
             </a>
@@ -87,8 +87,15 @@ const helpLinks = [
       }
     }
 
+    /* Four runs, then it stops on its own (WCAG 2.2.2: under 5 seconds). */
     .glitch {
-      animation: glitch 1s linear infinite;
+      animation: glitch 1s linear 4;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .glitch {
+        animation: none;
+      }
     }
   </style>
 </BaseLayout>

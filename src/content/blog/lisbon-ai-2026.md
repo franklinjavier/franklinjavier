@@ -1,6 +1,7 @@
 ---
 title: 'Lisbon AI 2026: agents, evals and security'
 date: 2026-09-25
+updated: 2026-09-28
 description: 'My notes from all 32 talks at Lisbon AI 2026, with the demos, the numbers and the audience questions.'
 author: Franklin Javier
 tags: ai, agents, evals, security, conference
@@ -11,7 +12,7 @@ draft: false
 ---
 
 <figure>
-  <img src="/images/blog/lisbon-ai-2026/auditorio-abertura.webp" srcset="/images/blog/lisbon-ai-2026/auditorio-abertura-640.webp 640w, /images/blog/lisbon-ai-2026/auditorio-abertura-1024.webp 1024w, /images/blog/lisbon-ai-2026/auditorio-abertura.webp 1600w" sizes="(max-width: 719px) calc(100vw - 4rem), 655px" alt="A nearly full tiered auditorium. On the left, a large oval window shows the river and trees; on the right, the stage with the LISBON AI screen and sponsor logos." width="1600" height="1200" fetchpriority="high" decoding="async">
+  <img src="/images/blog/lisbon-ai-2026/auditorio-abertura.webp" srcset="/images/blog/lisbon-ai-2026/auditorio-abertura-640.webp 640w, /images/blog/lisbon-ai-2026/auditorio-abertura-1024.webp 1024w, /images/blog/lisbon-ai-2026/auditorio-abertura-1200.webp 1200w, /images/blog/lisbon-ai-2026/auditorio-abertura.webp 1600w" sizes="min(calc(100vw - 3rem), 34.5rem)" alt="A nearly full tiered auditorium. On the left, a large oval window shows the river and trees; on the right, the stage with the LISBON AI screen and sponsor logos." width="1600" height="1200" fetchpriority="high" decoding="async">
   <figcaption>The Champalimaud Centre auditorium a few minutes before the opening on September 23. The window faces the Tagus.</figcaption>
 </figure>
 
@@ -59,7 +60,7 @@ Mixed quantization scans the model and keeps more precision in the sensitive lay
 The second is the KV cache, the memory the model uses to hold its context. When Google published a method to quantize it with almost no loss, Prince implemented it at 2 a.m. and posted it the next day. The post got close to a million views. With a quantized cache, a million-token context fits on a 16 GB MacBook, depending on the size of the model. His engine, mlx-vlm, has it turned on by default.
 
 <figure>
-  <a href="/images/blog/lisbon-ai-2026/kv-cache-quantizacao.webp"><img src="/images/blog/lisbon-ai-2026/kv-cache-quantizacao.webp" srcset="/images/blog/lisbon-ai-2026/kv-cache-quantizacao-640.webp 640w, /images/blog/lisbon-ai-2026/kv-cache-quantizacao-1024.webp 1024w, /images/blog/lisbon-ai-2026/kv-cache-quantizacao.webp 1600w" sizes="(max-width: 719px) calc(100vw - 4rem), 655px" alt="Dark slide titled 'Lever 1b · KV cache quantization', with the KV cache size formula and a list about a 4-bit cache on the server." width="1600" height="1042" loading="lazy" decoding="async"></a>
+  <a href="/images/blog/lisbon-ai-2026/kv-cache-quantizacao.webp"><img src="/images/blog/lisbon-ai-2026/kv-cache-quantizacao.webp" srcset="/images/blog/lisbon-ai-2026/kv-cache-quantizacao-640.webp 640w, /images/blog/lisbon-ai-2026/kv-cache-quantizacao-1024.webp 1024w, /images/blog/lisbon-ai-2026/kv-cache-quantizacao-1200.webp 1200w, /images/blog/lisbon-ai-2026/kv-cache-quantizacao.webp 1600w" sizes="min(calc(100vw - 3rem), 34.5rem)" alt="Dark slide titled 'Lever 1b · KV cache quantization', with the KV cache size formula and a list about a 4-bit cache on the server." width="1600" height="1042" loading="lazy" decoding="async"></a>
   <figcaption>Gemma 4 31B at 256K tokens of context: 22.31 GB of bf16 KV cache against 18.41 GB of 4-bit weights. At long context, the cache outweighs the model.</figcaption>
 </figure>
 
@@ -95,7 +96,7 @@ The method comes from two papers from his PhD:
 The first demo he posted, with the model vectorizing a molecule live, went viral, and that's when he saw there was a market. Today QuiverAI's model is called Arrow, and the launch video for version 2.0 mentions five times the speed. It went from simple emojis to detailed illustrations.
 
 <figure>
-  <a href="/images/blog/lisbon-ai-2026/quiverai-anatomia-svg.webp"><img src="/images/blog/lisbon-ai-2026/quiverai-anatomia-svg.webp" srcset="/images/blog/lisbon-ai-2026/quiverai-anatomia-svg-640.webp 640w, /images/blog/lisbon-ai-2026/quiverai-anatomia-svg-1024.webp 1024w, /images/blog/lisbon-ai-2026/quiverai-anatomia-svg.webp 1600w" sizes="(max-width: 719px) calc(100vw - 4rem), 655px" alt="Slide with three anatomical drawings in black line art with muscles in red (shoulder, thigh and calves), above a QuiverAI prompt box. The speaker stands at the lectern on the right." width="1600" height="1184" loading="lazy" decoding="async"></a>
+  <a href="/images/blog/lisbon-ai-2026/quiverai-anatomia-svg.webp"><img src="/images/blog/lisbon-ai-2026/quiverai-anatomia-svg.webp" srcset="/images/blog/lisbon-ai-2026/quiverai-anatomia-svg-640.webp 640w, /images/blog/lisbon-ai-2026/quiverai-anatomia-svg-1024.webp 1024w, /images/blog/lisbon-ai-2026/quiverai-anatomia-svg-1200.webp 1200w, /images/blog/lisbon-ai-2026/quiverai-anatomia-svg.webp 1600w" sizes="min(calc(100vw - 3rem), 34.5rem)" alt="Slide with three anatomical drawings in black line art with muscles in red (shoulder, thigh and calves), above a QuiverAI prompt box. The speaker stands at the lectern on the right." width="1600" height="1184" loading="lazy" decoding="async"></a>
   <figcaption>Anatomical illustrations generated by Arrow 2, QuiverAI's model, from a one-line prompt. Joan used the example to talk about technical fields like biomedicine.</figcaption>
 </figure>
 
@@ -125,7 +126,7 @@ Chema organized the problem in three parts, each handled today by a different ki
 - **Structure:** diffusion models trained on 3D files, which generate objects. There are few 3D files available to train them. The internet has billions of images and videos, but only a few million 3D files.
 
 <figure>
-  <a href="/images/blog/lisbon-ai-2026/world-model-tres-camadas.webp"><img src="/images/blog/lisbon-ai-2026/world-model-tres-camadas.webp" srcset="/images/blog/lisbon-ai-2026/world-model-tres-camadas-640.webp 640w, /images/blog/lisbon-ai-2026/world-model-tres-camadas-1024.webp 1024w, /images/blog/lisbon-ai-2026/world-model-tres-camadas.webp 1600w" sizes="(max-width: 719px) calc(100vw - 4rem), 655px" alt="Light slide with three columns, Understanding, Appearance and Structure, each with an example image. The speaker stands in the lower right corner of the stage." width="1600" height="1234" loading="lazy" decoding="async"></a>
+  <a href="/images/blog/lisbon-ai-2026/world-model-tres-camadas.webp"><img src="/images/blog/lisbon-ai-2026/world-model-tres-camadas.webp" srcset="/images/blog/lisbon-ai-2026/world-model-tres-camadas-640.webp 640w, /images/blog/lisbon-ai-2026/world-model-tres-camadas-1024.webp 1024w, /images/blog/lisbon-ai-2026/world-model-tres-camadas-1200.webp 1200w, /images/blog/lisbon-ai-2026/world-model-tres-camadas.webp 1600w" sizes="min(calc(100vw - 3rem), 34.5rem)" alt="Light slide with three columns, Understanding, Appearance and Structure, each with an example image. The speaker stands in the lower right corner of the stage." width="1600" height="1234" loading="lazy" decoding="async"></a>
   <figcaption>Understanding, appearance and structure: the three layers that, for Chema, are still solved by different models.</figcaption>
 </figure>
 
@@ -168,7 +169,7 @@ The faster classifier doubled the dataset to 21.3 billion tokens, and Bagaço st
 3. **v3:** added FinePDFs and FineWiki for more quality text. In the talk he said 30 billion tokens; on the slide, 29. The share with a high educational score rose to about 40%. Version 4 is in progress.
 
 <figure>
-  <a href="/images/blog/lisbon-ai-2026/bagaco-v3.webp"><img src="/images/blog/lisbon-ai-2026/bagaco-v3.webp" srcset="/images/blog/lisbon-ai-2026/bagaco-v3-640.webp 640w, /images/blog/lisbon-ai-2026/bagaco-v3-1024.webp 1024w, /images/blog/lisbon-ai-2026/bagaco-v3.webp 1600w" sizes="(max-width: 719px) calc(100vw - 4rem), 655px" alt="Slide titled 'Bagaço v3 the latest version', with a table comparing versions 1, 2 and 3 and bar charts by category. Duarte speaks at the lectern on the right." width="1600" height="952" loading="lazy" decoding="async"></a>
+  <a href="/images/blog/lisbon-ai-2026/bagaco-v3.webp"><img src="/images/blog/lisbon-ai-2026/bagaco-v3.webp" srcset="/images/blog/lisbon-ai-2026/bagaco-v3-640.webp 640w, /images/blog/lisbon-ai-2026/bagaco-v3-1024.webp 1024w, /images/blog/lisbon-ai-2026/bagaco-v3-1200.webp 1200w, /images/blog/lisbon-ai-2026/bagaco-v3.webp 1600w" sizes="min(calc(100vw - 3rem), 34.5rem)" alt="Slide titled 'Bagaço v3 the latest version', with a table comparing versions 1, 2 and 3 and bar charts by category. Duarte speaks at the lectern on the right." width="1600" height="952" loading="lazy" decoding="async"></a>
   <figcaption>Bagaço v3: 29 billion tokens of Portuguese, 37% more than version 2, after adding FinePDFs and FineWiki.</figcaption>
 </figure>
 
@@ -259,7 +260,7 @@ The alternative Cloudflare offers, a bet made before agents existed, is V8 isola
 - **Durable Objects:** stateful. They keep state between requests, have built-in SQLite, accept WebSockets for several people in the same session, talk to other services without going over the public internet and can be woken up by alarms, like a calendar for the agent.
 
 <figure>
-  <a href="/images/blog/lisbon-ai-2026/pecas-de-um-agente.webp"><img src="/images/blog/lisbon-ai-2026/pecas-de-um-agente.webp" srcset="/images/blog/lisbon-ai-2026/pecas-de-um-agente-640.webp 640w, /images/blog/lisbon-ai-2026/pecas-de-um-agente-1024.webp 1024w, /images/blog/lisbon-ai-2026/pecas-de-um-agente.webp 1600w" sizes="(max-width: 719px) calc(100vw - 4rem), 655px" alt="Light slide titled 'Pieces of an agent' with five cards side by side: Harness, Filesystem, Bash, Browser and MCP." width="1600" height="1258" loading="lazy" decoding="async"></a>
+  <a href="/images/blog/lisbon-ai-2026/pecas-de-um-agente.webp"><img src="/images/blog/lisbon-ai-2026/pecas-de-um-agente.webp" srcset="/images/blog/lisbon-ai-2026/pecas-de-um-agente-640.webp 640w, /images/blog/lisbon-ai-2026/pecas-de-um-agente-1024.webp 1024w, /images/blog/lisbon-ai-2026/pecas-de-um-agente-1200.webp 1200w, /images/blog/lisbon-ai-2026/pecas-de-um-agente.webp 1600w" sizes="min(calc(100vw - 3rem), 34.5rem)" alt="Light slide titled 'Pieces of an agent' with five cards side by side: Harness, Filesystem, Bash, Browser and MCP." width="1600" height="1258" loading="lazy" decoding="async"></a>
   <figcaption>The five pieces of an agent in Cloudflare's version: the loop, the files, execution, browsing and external tools.</figcaption>
 </figure>
 
@@ -292,12 +293,21 @@ In the old version, everything happened in a container. The agent wrote the file
 
 <div class="overflow-x-auto">
 
-| | Before | After |
-| --- | --- | --- |
-| Preview | build, dev server and expose the container before the user saw anything | the code runs in a Dynamic Worker and the preview shows up almost instantly |
-| Files | inside the container | virtual filesystem in a Durable Object, which outlives the container and the Worker |
-| History | tarball in R2; going back to a version meant downloading, unpacking and rebuilding | one commit per generation, with git at the edge (Artifacts) |
-| Final render | container | container, which now receives the synced files |
+<table>
+<thead>
+<tr>
+<td></td>
+<th scope="col">Before</th>
+<th scope="col">After</th>
+</tr>
+</thead>
+<tbody>
+<tr><th scope="row">Preview</th><td>build, dev server and expose the container before the user saw anything</td><td>the code runs in a Dynamic Worker and the preview shows up almost instantly</td></tr>
+<tr><th scope="row">Files</th><td>inside the container</td><td>virtual filesystem in a Durable Object, which outlives the container and the Worker</td></tr>
+<tr><th scope="row">History</th><td>tarball in R2; going back to a version meant downloading, unpacking and rebuilding</td><td>one commit per generation, with git at the edge (Artifacts)</td></tr>
+<tr><th scope="row">Final render</th><td>container</td><td>container, which now receives the synced files</td></tr>
+</tbody>
+</table>
 
 </div>
 
@@ -314,7 +324,7 @@ The last step was putting it all together. "I'm a lazy developer in the age of A
 Icarus is an internal Remote app that lets employees, whether they code or not, use agents with access to the company's context. Marcelo called his talk about it a report on his own "AI psychosis", half stubbornness, half hallucination.
 
 <figure>
-  <a href="/images/blog/lisbon-ai-2026/remote-numeros.webp"><img src="/images/blog/lisbon-ai-2026/remote-numeros.webp" srcset="/images/blog/lisbon-ai-2026/remote-numeros-640.webp 640w, /images/blog/lisbon-ai-2026/remote-numeros-1024.webp 1024w, /images/blog/lisbon-ai-2026/remote-numeros.webp 1600w" sizes="(max-width: 719px) calc(100vw - 4rem), 655px" alt="Purple slide with the Remote logo and the text: about 2000 people, more than 100 countries, fully distributed, almost no offices, about 10 million dollars a year on AI. Marcelo stands on the right of the stage." width="1600" height="1130" loading="lazy" decoding="async"></a>
+  <a href="/images/blog/lisbon-ai-2026/remote-numeros.webp"><img src="/images/blog/lisbon-ai-2026/remote-numeros.webp" srcset="/images/blog/lisbon-ai-2026/remote-numeros-640.webp 640w, /images/blog/lisbon-ai-2026/remote-numeros-1024.webp 1024w, /images/blog/lisbon-ai-2026/remote-numeros-1200.webp 1200w, /images/blog/lisbon-ai-2026/remote-numeros.webp 1600w" sizes="min(calc(100vw - 3rem), 34.5rem)" alt="Purple slide with the Remote logo and the text: about 2000 people, more than 100 countries, fully distributed, almost no offices, about 10 million dollars a year on AI. Marcelo stands on the right of the stage." width="1600" height="1130" loading="lazy" decoding="async"></a>
   <figcaption>Marcelo Lebre's opening slide: 2,000 people, more than 100 countries and US$10 million a year on AI.</figcaption>
 </figure>
 
@@ -344,7 +354,7 @@ With Icarus, Remote also built the "AI for Actual Work" site, used by thousands 
 Every agent has memory, whether the people who built it know it or not, and Vitalii's question was whether it was designed on purpose.
 
 <figure>
-  <a href="/images/blog/lisbon-ai-2026/contexto-ram.webp"><img src="/images/blog/lisbon-ai-2026/contexto-ram.webp" srcset="/images/blog/lisbon-ai-2026/contexto-ram-640.webp 640w, /images/blog/lisbon-ai-2026/contexto-ram-1024.webp 1024w, /images/blog/lisbon-ai-2026/contexto-ram.webp 1600w" sizes="(max-width: 719px) calc(100vw - 4rem), 655px" alt="Light slide titled 'The context window is RAM. Memory is the disk (not quite)' and a note on how Codex and Claude Code keep memory between sessions." width="1600" height="950" loading="lazy" decoding="async"></a>
+  <a href="/images/blog/lisbon-ai-2026/contexto-ram.webp"><img src="/images/blog/lisbon-ai-2026/contexto-ram.webp" srcset="/images/blog/lisbon-ai-2026/contexto-ram-640.webp 640w, /images/blog/lisbon-ai-2026/contexto-ram-1024.webp 1024w, /images/blog/lisbon-ai-2026/contexto-ram-1200.webp 1200w, /images/blog/lisbon-ai-2026/contexto-ram.webp 1600w" sizes="min(calc(100vw - 3rem), 34.5rem)" alt="Light slide titled 'The context window is RAM. Memory is the disk (not quite)' and a note on how Codex and Claude Code keep memory between sessions." width="1600" height="950" loading="lazy" decoding="async"></a>
   <figcaption>Vitalii's starting point: the context window disappears when the session ends, and memory is what carries over from one session to the next.</figcaption>
 </figure>
 
@@ -606,7 +616,7 @@ They described Cloudflare's four acts, as CEO Matthew Prince puts them: CDN and 
 Internally, they built Cloudflare OS. The starting question was how to let anyone at the company use agents with sensitive data, like Salesforce and the ERP, safely. The result is free, open source and installs with one click on a Cloudflare account. It's not a ChatGPT clone, they said. It's closer to Marcelo's Icarus or PostHog Desktop, where you can build and share whole apps and have skills for the whole organization. One of them set up an environment for their family, with a connector to the supermarket, and that's how they do the household shopping.
 
 <figure>
-  <a href="/images/blog/lisbon-ai-2026/agente-ciclo-de-vida.webp"><img src="/images/blog/lisbon-ai-2026/agente-ciclo-de-vida.webp" srcset="/images/blog/lisbon-ai-2026/agente-ciclo-de-vida-640.webp 640w, /images/blog/lisbon-ai-2026/agente-ciclo-de-vida-1024.webp 1024w, /images/blog/lisbon-ai-2026/agente-ciclo-de-vida.webp 1600w" sizes="(max-width: 719px) calc(100vw - 4rem), 655px" alt="Slide titled 'The agent drives the lifecycle' with an infinity symbol connecting Code, Plan, Build, Test, Release, Deploy, Monitor and Operate." width="1600" height="1090" loading="lazy" decoding="async"></a>
+  <a href="/images/blog/lisbon-ai-2026/agente-ciclo-de-vida.webp"><img src="/images/blog/lisbon-ai-2026/agente-ciclo-de-vida.webp" srcset="/images/blog/lisbon-ai-2026/agente-ciclo-de-vida-640.webp 640w, /images/blog/lisbon-ai-2026/agente-ciclo-de-vida-1024.webp 1024w, /images/blog/lisbon-ai-2026/agente-ciclo-de-vida-1200.webp 1200w, /images/blog/lisbon-ai-2026/agente-ciclo-de-vida.webp 1600w" sizes="min(calc(100vw - 3rem), 34.5rem)" alt="Slide titled 'The agent drives the lifecycle' with an infinity symbol connecting Code, Plan, Build, Test, Release, Deploy, Monitor and Operate." width="1600" height="1090" loading="lazy" decoding="async"></a>
   <figcaption>In Cloudflare's view, the agent uses wrangler, the CLI and MCP to write, test, deploy and monitor the application.</figcaption>
 </figure>
 
@@ -643,7 +653,7 @@ For his 7-year-old daughter, he made a game called Danger Brave. Her school was 
 Since all the art came from an image model, there was a lot to review, and he had to build tools. One was an asset manager. The problems included wrong hands and the classic one where you ask for a transparent background and the model draws a gray and white checkerboard. He found that software can send messages straight into the running Codex conversation, and built tools that write the fix prompts on their own.
 
 <figure>
-  <a href="/images/blog/lisbon-ai-2026/danger-brave-versoes.webp"><img src="/images/blog/lisbon-ai-2026/danger-brave-versoes.webp" srcset="/images/blog/lisbon-ai-2026/danger-brave-versoes-640.webp 640w, /images/blog/lisbon-ai-2026/danger-brave-versoes-1024.webp 1024w, /images/blog/lisbon-ai-2026/danger-brave-versoes.webp 1048w" sizes="(max-width: 719px) calc(100vw - 4rem), 655px" alt="Projected screen with two nearly identical illustrations of a fighter with a red belt and a staff, labeled Version 3 and Version 4, inside the tldraw canvas." width="1048" height="672" loading="lazy" decoding="async"></a>
+  <a href="/images/blog/lisbon-ai-2026/danger-brave-versoes.webp"><img src="/images/blog/lisbon-ai-2026/danger-brave-versoes.webp" srcset="/images/blog/lisbon-ai-2026/danger-brave-versoes-640.webp 640w, /images/blog/lisbon-ai-2026/danger-brave-versoes-1024.webp 1024w, /images/blog/lisbon-ai-2026/danger-brave-versoes.webp 1048w" sizes="min(calc(100vw - 3rem), 34.5rem)" alt="Projected screen with two nearly identical illustrations of a fighter with a red belt and a staff, labeled Version 3 and Version 4, inside the tldraw canvas." width="1048" height="672" loading="lazy" decoding="async"></a>
   <figcaption>A frame from the video I recorded: versions 3 and 4 of the same Danger Brave character. Keeping clothes and accessories the same across poses took its own pipeline.</figcaption>
 </figure>
 
@@ -679,7 +689,7 @@ The principles he took from building it:
 - **Reason.** Their first architecture had a smarter model silently watching a simpler voice model that runs the conversation. The two shared a state, and the voice model pulled ideas from the other when it needed them.
 
 <figure>
-  <a href="/images/blog/lisbon-ai-2026/voz-dois-modelos.webp"><img src="/images/blog/lisbon-ai-2026/voz-dois-modelos.webp" srcset="/images/blog/lisbon-ai-2026/voz-dois-modelos-640.webp 640w, /images/blog/lisbon-ai-2026/voz-dois-modelos-1024.webp 1024w, /images/blog/lisbon-ai-2026/voz-dois-modelos.webp 1600w" sizes="(max-width: 719px) calc(100vw - 4rem), 655px" alt="Blue slide titled 'Two models, one shared state': Voice interviewer and Claude director boxes connected to a Shared state box." width="1600" height="1014" loading="lazy" decoding="async"></a>
+  <a href="/images/blog/lisbon-ai-2026/voz-dois-modelos.webp"><img src="/images/blog/lisbon-ai-2026/voz-dois-modelos.webp" srcset="/images/blog/lisbon-ai-2026/voz-dois-modelos-640.webp 640w, /images/blog/lisbon-ai-2026/voz-dois-modelos-1024.webp 1024w, /images/blog/lisbon-ai-2026/voz-dois-modelos-1200.webp 1200w, /images/blog/lisbon-ai-2026/voz-dois-modelos.webp 1600w" sizes="min(calc(100vw - 3rem), 34.5rem)" alt="Blue slide titled 'Two models, one shared state': Voice interviewer and Claude director boxes connected to a Shared state box." width="1600" height="1014" loading="lazy" decoding="async"></a>
   <figcaption>A fast voice interviewer and a second model that analyzes the context of the conversation, both reading the same state. Daniel said this architecture is already being replaced by a native solution from the providers.</figcaption>
 </figure>
 
@@ -708,7 +718,7 @@ The robot needs to perceive, reason and act, and the target cost is under US$1,0
 - without GPS, a LiDAR like a robot vacuum's maps walls and obstacles, and the camera helps with orientation. The mission is defined by limits, like "don't go more than 20 meters away".
 
 <figure>
-  <a href="/images/blog/lisbon-ai-2026/ubr-8gb-cerebro.webp"><img src="/images/blog/lisbon-ai-2026/ubr-8gb-cerebro.webp" srcset="/images/blog/lisbon-ai-2026/ubr-8gb-cerebro-640.webp 640w, /images/blog/lisbon-ai-2026/ubr-8gb-cerebro-1024.webp 1024w, /images/blog/lisbon-ai-2026/ubr-8gb-cerebro.webp 1600w" sizes="(max-width: 719px) calc(100vw - 4rem), 655px" alt="Dark slide titled '8 GB is enough for a brain' and a bar split between system, reasoning, action, voice, sensors and headroom. A small wheeled robot is on the stage, bottom right." width="1600" height="1414" loading="lazy" decoding="async"></a>
+  <a href="/images/blog/lisbon-ai-2026/ubr-8gb-cerebro.webp"><img src="/images/blog/lisbon-ai-2026/ubr-8gb-cerebro.webp" srcset="/images/blog/lisbon-ai-2026/ubr-8gb-cerebro-640.webp 640w, /images/blog/lisbon-ai-2026/ubr-8gb-cerebro-1024.webp 1024w, /images/blog/lisbon-ai-2026/ubr-8gb-cerebro-1200.webp 1200w, /images/blog/lisbon-ai-2026/ubr-8gb-cerebro.webp 1600w" sizes="min(calc(100vw - 3rem), 34.5rem)" alt="Dark slide titled '8 GB is enough for a brain' and a bar split between system, reasoning, action, voice, sensors and headroom. A small wheeled robot is on the stage, bottom right." width="1600" height="1414" loading="lazy" decoding="async"></a>
   <figcaption>How VdG splits 8 GB: 0.9 GB for the system, 4.5 GB for Gemma 4 E4B in 4 bits and smaller slices for action, voice, sensors and headroom. The robot is on the stage, bottom right.</figcaption>
 </figure>
 
@@ -717,7 +727,7 @@ The goal is search and rescue: finding people, getting to them and providing sup
 In the Q&A, someone left a backpack on stage and Francisco sent the robot to look for it. It didn't find it. He gave two reasons. The model was trained too heavily on finding people, and the robot has no sensor pointing down. The reasoning on screen said it saw nothing of interest.
 
 <figure>
-  <a href="/images/blog/lisbon-ai-2026/vdg-mochila.webp"><img src="/images/blog/lisbon-ai-2026/vdg-mochila.webp" srcset="/images/blog/lisbon-ai-2026/vdg-mochila-640.webp 640w, /images/blog/lisbon-ai-2026/vdg-mochila-1024.webp 907w" sizes="(max-width: 719px) calc(100vw - 4rem), 655px" alt="The robot's camera feed projected on the big screen, showing the audience in the auditorium, with the text 'Find backpack ??? I see nothing of interest.' at the top." width="907" height="960" loading="lazy" decoding="async"></a>
+  <a href="/images/blog/lisbon-ai-2026/vdg-mochila.webp"><img src="/images/blog/lisbon-ai-2026/vdg-mochila.webp" srcset="/images/blog/lisbon-ai-2026/vdg-mochila-640.webp 640w, /images/blog/lisbon-ai-2026/vdg-mochila-1024.webp 907w" sizes="min(calc(100vw - 3rem), 34.5rem)" alt="The robot's camera feed projected on the big screen, showing the audience in the auditorium, with the text 'Find backpack ??? I see nothing of interest.' at the top." width="907" height="960" loading="lazy" decoding="async"></a>
   <figcaption>A frame from the video I recorded: VdG's camera looking at the audience and the robot's reasoning at the top, "I see nothing of interest".</figcaption>
 </figure>
 
@@ -734,7 +744,7 @@ Cristiana started from Dario Amodei's claim that it will be possible to cure mos
 At Loka, about 60% of customers are in healthcare and life sciences, and her team builds custom models for each stage of drug discovery. Since most of the audience had no biology background, she started with the basics. Her example was heart disease caused by fat building up in the arteries, like cholesterol, which the liver produces through a chain of reactions. To produce less cholesterol, you have to find the right point in the chain, the right protein, and a molecule that fits it and locks it. It's a physical fit, like a key and a lock.
 
 <figure>
-  <a href="/images/blog/lisbon-ai-2026/loka-chave-fechadura.webp"><img src="/images/blog/lisbon-ai-2026/loka-chave-fechadura.webp" srcset="/images/blog/lisbon-ai-2026/loka-chave-fechadura-640.webp 640w, /images/blog/lisbon-ai-2026/loka-chave-fechadura-1024.webp 1024w, /images/blog/lisbon-ai-2026/loka-chave-fechadura.webp 1600w" sizes="(max-width: 719px) calc(100vw - 4rem), 655px" alt="Slide titled 'Drugs Fit Proteins Like a Key Fits a Lock' with a diagram: statins bind to the HMG-CoA reductase enzyme and block cholesterol production." width="1600" height="984" loading="lazy" decoding="async"></a>
+  <a href="/images/blog/lisbon-ai-2026/loka-chave-fechadura.webp"><img src="/images/blog/lisbon-ai-2026/loka-chave-fechadura.webp" srcset="/images/blog/lisbon-ai-2026/loka-chave-fechadura-640.webp 640w, /images/blog/lisbon-ai-2026/loka-chave-fechadura-1024.webp 1024w, /images/blog/lisbon-ai-2026/loka-chave-fechadura-1200.webp 1200w, /images/blog/lisbon-ai-2026/loka-chave-fechadura.webp 1600w" sizes="min(calc(100vw - 3rem), 34.5rem)" alt="Slide titled 'Drugs Fit Proteins Like a Key Fits a Lock' with a diagram: statins bind to the HMG-CoA reductase enzyme and block cholesterol production." width="1600" height="984" loading="lazy" decoding="async"></a>
   <figcaption>In Cristiana's example, statins inhibit the HMG-CoA reductase enzyme, which is involved in producing cholesterol.</figcaption>
 </figure>
 
@@ -807,7 +817,7 @@ The basics are three primitives:
 Aayush said the temptation with these pieces is to keep building. He compared it to a Chipotle bowl, which people in the US call a "slop bowl". You pick a base and add salad, protein and cilantro, and you can keep adding nachos, guacamole and more protein until it's bad. He said software is turning into that. As the cost of writing code falls, there's no limit to what gets built. To show the scale, he cited recent examples: OpenAI solving the Navier-Stokes Millennium Prize problem, RSA-260 being solved and GPU engines for building shaders.
 
 <figure>
-  <a href="/images/blog/lisbon-ai-2026/slopbowl-mais-um-prompt.webp"><img src="/images/blog/lisbon-ai-2026/slopbowl-mais-um-prompt.webp" srcset="/images/blog/lisbon-ai-2026/slopbowl-mais-um-prompt-640.webp 640w, /images/blog/lisbon-ai-2026/slopbowl-mais-um-prompt-1024.webp 1024w, /images/blog/lisbon-ai-2026/slopbowl-mais-um-prompt.webp 1600w" sizes="(max-width: 719px) calc(100vw - 4rem), 655px" alt="Gray slide with a bowl labeled software and tags falling into it: a fallback, a config flag, a retry loop, an abstraction, another agent. Below, the phrase 'Just one more prompt'." width="1600" height="1020" loading="lazy" decoding="async"></a>
+  <a href="/images/blog/lisbon-ai-2026/slopbowl-mais-um-prompt.webp"><img src="/images/blog/lisbon-ai-2026/slopbowl-mais-um-prompt.webp" srcset="/images/blog/lisbon-ai-2026/slopbowl-mais-um-prompt-640.webp 640w, /images/blog/lisbon-ai-2026/slopbowl-mais-um-prompt-1024.webp 1024w, /images/blog/lisbon-ai-2026/slopbowl-mais-um-prompt-1200.webp 1200w, /images/blog/lisbon-ai-2026/slopbowl-mais-um-prompt.webp 1600w" sizes="min(calc(100vw - 3rem), 34.5rem)" alt="Gray slide with a bowl labeled software and tags falling into it: a fallback, a config flag, a retry loop, an abstraction, another agent. Below, the phrase 'Just one more prompt'." width="1600" height="1020" loading="lazy" decoding="async"></a>
   <figcaption>"Just one more prompt": fallback, config flag, retry and one more abstraction falling into the same bowl.</figcaption>
 </figure>
 
@@ -890,7 +900,7 @@ He went through the comparison point by point. On the models' side, the pirates:
 - were capable: they found vulnerabilities, chained exploits and turned initial access into persistent access.
 
 <figure>
-  <a href="/images/blog/lisbon-ai-2026/exercito-espanhol.webp"><img src="/images/blog/lisbon-ai-2026/exercito-espanhol.webp" srcset="/images/blog/lisbon-ai-2026/exercito-espanhol-640.webp 640w, /images/blog/lisbon-ai-2026/exercito-espanhol-1024.webp 1024w, /images/blog/lisbon-ai-2026/exercito-espanhol.webp 1600w" sizes="(max-width: 719px) calc(100vw - 4rem), 655px" alt="Parchment-style slide titled 'The Spanish Army Model Cos', with 'Spanish Army' crossed out, and four items numbered in Roman numerals." width="1600" height="960" loading="lazy" decoding="async"></a>
+  <a href="/images/blog/lisbon-ai-2026/exercito-espanhol.webp"><img src="/images/blog/lisbon-ai-2026/exercito-espanhol.webp" srcset="/images/blog/lisbon-ai-2026/exercito-espanhol-640.webp 640w, /images/blog/lisbon-ai-2026/exercito-espanhol-1024.webp 1024w, /images/blog/lisbon-ai-2026/exercito-espanhol-1200.webp 1200w, /images/blog/lisbon-ai-2026/exercito-espanhol.webp 1600w" sizes="min(calc(100vw - 3rem), 34.5rem)" alt="Parchment-style slide titled 'The Spanish Army Model Cos', with 'Spanish Army' crossed out, and four items numbered in Roman numerals." width="1600" height="960" loading="lazy" decoding="async"></a>
   <figcaption>The labs' side, according to Diogo: unpatched infrastructure, a weak sandbox, alerts without automatic containment and, in some cases, the internet left on.</figcaption>
 </figure>
 
@@ -930,7 +940,7 @@ Then he moved to defense. Defenders have advantages. They have the source code a
 - never let a production VM live longer than an hour; if something misbehaves, isolate it, rebuild it and bring it back up.
 
 <figure>
-  <a href="/images/blog/lisbon-ai-2026/chrome-bugs.webp"><img src="/images/blog/lisbon-ai-2026/chrome-bugs.webp" srcset="/images/blog/lisbon-ai-2026/chrome-bugs-640.webp 640w, /images/blog/lisbon-ai-2026/chrome-bugs-1024.webp 1024w, /images/blog/lisbon-ai-2026/chrome-bugs.webp 1600w" sizes="(max-width: 719px) calc(100vw - 4rem), 655px" alt="'Saturate bug discovery' slide with a bar chart of security bugs fixed per Chrome version, from M126 to M150. The bars stay near zero until M145 and climb to about 400 in the latest versions." width="1600" height="940" loading="lazy" decoding="async"></a>
+  <a href="/images/blog/lisbon-ai-2026/chrome-bugs.webp"><img src="/images/blog/lisbon-ai-2026/chrome-bugs.webp" srcset="/images/blog/lisbon-ai-2026/chrome-bugs-640.webp 640w, /images/blog/lisbon-ai-2026/chrome-bugs-1024.webp 1024w, /images/blog/lisbon-ai-2026/chrome-bugs-1200.webp 1200w, /images/blog/lisbon-ai-2026/chrome-bugs.webp 1600w" sizes="min(calc(100vw - 3rem), 34.5rem)" alt="'Saturate bug discovery' slide with a bar chart of security bugs fixed per Chrome version, from M126 to M150. The bars stay near zero until M145 and climb to about 400 in the latest versions." width="1600" height="940" loading="lazy" decoding="async"></a>
   <figcaption>Diogo's slide lists 1,072 security bugs fixed in Chrome versions 149 and 150.</figcaption>
 </figure>
 

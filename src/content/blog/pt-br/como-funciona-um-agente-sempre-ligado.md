@@ -1,11 +1,13 @@
 ---
 title: Como funciona um agente em loop
 date: 2026-10-11
-description: Laptop fechado, mensagens chegando juntas, servidor caindo e contexto caro. As soluções da aula de Lee Robinson para um agente sempre ligado e o que eu construiria primeiro.
+updated: 2026-10-11
+description: Como agentes sempre ligados lidam com filas, falhas e contexto, com base na aula de Lee Robinson em Stanford CS146S, seguida do meu plano de experimento.
 author: Franklin Javier
 tags: ia, agentes, arquitetura, llm
 lang: pt-br
 translationKey: always-on-agents
+image: /images/og/always-on-agents-pt-br.png
 series: { key: agent-experiments, part: 2 }
 toc:
   por-que-o-agente-não-roda-na-máquina-que-você-fecha: Máquina sempre ligada
@@ -22,7 +24,9 @@ toc:
   minha-proposta-o-que-eu-construiria-primeiro: Por onde começar
 ---
 
-No [post anterior](/pt-br/blog/macbook-velho-virou-servidor-de-contexto/), contei como meu MacBook velho virou o servidor que guarda o contexto dos meus agentes. Com essa metade funcionando, quero experimentar a outra: o que faz um agente continuar trabalhando por conta própria ali, depois que eu saio? A aula [How always-on agents work, de Lee Robinson (@leerob)](https://x.com/leerob/status/2108650243365736855), apresentada em Stanford CS146S em 8 de outubro de 2026, dá uma base para esse próximo passo.
+Um agente sempre ligado executa o loop de modelo e ferramentas no servidor, salva o progresso e pode continuar a tarefa depois que você sai da conversa. A aula de Lee Robinson em Stanford CS146S explica essa arquitetura: filas de mensagens, workflows duráveis, uma VM que pode ser reconstruída, ferramentas sob demanda, helpers, cache do prompt, memória em camadas e autorização de ações. Com o [contexto compartilhado da parte 1](/pt-br/blog/macbook-velho-virou-servidor-de-contexto/) funcionando, termino com uma proposta minha para o primeiro experimento, que ainda preciso testar.
+
+A aula [How always-on agents work, de Lee Robinson (@leerob)](https://x.com/leerob/status/2108650243365736855), foi apresentada em Stanford CS146S em 8 de outubro de 2026.
 
 Meu outro Mac já dormiu no meio de uma tarefa. Do celular, pedi ao agente no servidor para descobrir onde ela tinha parado. Ele encontrou o histórico na memória compartilhada e conferiu no GitHub o que já tinha sido enviado.
 

@@ -1,14 +1,25 @@
 // Assertions against the built site in dist/. Run `bun run build` first
 // (the `bun test` script in package.json does this for you via `bun run check`).
 import { beforeAll, describe, expect, test } from 'bun:test'
-import { existsSync, readdirSync, readFileSync } from 'node:fs'
+import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs'
 import { join, sep } from 'node:path'
+import { Window } from 'happy-dom'
 import { SERIES } from '../src/data/series'
 
 const DIST = join(import.meta.dir, '..', 'dist')
 
 function read(path: string): string {
   return readFileSync(join(DIST, path), 'utf-8')
+}
+
+function cssHrefs(html: string): string[] {
+  return [...html.matchAll(/<link[^>]+href="([^"]+\.css)"/g)].map((match) => match[1])
+}
+
+function cssFor(htmlPath: string): string {
+  return cssHrefs(read(htmlPath))
+    .map((href) => read(href.replace(/^\//, '')))
+    .join('\n')
 }
 
 function jsonLdBlocks(html: string): Record<string, unknown>[] {
@@ -22,6 +33,26 @@ function jsonLdBlocks(html: string): Record<string, unknown>[] {
     blocks.push(JSON.parse(decoded))
   }
   return blocks
+}
+
+// The table of contents ships once, inside the inline (mobile) <details>;
+// the sidebar nav only has an empty rail that its script fills with a copy.
+function inlineToc(html: string): string {
+  return (
+    /<details data-toc-inline[^>]*>.*?<nav data-toc aria-label="[^"]+"[^>]*>(.*?)<\/nav>/s.exec(
+      html,
+    )?.[1] ?? ''
+  )
+}
+
+function sidebarToc(html: string): string {
+  return (
+    /<nav data-toc aria-labelledby="toc-label-sidebar"[^>]*>(.*?)<\/nav>/s.exec(html)?.[1] ?? ''
+  )
+}
+
+function decodeEntities(text: string): string {
+  return text.replaceAll('&#39;', "'").replaceAll('&quot;', '"').replaceAll('&amp;', '&')
 }
 
 beforeAll(() => {
@@ -104,6 +135,55 @@ describe('speaking page', () => {
   })
 })
 
+describe('site header', () => {
+  const header = (path: string) =>
+    read(path).match(/<header class="sticky[^"]*"[^>]*>(.*?)<\/header>/s)?.[0] ?? ''
+
+  test('labels the nav, marks the current item and localizes the switches', () => {
+    const en = header('index.html')
+    expect(en).toContain('<nav aria-label="Main"')
+    expect(en).toMatch(/<a href="\/" aria-current="page"/)
+    expect(en).toMatch(/id="language-toggle" href="\/pt-br\/" hreflang="pt-br" lang="pt-br"/)
+    // Label in name (WCAG 2.5.3): no aria-label, the name starts with the visible code.
+    expect(en).toMatch(
+      /id="language-toggle"[^>]*>PT<span class="sr-only">, Mudar para Português<\/span><\/a>/,
+    )
+    expect(en).not.toMatch(/id="language-toggle"[^>]*aria-label/)
+    expect(en).toContain('aria-label="Toggle dark mode"')
+
+    const pt = header('pt-br/blog/index.html')
+    expect(pt).toContain('<nav aria-label="Principal"')
+    expect(pt).toMatch(/<a href="\/pt-br\/blog\/" aria-current="page"/)
+    expect(pt).toMatch(
+      /id="language-toggle"[^>]*>EN<span class="sr-only">, Switch to English<\/span><\/a>/,
+    )
+    expect(pt).not.toMatch(/id="language-toggle"[^>]*aria-label/)
+    expect(pt).toContain('aria-label="Alternar modo escuro"')
+  })
+
+  test('marks Blog as the current section on posts', () => {
+    expect(header('blog/how-to-be-proactive/index.html')).toMatch(
+      /<a href="\/blog\/" aria-current="true"/,
+    )
+  })
+
+  test('uses the same container as every page body', () => {
+    for (const path of [
+      'index.html',
+      'blog/index.html',
+      'blog/tag/react/index.html',
+      'about/index.html',
+      'speaking/index.html',
+      'blog/how-to-be-proactive/index.html',
+    ]) {
+      expect(header(path)).toContain('<div class="site-container">')
+      expect(read(path)).toMatch(/<(main|div) class="site-container[ "]/)
+      expect(read(path)).not.toContain('max-w-2xl')
+      expect(read(path)).not.toContain('max-w-[34.5rem]')
+    }
+  })
+})
+
 describe('blog post pages', () => {
   test('have BlogPosting JSON-LD and og:type article', () => {
     const html = read('blog/how-to-be-proactive/index.html')
@@ -121,16 +201,15 @@ describe('blog post pages', () => {
     ]
     for (const { path, label } of cases) {
       const html = read(path)
+      // Sidebar (lg+, filled by JS) and collapsed <details> (mobile) navs;
+      // only the <details> ships the list.
       const tocs = [...html.matchAll(/<nav data-toc[^>]*>(.*?)<\/nav>/gs)].map((m) => m[0])
-      // Sidebar (lg+) and collapsed <details> (mobile) variants.
       expect(tocs).toHaveLength(2)
       expect(html).toContain(`>${label}</p>`)
       expect(html).toContain(`aria-label="${label}"`)
-      for (const toc of tocs) {
-        const ids = [...toc.matchAll(/href="#([^"]+)"/g)].map((m) => m[1])
-        expect(ids.length).toBeGreaterThanOrEqual(2)
-        for (const id of ids) expect(html).toContain(`id="${id}"`)
-      }
+      const ids = [...inlineToc(html).matchAll(/href="#([^"]+)"/g)].map((m) => m[1])
+      expect(ids.length).toBeGreaterThanOrEqual(2)
+      for (const id of ids) expect(html).toContain(`id="${id}"`)
     }
   })
 
@@ -141,34 +220,265 @@ describe('blog post pages', () => {
     expect(html).not.toContain('lg:grid-cols-')
   })
 
-  test('TOC uses short frontmatter labels, numbers sections and keeps the full heading as title', () => {
+  test('TOC falls back to the heading text, numbers sections and keeps the full heading', () => {
+    // These posts set no `toc` frontmatter labels (see the custom-label test).
     const cases = [
       {
-        path: 'blog/how-always-on-agents-work/index.html',
-        slug: 'a-retry-must-not-charge-you-again',
-        heading: 'A retry must not charge you again',
-        label: 'Safe retries',
+        path: 'blog/old-macbook-context-server/index.html',
+        slug: 'the-architecture-roughly',
+        heading: 'The architecture, roughly',
       },
       {
-        path: 'pt-br/blog/como-funciona-um-agente-sempre-ligado/index.html',
-        slug: 'cache-o-detalhe-que-define-o-custo',
-        heading: 'Cache: o detalhe que define o custo',
-        label: 'Cache do prompt',
+        path: 'pt-br/blog/macbook-velho-virou-servidor-de-contexto/index.html',
+        slug: 'a-arquitetura-por-alto',
+        heading: 'A arquitetura, por alto',
       },
     ]
-    for (const { path, slug, heading, label } of cases) {
+    for (const { path, slug, heading } of cases) {
+      const toc = inlineToc(read(path))
+      const link = new RegExp(`<a href="#${slug}"[^>]*>(.*?)</a>`, 's').exec(toc)
+      expect(link).not.toBeNull()
+      // Tooltip for the truncated inline label (the rail copy drops it).
+      expect(link![0]).toContain(`title="${heading}"`)
+      // No short label: the full heading is the visible (truncated) label.
+      expect(link![1]).toContain(`class="toc-full min-w-0 truncate">${heading}</span>`)
+      expect(link![1]).not.toContain('toc-short')
+      // Section numbers are decorative: hidden from screen readers.
+      expect(toc).toMatch(/<span aria-hidden="true"[^>]*>01<\/span>/)
+    }
+  })
+
+  test('show the reading time in the meta line in both languages', () => {
+    const cases = [
+      { path: 'blog/old-macbook-context-server/index.html', label: 'min read' },
+      {
+        path: 'pt-br/blog/macbook-velho-virou-servidor-de-contexto/index.html',
+        label: 'min de leitura',
+      },
+      { path: 'blog/the-great-suspender/index.html', label: 'min read' },
+    ]
+    for (const { path, label } of cases) {
+      const match = new RegExp(`<span data-reading-time>(\\d+) ${label}</span>`).exec(read(path))
+      expect(match).not.toBeNull()
+      expect(Number(match![1])).toBeGreaterThanOrEqual(1)
+    }
+  })
+
+  test('ship the sidenote enhancement hook and script', () => {
+    for (const path of [
+      'blog/old-macbook-context-server/index.html',
+      'pt-br/blog/macbook-velho-virou-servidor-de-contexto/index.html',
+    ]) {
       const html = read(path)
-      const tocs = [...html.matchAll(/<nav data-toc[^>]*>(.*?)<\/nav>/gs)].map((m) => m[1])
-      expect(tocs).toHaveLength(2)
-      for (const toc of tocs) {
-        const link = new RegExp(`<a href="#${slug}"[^>]*>(.*?)</a>`, 's').exec(toc)
-        expect(link).not.toBeNull()
-        expect(link![0]).toContain(`title="${heading}"`)
-        expect(link![1]).toContain(`>${label}</span>`)
-        expect(link![1]).not.toContain(heading)
-        // Section numbers are decorative: hidden from screen readers.
-        expect(toc).toMatch(/<span aria-hidden="true"[^>]*>01<\/span>/)
+      expect(html).toMatch(/<div class="prose" data-sidenotes>/)
+      const scripts = [...html.matchAll(/<script type="module">(.*?)<\/script>/gs)].map((m) => m[1])
+      const sidenotes = scripts.find((script) => script.includes('sup > a[data-footnote-ref]'))
+      expect(sidenotes).toBeDefined()
+      expect(sidenotes).toContain('[data-sidenotes]')
+      expect(sidenotes).toContain('(min-width: 64rem)')
+    }
+  })
+})
+
+describe('no web fonts', () => {
+  function builtFiles(dir: string, ext: RegExp): string[] {
+    return readdirSync(join(DIST, dir), { recursive: true, encoding: 'utf-8' })
+      .filter((file) => ext.test(file))
+      .map((file) => join(dir, file))
+  }
+
+  test('built HTML and CSS load no font files, @font-face or font CDNs', () => {
+    const files = [...builtFiles('.', /\.html$/), ...builtFiles('.', /\.css$/)]
+    expect(files.some((file) => file.endsWith('.css'))).toBe(true)
+    for (const file of files) {
+      // Code samples in posts may talk about fonts; only markup and CSS count.
+      const text = read(file).replace(/<(pre|code)\b[\s\S]*?<\/\1>/g, '')
+      expect(text).not.toContain('@font-face')
+      expect(text).not.toMatch(/\.(woff2?|ttf|otf)\b/)
+      expect(text).not.toMatch(/fonts\.(googleapis|gstatic)/)
+      expect(text).not.toMatch(/<link\b[^>]*rel="preload"[^>]*as="font"/)
+      expect(text).not.toMatch(/<link\b[^>]*as="font"[^>]*rel="preload"/)
+    }
+    expect(existsSync(join(DIST, 'fonts'))).toBe(false)
+  })
+
+  test('uses native system stacks', () => {
+    const css = cssFor('blog/how-to-be-proactive/index.html')
+    expect(css).toMatch(/--font-sans:\s*ui-sans-serif,\s*system-ui/)
+    expect(css).toMatch(/--font-serif:\s*ui-serif,\s*["']New York["']/)
+    expect(css).toMatch(/--font-mono:\s*ui-monospace,\s*SFMono-Regular/)
+  })
+})
+
+describe('heading links', () => {
+  const posts = [
+    'blog/stylex-personal-site/index.html',
+    'pt-br/blog/stylex-nao-deixou-o-site-mais-rapido/index.html',
+    'blog/old-macbook-context-server/index.html',
+    'pt-br/blog/macbook-velho-virou-servidor-de-contexto/index.html',
+    'blog/how-always-on-agents-work/index.html',
+    'pt-br/blog/como-funciona-um-agente-sempre-ligado/index.html',
+  ]
+  const prose = (html: string) =>
+    html.match(/<div class="prose" data-sidenotes>([\s\S]*?)<p data-heading-anchor-status/)?.[1] ??
+    ''
+  // The visually hidden "Footnotes" h2 from GFM is not a section.
+  const headingIds = (html: string) =>
+    [...prose(html).matchAll(/<h[23]\b[^>]*\sid="([^"]+)"/g)]
+      .map((m) => m[1])
+      .filter((id) => id !== 'footnote-label')
+
+  test('every prose h2/h3 id is in the TOC and every TOC href is a heading', () => {
+    for (const path of posts) {
+      const html = read(path)
+      const ids = headingIds(html)
+      expect(ids.length).toBeGreaterThanOrEqual(2)
+      const hrefs = [...inlineToc(html).matchAll(/href="#([^"]+)"/g)].map((m) => m[1])
+      expect(hrefs).toEqual(ids)
+    }
+  })
+
+  const decode = (text: string) =>
+    text
+      .replaceAll('&quot;', '"')
+      .replaceAll('&#39;', "'")
+      .replaceAll('&#x27;', "'")
+      .replaceAll('&lt;', '<')
+      .replaceAll('&gt;', '>')
+      .replaceAll('&amp;', '&')
+  const stripTags = (html: string) => decode(html.replace(/<[^>]+>/g, '')).trim()
+  // Heading text as a screen reader gets it, minus the copy-link anchor.
+  const headingTexts = (html: string) =>
+    [...prose(html).matchAll(/<h([23])\b[^>]*\sid="([^"]+)"[^>]*>([\s\S]*?)<\/h\1>/g)]
+      .filter((m) => m[2] !== 'footnote-label')
+      .map((m) => stripTags(m[3].replace(/<a class="heading-anchor"[\s\S]*?<\/a>/g, '')))
+  const tocLinks = (toc: string) =>
+    [...toc.matchAll(/<a href="#[^"]+"([^>]*)>(.*?)<\/a>/gs)].map((m) => ({
+      attrs: m[1],
+      inner: m[2],
+    }))
+  // Accessible name from content: aria-hidden subtrees don't count.
+  const accessibleName = (inner: string) =>
+    stripTags(inner.replace(/<span aria-hidden="true"[^>]*>.*?<\/span>/gs, ''))
+
+  test('the TOC names every link once with the full heading text', () => {
+    for (const path of posts) {
+      const html = read(path)
+      const headings = headingTexts(html)
+      const links = tocLinks(inlineToc(html))
+      expect(links).toHaveLength(headings.length)
+      for (const [index, { attrs, inner }] of links.entries()) {
+        const full = /<span class="toc-full[^"]*">(.*?)<\/span>/s.exec(inner)
+        expect(full).not.toBeNull()
+        expect(stripTags(full![1])).toBe(headings[index])
+        // One name, from content only; the title only repeats it as a tooltip.
+        expect(attrs).not.toContain('aria-label')
+        expect(decode(/title="([^"]*)"/.exec(attrs)?.[1] ?? '')).toBe(headings[index])
+        // A short label, when there is one, is visible and starts the name.
+        const short = /<span class="toc-short[^"]*">(.*?)<\/span>/s.exec(inner)
+        expect(accessibleName(inner)).toBe(
+          short ? `${stripTags(short[1])}: ${headings[index]}` : headings[index],
+        )
       }
+    }
+  })
+
+  test('custom TOC labels are visible and start the link name (label in name)', () => {
+    const path = 'blog/how-always-on-agents-work/index.html'
+    const links = tocLinks(inlineToc(read(path)))
+    const link = links.find(({ inner }) => inner.includes('>Safe retries<'))
+    expect(link).toBeDefined()
+    expect(link!.inner).toMatch(/<span class="toc-short[^"]*">Safe retries<\/span>/)
+    expect(link!.inner).not.toMatch(/aria-hidden="true"[^>]*class="toc-(short|full)/)
+    expect(accessibleName(link!.inner)).toBe('Safe retries: A retry must not charge you again')
+    expect(links.filter(({ inner }) => inner.includes('toc-short')).length).toBeGreaterThan(1)
+  })
+
+  test('the list ships once: the sidebar rail is an empty slot', () => {
+    for (const path of posts) {
+      const html = read(path)
+      expect(html.match(/class="toc-link /g)?.length).toBe(headingTexts(html).length)
+      expect(sidebarToc(html)).toMatch(/<div data-toc-rail[^>]*><\/div>/)
+      expect(sidebarToc(html)).not.toContain('<ol')
+      // Without JS the rail stays empty, so the <details> shows on lg+ too.
+      expect(html).toMatch(
+        /<head>.*<noscript><style>[^<]*\[data-toc-inline\][^<]*display: block[^<]*<\/style><\/noscript>.*<\/head>/s,
+      )
+    }
+  })
+
+  test('the sidebar script copies the list into the rail without tooltips', async () => {
+    const path = 'blog/old-macbook-context-server/index.html'
+    const html = read(path)
+    const script = [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)]
+      .map((m) => m[1])
+      .find((code) => code.includes('[data-toc-rail]'))
+    expect(script).toBeDefined()
+    const window = new Window({
+      url: `https://franklinjavier.com/${path.replace('index.html', '')}`,
+    })
+    const document = window.document
+    document.write(html.replace(/<script\b[\s\S]*?<\/script>/g, ''))
+    window.eval(script!)
+    const inline = [...document.querySelectorAll('[data-toc-inline] a')]
+    const rail = [...document.querySelectorAll('[data-toc-rail] a')]
+    expect(rail).toHaveLength(headingTexts(html).length)
+    expect(rail.map((a) => a.getAttribute('href'))).toEqual(
+      inline.map((a) => a.getAttribute('href')),
+    )
+    expect(rail.every((a) => !a.hasAttribute('title'))).toBe(true)
+    expect(inline.every((a) => a.hasAttribute('title'))).toBe(true)
+    // Scroll-spy marks the same section in both copies.
+    rail[1].dispatchEvent(new window.MouseEvent('click', { bubbles: true, cancelable: true }))
+    const current = [...document.querySelectorAll('a[aria-current="location"]')]
+    expect(current.map((a) => a.getAttribute('href'))).toEqual([
+      inline[1].getAttribute('href'),
+      rail[1].getAttribute('href'),
+    ])
+    await window.happyDOM.close()
+  })
+
+  test('each heading carries a localized copy-link anchor to its own id', () => {
+    for (const path of posts) {
+      const html = read(path)
+      const prefix = path.startsWith('pt-br/') ? 'Copiar link da seção:' : 'Copy link to section:'
+      const message = path.startsWith('pt-br/') ? 'Link copiado' : 'Link copied'
+      const headings = [
+        ...prose(html).matchAll(/<h([23])\b[^>]*\sid="([^"]+)"[^>]*>([\s\S]*?)<\/h\1>/g),
+      ].filter((m) => m[2] !== 'footnote-label')
+      expect(headings.length).toBeGreaterThanOrEqual(2)
+      for (const [, , id, inner] of headings) {
+        expect(inner).toContain(`<a class="heading-anchor" href="#${id}" aria-label="${prefix} `)
+        expect(inner.match(/data-heading-anchor/g)).toHaveLength(1)
+      }
+      const regions = [...html.matchAll(/<p data-heading-anchor-status[^>]*>/g)]
+      expect(regions).toHaveLength(1)
+      expect(regions[0][0]).toContain(`data-message="${message}"`)
+      expect(regions[0][0]).toContain('data-error-message="')
+      expect(regions[0][0]).toContain('aria-live="polite"')
+      const scripts = [...html.matchAll(/<script type="module"[^>]*>(.*?)<\/script>/gs)]
+        .map((m) => m[1])
+        .join('\n')
+      const external = [...html.matchAll(/<script type="module" src="([^"]+)"/g)]
+        .map((m) => read(m[1].replace(/^\//, '')))
+        .join('\n')
+      const js = scripts + external
+      expect(js).toContain('a[data-heading-anchor]')
+      expect(js).toContain('writeText')
+      expect(js).toContain('execCommand')
+    }
+  })
+
+  test('the TOC labels and markdown twins carry no anchor glyph', () => {
+    for (const path of posts) {
+      const html = read(path)
+      for (const toc of html.matchAll(/<nav data-toc[^>]*>(.*?)<\/nav>/gs)) {
+        expect(toc[1]).not.toContain('heading-anchor')
+        expect(toc[1]).not.toMatch(/#<\/span>/)
+      }
+      const twin = read(path.replace(/index\.html$/, 'index.md'))
+      expect(twin).not.toContain('heading-anchor')
+      expect(twin).not.toMatch(/^#{2,3} .*#\s*$/m)
     }
   })
 })
@@ -332,13 +642,13 @@ describe('markdown alternate link', () => {
   }
 
   test('post HTML links its markdown twin via rel=alternate', () => {
-    expect(markdownAlternates(read('blog/how-always-on-agents-work/index.html'))).toEqual([
-      'https://franklinjavier.com/blog/how-always-on-agents-work/index.md',
+    expect(markdownAlternates(read('blog/old-macbook-context-server/index.html'))).toEqual([
+      'https://franklinjavier.com/blog/old-macbook-context-server/index.md',
     ])
     expect(
-      markdownAlternates(read('pt-br/blog/como-funciona-um-agente-sempre-ligado/index.html')),
+      markdownAlternates(read('pt-br/blog/macbook-velho-virou-servidor-de-contexto/index.html')),
     ).toEqual([
-      'https://franklinjavier.com/pt-br/blog/como-funciona-um-agente-sempre-ligado/index.md',
+      'https://franklinjavier.com/pt-br/blog/macbook-velho-virou-servidor-de-contexto/index.md',
     ])
     expect(markdownAlternates(read('404.html'))).toEqual([])
   })
@@ -485,21 +795,24 @@ describe('llms.txt', () => {
 describe('sitemap.xml', () => {
   const xml = () => read('sitemap.xml')
 
-  test('is a urlset with lastmod on every entry', () => {
-    expect(xml()).toContain('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">')
+  test('is a urlset with the xhtml namespace for hreflang alternates', () => {
+    expect(xml()).toContain(
+      '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">',
+    )
     const locs = xml().match(/<loc>/g) ?? []
-    const lastmods = xml().match(/<lastmod>\d{4}-\d{2}-\d{2}<\/lastmod>/g) ?? []
     expect(locs.length).toBeGreaterThan(20)
-    expect(lastmods.length).toBe(locs.length)
+    // lastmod, when present, is a plain date.
+    expect(xml().match(/<lastmod>[^<]*<\/lastmod>/g)?.length).toBe(
+      xml().match(/<lastmod>\d{4}-\d{2}-\d{2}<\/lastmod>/g)?.length,
+    )
   })
 
-  test('covers homepages, blog, posts, tags and trust pages', () => {
+  test('covers homepages, blog, posts and trust pages', () => {
     for (const url of [
       'https://franklinjavier.com/',
       'https://franklinjavier.com/pt-br/',
       'https://franklinjavier.com/blog/',
       'https://franklinjavier.com/blog/how-to-be-proactive/',
-      'https://franklinjavier.com/blog/tag/react/',
       'https://franklinjavier.com/speaking/',
       'https://franklinjavier.com/pt-br/speaking/',
       'https://franklinjavier.com/about/',
@@ -509,6 +822,323 @@ describe('sitemap.xml', () => {
     ]) {
       expect(xml()).toContain(`<loc>${url}</loc>`)
     }
+  })
+})
+
+// Sitemap entries keyed by <loc>.
+function sitemapEntries(): Map<string, { lastmod?: string; alternates: Record<string, string> }> {
+  const entries = new Map<string, { lastmod?: string; alternates: Record<string, string> }>()
+  for (const [, body] of read('sitemap.xml').matchAll(/<url>(.*?)<\/url>/gs)) {
+    const loc = /<loc>([^<]+)<\/loc>/.exec(body)![1]
+    const lastmod = /<lastmod>([^<]+)<\/lastmod>/.exec(body)?.[1]
+    const alternates: Record<string, string> = {}
+    for (const [, lang, href] of body.matchAll(
+      /<xhtml:link rel="alternate" hreflang="([^"]+)" href="([^"]+)"\/>/g,
+    )) {
+      alternates[lang] = href
+    }
+    entries.set(loc, { lastmod, alternates })
+  }
+  return entries
+}
+
+function htmlPages(dir = DIST): string[] {
+  return readdirSync(dir, { recursive: true, encoding: 'utf-8' })
+    .filter((file) => file.endsWith('index.html'))
+    .map((file) => file.split(sep).join('/'))
+}
+
+function distPathFor(url: string): string {
+  return `${new URL(url).pathname.replace(/^\//, '')}index.html`
+}
+
+function hreflangs(html: string): Record<string, string> {
+  const links: Record<string, string> = {}
+  for (const [, lang, href] of html.matchAll(
+    /<link rel="alternate" hreflang="([^"]+)" href="([^"]+)">/g,
+  )) {
+    links[lang] = href
+  }
+  return links
+}
+
+describe('hreflang', () => {
+  test('translated pages carry absolute, reciprocal en / pt-BR / x-default alternates', () => {
+    let checked = 0
+    for (const path of htmlPages()) {
+      const html = read(path)
+      const links = hreflangs(html)
+      if (Object.keys(links).length === 0) continue
+      checked++
+      expect(Object.keys(links).sort()).toEqual(['en', 'pt-BR', 'x-default'])
+      expect(links['x-default']).toBe(links.en)
+      const self = /<link rel="canonical" href="([^"]+)">/.exec(html)![1]
+      const lang = /<html lang="([^"]+)"/.exec(html)![1]
+      expect(links[lang === 'pt-BR' ? 'pt-BR' : 'en']).toBe(self)
+      for (const href of Object.values(links)) {
+        expect(href.startsWith('https://franklinjavier.com/')).toBe(true)
+        expect(existsSync(join(DIST, distPathFor(href)))).toBe(true)
+        // The target points back with the same set.
+        expect(hreflangs(read(distPathFor(href)))).toEqual(links)
+      }
+    }
+    expect(checked).toBeGreaterThan(40)
+  })
+
+  test('covers posts, homes, blog indexes, speaking, CV and trust pages', () => {
+    for (const path of [
+      'index.html',
+      'pt-br/index.html',
+      'blog/index.html',
+      'speaking/index.html',
+      'cv/index.html',
+      'about/index.html',
+      'privacy/index.html',
+      'pt-br/contact/index.html',
+      'blog/lisbon-ai-2026/index.html',
+      'pt-br/blog/macbook-velho-virou-servidor-de-contexto/index.html',
+    ]) {
+      expect(Object.keys(hreflangs(read(path)))).toHaveLength(3)
+    }
+    expect(hreflangs(read('pt-br/blog/lisbon-ai-2026/index.html'))).toEqual({
+      en: 'https://franklinjavier.com/blog/lisbon-ai-2026/',
+      'pt-BR': 'https://franklinjavier.com/pt-br/blog/lisbon-ai-2026/',
+      'x-default': 'https://franklinjavier.com/blog/lisbon-ai-2026/',
+    })
+  })
+
+  test('pages without a translation emit none', () => {
+    expect(hreflangs(read('404.html'))).toEqual({})
+    expect(hreflangs(read('blog/tag/react/index.html'))).toEqual({})
+  })
+
+  test('sitemap entries mirror the page head alternates', () => {
+    let withAlternates = 0
+    for (const [loc, entry] of sitemapEntries()) {
+      const head = hreflangs(read(distPathFor(loc)))
+      expect(entry.alternates).toEqual(head)
+      if (Object.keys(head).length > 0) withAlternates++
+    }
+    expect(withAlternates).toBeGreaterThan(40)
+  })
+})
+
+describe('tag pages', () => {
+  const tagPages = () => htmlPages().filter((path) => /(^|\/)blog\/tag\//.test(path))
+
+  test('are noindex,follow in both languages', () => {
+    const pages = tagPages()
+    expect(pages.some((path) => path.startsWith('pt-br/'))).toBe(true)
+    expect(pages.some((path) => path.startsWith('blog/'))).toBe(true)
+    for (const path of pages) {
+      expect(read(path)).toContain('<meta name="robots" content="noindex,follow">')
+    }
+  })
+
+  test('are left out of the sitemap, and nothing else is noindex', () => {
+    expect(read('sitemap.xml')).not.toContain('/tag/')
+    for (const path of htmlPages().filter((path) => !path.includes('/tag/'))) {
+      expect(read(path)).not.toContain('name="robots"')
+    }
+  })
+})
+
+describe('publish and modified dates', () => {
+  const posting = (path: string) =>
+    jsonLdBlocks(read(path)).find((block) => block['@type'] === 'BlogPosting')!
+  const meta = (path: string, property: string) =>
+    new RegExp(`<meta property="${property}" content="([^"]+)">`).exec(read(path))?.[1]
+
+  test('dateModified and article:modified_time use `updated`, falling back to `date`', () => {
+    // Lisbon sets updated: 2026-09-28; How to be proactive has no `updated`.
+    for (const path of ['blog/lisbon-ai-2026/index.html', 'pt-br/blog/lisbon-ai-2026/index.html']) {
+      expect(posting(path).datePublished).toBe('2026-09-25T00:00:00.000Z')
+      expect(posting(path).dateModified).toBe('2026-09-28T00:00:00.000Z')
+      expect(meta(path, 'article:published_time')).toBe('2026-09-25T00:00:00.000Z')
+      expect(meta(path, 'article:modified_time')).toBe('2026-09-28T00:00:00.000Z')
+    }
+    const plain = 'blog/how-to-be-proactive/index.html'
+    expect(posting(plain).dateModified).toBe(posting(plain).datePublished)
+    expect(meta(plain, 'article:modified_time')).toBe(meta(plain, 'article:published_time'))
+  })
+
+  test('posts revised on 2026-10-11 carry that dateModified', () => {
+    for (const path of [
+      'blog/old-macbook-context-server/index.html',
+      'pt-br/blog/macbook-velho-virou-servidor-de-contexto/index.html',
+      'blog/how-always-on-agents-work/index.html',
+      'pt-br/blog/como-funciona-um-agente-sempre-ligado/index.html',
+    ]) {
+      expect(posting(path).dateModified).toBe('2026-10-11T00:00:00.000Z')
+      expect(meta(path, 'article:modified_time')).toBe('2026-10-11T00:00:00.000Z')
+    }
+  })
+
+  test('every post carries both article times', () => {
+    for (const path of htmlPages().filter((path) =>
+      /^(pt-br\/)?blog\/(?!tag\/)[^/]+\/index\.html$/.test(path),
+    )) {
+      expect(meta(path, 'article:published_time')).toBeDefined()
+      expect(meta(path, 'article:modified_time')).toBeDefined()
+      expect(posting(path).dateModified).toBe(meta(path, 'article:modified_time'))
+    }
+  })
+
+  test('sitemap lastmod: posts use their last edit, indexes the newest post in their language', () => {
+    const entries = sitemapEntries()
+    expect(entries.get('https://franklinjavier.com/blog/lisbon-ai-2026/')?.lastmod).toBe(
+      '2026-09-28',
+    )
+    expect(entries.get('https://franklinjavier.com/blog/how-to-be-proactive/')?.lastmod).toBe(
+      String(posting('blog/how-to-be-proactive/index.html').datePublished).slice(0, 10),
+    )
+    for (const [prefix, lang] of [
+      ['', 'en'],
+      ['pt-br/', 'pt-BR'],
+    ]) {
+      const newest = htmlPages()
+        .filter((path) => path.startsWith(`${prefix}blog/`) && !path.includes('/tag/'))
+        .map((path) => jsonLdBlocks(read(path)).find((block) => block['@type'] === 'BlogPosting'))
+        .filter((block) => block && block.inLanguage === lang)
+        .map((block) => String(block!.dateModified).slice(0, 10))
+        .sort()
+        .at(-1)
+      expect(entries.get(`https://franklinjavier.com/${prefix}`)?.lastmod).toBe(newest)
+      expect(entries.get(`https://franklinjavier.com/${prefix}blog/`)?.lastmod).toBe(newest)
+    }
+  })
+
+  test('static pages use their `updated` frontmatter or omit lastmod (never the build date)', () => {
+    const entries = sitemapEntries()
+    expect(entries.get('https://franklinjavier.com/about/')?.lastmod).toBe('2026-09-28')
+    expect(entries.get('https://franklinjavier.com/pt-br/cv/')?.lastmod).toBe('2026-09-28')
+    expect(entries.get('https://franklinjavier.com/speaking/')?.lastmod).toBeUndefined()
+  })
+})
+
+describe('localized home and blog metadata', () => {
+  const description = (path: string) =>
+    /<meta name="description" content="([^"]+)">/.exec(read(path))?.[1]
+  const graphDescriptions = (path: string) => {
+    const graph = jsonLdBlocks(read(path)).find((block) => '@graph' in block) as {
+      '@graph': Record<string, unknown>[]
+    }
+    return graph['@graph'].map((node) => node.description)
+  }
+  const PT_HOME =
+    'Sou Principal Engineer com 19 anos de experiência em front-end. Hoje construo produtos de IA e os harnesses que coordenam seus agentes e ferramentas.'
+  const EN_HOME =
+    "I'm a Principal Engineer with 19 years of front-end development experience, now building AI products and the agent harnesses behind them."
+
+  test('PT home has its own title, description and JSON-LD description', () => {
+    const html = read('pt-br/index.html')
+    expect(html).toContain(
+      '<title>Principal Engineer em Lisboa, Portugal - Franklin Javier</title>',
+    )
+    expect(description('pt-br/index.html')).toBe(PT_HOME)
+    expect(html).toContain(`property="og:description" content="${PT_HOME}"`)
+    expect(graphDescriptions('pt-br/index.html')).toEqual([PT_HOME, PT_HOME])
+    expect(graphDescriptions('pt-br/blog/index.html')).toEqual([PT_HOME, PT_HOME])
+  })
+
+  test('EN home keeps its title and description', () => {
+    expect(read('index.html')).toContain('<title>Principal Engineer - Franklin Javier</title>')
+    expect(decodeEntities(description('index.html') ?? '')).toBe(EN_HOME)
+    expect(graphDescriptions('index.html')).toEqual([EN_HOME, EN_HOME])
+  })
+
+  test('blog indexes describe the current focus in each language', () => {
+    expect(decodeEntities(description('blog/index.html') ?? '')).toBe(
+      'Notes on AI agents and the engineering behind them, alongside web performance, tooling, and lessons from years of front-end work.',
+    )
+    expect(description('pt-br/blog/index.html')).toBe(
+      'Textos sobre agentes de IA e a engenharia por trás deles, além de performance web, ferramentas e experiências de trabalho com front-end.',
+    )
+  })
+})
+
+describe('series social cards', () => {
+  const cases = [
+    ['blog/old-macbook-context-server/index.html', '/images/og/old-macbook-context-server-en.png'],
+    [
+      'pt-br/blog/macbook-velho-virou-servidor-de-contexto/index.html',
+      '/images/og/old-macbook-context-server-pt-br.png',
+    ],
+    ['blog/how-always-on-agents-work/index.html', '/images/og/always-on-agents-en.png'],
+    [
+      'pt-br/blog/como-funciona-um-agente-sempre-ligado/index.html',
+      '/images/og/always-on-agents-pt-br.png',
+    ],
+  ]
+
+  test('og:image, twitter:image and BlogPosting.image point at an existing 1200x630 PNG', () => {
+    for (const [path, image] of cases) {
+      const html = read(path)
+      const url = `https://franklinjavier.com${image}`
+      expect(html).toContain(`<meta property="og:image" content="${url}">`)
+      expect(html).toContain(`<meta name="twitter:image" content="${url}">`)
+      const posting = jsonLdBlocks(html).find((block) => block['@type'] === 'BlogPosting')
+      expect(posting?.image).toBe(url)
+      const file = join(DIST, image)
+      expect(existsSync(file)).toBe(true)
+      expect(statSync(file).size).toBeLessThan(100 * 1024)
+      const png = readFileSync(file)
+      expect(png.subarray(1, 4).toString()).toBe('PNG')
+      expect([png.readUInt32BE(16), png.readUInt32BE(20)]).toEqual([1200, 630])
+    }
+  })
+})
+
+describe('lisbon post markup', () => {
+  const paths = ['blog/lisbon-ai-2026/index.html', 'pt-br/blog/lisbon-ai-2026/index.html']
+
+  test('slides use the real column for sizes and offer a 1200w step', () => {
+    // sizes caps at the post column's max-width, read from the stylesheet.
+    const column = /\.post-column \{\s*max-width: ([\d.]+rem);/.exec(
+      readFileSync(join(import.meta.dir, '..', 'src', 'styles', 'prose.css'), 'utf8'),
+    )?.[1]
+    expect(column).toBeDefined()
+    for (const path of paths) {
+      const imgs = [...read(path).matchAll(/<img [^>]*srcset="([^"]+)"[^>]*>/g)]
+      expect(imgs.length).toBe(17)
+      for (const [tag, srcset] of imgs) {
+        expect(tag).toContain(`sizes="min(calc(100vw - 3rem), ${column})"`)
+        for (const candidate of srcset.split(', ')) {
+          expect(existsSync(join(DIST, candidate.split(' ')[0]))).toBe(true)
+        }
+      }
+      // Every slide wider than 1200px has the step (two sources are narrower).
+      expect(imgs.filter(([, srcset]) => srcset.includes(' 1200w')).length).toBe(15)
+    }
+  })
+
+  test('the before/after table has column and row header cells', () => {
+    for (const path of paths) {
+      const table = /<table>(?:(?!<\/table>).)*?scope="row">Preview<\/th>.*?<\/table>/s.exec(
+        read(path),
+      )?.[0]
+      expect(table).toBeDefined()
+      expect(table!.match(/<th scope="col">/g)).toHaveLength(2)
+      expect(table!.match(/<th scope="row">/g)).toHaveLength(4)
+    }
+  })
+})
+
+describe('post HTML weight', () => {
+  // The TOC list used to ship twice (rail + <details>), ~37 KB on this page.
+  test('long posts ship the TOC list once and stay under budget', () => {
+    for (const path of [
+      'pt-br/blog/lisbon-ai-2026/index.html',
+      'blog/how-always-on-agents-work/index.html',
+    ]) {
+      const html = read(path)
+      expect(html.match(/<ol>\s*<li><a href="#/g)).toHaveLength(1)
+      const navs = [...html.matchAll(/<nav data-toc.*?<\/nav>/gs)].map((m) => m[0].length)
+      expect(navs).toHaveLength(2)
+      // The rail nav is a shell: heading, progress line, empty slot.
+      expect(Math.min(...navs)).toBeLessThan(1500)
+    }
+    expect(read('pt-br/blog/lisbon-ai-2026/index.html').length).toBeLessThan(210_000)
   })
 })
 
@@ -537,16 +1167,6 @@ describe('unregistered leftovers', () => {
 })
 
 describe('payload cuts', () => {
-  function cssHrefs(html: string): string[] {
-    return [...html.matchAll(/<link[^>]+href="([^"]+\.css)"/g)].map((match) => match[1])
-  }
-
-  function cssFor(htmlPath: string): string {
-    return cssHrefs(read(htmlPath))
-      .map((href) => read(href.replace(/^\//, '')))
-      .join('\n')
-  }
-
   test('home, blog index, speaking and 404 do not download .prose', () => {
     for (const path of ['index.html', 'blog/index.html', 'speaking/index.html', '404.html']) {
       expect(cssFor(path)).not.toContain('.prose')
@@ -637,5 +1257,64 @@ describe('vercel.json', () => {
       expect(value).toContain('</rss.xml>; rel="alternate"')
       expect(value).toContain('</sitemap.xml>; rel="sitemap"')
     }
+  })
+})
+
+describe('accessibility guards', () => {
+  const post = 'blog/stylex-personal-site/index.html'
+
+  test('selected text is ink on the selection colour', () => {
+    expect(cssFor('index.html')).toMatch(
+      /::selection\{background-color:var\(--selection\);color:var\(--ink\)\}/,
+    )
+  })
+
+  test('bare markdown tables scroll inside themselves on phones', () => {
+    // This post ships a GFM table with no .overflow-x-auto wrapper.
+    expect(read(post)).toMatch(/<\/p>\s*<table>/)
+    expect(cssFor(post)).toMatch(
+      /table:not\(\.overflow-x-auto ?> ?table\)\)\{[^}]*max-width:100%[^}]*display:block[^}]*overflow-x:auto/,
+    )
+  })
+
+  test('translucent Shiki comments are forced opaque', () => {
+    expect(read('blog/loading-disqus-at-page-end/index.html')).toContain('color:#8B8B8B94')
+    expect(cssFor('blog/loading-disqus-at-page-end/index.html')).toMatch(
+      /8B8B8B94 i\]\)\{color:#8b8b8b!important\}/,
+    )
+  })
+
+  test('theme transition and 404 glitch opt out of reduced motion', () => {
+    const html = read('index.html')
+    expect(html).toContain(
+      "startViewTransition&&!matchMedia('(prefers-reduced-motion: reduce)').matches",
+    )
+    expect(cssFor('index.html')).toMatch(
+      /@media \(prefers-reduced-motion:reduce\)\{::view-transition-old\(root\),::view-transition-new\(root\)\{animation:none\}/,
+    )
+    expect(cssFor('404.html')).toMatch(
+      /@media \(prefers-reduced-motion:reduce\)\{\.glitch[^{]*\{animation:none\}/,
+    )
+  })
+
+  test('the 404 glitch stops on its own within five seconds', () => {
+    expect(cssFor('404.html')).toMatch(/\.glitch[^{]*\{animation:1s linear 4 glitch\}/)
+  })
+
+  test('footnote text on well backgrounds is never muted', () => {
+    const css = cssFor(post)
+    expect(css).toMatch(/th sup>a\[data-footnote-ref\]\)\{color:var\(--ink-2\)\}/)
+    expect(css).toMatch(/\.sidenote a code\)\{color:var\(--ink-2\)\}/)
+  })
+
+  test('theme toggle is labelled in the page language', () => {
+    expect(read('index.html')).toContain('aria-label="Toggle dark mode"')
+    expect(read('pt-br/index.html')).toContain('aria-label="Alternar modo escuro"')
+  })
+
+  test('home lists recent posts as headings with their descriptions', () => {
+    const section = /<section[^>]*id="posts"[^>]*>(.*?)<\/section>/s.exec(read('index.html'))![1]
+    expect((section.match(/<h3\b/g) ?? []).length).toBe(6)
+    expect(section).toMatch(/<\/h3>.*?<\/time>\s*<\/div>\s*<p\b/s)
   })
 })

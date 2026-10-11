@@ -21,18 +21,16 @@ html {
   tab-size: 4;
   font-family: --theme(
     --default-font-family,
+    ui-sans-serif,
+    system-ui,
     -apple-system,
-    BlinkMacSystemFont,
     'Segoe UI',
     Roboto,
     'Helvetica Neue',
-    'Noto Sans',
     Arial,
     sans-serif,
     'Apple Color Emoji',
-    'Segoe UI Emoji',
-    'Segoe UI Symbol',
-    'Noto Color Emoji'
+    'Segoe UI Emoji'
   );
   font-feature-settings: --theme(--default-font-feature-settings, normal);
   font-variation-settings: --theme(--default-font-variation-settings, normal);
@@ -69,11 +67,10 @@ pre {
     --default-mono-font-family,
     ui-monospace,
     SFMono-Regular,
+    'SF Mono',
     Menlo,
-    Monaco,
     Consolas,
     'Liberation Mono',
-    'Courier New',
     monospace
   );
   font-feature-settings: --theme(--default-mono-font-feature-settings, normal);

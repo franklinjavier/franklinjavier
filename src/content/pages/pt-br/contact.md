@@ -2,6 +2,7 @@
 title: Contato
 description: Como entrar em contato com Franklin Javier - email, LinkedIn, GitHub e X.
 lang: pt-br
+updated: 2026-09-28
 ---
 
 A melhor forma de falar comigo é por email. Leio tudo o que chega na minha caixa de entrada e faço o possível para responder mensagens genuínas sobre engenharia, consultoria, mentoria ou problemas interessantes de front-end.

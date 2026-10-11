@@ -32,9 +32,11 @@ beforeAll(() => {
   // Astro needs node_modules inside the project root (a symlink breaks .astro
   // compilation), so hardlink-copy it, or plain-copy across filesystems. The
   // copy's own node_modules/.astro starts empty and is the cache under test.
+  // The trailing /. copies the contents even when node_modules is a symlink
+  // (worktrees sharing an install).
   const copy = (flags: string) =>
-    Bun.spawnSync(['cp', flags, join(repo, 'node_modules'), join(dir, 'node_modules')]).exitCode ===
-    0
+    Bun.spawnSync(['cp', flags, `${join(repo, 'node_modules')}/.`, join(dir, 'node_modules')])
+      .exitCode === 0
   if (!copy('-al')) {
     rmSync(join(dir, 'node_modules'), { recursive: true, force: true })
     if (!copy('-a')) throw new Error('could not copy node_modules')

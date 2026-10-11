@@ -2,6 +2,7 @@
 title: About
 description: Who Franklin Javier is - Principal Engineer with 19 years of front-end experience, now working on AI products and agent tooling.
 lang: en
+updated: 2026-09-28
 ---
 
 I'm Franklin Javier, a Principal Engineer. I've been doing front-end since 2007, on high-performance web and mobile apps, and today I lead front-end and agentic engineering work across product teams.

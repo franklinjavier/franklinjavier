@@ -1,13 +1,17 @@
 ---
 title: MacBook velho virou servidor de contexto
 date: 2026-10-08
-description: Um MacBook Pro de 2017, de tampa fechada na tomada, guarda o histórico das sessões dos meus agentes em várias máquinas e vários projetos. Quando uma tarefa para no meio, o próximo agente parte de um resumo e é instruído a conferir o estado atual no repositório.
+updated: 2026-10-11
+description: "Contexto compartilhado entre agentes, máquinas e projetos: meu MacBook de 2017 guarda sessões e resumos, com conferência no repositório antes de retomar."
 author: Franklin Javier
 tags: ia, agentes, self-hosting, tooling, produtividade
 lang: pt-br
 translationKey: old-macbook-context-server
+image: /images/og/old-macbook-context-server-pt-br.png
 series: { key: agent-experiments, part: 1 }
 ---
+
+Meu MacBook Pro de 2017 virou um servidor de contexto compartilhado para agentes que trabalham em várias máquinas e projetos. Hooks gravam as sessões de código automaticamente, e cada nova sessão começa com um resumo do projeto. A instrução para todos os agentes é tratar a memória como histórico e conferir o repositório antes de afirmar algo sobre o código atual.
 
 Meu outro Mac dormiu no meio de uma tarefa do Codex. Do celular, pedi ao Claude Code, rodando num MacBook antigo, para descobrir onde o trabalho tinha parado. Ele achou na memória compartilhada os pedidos completos que o Codex tinha feito ao Claude Code, com o texto exato das mudanças que ficaram sem commit, e conferiu no GitHub o que já tinha subido no PR e o que não.
 

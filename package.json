@@ -11,6 +11,8 @@
     "format:check": "prettier --check .",
     "test": "bun run build && bun test tests",
     "test:cache": "bun test tests/diagram-cache.test.ts",
+    "og": "bun scripts/og-cards.ts",
+    "images:widths": "bun scripts/image-widths.ts",
     "updatedeps": "bun update --latest"
   },
   "author": "Franklin Javier <franklinjalves@gmail.com>",
@@ -28,9 +30,11 @@
   },
   "devDependencies": {
     "@types/bun": "^1.4.2",
+    "happy-dom": "^20.14.6",
     "prettier": "^3.9.9",
     "prettier-plugin-astro": "^1.1.0",
     "prettier-plugin-tailwindcss": "^0.8.1",
+    "sharp": "^0.35.4",
     "vite": "^8.3.1"
   }
 }

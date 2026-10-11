@@ -12,6 +12,7 @@ import {
   baseJsonLd,
 } from '../lib/site'
 import { markdownPathFor } from '../lib/negotiation'
+import { hreflangLinks, translationPair } from '../lib/alternates'
 
 interface Props {
   title?: string
@@ -29,6 +30,14 @@ interface Props {
    * Only set it from pages that endpoint covers.
    */
   markdownTwin?: boolean
+  /**
+   * Site path of this page in the other language. When set, the head carries
+   * reciprocal hreflang alternates (en, pt-BR, x-default -> en); leave it unset
+   * for pages without a translation.
+   */
+  alternate?: string | null
+  /** Ask search engines not to index the page (links are still followed). */
+  noindex?: boolean
 }
 
 const {
@@ -40,6 +49,8 @@ const {
   bare = false,
   image,
   markdownTwin = false,
+  alternate,
+  noindex = false,
 } = Astro.props
 const htmlLang = lang === 'pt-br' ? 'pt-BR' : 'en'
 const siteTitle = SITE_TITLE
@@ -49,6 +60,8 @@ const pageDescription = description || siteDescription
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site ?? 'https://franklinjavier.com').href
 const ogImage = absoluteUrl(image ?? SITE_IMAGE, Astro.site)
 const ogLocale = lang === 'pt-br' ? 'pt_BR' : 'en_US'
+const pageLang = lang === 'pt-br' ? 'pt-br' : 'en'
+const alternates = hreflangLinks(translationPair(pageLang, Astro.url.pathname, alternate))
 const markdownUrl = markdownTwin ? `${SITE_URL}${markdownPathFor(Astro.url.pathname)}` : undefined
 ---
 
@@ -61,7 +74,11 @@ const markdownUrl = markdownTwin ? `${SITE_URL}${markdownPathFor(Astro.url.pathn
     <title>{pageTitle}</title>
     <meta name="description" content={pageDescription} />
     <meta name="author" content="Franklin Javier" />
+    {noindex && <meta name="robots" content="noindex,follow" />}
     <link rel="canonical" href={canonicalUrl} />
+    {alternates.map((link) => (
+      <link rel="alternate" hreflang={link.hreflang} href={link.href} />
+    ))}
     <meta property="og:type" content={type} />
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={pageDescription} />
@@ -75,18 +92,19 @@ const markdownUrl = markdownTwin ? `${SITE_URL}${markdownPathFor(Astro.url.pathn
     <meta name="twitter:title" content={pageTitle} />
     <meta name="twitter:description" content={pageDescription} />
     <meta name="twitter:image" content={ogImage} />
-    <script type="application/ld+json" is:inline set:html={JSON.stringify(baseJsonLd())} />
+    <script type="application/ld+json" is:inline set:html={JSON.stringify(baseJsonLd(pageLang))} />
     {jsonLd && <script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} />}
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="alternate" href="/rss.xml" type="application/rss+xml" title="Feed" />
     {markdownUrl && <link rel="alternate" type="text/markdown" href={markdownUrl} />}
+    <slot name="head" />
 
     <script is:inline>
       /* prettier-ignore */
-      ;(function(){var r=document.documentElement,s=localStorage.getItem('color-theme');r.classList.toggle('dark',s==='dark'||(s===null&&matchMedia('(prefers-color-scheme: dark)').matches));function boot(){var t=document.getElementById('theme-toggle'),m=document.getElementById('theme-toggle-dark-icon'),u=document.getElementById('theme-toggle-light-icon'),l=document.getElementById('language-toggle');function sync(){if(!m||!u)return;var on=r.classList.contains('dark');m.classList.toggle('hidden',on);u.classList.toggle('hidden',!on)}function apply(on){r.classList.toggle('dark',on);localStorage.setItem('color-theme',on?'dark':'light');sync()}function tog(){var go=function(){apply(!r.classList.contains('dark'))};document.startViewTransition?document.startViewTransition(go):go()}sync();if(t)t.addEventListener('click',tog);document.addEventListener('keydown',function(e){if(e.metaKey||e.ctrlKey||e.altKey)return;var n=document.activeElement&&document.activeElement.tagName;if(n==='INPUT'||n==='TEXTAREA')return;if(e.key==='t'&&t)tog();if(e.key==='l'&&l)location.href=l.href})}document.readyState==='loading'?document.addEventListener('DOMContentLoaded',boot):boot()})()
+      ;(function(){var r=document.documentElement,s=localStorage.getItem('color-theme');r.classList.toggle('dark',s==='dark'||(s===null&&matchMedia('(prefers-color-scheme: dark)').matches));function boot(){var t=document.getElementById('theme-toggle'),m=document.getElementById('theme-toggle-dark-icon'),u=document.getElementById('theme-toggle-light-icon'),l=document.getElementById('language-toggle');function sync(){if(!m||!u)return;var on=r.classList.contains('dark');m.classList.toggle('hidden',on);u.classList.toggle('hidden',!on)}function apply(on){r.classList.toggle('dark',on);localStorage.setItem('color-theme',on?'dark':'light');sync()}function tog(){var go=function(){apply(!r.classList.contains('dark'))};document.startViewTransition&&!matchMedia('(prefers-reduced-motion: reduce)').matches?document.startViewTransition(go):go()}sync();if(t)t.addEventListener('click',tog);document.addEventListener('keydown',function(e){if(e.metaKey||e.ctrlKey||e.altKey)return;var n=document.activeElement&&document.activeElement.tagName;if(n==='INPUT'||n==='TEXTAREA')return;if(e.key==='t'&&t)tog();if(e.key==='l'&&l)location.href=l.href})}document.readyState==='loading'?document.addEventListener('DOMContentLoaded',boot):boot()})()
     </script>
   </head>
-  <body class="min-h-screen bg-white text-gray-900 antialiased transition-colors dark:bg-black dark:text-gray-100">
+  <body class="min-h-screen bg-page text-ink antialiased transition-colors ease-smooth">
     <slot />
     {!bare && <Footer />}
     <Analytics />

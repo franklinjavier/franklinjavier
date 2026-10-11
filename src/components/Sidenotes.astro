@@ -1,0 +1,13 @@
+---
+/**
+ * Margin sidenotes for GFM footnotes (logic in lib/sidenotes.ts). Without
+ * JS, or when a footnote can't be moved, the normal footnotes stay.
+ */
+---
+
+<script>
+  import { enhanceSidenotes } from '../lib/sidenotes'
+
+  const prose = document.querySelector('[data-sidenotes]')
+  if (prose) enhanceSidenotes(prose, matchMedia('(min-width: 64rem)'))
+</script>
