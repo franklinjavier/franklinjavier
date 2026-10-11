@@ -4,6 +4,7 @@
 import { getCollection, type CollectionEntry } from 'astro:content'
 import { parseTags, getPostUrl, getTagUrl } from '../i18n/utils'
 import type { Lang, PostSummary } from './markdown'
+import { seriesDrift, seriesNav, type SeriesNav, type SeriesRef } from './series'
 
 export async function getPublishedPosts(lang?: Lang): Promise<CollectionEntry<'blog'>[]> {
   const posts = await getCollection('blog', ({ data }) => {
@@ -21,6 +22,33 @@ export function toPostSummary(post: CollectionEntry<'blog'>): PostSummary {
     tags: parseTags(post.data.tags),
     author: post.data.author,
   }
+}
+
+// Fails the build when src/data/series.ts and the published posts disagree.
+async function checkSeriesData(): Promise<void> {
+  const posts = await getPublishedPosts()
+  const problems = seriesDrift(
+    posts.map((post) => ({
+      lang: post.data.lang,
+      title: post.data.title,
+      url: getPostUrl(post.id, post.data.lang),
+      translationKey: post.data.translationKey,
+      series: post.data.series,
+    })),
+  )
+  if (problems.length > 0) {
+    throw new Error(`Series data is out of sync:\n- ${problems.join('\n- ')}`)
+  }
+}
+
+// Series marker and neighbouring parts, or undefined when the post is in no series.
+export async function getSeriesNav(
+  lang: Lang,
+  series: SeriesRef | undefined,
+): Promise<SeriesNav | undefined> {
+  if (!series) return undefined
+  await checkSeriesData()
+  return seriesNav(series, lang)
 }
 
 export interface TagPage {

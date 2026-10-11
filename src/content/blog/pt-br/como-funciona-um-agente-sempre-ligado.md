@@ -6,8 +6,9 @@ author: Franklin Javier
 tags: ia, agentes, arquitetura, llm
 lang: pt-br
 translationKey: always-on-agents
+series: { key: agent-experiments, part: 2 }
 toc:
-  por-que-o-agente-não-roda-no-seu-laptop: Laptop fechado
+  por-que-o-agente-não-roda-na-máquina-que-você-fecha: Máquina sempre ligada
   a-máquina-precisa-poder-ser-reconstruída: Máquina reconstruível
   mensagens-rápidas-precisam-virar-um-pedido-só: Fila de mensagens
   como-retomar-sem-repetir-um-pagamento: Retomada sem duplicação
@@ -21,17 +22,17 @@ toc:
   minha-proposta-o-que-eu-construiria-primeiro: Por onde começar
 ---
 
-No [post anterior](/pt-br/blog/macbook-velho-virou-servidor-de-contexto/), contei como um MacBook velho virou servidor para manter o contexto vivo entre sessões e agentes. O próximo passo é o próprio agente continuar disponível e trabalhando quando eu saio. A aula [How always-on agents work, de Lee Robinson (@leerob)](https://x.com/leerob/status/2108650243365736855), apresentada em Stanford CS146S em 8 de outubro de 2026, mostra como construir isso.
+No [post anterior](/pt-br/blog/macbook-velho-virou-servidor-de-contexto/), contei como meu MacBook velho virou o servidor que guarda o contexto dos meus agentes. Com essa metade funcionando, quero experimentar a outra: o que faz um agente continuar trabalhando por conta própria ali, depois que eu saio? A aula [How always-on agents work, de Lee Robinson (@leerob)](https://x.com/leerob/status/2108650243365736855), apresentada em Stanford CS146S em 8 de outubro de 2026, dá uma base para esse próximo passo.
 
-Uso agentes assim todos os dias. O que me chamou a atenção na aula foi o cuidado com falhas e interrupções; eu copiaria primeiro a separação entre execução e estado salvo.
+Meu outro Mac já dormiu no meio de uma tarefa. Do celular, pedi ao agente no servidor para descobrir onde ela tinha parado. Ele encontrou o histórico na memória compartilhada e conferiu no GitHub o que já tinha sido enviado.
 
-No [vídeo](https://x.com/leerob/status/2108650243365736855): 2:35 — como chegamos aqui; 6:13 — modelos; 10:06 — arquitetura; 18:07 — harness; 27:26 — contexto; 34:26 — próximos passos.
+No [vídeo](https://x.com/leerob/status/2108650243365736855): 2:35 (como chegamos aqui); 6:13 (modelos); 10:06 (arquitetura); 18:07 (harness); 27:26 (contexto); 34:26 (próximos passos.)
 
-A arquitetura vem da aula. Os exemplos são hipotéticos, sem resultados medidos, e o plano final é uma proposta minha.
+A arquitetura vem da aula. Os relatos do MacBook vêm das experiências que contei no post anterior; os outros exemplos são hipotéticos. O plano final é uma proposta minha.
 
-## Por que o agente não roda no seu laptop
+## Por que o agente não roda na máquina que você fecha
 
-Se a tarefa depende do processo aberto no terminal, fechar o computador acaba com ela. A aula começa pelo loop da semana 1:
+Se a tarefa depende do processo aberto no terminal, suspender o computador interrompe o trabalho. Meu MacBook resolve essa parte porque deixou de ser usado como laptop: fica de tampa fechada, na tomada, ligado o dia inteiro, com o modo de suspensão desativado. A aula começa pelo loop da semana 1:
 
 ```python
 messages = [system_prompt, user_message]
@@ -76,7 +77,7 @@ Imagine um pedido pelo Slack: incluir alguém numa reunião, depois acrescentar 
 
 ## Como retomar sem repetir um pagamento
 
-Reiniciar um job do começo depois de uma queda pode repetir uma ação já concluída. Em um pagamento, isso deixa de ser apenas desperdício de processamento.
+Reiniciar um job do começo depois de uma queda pode repetir uma ação já concluída. No MacBook, testei reiniciar a máquina e derrubar o Wi-Fi; os serviços voltaram sozinhos. Retomar cada etapa de uma tarefa é o teste que quero fazer agora. Em um pagamento, repetir uma etapa pode significar outra cobrança.
 
 A aula usa Temporal para executar workflows duráveis: sequências de trabalho com cada passo registrado. Outro servidor consegue retomar do último passo salvo. As etapas também precisam ser idempotentes, isto é, uma repetição deve manter o mesmo resultado, sem criar outra ação. O motor oferece timers e cancelamento; cada helper tem seu próprio workflow.
 
@@ -110,7 +111,7 @@ Exibir toda resposta do modelo enche o chat de comentários sobre cada tentativa
 
 No harness da aula, o código que organiza o uso do modelo e das ferramentas, `SendToUser` é a única saída visível. Texto comum e raciocínio ficam privados. O agente pode terminar um turno em silêncio. Quando precisa falar, a ferramenta envia texto, arquivos ou controles para uma decisão; a última mensagem pode encerrar o turno sem outra chamada ao modelo.
 
-Imagine uma rotina autorizada que verifica se um documento mudou. Se encontrar a mesma versão, ela termina sem mandar uma atualização vazia. Quando houver uma mudança relevante, o agente envia o que mudou.
+No meu servidor, o monitoramento já só me avisa no Telegram quando algo muda. Desliguei o Wi-Fi para testar, e o alerta chegou. Para o loop, quero testar esse mesmo critério: uma rotina autorizada que verifica um documento termina em silêncio se ele continuar igual e avisa quando houver uma mudança relevante.
 
 ## Delegar mantém a conversa disponível
 
@@ -132,13 +133,13 @@ Na aula, o prefixo do prompt segue uma ordem fixa e fica idêntico até o próxi
 
 <figure data-diagram="prompt-cache"></figure>
 
-A compactação aproveita essa estabilidade. No caso apresentado, um turno termina acima de 100 mil tokens. Cerca de 10 minutos depois, o sistema resume enquanto o cache ainda está quente, numa janela de 10 a 60 minutos. Preserva as últimas mensagens ao usuário palavra por palavra. Se um trabalho em background estiver prestes a acordar o agente, pula essa compactação.
+A compactação aproveita essa estabilidade. No caso apresentado, o sistema espera cerca de 10 minutos depois de um turno grande e resume enquanto o cache ainda está quente, numa janela de 10 a 60 minutos. Preserva as últimas mensagens ao usuário palavra por palavra. Se um trabalho em background estiver prestes a acordar o agente, pula essa compactação.
 
 Suponha que uma pesquisa longa termine e você saia do chat. O sistema pode resumir durante a pausa usando o prefixo em cache. Seu próximo pedido começa com o resumo menor. Há perda de informação na compressão, então a qualidade desse resumo continua sendo um problema a resolver.
 
 ## Memória útil precisa caber no prompt
 
-Guardar tudo não garante encontrar uma preferência quando ela importa. Carregar tudo no prompt consome o espaço da tarefa atual.
+Guardar tudo não garante encontrar uma preferência quando ela importa. No servidor, instruo os agentes a tratar a memória como histórico e conferir o estado atual no repositório e no histórico de alterações. Foi assim que o agente conferiu o trabalho do meu outro Mac. Carregar tudo no prompt também consome o espaço da tarefa atual.
 
 A aula divide a memória em camadas. O perfil, sempre no prompt, comporta até 100 fatos em 4.000 caracteres. O log traz eventos datados, com os 30 mais relevantes e recentes no contexto. Notas guardam detalhes de curto prazo; o restante fica disponível por busca.
 
@@ -148,7 +149,7 @@ Imagine dizer que prefere reuniões à tarde. Essa preferência vai para o perfi
 
 ## Um email recebido não pode autorizar uma ação
 
-Um email de phishing pode mandar o agente enviar dinheiro e se apresentar como uma instrução urgente. O sistema precisa preservar a origem daquele texto para não confundir conteúdo recebido com um pedido seu.
+Um email de phishing pode mandar o agente enviar dinheiro e se apresentar como uma instrução urgente. Já limito as permissões dos meus agentes ao que cada um precisa. O loop também precisa preservar a origem do texto para não confundir conteúdo recebido com um pedido meu.
 
 A aula marca textos de email e webhook como não confiáveis. Antes de uma ação arriscada, outro modelo faz o auto-review. Se o modelo bloquear a ação, o usuário recebe um pedido de aprovação. Se o usuário não responder em 15 segundos, a ação continua bloqueada.
 
@@ -170,4 +171,4 @@ Este plano é meu, separado da aula do Lee. Eu começaria pela continuidade: uma
 
 Meu primeiro cenário seria uma pesquisa que continua com o laptop fechado e aceita uma correção pelo celular. Depois eu ampliaria o acesso do agente a ações com consequências externas.
 
-O próximo passo é colocar vários agentes para rodar juntos em loops na oficina de agentes que estou construindo, e vou contar mais sobre ela em outro post.
+Agora tenho critérios para avaliar se uma tarefa pode continuar depois que eu saio da conversa. Ainda quero testar a retomada no ponto certo e entender como os agentes vão coordenar o trabalho entre si. No próximo capítulo, vou tratar da oficina de agentes, onde pretendo colocar vários deles rodando em loops juntos.

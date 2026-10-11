@@ -26,6 +26,7 @@ const { Content, headings } = await render(post)
   description={post.data.description}
   tags={post.data.tags}
   image={postImage(post)}
+  series={post.data.series}
 >
   <Content />
 </PostLayout>

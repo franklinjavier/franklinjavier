@@ -15,6 +15,8 @@ import {
   getPostTranslationUrl,
 } from '../i18n/utils'
 import { blogPostingJsonLd } from '../lib/site'
+import { getSeriesNav } from '../lib/content'
+import { seriesMarker, seriesNextLabel, seriesPartLabel, type SeriesRef } from '../lib/series'
 
 interface Props {
   title: string
@@ -25,6 +27,8 @@ interface Props {
   headings?: MarkdownHeading[]
   /** Short TOC labels from the post's `toc` frontmatter, keyed by heading slug. */
   tocLabels?: TocLabels
+  /** Series membership from the post's `series` frontmatter. */
+  series?: SeriesRef
 }
 
 const {
@@ -35,6 +39,7 @@ const {
   image,
   headings = [],
   tocLabels,
+  series,
 } = Astro.props
 const showToc = hasToc(headings)
 
@@ -44,6 +49,7 @@ const t = useTranslations(lang)
 const blogUrl = lang === 'en' ? '/blog/' : '/pt-br/blog/'
 const formattedDate = formatDate(date, lang)
 const translation = await getPostTranslationUrl(Astro.url, lang)
+const seriesNav = await getSeriesNav(lang, series)
 const flags = { en: '🇺🇸', 'pt-br': '🇧🇷' }
 const jsonLd = blogPostingJsonLd({
   title,
@@ -102,6 +108,22 @@ const jsonLd = blogPostingJsonLd({
 
       <header class="mb-12">
         <h1 class="mb-4 text-5xl leading-tight font-bold">{title}</h1>
+        {seriesNav && (
+          <nav aria-label={t('series.nav')} class="mb-4 text-sm text-gray-500 dark:text-gray-400">
+            <p>{seriesMarker(seriesNav, lang)}</p>
+            {seriesNav.previous && (
+              <p class="mt-1">
+                <a
+                  href={seriesNav.previous.url}
+                  rel="prev"
+                  class="transition hover:text-gray-900 dark:hover:text-gray-100"
+                >
+                  ← {seriesPartLabel(seriesNav.previous, lang)}
+                </a>
+              </p>
+            )}
+          </nav>
+        )}
         <div class="flex flex-wrap items-center gap-4">
           <time class="text-sm text-gray-500 dark:text-gray-400">{formattedDate}</time>
           {tags.length > 0 && (
@@ -124,16 +146,29 @@ const jsonLd = blogPostingJsonLd({
       <div class="prose">
         <slot />
       </div>
+
+      {seriesNav?.next && (
+        <nav
+          aria-label={t('series.navNext')}
+          class="mt-12 border-t border-gray-200 pt-6 text-sm text-gray-500 dark:border-gray-800 dark:text-gray-400"
+        >
+          <a
+            href={seriesNav.next.url}
+            rel="next"
+            class="transition hover:text-gray-900 dark:hover:text-gray-100"
+          >
+            {seriesNextLabel(seriesNav.next, lang)}
+          </a>
+        </nav>
+      )}
     </article>
 
     {/* lg:pt-13 skips the back-link row (h-5 + mb-8) so the TOC starts level with the h1. */}
-    {
-      showToc && (
-        <aside class="hidden pr-6 lg:col-start-3 lg:row-start-1 lg:block lg:pt-13 lg:pl-6 xl:pl-14">
-          <TableOfContents lang={lang} headings={headings} labels={tocLabels} variant="sidebar" />
-        </aside>
-      )
-    }
+    {showToc && (
+      <aside class="hidden pr-6 lg:col-start-3 lg:row-start-1 lg:block lg:pt-13 lg:pl-6 xl:pl-14">
+        <TableOfContents lang={lang} headings={headings} labels={tocLabels} variant="sidebar" />
+      </aside>
+    )}
   </main>
 
   <ImageViewer lang={lang} />

@@ -3,9 +3,18 @@
 // callers pass plain data extracted from content collections.
 
 import { ui } from '../i18n/ui'
-import { SITE_TITLE, SITE_DESCRIPTION, SITE_EMAIL, SITE_URL, SOCIAL_LINKS, DEV_STACK, SIDE_PROJECTS } from './site'
+import {
+  SITE_TITLE,
+  SITE_DESCRIPTION,
+  SITE_EMAIL,
+  SITE_URL,
+  SOCIAL_LINKS,
+  DEV_STACK,
+  SIDE_PROJECTS,
+} from './site'
 import { APPEARANCES, speakingUrl } from './speaking'
 import { describeDiagrams } from '../diagrams'
+import { seriesMarker, seriesNextLabel, seriesPartLabel, type SeriesNav } from './series'
 
 export type Lang = 'en' | 'pt-br'
 
@@ -109,10 +118,27 @@ ${footerNote(lang)}
 `
 }
 
-export function postMarkdown(post: PostSummary & { lang: Lang; body: string }): string {
+// Series marker under the title, with a link back to the previous part.
+function seriesHeaderLines(nav: SeriesNav, lang: Lang): string[] {
+  const previous = nav.previous
+    ? [`← [${seriesPartLabel(nav.previous, lang)}](${absolute(nav.previous.url)})`, '']
+    : []
+  return [seriesMarker(nav, lang), '', ...previous]
+}
+
+// Link to the next part after the post body.
+function seriesFooterLines(nav: SeriesNav | undefined, lang: Lang): string[] {
+  if (!nav?.next) return []
+  return [`[${seriesNextLabel(nav.next, lang)}](${absolute(nav.next.url)})`, '']
+}
+
+export function postMarkdown(
+  post: PostSummary & { lang: Lang; body: string; seriesNav?: SeriesNav },
+): string {
   const lines = [
     `# ${post.title}`,
     '',
+    ...(post.seriesNav ? seriesHeaderLines(post.seriesNav, post.lang) : []),
     ...(post.description ? [`> ${post.description}`, ''] : []),
     `- Author: ${post.author}`,
     `- Published: ${formatIsoDate(post.date)}`,
@@ -122,6 +148,7 @@ export function postMarkdown(post: PostSummary & { lang: Lang; body: string }): 
     '',
     describeDiagrams(post.body, post.lang).trim(),
     '',
+    ...seriesFooterLines(post.seriesNav, post.lang),
     footerNote(post.lang),
     '',
   ]

@@ -3,6 +3,7 @@
 import { beforeAll, describe, expect, test } from 'bun:test'
 import { existsSync, readdirSync, readFileSync } from 'node:fs'
 import { join, sep } from 'node:path'
+import { SERIES } from '../src/data/series'
 
 const DIST = join(import.meta.dir, '..', 'dist')
 
@@ -172,6 +173,131 @@ describe('blog post pages', () => {
   })
 })
 
+describe('post series', () => {
+  const cases = [
+    {
+      lang: 'en',
+      part1: '/blog/old-macbook-context-server/',
+      part2: '/blog/how-always-on-agents-work/',
+      marker: (n: number) => `Part ${n} of 2 · experiments with agents`,
+      backLink: 'Part 1: My old MacBook is now a context server',
+      nextLink: 'Next: Part 2 · How an agent loop works',
+      nextPrefix: 'Next: Part',
+      navLabel: 'Post series',
+      nextNavLabel: 'Next part of the series',
+    },
+    {
+      lang: 'pt-br',
+      part1: '/pt-br/blog/macbook-velho-virou-servidor-de-contexto/',
+      part2: '/pt-br/blog/como-funciona-um-agente-sempre-ligado/',
+      marker: (n: number) => `Parte ${n} de 2 · experimentos com agentes`,
+      backLink: 'Parte 1: MacBook velho virou servidor de contexto',
+      nextLink: 'Próximo: Parte 2 · Como funciona um agente em loop',
+      nextPrefix: 'Próximo: Parte',
+      navLabel: 'Série de posts',
+      nextNavLabel: 'Próxima parte da série',
+    },
+  ]
+
+  function page(url: string): string {
+    return read(`${url.slice(1)}index.html`)
+  }
+
+  function twin(url: string): string {
+    return read(`${url.slice(1)}index.md`)
+  }
+
+  function nav(html: string, label: string): string | undefined {
+    return new RegExp(`<nav aria-label="${label}"[^>]*>(.*?)</nav>`, 's').exec(html)?.[1]
+  }
+
+  for (const c of cases) {
+    test(`${c.lang}: part 1 shows "${c.marker(1)}" with no link at the top`, () => {
+      const top = nav(page(c.part1), c.navLabel)
+      expect(top).toContain(c.marker(1))
+      expect(top).not.toContain('<a')
+    })
+
+    test(`${c.lang}: part 2 shows "${c.marker(2)}" and links back to part 1`, () => {
+      const top = nav(page(c.part2), c.navLabel)
+      expect(top).toContain(c.marker(2))
+      expect(top).toContain(`href="${c.part1}"`)
+      expect(top).toContain(c.backLink)
+    })
+
+    test(`${c.lang}: part 1 ends with "${c.nextLink}" after the body`, () => {
+      const html = page(c.part1)
+      const end = nav(html, c.nextNavLabel)
+      expect(end).toContain(`href="${c.part2}"`)
+      expect(end).toContain(c.nextLink)
+      const at = html.indexOf(`aria-label="${c.nextNavLabel}"`)
+      expect(at).toBeGreaterThan(html.indexOf('class="prose"'))
+      expect(at).toBeLessThan(html.indexOf('</article>'))
+    })
+
+    test(`${c.lang}: the last part has no forward link`, () => {
+      const html = page(c.part2)
+      expect(nav(html, c.nextNavLabel)).toBeUndefined()
+      expect(html).not.toContain(c.nextPrefix)
+    })
+
+    test(`${c.lang}: markdown twins carry the marker, back link and next line`, () => {
+      const part1 = twin(c.part1)
+      const part2 = twin(c.part2)
+      const header = (md: string) => md.slice(0, md.indexOf('- Author:'))
+      expect(header(part1)).toContain(c.marker(1))
+      expect(header(part1)).not.toContain('](')
+      expect(header(part2)).toContain(c.marker(2))
+      expect(header(part2)).toContain(`← [${c.backLink}](https://`)
+      expect(header(part2)).toContain(`${c.part1})`)
+      const next = `[${c.nextLink}](https://`
+      expect(part1).toContain(next)
+      expect(part1).toContain(`${c.part2})`)
+      expect(part1.indexOf(next)).toBeGreaterThan(part1.indexOf('- Canonical:'))
+      expect(part2).not.toContain(c.nextPrefix)
+    })
+  }
+
+  test('every series part in the data matches a built post (title, URL, language, part)', () => {
+    for (const series of Object.values(SERIES)) {
+      for (const entry of series.parts) {
+        for (const lang of ['en', 'pt-br'] as const) {
+          const post = entry.posts[lang]
+          const html = page(post.url)
+          const pt = lang === 'pt-br'
+          expect(html).toContain(`<html lang="${pt ? 'pt-BR' : 'en'}"`)
+          expect(/<h1[^>]*>(.*?)<\/h1>/s.exec(html)?.[1]).toBe(post.title)
+          const marker = `${pt ? 'Parte' : 'Part'} ${entry.part} ${pt ? 'de' : 'of'} ${series.parts.length} · ${series.name[lang]}`
+          expect(nav(html, pt ? 'Série de posts' : 'Post series')).toContain(marker)
+        }
+      }
+    }
+  })
+
+  test('every built post with a series marker is listed in the series data', () => {
+    const listed = Object.values(SERIES).flatMap((series) =>
+      series.parts.flatMap((entry) => [entry.posts.en.url, entry.posts['pt-br'].url]),
+    )
+    const marked: string[] = []
+    for (const base of ['blog', 'pt-br/blog']) {
+      for (const slug of readdirSync(join(DIST, base))) {
+        const file = join(DIST, base, slug, 'index.html')
+        if (!existsSync(file)) continue
+        if (/<nav aria-label="(Post series|Série de posts)"/.test(readFileSync(file, 'utf-8'))) {
+          marked.push(`/${base}/${slug}/`)
+        }
+      }
+    }
+    expect(marked.sort()).toEqual(listed.sort())
+  })
+
+  test('posts outside a series have no series nav', () => {
+    const html = read('blog/the-great-suspender/index.html')
+    expect(html).not.toContain('aria-label="Post series"')
+    expect(html).not.toContain('aria-label="Next part of the series"')
+  })
+})
+
 describe('markdown alternate link', () => {
   function markdownAlternates(html: string): string[] {
     const hrefs: string[] = []
@@ -233,7 +359,9 @@ describe('inline diagrams', () => {
   test('the always-on post renders seven accessible SVG figures per language', () => {
     for (const post of posts) {
       const html = read(post.html)
-      const figures = [...html.matchAll(/<figure class="diagram"[^>]*>(.*?)<\/figure>/gs)].map((m) => m[1])
+      const figures = [...html.matchAll(/<figure class="diagram"[^>]*>(.*?)<\/figure>/gs)].map(
+        (m) => m[1],
+      )
       expect(figures).toHaveLength(7)
       for (const figure of figures) {
         const svg = /<svg [^>]*>/.exec(figure)?.[0] ?? ''

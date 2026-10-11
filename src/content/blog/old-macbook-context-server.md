@@ -6,6 +6,7 @@ author: Franklin Javier
 tags: ai, agents, self-hosting, tooling, productivity
 lang: en
 translationKey: old-macbook-context-server
+series: { key: agent-experiments, part: 1 }
 ---
 
 My other Mac went to sleep halfway through a Codex task. From my phone, I asked Claude Code, which runs on an old MacBook, to work out where things had stopped. In shared memory it found the full requests Codex had sent it, with the exact text of the changes that hadn't been committed. Then it checked GitHub to see what had already made it into the PR and what hadn't.

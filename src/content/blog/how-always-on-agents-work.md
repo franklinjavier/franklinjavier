@@ -6,8 +6,9 @@ author: Franklin Javier
 tags: ai, agents, architecture, llm
 lang: en
 translationKey: always-on-agents
+series: { key: agent-experiments, part: 2 }
 toc:
-  closing-the-app-should-leave-the-work-intact: Work after closing
+  why-the-agent-cant-live-on-a-machine-you-close: Always-on machine
   a-replaceable-computer-makes-maintenance-possible: Replaceable computer
   corrections-need-priority-over-queued-work: Message queue
   a-retry-must-not-charge-you-again: Safe retries
@@ -21,17 +22,17 @@ toc:
   my-proposal-for-getting-started: Where to start
 ---
 
-[Last time](/blog/old-macbook-context-server/), I turned an old MacBook into a server so context could carry over between sessions and agents. That leaves the next step: keeping the agent itself available and working after I walk away. Lee Robinson (@leerob) shows how to build that in his lecture [How always-on agents work](https://x.com/leerob/status/2108650243365736855), delivered at Stanford CS146S on October 8, 2026.
+[Last time](/blog/old-macbook-context-server/), I wrote about the old MacBook that now stores my agents' context. That gives me somewhere to keep their history. I want to try the other half next: an agent that keeps working on its own there after I leave. Lee Robinson (@leerob)'s lecture [How always-on agents work](https://x.com/leerob/status/2108650243365736855), delivered at Stanford CS146S on October 8, 2026, lays out how that can work.
 
-I use agents like this daily. What stood out in the lecture was the attention to recovering work and letting the user interrupt it. I'd start by copying the separation between execution and saved state.
+My other Mac already went to sleep halfway through a task. From my phone, I asked the agent on the server to find where the work had stopped. It retrieved the shared history, then checked GitHub to see what had actually been pushed.
 
-In the [video](https://x.com/leerob/status/2108650243365736855): 2:35 — how we got here; 6:13 — models; 10:06 — architecture; 18:07 — harness; 27:26 — context; 34:26 — where this is going.
+In the [video](https://x.com/leerob/status/2108650243365736855): 2:35 (how we got here); 6:13 (models); 10:06 (architecture); 18:07 (harness); 27:26 (context); 34:26 (where this is going.)
 
-The architecture comes from the lecture. The examples are hypothetical, with no measured outcomes, and the plan at the end is my own proposal.
+The architecture comes from the lecture. The MacBook stories come from my experiences in the previous post; the other examples are hypothetical. The plan at the end is mine.
 
-## Closing the app should leave the work intact
+## Why the agent can't live on a machine you close
 
-A process running on your laptop depends on your laptop staying awake. The lecture starts with the week-1 loop, which captures the basic interaction:
+A local process needs the computer to stay awake. My MacBook solves that problem by spending its days as a server: lid shut, plugged in, on all day, with sleep disabled. I've stopped using it as a laptop. The lecture starts with the week-1 loop:
 
 ```python
 messages = [system_prompt, user_message]
@@ -76,7 +77,7 @@ Imagine asking in Slack to add a colleague to a meeting, immediately adding anot
 
 ## A retry must not charge you again
 
-A job that restarts from the beginning after a failure may repeat work it already completed. A payment makes the consequences easy to see.
+Restarting a job from scratch can repeat completed work. I rebooted the MacBook and cut its Wi-Fi, and the services came back on their own. Next I want to test whether a task resumes at the right step. With a payment, repeating a step could mean charging twice.
 
 The lecture uses Temporal for durable workflows. The engine records steps so another server can resume from saved progress. It also supplies timers, cancellation, and health checks. Helpers each have their own durable workflow.
 
@@ -102,7 +103,7 @@ Showing every model response floods the chat with commentary and private reasoni
 
 The harness, the code that coordinates the model and its tools, makes `SendToUser` the only visible output. Ordinary model text stays private. A turn can end quietly. When there is something useful to report, the tool sends text, files, or controls for a user decision. The final send can also finish the turn without another model call.
 
-For example, imagine an approved routine checking for changes to a shared document. If the document is unchanged, the agent can finish silently. A meaningful revision gives it a reason to send an update. The user sees the change, without a running account of each check.
+My server's monitoring already follows a similar rule: it alerts me on Telegram when something changes. I turned off the Wi-Fi to test it, and the alert arrived. I'd test the loop with an approved document check: silence when the document is unchanged, an update when there's a relevant revision.
 
 ## Load the tool you need, when you need it
 
@@ -136,7 +137,7 @@ The lecture assembles the prompt in a fixed order and keeps the prefix identical
 
 <figure data-diagram="prompt-cache"></figure>
 
-Lee treats a cache miss as a bug. Each section has a hash to help find what changed. This also shapes compaction: in the case described, a turn finishes above 100k tokens, then the system waits roughly 10 minutes before summarizing. It reuses the prefix while the provider cache remains warm, within a 10–60 minute window.
+Lee treats a cache miss as a bug. Each section has a hash to help find what changed. This also shapes compaction: in the case described, the system waits roughly 10 minutes after a large turn ends before summarizing. It reuses the prefix while the provider cache remains warm, within a 10–60 minute window.
 
 The latest user-facing agent messages survive word for word. Compaction is skipped if background work is about to wake the agent anyway. Compression loses information, so a smaller prompt still depends on a good summary.
 
@@ -144,7 +145,7 @@ Picture a long research task ending just as you leave the chat. During that paus
 
 ## Remember preferences without carrying every conversation
 
-Saving everything doesn't guarantee the agent will find a preference when it matters. Loading everything consumes context needed for the current request.
+Saving everything doesn't guarantee useful recall. I tell my agents to treat memory as history and check the repository and its change history for the current state. The agent that picked up after my other Mac fell asleep checked GitHub too. Loading all that history would crowd out the current request.
 
 The lecture's profile always enters the prompt, with up to 100 facts in 4,000 characters. A dated log contributes the 30 most relevant and recent events. Notes hold short-lived details, and a memory-search tool retrieves the rest.
 
@@ -154,7 +155,7 @@ For instance, you might say you prefer afternoon meetings. The profile can carry
 
 ## External text must not become permission
 
-A phishing email can tell an agent to send money and claim the request is urgent. The system needs to distinguish text it received from an instruction you authorized.
+A phishing email can tell an agent to send money and claim urgency. I already limit each agent's permissions to what it needs. The loop also has to distinguish incoming text from a request I've authorized.
 
 The lecture tags email and webhook content as untrusted. A separate model reviews risky actions before they run. If the model blocks the action, the user receives an approval request. If the user doesn't answer within 15 seconds, the action stays blocked.
 
@@ -176,4 +177,4 @@ This is my proposal, separate from Lee's lecture. I'd build continuity before gr
 
 I'd begin with an overnight document comparison that I can redirect from my phone. That gives me a concrete task to build around before adding payments or messages to other people.
 
-I'll write another post about the agent workshop I'm building to get several agents running in loops together.
+I now have a way to assess whether a task can keep going after I leave the conversation. I still need to test how it picks up after an interruption, and how agents coordinate their work. Next in the series, I'll turn to the agent workshop, where I plan to have several agents running in loops together.
