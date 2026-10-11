@@ -125,6 +125,8 @@ The lecture delegates that work to helpers. The main agent supplies a complete t
 
 In my own agent team, an orchestrator sorts incoming requests and routes each one to a bot assigned permanently to that project. The bot plans the work, owns the PR, and reports back to me. In the lecture, the main agent hands a task to a helper and gets a report back; in my team, the bot stays with its project and keeps that project's context between tasks. For example, when I ask for a website bug fix, the orchestrator hands it to the website bot, which already knows the repository.
 
+The diagram below shows how the lecture divides work between the main agent and its helpers.
+
 <figure data-diagram="helpers"></figure>
 
 A computer-use helper handles clicks and screenshots. It can inspect page structure for web interactions; pixel-based work uses a 1280x800 display. When human intervention is needed, it stops and hands over control. The cloud coding helper makes changes **in its own VM, separate from the user’s VM**.

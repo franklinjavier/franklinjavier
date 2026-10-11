@@ -121,6 +121,8 @@ Lee separa o principal dos helpers. O principal entrega uma descrição completa
 
 No meu time de agentes, um orquestrador classifica o pedido e o encaminha ao bot fixo daquele projeto. Esse bot planeja o trabalho, fica responsável pelo PR e me devolve o resultado. Na aula, o agente principal passa uma tarefa a um helper e recebe um relatório de volta; no meu time, o bot continua com o projeto e mantém o contexto dele entre tarefas. Quando peço para corrigir um bug no site, por exemplo, o orquestrador passa o pedido ao bot do site, que já conhece o repositório.
 
+O diagrama abaixo mostra a divisão entre o agente principal e os helpers na aula.
+
 <figure data-diagram="helpers"></figure>
 
 O helper de computador concentra os cliques e screenshots. Na web, pode ler a estrutura da página; para ações em pixels, a aula usa uma tela de 1280x800. Quando precisa de intervenção humana, entrega o controle. Já o cloud coding agent faz mudanças de código **numa VM só dele, separada da VM do usuário**.
