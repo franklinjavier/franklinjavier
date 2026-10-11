@@ -1,11 +1,12 @@
 ---
 title: How an agent loop works
 date: 2026-10-11
-description: How an always-on agent survives failures, handles interruptions, and keeps context costs down. Lessons from Lee Robinson's Stanford lecture, followed by my own starting plan.
+description: How always-on agents handle queues, recovery, and context, based on Lee Robinson's Stanford CS146S lecture, followed by my own plan for a first experiment.
 author: Franklin Javier
 tags: ai, agents, architecture, llm
 lang: en
 translationKey: always-on-agents
+image: /images/og/always-on-agents-en.png
 series: { key: agent-experiments, part: 2 }
 toc:
   why-the-agent-cant-live-on-a-machine-you-close: Always-on machine
@@ -22,7 +23,9 @@ toc:
   my-proposal-for-getting-started: Where to start
 ---
 
-[Last time](/blog/old-macbook-context-server/), I wrote about the old MacBook that now stores my agents' context. That gives me somewhere to keep their history. I want to try the other half next: an agent that keeps working on its own there after I leave. Lee Robinson (@leerob)'s lecture [How always-on agents work](https://x.com/leerob/status/2108650243365736855), delivered at Stanford CS146S on October 8, 2026, lays out how that can work.
+An always-on agent runs its model-and-tool loop on a server, saves progress, and can keep working after you leave the conversation. Lee Robinson's Stanford CS146S lecture explains the pieces behind it: message queues, durable workflows, a replaceable VM, tools on demand, helpers, prompt caching, layered memory, and action authorization. With [shared context already working from part 1](/blog/old-macbook-context-server/), I close with my own starting plan, which I still need to test.
+
+Lee Robinson (@leerob)'s lecture [How always-on agents work](https://x.com/leerob/status/2108650243365736855) was delivered at Stanford CS146S on October 8, 2026.
 
 My other Mac already went to sleep halfway through a task. From my phone, I asked the agent on the server to find where the work had stopped. It retrieved the shared history, then checked GitHub to see what had actually been pushed.
 

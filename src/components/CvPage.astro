@@ -8,7 +8,7 @@
 import { getEntry, render } from 'astro:content'
 import BaseLayout from '../layouts/BaseLayout.astro'
 import { languages } from '../i18n/ui'
-import { useTranslations, getLocalizedPath } from '../i18n/utils'
+import { useTranslations, getLocalizedPath, getAlternateUrl } from '../i18n/utils'
 import { SITE_EMAIL, SITE_TITLE, SITE_URL, SOCIAL_LINKS } from '../lib/site'
 
 interface Props {
@@ -33,7 +33,14 @@ const otherLang = lang === 'en' ? 'pt-br' : 'en'
 const flags = { en: '🇺🇸', 'pt-br': '🇧🇷' }
 ---
 
-<BaseLayout title={entry.data.title} description={entry.data.description} lang={lang} bare markdownTwin>
+<BaseLayout
+  title={entry.data.title}
+  description={entry.data.description}
+  lang={lang}
+  alternate={getAlternateUrl(Astro.url, otherLang)}
+  bare
+  markdownTwin
+>
   <div class="cv-desk">
     <div class="cv-toolbar">
       <a href={getLocalizedPath('/', lang)}>← {site}</a>

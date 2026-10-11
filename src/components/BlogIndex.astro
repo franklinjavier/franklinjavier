@@ -2,7 +2,14 @@
 import { getCollection } from 'astro:content'
 import BaseLayout from '../layouts/BaseLayout.astro'
 import Navigation from './Navigation.astro'
-import { useTranslations, formatDate, parseTags, getTagUrl, getPostUrl } from '../i18n/utils'
+import {
+  useTranslations,
+  formatDate,
+  parseTags,
+  getTagUrl,
+  getPostUrl,
+  getAlternateUrl,
+} from '../i18n/utils'
 
 interface Props {
   lang: 'en' | 'pt-br'
@@ -28,7 +35,13 @@ const countLabel = `${allPosts.length} ${
 const summary = `${countLabel} - ${description}`
 ---
 
-<BaseLayout title={title} description={description} lang={lang} markdownTwin>
+<BaseLayout
+  title={title}
+  description={description}
+  lang={lang}
+  alternate={getAlternateUrl(Astro.url, lang === 'en' ? 'pt-br' : 'en')}
+  markdownTwin
+>
   <Navigation />
 
   <main class="site-container pt-20 pb-24">

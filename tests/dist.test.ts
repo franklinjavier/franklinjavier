@@ -1,8 +1,9 @@
 // Assertions against the built site in dist/. Run `bun run build` first
 // (the `bun test` script in package.json does this for you via `bun run check`).
 import { beforeAll, describe, expect, test } from 'bun:test'
-import { existsSync, readdirSync, readFileSync } from 'node:fs'
+import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs'
 import { join, sep } from 'node:path'
+import { Window } from 'happy-dom'
 import { SERIES } from '../src/data/series'
 
 const DIST = join(import.meta.dir, '..', 'dist')
@@ -32,6 +33,26 @@ function jsonLdBlocks(html: string): Record<string, unknown>[] {
     blocks.push(JSON.parse(decoded))
   }
   return blocks
+}
+
+// The table of contents ships once, inside the inline (mobile) <details>;
+// the sidebar nav only has an empty rail that its script fills with a copy.
+function inlineToc(html: string): string {
+  return (
+    /<details data-toc-inline[^>]*>.*?<nav data-toc aria-label="[^"]+"[^>]*>(.*?)<\/nav>/s.exec(
+      html,
+    )?.[1] ?? ''
+  )
+}
+
+function sidebarToc(html: string): string {
+  return (
+    /<nav data-toc aria-labelledby="toc-label-sidebar"[^>]*>(.*?)<\/nav>/s.exec(html)?.[1] ?? ''
+  )
+}
+
+function decodeEntities(text: string): string {
+  return text.replaceAll('&#39;', "'").replaceAll('&quot;', '"').replaceAll('&amp;', '&')
 }
 
 beforeAll(() => {
@@ -123,13 +144,20 @@ describe('site header', () => {
     expect(en).toContain('<nav aria-label="Main"')
     expect(en).toMatch(/<a href="\/" aria-current="page"/)
     expect(en).toMatch(/id="language-toggle" href="\/pt-br\/" hreflang="pt-br" lang="pt-br"/)
-    expect(en).toContain('aria-label="Mudar para Português"')
+    // Label in name (WCAG 2.5.3): no aria-label, the name starts with the visible code.
+    expect(en).toMatch(
+      /id="language-toggle"[^>]*>PT<span class="sr-only">, Mudar para Português<\/span><\/a>/,
+    )
+    expect(en).not.toMatch(/id="language-toggle"[^>]*aria-label/)
     expect(en).toContain('aria-label="Toggle dark mode"')
 
     const pt = header('pt-br/blog/index.html')
     expect(pt).toContain('<nav aria-label="Principal"')
     expect(pt).toMatch(/<a href="\/pt-br\/blog\/" aria-current="page"/)
-    expect(pt).toContain('aria-label="Switch to English"')
+    expect(pt).toMatch(
+      /id="language-toggle"[^>]*>EN<span class="sr-only">, Switch to English<\/span><\/a>/,
+    )
+    expect(pt).not.toMatch(/id="language-toggle"[^>]*aria-label/)
     expect(pt).toContain('aria-label="Alternar modo escuro"')
   })
 
@@ -173,16 +201,15 @@ describe('blog post pages', () => {
     ]
     for (const { path, label } of cases) {
       const html = read(path)
+      // Sidebar (lg+, filled by JS) and collapsed <details> (mobile) navs;
+      // only the <details> ships the list.
       const tocs = [...html.matchAll(/<nav data-toc[^>]*>(.*?)<\/nav>/gs)].map((m) => m[0])
-      // Sidebar (lg+) and collapsed <details> (mobile) variants.
       expect(tocs).toHaveLength(2)
       expect(html).toContain(`>${label}</p>`)
       expect(html).toContain(`aria-label="${label}"`)
-      for (const toc of tocs) {
-        const ids = [...toc.matchAll(/href="#([^"]+)"/g)].map((m) => m[1])
-        expect(ids.length).toBeGreaterThanOrEqual(2)
-        for (const id of ids) expect(html).toContain(`id="${id}"`)
-      }
+      const ids = [...inlineToc(html).matchAll(/href="#([^"]+)"/g)].map((m) => m[1])
+      expect(ids.length).toBeGreaterThanOrEqual(2)
+      for (const id of ids) expect(html).toContain(`id="${id}"`)
     }
   })
 
@@ -209,19 +236,16 @@ describe('blog post pages', () => {
       },
     ]
     for (const { path, slug, heading } of cases) {
-      const html = read(path)
-      const tocs = [...html.matchAll(/<nav data-toc[^>]*>(.*?)<\/nav>/gs)].map((m) => m[1])
-      expect(tocs).toHaveLength(2)
-      for (const [index, toc] of tocs.entries()) {
-        const link = new RegExp(`<a href="#${slug}"[^>]*>(.*?)</a>`, 's').exec(toc)
-        expect(link).not.toBeNull()
-        // Inline <details> first (title tooltip), then the sidebar (full text on expand).
-        if (index === 0) expect(link![0]).toContain(`title="${heading}"`)
-        else expect(link![1]).toContain(`class="toc-full sr-only">${heading}</span>`)
-        expect(link![1]).toContain(`>${heading}</span>`)
-        // Section numbers are decorative: hidden from screen readers.
-        expect(toc).toMatch(/<span aria-hidden="true"[^>]*>01<\/span>/)
-      }
+      const toc = inlineToc(read(path))
+      const link = new RegExp(`<a href="#${slug}"[^>]*>(.*?)</a>`, 's').exec(toc)
+      expect(link).not.toBeNull()
+      // Tooltip for the truncated inline label (the rail copy drops it).
+      expect(link![0]).toContain(`title="${heading}"`)
+      // No short label: the full heading is the visible (truncated) label.
+      expect(link![1]).toContain(`class="toc-full min-w-0 truncate">${heading}</span>`)
+      expect(link![1]).not.toContain('toc-short')
+      // Section numbers are decorative: hidden from screen readers.
+      expect(toc).toMatch(/<span aria-hidden="true"[^>]*>01<\/span>/)
     }
   })
 
@@ -308,12 +332,8 @@ describe('heading links', () => {
       const html = read(path)
       const ids = headingIds(html)
       expect(ids.length).toBeGreaterThanOrEqual(2)
-      const tocs = [...html.matchAll(/<nav data-toc[^>]*>(.*?)<\/nav>/gs)].map((m) => m[1])
-      expect(tocs).toHaveLength(2)
-      for (const toc of tocs) {
-        const hrefs = [...toc.matchAll(/href="#([^"]+)"/g)].map((m) => m[1])
-        expect(hrefs).toEqual(ids)
-      }
+      const hrefs = [...inlineToc(html).matchAll(/href="#([^"]+)"/g)].map((m) => m[1])
+      expect(hrefs).toEqual(ids)
     }
   })
 
@@ -331,10 +351,6 @@ describe('heading links', () => {
     [...prose(html).matchAll(/<h([23])\b[^>]*\sid="([^"]+)"[^>]*>([\s\S]*?)<\/h\1>/g)]
       .filter((m) => m[2] !== 'footnote-label')
       .map((m) => stripTags(m[3].replace(/<a class="heading-anchor"[\s\S]*?<\/a>/g, '')))
-  const sidebarToc = (html: string) =>
-    /<nav data-toc aria-labelledby="toc-label-sidebar"[^>]*>(.*?)<\/nav>/s.exec(html)?.[1] ?? ''
-  const inlineToc = (html: string) =>
-    /<nav data-toc aria-label="[^"]+"[^>]*>(.*?)<\/nav>/s.exec(html)?.[1] ?? ''
   const tocLinks = (toc: string) =>
     [...toc.matchAll(/<a href="#[^"]+"([^>]*)>(.*?)<\/a>/gs)].map((m) => ({
       attrs: m[1],
@@ -344,40 +360,70 @@ describe('heading links', () => {
   const accessibleName = (inner: string) =>
     stripTags(inner.replace(/<span aria-hidden="true"[^>]*>.*?<\/span>/gs, ''))
 
-  test('the sidebar TOC carries the full heading text for every item, named once', () => {
-    for (const path of posts) {
-      const html = read(path)
-      const headings = headingTexts(html)
-      const links = tocLinks(sidebarToc(html))
-      expect(links).toHaveLength(headings.length)
-      for (const [index, { attrs, inner }] of links.entries()) {
-        const full = /<span class="toc-full[^"]*">(.*?)<\/span>/s.exec(inner)
-        expect(full).not.toBeNull()
-        expect(stripTags(full![1])).toBe(headings[index])
-        // The short label is shown while compact but hidden from screen readers.
-        expect(inner).toMatch(/<span aria-hidden="true" class="toc-short[^"]*">/)
-        // One name, from content only: no aria-label or title to repeat it.
-        expect(attrs).not.toContain('aria-label')
-        expect(attrs).not.toContain('title=')
-        expect(accessibleName(inner)).toBe(headings[index])
-      }
-    }
-  })
-
-  test('the inline (mobile) TOC keeps one truncated label with the heading as title', () => {
+  test('the TOC names every link once with the full heading text', () => {
     for (const path of posts) {
       const html = read(path)
       const headings = headingTexts(html)
       const links = tocLinks(inlineToc(html))
       expect(links).toHaveLength(headings.length)
       for (const [index, { attrs, inner }] of links.entries()) {
-        expect(inner).not.toContain('toc-full')
-        expect(inner).not.toContain('toc-short')
-        expect(inner.match(/<span class="min-w-0 truncate">/g)).toHaveLength(1)
+        const full = /<span class="toc-full[^"]*">(.*?)<\/span>/s.exec(inner)
+        expect(full).not.toBeNull()
+        expect(stripTags(full![1])).toBe(headings[index])
+        // A short label, when there is one, is shown but hidden from screen readers.
+        if (inner.includes('toc-short')) {
+          expect(inner).toMatch(/<span aria-hidden="true" class="toc-short[^"]*">/)
+        }
+        // One name, from content only; the title only repeats it as a tooltip.
+        expect(attrs).not.toContain('aria-label')
         expect(decode(/title="([^"]*)"/.exec(attrs)?.[1] ?? '')).toBe(headings[index])
         expect(accessibleName(inner)).toBe(headings[index])
       }
     }
+  })
+
+  test('the list ships once: the sidebar rail is an empty slot', () => {
+    for (const path of posts) {
+      const html = read(path)
+      expect(html.match(/class="toc-link /g)?.length).toBe(headingTexts(html).length)
+      expect(sidebarToc(html)).toMatch(/<div data-toc-rail[^>]*><\/div>/)
+      expect(sidebarToc(html)).not.toContain('<ol')
+      // Without JS the rail stays empty, so the <details> shows on lg+ too.
+      expect(html).toMatch(
+        /<head>.*<noscript><style>[^<]*\[data-toc-inline\][^<]*display: block[^<]*<\/style><\/noscript>.*<\/head>/s,
+      )
+    }
+  })
+
+  test('the sidebar script copies the list into the rail without tooltips', async () => {
+    const path = 'blog/old-macbook-context-server/index.html'
+    const html = read(path)
+    const script = [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)]
+      .map((m) => m[1])
+      .find((code) => code.includes('[data-toc-rail]'))
+    expect(script).toBeDefined()
+    const window = new Window({
+      url: `https://franklinjavier.com/${path.replace('index.html', '')}`,
+    })
+    const document = window.document
+    document.write(html.replace(/<script\b[\s\S]*?<\/script>/g, ''))
+    window.eval(script!)
+    const inline = [...document.querySelectorAll('[data-toc-inline] a')]
+    const rail = [...document.querySelectorAll('[data-toc-rail] a')]
+    expect(rail).toHaveLength(headingTexts(html).length)
+    expect(rail.map((a) => a.getAttribute('href'))).toEqual(
+      inline.map((a) => a.getAttribute('href')),
+    )
+    expect(rail.every((a) => !a.hasAttribute('title'))).toBe(true)
+    expect(inline.every((a) => a.hasAttribute('title'))).toBe(true)
+    // Scroll-spy marks the same section in both copies.
+    rail[1].dispatchEvent(new window.MouseEvent('click', { bubbles: true, cancelable: true }))
+    const current = [...document.querySelectorAll('a[aria-current="location"]')]
+    expect(current.map((a) => a.getAttribute('href'))).toEqual([
+      inline[1].getAttribute('href'),
+      rail[1].getAttribute('href'),
+    ])
+    await window.happyDOM.close()
   })
 
   test('each heading carries a localized copy-link anchor to its own id', () => {
@@ -737,21 +783,24 @@ describe('llms.txt', () => {
 describe('sitemap.xml', () => {
   const xml = () => read('sitemap.xml')
 
-  test('is a urlset with lastmod on every entry', () => {
-    expect(xml()).toContain('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">')
+  test('is a urlset with the xhtml namespace for hreflang alternates', () => {
+    expect(xml()).toContain(
+      '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">',
+    )
     const locs = xml().match(/<loc>/g) ?? []
-    const lastmods = xml().match(/<lastmod>\d{4}-\d{2}-\d{2}<\/lastmod>/g) ?? []
     expect(locs.length).toBeGreaterThan(20)
-    expect(lastmods.length).toBe(locs.length)
+    // lastmod, when present, is a plain date.
+    expect(xml().match(/<lastmod>[^<]*<\/lastmod>/g)?.length).toBe(
+      xml().match(/<lastmod>\d{4}-\d{2}-\d{2}<\/lastmod>/g)?.length,
+    )
   })
 
-  test('covers homepages, blog, posts, tags and trust pages', () => {
+  test('covers homepages, blog, posts and trust pages', () => {
     for (const url of [
       'https://franklinjavier.com/',
       'https://franklinjavier.com/pt-br/',
       'https://franklinjavier.com/blog/',
       'https://franklinjavier.com/blog/how-to-be-proactive/',
-      'https://franklinjavier.com/blog/tag/react/',
       'https://franklinjavier.com/speaking/',
       'https://franklinjavier.com/pt-br/speaking/',
       'https://franklinjavier.com/about/',
@@ -761,6 +810,306 @@ describe('sitemap.xml', () => {
     ]) {
       expect(xml()).toContain(`<loc>${url}</loc>`)
     }
+  })
+})
+
+// Sitemap entries keyed by <loc>.
+function sitemapEntries(): Map<string, { lastmod?: string; alternates: Record<string, string> }> {
+  const entries = new Map<string, { lastmod?: string; alternates: Record<string, string> }>()
+  for (const [, body] of read('sitemap.xml').matchAll(/<url>(.*?)<\/url>/gs)) {
+    const loc = /<loc>([^<]+)<\/loc>/.exec(body)![1]
+    const lastmod = /<lastmod>([^<]+)<\/lastmod>/.exec(body)?.[1]
+    const alternates: Record<string, string> = {}
+    for (const [, lang, href] of body.matchAll(
+      /<xhtml:link rel="alternate" hreflang="([^"]+)" href="([^"]+)"\/>/g,
+    )) {
+      alternates[lang] = href
+    }
+    entries.set(loc, { lastmod, alternates })
+  }
+  return entries
+}
+
+function htmlPages(dir = DIST): string[] {
+  return readdirSync(dir, { recursive: true, encoding: 'utf-8' })
+    .filter((file) => file.endsWith('index.html'))
+    .map((file) => file.split(sep).join('/'))
+}
+
+function distPathFor(url: string): string {
+  return `${new URL(url).pathname.replace(/^\//, '')}index.html`
+}
+
+function hreflangs(html: string): Record<string, string> {
+  const links: Record<string, string> = {}
+  for (const [, lang, href] of html.matchAll(
+    /<link rel="alternate" hreflang="([^"]+)" href="([^"]+)">/g,
+  )) {
+    links[lang] = href
+  }
+  return links
+}
+
+describe('hreflang', () => {
+  test('translated pages carry absolute, reciprocal en / pt-BR / x-default alternates', () => {
+    let checked = 0
+    for (const path of htmlPages()) {
+      const html = read(path)
+      const links = hreflangs(html)
+      if (Object.keys(links).length === 0) continue
+      checked++
+      expect(Object.keys(links).sort()).toEqual(['en', 'pt-BR', 'x-default'])
+      expect(links['x-default']).toBe(links.en)
+      const self = /<link rel="canonical" href="([^"]+)">/.exec(html)![1]
+      const lang = /<html lang="([^"]+)"/.exec(html)![1]
+      expect(links[lang === 'pt-BR' ? 'pt-BR' : 'en']).toBe(self)
+      for (const href of Object.values(links)) {
+        expect(href.startsWith('https://franklinjavier.com/')).toBe(true)
+        expect(existsSync(join(DIST, distPathFor(href)))).toBe(true)
+        // The target points back with the same set.
+        expect(hreflangs(read(distPathFor(href)))).toEqual(links)
+      }
+    }
+    expect(checked).toBeGreaterThan(40)
+  })
+
+  test('covers posts, homes, blog indexes, speaking, CV and trust pages', () => {
+    for (const path of [
+      'index.html',
+      'pt-br/index.html',
+      'blog/index.html',
+      'speaking/index.html',
+      'cv/index.html',
+      'about/index.html',
+      'privacy/index.html',
+      'pt-br/contact/index.html',
+      'blog/lisbon-ai-2026/index.html',
+      'pt-br/blog/macbook-velho-virou-servidor-de-contexto/index.html',
+    ]) {
+      expect(Object.keys(hreflangs(read(path)))).toHaveLength(3)
+    }
+    expect(hreflangs(read('pt-br/blog/lisbon-ai-2026/index.html'))).toEqual({
+      en: 'https://franklinjavier.com/blog/lisbon-ai-2026/',
+      'pt-BR': 'https://franklinjavier.com/pt-br/blog/lisbon-ai-2026/',
+      'x-default': 'https://franklinjavier.com/blog/lisbon-ai-2026/',
+    })
+  })
+
+  test('pages without a translation emit none', () => {
+    expect(hreflangs(read('404.html'))).toEqual({})
+    expect(hreflangs(read('blog/tag/react/index.html'))).toEqual({})
+  })
+
+  test('sitemap entries mirror the page head alternates', () => {
+    let withAlternates = 0
+    for (const [loc, entry] of sitemapEntries()) {
+      const head = hreflangs(read(distPathFor(loc)))
+      expect(entry.alternates).toEqual(head)
+      if (Object.keys(head).length > 0) withAlternates++
+    }
+    expect(withAlternates).toBeGreaterThan(40)
+  })
+})
+
+describe('tag pages', () => {
+  const tagPages = () => htmlPages().filter((path) => /(^|\/)blog\/tag\//.test(path))
+
+  test('are noindex,follow in both languages', () => {
+    const pages = tagPages()
+    expect(pages.some((path) => path.startsWith('pt-br/'))).toBe(true)
+    expect(pages.some((path) => path.startsWith('blog/'))).toBe(true)
+    for (const path of pages) {
+      expect(read(path)).toContain('<meta name="robots" content="noindex,follow">')
+    }
+  })
+
+  test('are left out of the sitemap, and nothing else is noindex', () => {
+    expect(read('sitemap.xml')).not.toContain('/tag/')
+    for (const path of htmlPages().filter((path) => !path.includes('/tag/'))) {
+      expect(read(path)).not.toContain('name="robots"')
+    }
+  })
+})
+
+describe('publish and modified dates', () => {
+  const posting = (path: string) =>
+    jsonLdBlocks(read(path)).find((block) => block['@type'] === 'BlogPosting')!
+  const meta = (path: string, property: string) =>
+    new RegExp(`<meta property="${property}" content="([^"]+)">`).exec(read(path))?.[1]
+
+  test('dateModified and article:modified_time use `updated`, falling back to `date`', () => {
+    // Lisbon sets updated: 2026-09-28; How to be proactive has no `updated`.
+    for (const path of ['blog/lisbon-ai-2026/index.html', 'pt-br/blog/lisbon-ai-2026/index.html']) {
+      expect(posting(path).datePublished).toBe('2026-09-25T00:00:00.000Z')
+      expect(posting(path).dateModified).toBe('2026-09-28T00:00:00.000Z')
+      expect(meta(path, 'article:published_time')).toBe('2026-09-25T00:00:00.000Z')
+      expect(meta(path, 'article:modified_time')).toBe('2026-09-28T00:00:00.000Z')
+    }
+    const plain = 'blog/how-to-be-proactive/index.html'
+    expect(posting(plain).dateModified).toBe(posting(plain).datePublished)
+    expect(meta(plain, 'article:modified_time')).toBe(meta(plain, 'article:published_time'))
+  })
+
+  test('every post carries both article times', () => {
+    for (const path of htmlPages().filter((path) =>
+      /^(pt-br\/)?blog\/(?!tag\/)[^/]+\/index\.html$/.test(path),
+    )) {
+      expect(meta(path, 'article:published_time')).toBeDefined()
+      expect(meta(path, 'article:modified_time')).toBeDefined()
+      expect(posting(path).dateModified).toBe(meta(path, 'article:modified_time'))
+    }
+  })
+
+  test('sitemap lastmod: posts use their last edit, indexes the newest post in their language', () => {
+    const entries = sitemapEntries()
+    expect(entries.get('https://franklinjavier.com/blog/lisbon-ai-2026/')?.lastmod).toBe(
+      '2026-09-28',
+    )
+    expect(entries.get('https://franklinjavier.com/blog/how-to-be-proactive/')?.lastmod).toBe(
+      String(posting('blog/how-to-be-proactive/index.html').datePublished).slice(0, 10),
+    )
+    for (const [prefix, lang] of [
+      ['', 'en'],
+      ['pt-br/', 'pt-BR'],
+    ]) {
+      const newest = htmlPages()
+        .filter((path) => path.startsWith(`${prefix}blog/`) && !path.includes('/tag/'))
+        .map((path) => jsonLdBlocks(read(path)).find((block) => block['@type'] === 'BlogPosting'))
+        .filter((block) => block && block.inLanguage === lang)
+        .map((block) => String(block!.dateModified).slice(0, 10))
+        .sort()
+        .at(-1)
+      expect(entries.get(`https://franklinjavier.com/${prefix}`)?.lastmod).toBe(newest)
+      expect(entries.get(`https://franklinjavier.com/${prefix}blog/`)?.lastmod).toBe(newest)
+    }
+  })
+
+  test('static pages use their `updated` frontmatter or omit lastmod (never the build date)', () => {
+    const entries = sitemapEntries()
+    expect(entries.get('https://franklinjavier.com/about/')?.lastmod).toBe('2026-09-28')
+    expect(entries.get('https://franklinjavier.com/pt-br/cv/')?.lastmod).toBe('2026-09-28')
+    expect(entries.get('https://franklinjavier.com/speaking/')?.lastmod).toBeUndefined()
+  })
+})
+
+describe('localized home and blog metadata', () => {
+  const description = (path: string) =>
+    /<meta name="description" content="([^"]+)">/.exec(read(path))?.[1]
+  const graphDescriptions = (path: string) => {
+    const graph = jsonLdBlocks(read(path)).find((block) => '@graph' in block) as {
+      '@graph': Record<string, unknown>[]
+    }
+    return graph['@graph'].map((node) => node.description)
+  }
+  const PT_HOME =
+    'Sou Principal Engineer com 19 anos de experiência em front-end. Hoje construo produtos de IA e os harnesses que coordenam seus agentes e ferramentas.'
+  const EN_HOME =
+    "I'm a Principal Engineer with 19 years of front-end development experience, now building AI products and the agent harnesses behind them."
+
+  test('PT home has its own title, description and JSON-LD description', () => {
+    const html = read('pt-br/index.html')
+    expect(html).toContain(
+      '<title>Principal Engineer em Lisboa, Portugal - Franklin Javier</title>',
+    )
+    expect(description('pt-br/index.html')).toBe(PT_HOME)
+    expect(html).toContain(`property="og:description" content="${PT_HOME}"`)
+    expect(graphDescriptions('pt-br/index.html')).toEqual([PT_HOME, PT_HOME])
+    expect(graphDescriptions('pt-br/blog/index.html')).toEqual([PT_HOME, PT_HOME])
+  })
+
+  test('EN home keeps its title and description', () => {
+    expect(read('index.html')).toContain('<title>Principal Engineer - Franklin Javier</title>')
+    expect(decodeEntities(description('index.html') ?? '')).toBe(EN_HOME)
+    expect(graphDescriptions('index.html')).toEqual([EN_HOME, EN_HOME])
+  })
+
+  test('blog indexes describe the current focus in each language', () => {
+    expect(decodeEntities(description('blog/index.html') ?? '')).toBe(
+      'Notes on AI agents and the engineering behind them, alongside web performance, tooling, and lessons from years of front-end work.',
+    )
+    expect(description('pt-br/blog/index.html')).toBe(
+      'Textos sobre agentes de IA e a engenharia por trás deles, além de performance web, ferramentas e experiências de trabalho com front-end.',
+    )
+  })
+})
+
+describe('series social cards', () => {
+  const cases = [
+    ['blog/old-macbook-context-server/index.html', '/images/og/old-macbook-context-server-en.png'],
+    [
+      'pt-br/blog/macbook-velho-virou-servidor-de-contexto/index.html',
+      '/images/og/old-macbook-context-server-pt-br.png',
+    ],
+    ['blog/how-always-on-agents-work/index.html', '/images/og/always-on-agents-en.png'],
+    [
+      'pt-br/blog/como-funciona-um-agente-sempre-ligado/index.html',
+      '/images/og/always-on-agents-pt-br.png',
+    ],
+  ]
+
+  test('og:image, twitter:image and BlogPosting.image point at an existing 1200x630 PNG', () => {
+    for (const [path, image] of cases) {
+      const html = read(path)
+      const url = `https://franklinjavier.com${image}`
+      expect(html).toContain(`<meta property="og:image" content="${url}">`)
+      expect(html).toContain(`<meta name="twitter:image" content="${url}">`)
+      const posting = jsonLdBlocks(html).find((block) => block['@type'] === 'BlogPosting')
+      expect(posting?.image).toBe(url)
+      const file = join(DIST, image)
+      expect(existsSync(file)).toBe(true)
+      expect(statSync(file).size).toBeLessThan(100 * 1024)
+      const png = readFileSync(file)
+      expect(png.subarray(1, 4).toString()).toBe('PNG')
+      expect([png.readUInt32BE(16), png.readUInt32BE(20)]).toEqual([1200, 630])
+    }
+  })
+})
+
+describe('lisbon post markup', () => {
+  const paths = ['blog/lisbon-ai-2026/index.html', 'pt-br/blog/lisbon-ai-2026/index.html']
+
+  test('slides use the real column for sizes and offer a 1200w step', () => {
+    for (const path of paths) {
+      const imgs = [...read(path).matchAll(/<img [^>]*srcset="([^"]+)"[^>]*>/g)]
+      expect(imgs.length).toBe(17)
+      for (const [tag, srcset] of imgs) {
+        expect(tag).toContain('sizes="(max-width: 639px) calc(100vw - 3rem), 34.5rem"')
+        for (const candidate of srcset.split(', ')) {
+          expect(existsSync(join(DIST, candidate.split(' ')[0]))).toBe(true)
+        }
+      }
+      // Every slide wider than 1200px has the step (two sources are narrower).
+      expect(imgs.filter(([, srcset]) => srcset.includes(' 1200w')).length).toBe(15)
+    }
+  })
+
+  test('the before/after table has column and row header cells', () => {
+    for (const path of paths) {
+      const table = /<table>(?:(?!<\/table>).)*?scope="row">Preview<\/th>.*?<\/table>/s.exec(
+        read(path),
+      )?.[0]
+      expect(table).toBeDefined()
+      expect(table!.match(/<th scope="col">/g)).toHaveLength(2)
+      expect(table!.match(/<th scope="row">/g)).toHaveLength(4)
+    }
+  })
+})
+
+describe('post HTML weight', () => {
+  // The TOC list used to ship twice (rail + <details>), ~37 KB on this page.
+  test('long posts ship the TOC list once and stay under budget', () => {
+    for (const path of [
+      'pt-br/blog/lisbon-ai-2026/index.html',
+      'blog/how-always-on-agents-work/index.html',
+    ]) {
+      const html = read(path)
+      expect(html.match(/<ol>\s*<li><a href="#/g)).toHaveLength(1)
+      const navs = [...html.matchAll(/<nav data-toc.*?<\/nav>/gs)].map((m) => m[0].length)
+      expect(navs).toHaveLength(2)
+      // The rail nav is a shell: heading, progress line, empty slot.
+      expect(Math.min(...navs)).toBeLessThan(1500)
+    }
+    expect(read('pt-br/blog/lisbon-ai-2026/index.html').length).toBeLessThan(210_000)
   })
 })
 

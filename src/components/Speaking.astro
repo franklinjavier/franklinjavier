@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro'
 import Navigation from './Navigation.astro'
-import { useTranslations, formatDate, getLocalizedPath } from '../i18n/utils'
+import { useTranslations, formatDate, getLocalizedPath, getAlternateUrl } from '../i18n/utils'
 import { APPEARANCES, speakingJsonLd } from '../lib/speaking'
 
 interface Props {
@@ -19,6 +19,7 @@ const appearances = [...APPEARANCES].sort((a, b) => (b.date ?? '').localeCompare
   description={t('speaking.description')}
   lang={lang}
   jsonLd={speakingJsonLd(lang)}
+  alternate={getAlternateUrl(Astro.url, lang === 'en' ? 'pt-br' : 'en')}
   markdownTwin
 >
   <Navigation />

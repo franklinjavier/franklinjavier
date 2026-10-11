@@ -23,6 +23,8 @@ import { seriesMarker, seriesNextLabel, seriesPartLabel, type SeriesRef } from '
 interface Props {
   title: string
   date: Date
+  /** Last meaningful edit (`updated` frontmatter); `date` when absent. */
+  updated?: Date
   description?: string
   tags?: string | string[]
   image?: string
@@ -38,6 +40,7 @@ interface Props {
 const {
   title,
   date,
+  updated,
   description,
   tags: rawTags,
   image,
@@ -57,10 +60,12 @@ const translation = await getPostTranslationUrl(Astro.url, lang)
 const seriesNav = await getSeriesNav(lang, series)
 const flags = { en: '🇺🇸', 'pt-br': '🇧🇷' }
 const readingLabel = readingTime ? `${readingTime} ${t('blog.minRead')}` : undefined
+const modified = updated ?? date
 const jsonLd = blogPostingJsonLd({
   title,
   description,
   date,
+  updated: modified,
   url: Astro.url.pathname,
   lang,
   tags,
@@ -75,8 +80,24 @@ const jsonLd = blogPostingJsonLd({
   type="article"
   jsonLd={jsonLd}
   image={image}
+  alternate={translation?.url}
   markdownTwin
 >
+  <meta slot="head" property="article:published_time" content={date.toISOString()} />
+  <meta slot="head" property="article:modified_time" content={modified.toISOString()} />
+  {/* The TOC list ships once, in the inline <details>; JS copies it into the
+      lg+ rail. Without JS the rail stays empty, so keep the <details> there. */}
+  {showToc && (
+    <noscript slot="head">
+      <style is:inline>
+        @media (min-width: 64rem) {
+          [data-toc-inline] {
+            display: block;
+          }
+        }
+      </style>
+    </noscript>
+  )}
   <Navigation />
 
   <main class="site-container pt-10 pb-24">

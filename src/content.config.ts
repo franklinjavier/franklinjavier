@@ -6,6 +6,8 @@ const blog = defineCollection({
   schema: z.object({
     title: z.string(),
     date: z.coerce.date(),
+    /** Last meaningful edit; feeds dateModified, article:modified_time and sitemap lastmod. */
+    updated: z.coerce.date().optional(),
     description: z.string().optional(),
     author: z.string().default('Franklin Javier'),
     tags: z.union([z.string(), z.array(z.string())]).optional(),
@@ -27,6 +29,8 @@ const pages = defineCollection({
     title: z.string(),
     description: z.string().optional(),
     lang: z.enum(['pt-br', 'en']).default('pt-br'),
+    /** Last meaningful edit; the sitemap omits <lastmod> for pages without it. */
+    updated: z.coerce.date().optional(),
   }),
 })
 

@@ -1,14 +1,15 @@
 ---
 title: Política de Privacidade
-description: Como franklinjavier.com trata dados - sem rastreadores, sem anúncios, sem coleta de dados pessoais.
+description: Como franklinjavier.com trata dados - analytics agregado da Vercel, sem cookies, sem anúncios e sem rastreamento entre sites.
 lang: pt-br
+updated: 2026-10-11
 ---
 
-Este site, franklinjavier.com, é o site pessoal e blog de Franklin Javier. É um site estático e intencionalmente sem graça do ponto de vista de privacidade: ele existe para publicar artigos, não para coletar dados.
+Este site, franklinjavier.com, é o site pessoal e blog de Franklin Javier. É um site estático e intencionalmente sem graça do ponto de vista de privacidade: ele existe para publicar artigos, com apenas estatísticas agregadas de tráfego.
 
 ## O que este site coleta
 
-- **Nenhum script de analytics ou rastreamento.** Este site não roda Google Analytics nem qualquer outro script de analytics, publicidade ou fingerprinting.
+- **Analytics agregado da Vercel, sem cookies.** Este site mede visualizações de páginas e sites de origem das visitas de forma agregada, sem cookies nem rastreamento entre sites. Não roda Google Analytics nem scripts de publicidade ou fingerprinting.
 - **Nenhum cookie.** O site não define cookies. Sua preferência de tema (modo claro ou escuro) é armazenada no `localStorage` do seu navegador e nunca sai do seu dispositivo.
 - **Nenhuma conta ou formulário.** Não há nada para se cadastrar, então nenhuma informação pessoal é solicitada ou armazenada por este site.
 

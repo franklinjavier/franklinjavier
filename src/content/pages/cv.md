@@ -2,6 +2,7 @@
 title: CV
 description: CV of Franklin Javier, Principal Engineer (Frontend) based in Lisbon, with 19 years building and scaling web and mobile products.
 lang: en
+updated: 2026-09-28
 ---
 
 ## Summary

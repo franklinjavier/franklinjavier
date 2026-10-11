@@ -12,6 +12,7 @@ import {
   baseJsonLd,
 } from '../lib/site'
 import { markdownPathFor } from '../lib/negotiation'
+import { hreflangLinks, translationPair } from '../lib/alternates'
 
 interface Props {
   title?: string
@@ -29,6 +30,14 @@ interface Props {
    * Only set it from pages that endpoint covers.
    */
   markdownTwin?: boolean
+  /**
+   * Site path of this page in the other language. When set, the head carries
+   * reciprocal hreflang alternates (en, pt-BR, x-default -> en); leave it unset
+   * for pages without a translation.
+   */
+  alternate?: string | null
+  /** Ask search engines not to index the page (links are still followed). */
+  noindex?: boolean
 }
 
 const {
@@ -40,6 +49,8 @@ const {
   bare = false,
   image,
   markdownTwin = false,
+  alternate,
+  noindex = false,
 } = Astro.props
 const htmlLang = lang === 'pt-br' ? 'pt-BR' : 'en'
 const siteTitle = SITE_TITLE
@@ -49,6 +60,8 @@ const pageDescription = description || siteDescription
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site ?? 'https://franklinjavier.com').href
 const ogImage = absoluteUrl(image ?? SITE_IMAGE, Astro.site)
 const ogLocale = lang === 'pt-br' ? 'pt_BR' : 'en_US'
+const pageLang = lang === 'pt-br' ? 'pt-br' : 'en'
+const alternates = hreflangLinks(translationPair(pageLang, Astro.url.pathname, alternate))
 const markdownUrl = markdownTwin ? `${SITE_URL}${markdownPathFor(Astro.url.pathname)}` : undefined
 ---
 
@@ -61,7 +74,11 @@ const markdownUrl = markdownTwin ? `${SITE_URL}${markdownPathFor(Astro.url.pathn
     <title>{pageTitle}</title>
     <meta name="description" content={pageDescription} />
     <meta name="author" content="Franklin Javier" />
+    {noindex && <meta name="robots" content="noindex,follow" />}
     <link rel="canonical" href={canonicalUrl} />
+    {alternates.map((link) => (
+      <link rel="alternate" hreflang={link.hreflang} href={link.href} />
+    ))}
     <meta property="og:type" content={type} />
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={pageDescription} />
@@ -75,11 +92,12 @@ const markdownUrl = markdownTwin ? `${SITE_URL}${markdownPathFor(Astro.url.pathn
     <meta name="twitter:title" content={pageTitle} />
     <meta name="twitter:description" content={pageDescription} />
     <meta name="twitter:image" content={ogImage} />
-    <script type="application/ld+json" is:inline set:html={JSON.stringify(baseJsonLd())} />
+    <script type="application/ld+json" is:inline set:html={JSON.stringify(baseJsonLd(pageLang))} />
     {jsonLd && <script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} />}
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="alternate" href="/rss.xml" type="application/rss+xml" title="Feed" />
     {markdownUrl && <link rel="alternate" type="text/markdown" href={markdownUrl} />}
+    <slot name="head" />
 
     <script is:inline>
       /* prettier-ignore */

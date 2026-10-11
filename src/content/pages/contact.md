@@ -2,6 +2,7 @@
 title: Contact
 description: How to get in touch with Franklin Javier - email, LinkedIn, GitHub, and X.
 lang: en
+updated: 2026-09-28
 ---
 
 The best way to reach me is by email. I read everything that lands in my inbox, and I do my best to reply to genuine messages about engineering, consulting, mentorship, or interesting front-end problems.

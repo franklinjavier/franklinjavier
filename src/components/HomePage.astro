@@ -2,7 +2,13 @@
 import { getCollection } from 'astro:content'
 import BaseLayout from '../layouts/BaseLayout.astro'
 import Navigation from '../components/Navigation.astro'
-import { useTranslations, formatDate, getPostUrl, getLocalizedPath } from '../i18n/utils'
+import {
+  useTranslations,
+  formatDate,
+  getPostUrl,
+  getLocalizedPath,
+  getAlternateUrl,
+} from '../i18n/utils'
 import { DEV_STACK, SIDE_PROJECTS } from '../lib/site'
 
 interface Props {
@@ -19,7 +25,13 @@ const allPosts = await getCollection('blog', ({ data }) => {
 const sortedPosts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
 ---
 
-<BaseLayout title="Principal Engineer" lang={lang} markdownTwin>
+<BaseLayout
+  title={t('home.title')}
+  description={t('home.description')}
+  lang={lang}
+  alternate={getAlternateUrl(Astro.url, lang === 'en' ? 'pt-br' : 'en')}
+  markdownTwin
+>
   <Navigation />
 
   <main class="site-container pt-20 pb-24">

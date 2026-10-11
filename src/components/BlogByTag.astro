@@ -31,7 +31,8 @@ const countLabel = `${sortedPosts.length} ${
 }`
 ---
 
-<BaseLayout title={title} description={description} lang={lang} markdownTwin>
+{/* Thin listing pages: kept out of the index and the sitemap, links still followed. */}
+<BaseLayout title={title} description={description} lang={lang} noindex markdownTwin>
   <Navigation />
 
   <main class="site-container pt-20 pb-24">

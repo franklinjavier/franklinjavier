@@ -1,13 +1,16 @@
 ---
 title: My old MacBook is now a context server
 date: 2026-10-08
-description: A 2017 MacBook Pro, lid closed and plugged in, stores session history from my agents across machines and projects. When a task stops halfway, the next agent starts from a summary and is told to check the repository for the current state.
+description: "Shared context across coding agents, machines, and projects: my 2017 MacBook stores session history and summaries, with repository checks before resuming work."
 author: Franklin Javier
 tags: ai, agents, self-hosting, tooling, productivity
 lang: en
 translationKey: old-macbook-context-server
+image: /images/og/old-macbook-context-server-en.png
 series: { key: agent-experiments, part: 1 }
 ---
+
+I turned a 2017 MacBook Pro into a shared context server for agents working across machines and projects. Hooks save coding sessions automatically, and new sessions start with a project summary. I tell every agent to treat that memory as history and check the repository before making claims about the current code.
 
 My other Mac went to sleep halfway through a Codex task. From my phone, I asked Claude Code, which runs on an old MacBook, to work out where things had stopped. In shared memory it found the full requests Codex had sent it, with the exact text of the changes that hadn't been committed. Then it checked GitHub to see what had already made it into the PR and what hadn't.
 

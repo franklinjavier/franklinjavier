@@ -1,25 +1,25 @@
 ---
 /**
- * The numbered link list shared by both TableOfContents variants.
+ * The numbered link list behind both TableOfContents variants. It is rendered
+ * once, in the inline (mobile) <details>; the sidebar script clones it into
+ * the rail, so long posts don't ship the list twice.
  * Numbers are decorative (aria-hidden), so links are announced by text only.
  *
- * - `plain` shows the (possibly shortened) label, truncated, with the full
- *   heading text in `title`.
- * - `rail` renders both: the short label (aria-hidden, shown while compact)
- *   and the full heading text (visually hidden while compact, shown when the
- *   sidebar expands; TableOfContents styles both states). Screen readers hear
- *   only the full heading text.
+ * Every link names itself with the full heading text (`toc-full`). When the
+ * post's `toc` frontmatter shortens a label, the short label (`toc-short`,
+ * aria-hidden) is what shows while compact and the full text stays visually
+ * hidden; otherwise the full text is the visible, truncated label. The
+ * sidebar's expanded overlay shows the full text either way (TableOfContents
+ * styles both states). `title` carries the full heading for the truncated
+ * inline copy; the rail clone drops it.
  */
 import type { TocItem } from '../lib/toc'
 
 interface Props {
   items: TocItem[]
-  /** `rail` leaves room on the left for the sidebar's progress rail. */
-  variant: 'rail' | 'plain'
 }
 
-const { items, variant } = Astro.props
-const rail = variant === 'rail'
+const { items } = Astro.props
 ---
 
 <ol>
@@ -27,12 +27,13 @@ const rail = variant === 'rail'
     <li>
       <a
         href={`#${item.slug}`}
-        title={rail ? undefined : item.text}
+        title={item.text}
+        data-depth={item.depth}
         class:list={[
-          'toc-link group flex items-baseline gap-2 py-1 pr-1 leading-[1.125rem] text-muted hover:text-ink focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ink aria-[current=location]:text-ink',
-          rail ? 'rounded-r-sm' : 'rounded-sm',
-          // h3 text lines up with h2 text (number column w-4 + gap-2).
-          item.depth === 3 ? (rail ? 'pl-9' : 'pl-6') : rail ? 'pl-3' : 'pl-0',
+          'toc-link group flex items-baseline gap-2 rounded-sm py-1 pr-1 leading-[1.125rem] text-muted hover:text-ink focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ink aria-[current=location]:text-ink',
+          // h3 text lines up with h2 text (number column w-4 + gap-2). The rail
+          // shifts both right of its progress line (TableOfContents styles).
+          item.depth === 3 ? 'pl-6' : 'pl-0',
         ]}
       >
         {item.number && (
@@ -43,15 +44,15 @@ const rail = variant === 'rail'
             {item.number}
           </span>
         )}
-        {rail ? (
+        {item.label === item.text ? (
+          <span class="toc-full min-w-0 truncate">{item.text}</span>
+        ) : (
           <>
             <span aria-hidden="true" class="toc-short min-w-0 truncate">
               {item.label}
             </span>
             <span class="toc-full sr-only">{item.text}</span>
           </>
-        ) : (
-          <span class="min-w-0 truncate">{item.label}</span>
         )}
       </a>
     </li>

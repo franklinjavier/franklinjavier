@@ -2,7 +2,10 @@
 /**
  * "On this page" table of contents for blog posts, built from the h2/h3
  * headings that `render()` returns plus optional short labels from the
- * post's `toc` frontmatter. Two variants share the list (TocList):
+ * post's `toc` frontmatter. Two variants share one list (TocList), which is
+ * rendered once, in `inline`; the script clones it into the `sidebar` rail.
+ * Without JS the rail stays empty and the <details> also shows on lg+
+ * (PostLayout's <noscript> style), so there is always one usable TOC.
  *
  * - `sidebar`: sticky column on lg+ with its own scroll, a vertical
  *   reading-progress rail and a sliding active indicator on top of it.
@@ -63,7 +66,8 @@ const labelId = `toc-label-${variant}`
             class="toc-indicator pointer-events-none absolute top-0 -left-px z-10 w-0.75 rounded-full bg-ink"
             aria-hidden="true"
           />
-          <TocList items={items} variant="rail" />
+          {/* Filled by the script with a clone of the inline list. */}
+          <div data-toc-rail />
         </div>
       </div>
     </div>
@@ -71,18 +75,28 @@ const labelId = `toc-label-${variant}`
 )}
 
 {show && variant === 'inline' && (
-  <details class="mb-8 border-y border-rule text-meta lg:hidden">
+  <details data-toc-inline class="mb-8 border-y border-rule text-meta lg:hidden">
     <summary class="cursor-pointer py-2.5 text-ink-2 transition-colors duration-200 ease-smooth hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink">
       {t('blog.onThisPage')}
     </summary>
     <nav data-toc aria-label={t('blog.onThisPage')} class="pb-3">
-      <TocList items={items} variant="plain" />
+      <TocList items={items} />
     </nav>
   </details>
 )}
 
 {show && variant === 'sidebar' && <script is:inline>
   ;(() => {
+    // The list ships once (inline <details>); the rail gets a copy without
+    // the tooltips, which would only repeat the link text there.
+    const source = document.querySelector('[data-toc-inline] ol')
+    const rail = document.querySelector('[data-toc-rail]')
+    if (source && rail && !rail.firstElementChild) {
+      const copy = source.cloneNode(true)
+      for (const link of copy.querySelectorAll('a[title]')) link.removeAttribute('title')
+      rail.append(copy)
+    }
+
     const navs = [...document.querySelectorAll('[data-toc]')]
     const links = navs.flatMap((nav) => [...nav.querySelectorAll('a[href^="#"]')])
     const idOf = (link) => decodeURIComponent(link.hash.slice(1))
@@ -271,6 +285,16 @@ const labelId = `toc-label-${variant}`
   /* Links render in TocList, outside this component's style scope. */
   :global(.toc-link) {
     transition: color 150ms var(--ease);
+  }
+
+  /* Rail copy: clear the progress line on the left, round the right side only. */
+  [data-toc-rail] :global(.toc-link) {
+    padding-left: 0.75rem;
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  }
+
+  [data-toc-rail] :global(.toc-link[data-depth='3']) {
+    padding-left: 2.25rem;
   }
 
   /* Updated every frame from the scroll handler; never animated. */

@@ -35,6 +35,8 @@ Reach for this site when you need to:
 
 This site is a personal blog, not a product or API. Do not use it for topics unrelated to Franklin Javier or front-end web development.
 
+The site uses cookieless, aggregated Vercel Web Analytics for page views and referrers. It sets no cookies and uses no cross-site tracking, Google Analytics, advertising, or fingerprinting.
+
 ## How to consume this site
 
 - Every HTML page has a markdown variant: request any URL with the header \`Accept: text/markdown\`, or fetch \`<page-url>/index.md\` directly (e.g. \`${absolute('/blog/')}index.md\`). Appending \`.md\` to a page URL works too (e.g. \`${absolute('/about')}.md\`).
