@@ -1,20 +1,22 @@
 ---
-title: Como funciona um agente sempre ligado
+title: Como construir um agente que continua trabalhando quando você sai
 date: 2026-10-11
-description: A arquitetura, os gatilhos, as tools e a memória de um agente sempre ligado, a partir da aula de Lee Robinson em Stanford. Meu plano mínimo para construir um agente assim.
+description: Laptop fechado, mensagens chegando juntas, servidor caindo e contexto caro. As soluções da aula de Lee Robinson para um agente sempre ligado e o que eu construiria primeiro.
 author: Franklin Javier
 tags: ia, agentes, arquitetura, llm
 lang: pt-br
 translationKey: always-on-agents
 ---
 
-Assisti à aula [How always-on agents work, do Lee Robinson (@leerob)](https://x.com/leerob/status/2108650243365736855), apresentada em Stanford CS146S em 8 de outubro de 2026. Quero construir um agente assim em um projeto meu: receber uma tarefa pelo chat, continuar trabalhando quando eu fechar o computador e voltar quando tiver algo importante para dizer.
+Fechar o laptop deveria deixar a tarefa em andamento. Mover o script para a nuvem ajuda, mas ele ainda precisa sobreviver a falhas e aceitar correções.
 
-Os slides trazem os números 2 minutos, 15 segundos, 4.000 caracteres, 100 fatos, 30 eventos, 1280x800 e 100 mil tokens. A regra dos 90% no mesmo padrão de shell, a espera de cerca de 10 minutos e a janela de cache de 10 a 60 minutos também vêm da aula. No plano ao final, a janela de 2 a 3 segundos, a interrupção em menos de 1 segundo e a meta de cache hit acima de 90% são propostas minhas.
+Uso agentes assim todos os dias. A aula [How always-on agents work, de Lee Robinson (@leerob)](https://x.com/leerob/status/2108650243365736855), apresentada em Stanford CS146S em 8 de outubro de 2026, me chamou a atenção pelo cuidado com falhas e interrupções. Eu copiaria primeiro a separação entre execução e estado salvo.
 
-## O loop de terminal é o ponto de partida
+A arquitetura vem da palestra. Os exemplos são hipotéticos, sem resultados medidos. O plano final é uma proposta minha.
 
-A aula começa com o loop da semana 1:
+## Por que o agente não roda no seu laptop
+
+Se a tarefa depende do processo aberto no terminal, fechar o computador acaba com ela. A aula começa pelo loop da semana 1:
 
 ```python
 messages = [system_prompt, user_message]
@@ -27,236 +29,112 @@ while True:
         messages.append(run_tool(call))
 ```
 
-O modelo recebe mensagens, pede tools e lê os resultados até terminar. Para trabalhar por meses, esse loop precisa de estado persistente, entradas vindas de outros lugares e uma forma de decidir quando falar.
+O modelo pede ferramentas, recebe os resultados e decide o próximo passo. Para continuar depois que você sai, esse loop roda no servidor, que salva cada passo. O aplicativo recebe mensagens e mostra o progresso. A VM, o computador do agente na nuvem, executa as ferramentas que precisam de uma máquina.
 
-<div class="overflow-x-auto">
-<table>
-<thead><tr><th>Comportamento</th><th>Agente de terminal</th><th>Agente sempre ligado</th></tr></thead>
-<tbody>
-<tr><th scope="row">Execução</th><td>Para quando o laptop fecha.</td><td>Continua no servidor e sobrevive a falhas e deploys.</td></tr>
-<tr><th scope="row">Computador</th><td>Usa o seu laptop.</td><td>Tem uma VM na nuvem, com desktop, browser e arquivos.</td></tr>
-<tr><th scope="row">Memória</th><td>Lembra da lista de mensagens.</td><td>Salva estado, memória e skills, e resume mensagens antigas.</td></tr>
-<tr><th scope="row">Resposta</th><td>Imprime o texto do modelo.</td><td>Envia mensagem por uma tool e pode ficar quieto.</td></tr>
-<tr><th scope="row">Início do trabalho</th><td>Espera você digitar.</td><td>Recebe mensagens, agendas e outros eventos.</td></tr>
-<tr><th scope="row">Continuidade</th><td>Faz uma tarefa e sai.</td><td>Trabalha por meses, com memória entre conversas.</td></tr>
-</tbody>
-</table>
-</div>
+Sempre ligado também permite parar quando não há trabalho. O processo encerra após 2 minutos ocioso; um novo evento carrega o estado e inicia outro turno. Os números usados neste texto vêm dos slides da aula.
 
-## O loop fica no servidor
+Imagine pedir uma pesquisa antes de dormir. Você fecha o laptop, mas o servidor continua a tarefa. De manhã, abre a conversa no celular e encontra o progresso salvo, sem precisar manter o terminal aberto durante a noite.
 
-A arquitetura tem três partes. Os apps recebem mensagens e mostram progresso. O servidor valida entradas, organiza a fila e executa o loop do agente. A VM executa as tools que precisam de um computador.
+## A máquina precisa poder ser reconstruída
 
-O cliente cuida da interface; o servidor concentra o trabalho. O loop fica no servidor, separado tanto do app quanto da VM. Isso permite trocar de dispositivo, continuar com o laptop fechado e deixar trabalhos pesados, como transcrição e imagem, no servidor. Um deploy do loop também não depende da revisão da App Store. Essa separação permite escalar com crescimento rápido. Um agente que trabalha por meses não pode viver no aparelho.
+Um patch de segurança pode exigir reconstruir a VM. Se a conversa e o progresso existirem só nela, a manutenção vira perda de trabalho. A orientação da aula é direta: “Salve tudo no servidor. A VM sempre pode ser reconstruída.”
 
-Lee resume a regra de persistência assim:
+O servidor guarda conversas, memória, rotinas e skills. Cada usuário tem uma microVM Firecracker com Linux e navegador. Seus agentes dividem a máquina, cada um com sua tela virtual e seu Chrome.
 
-> "Salve tudo no servidor. A VM sempre pode ser reconstruída."
+Quando fica ociosa, a VM sincroniza os arquivos com o armazenamento na nuvem, salva um snapshot da memória e do disco e para. Nunca dorme no meio de um turno. Uma chamada de ferramenta que precise dela restaura o snapshot, incluindo ferramentas instaladas e sessões do navegador.
 
-Se o loop estivesse dentro da VM, reconstruí-la para corrigir uma vulnerabilidade zero-day derrubaria o agente. Com estado salvo no banco e no storage, a máquina pode ser desligada e restaurada quando necessário.
+Suponha que o agente tenha preparado uma planilha e a máquina durma. Ao pedir uma alteração, você provoca uma nova chamada de ferramenta. A VM acorda com os arquivos e o navegador preservados; o servidor mantém a conversa.
 
-### O que fica ligado
+## Mensagens rápidas precisam virar um pedido só
 
-Depois de concluir o turno, o processo para após 2 minutos sem atividade. A VM dorme com um snapshot em disco e só volta quando uma tool precisa dela.
+Executar cada mensagem separadamente cria concorrência sobre o mesmo pedido. O agente pode agir antes de receber a correção seguinte.
 
-Quando nada acontece, nada roda. Conversas, memória, rotinas e skills estão salvas no servidor; o próximo gatilho traz o agente de volta. Uma rotina que não usa o computador pode terminar sem acordar a VM.
+Na aula, um roteador elimina eventos duplicados e escolhe a conversa. Cada conversa tem sua fila e executa um turno por vez. Mensagens rápidas entram em lote. Eventos de Slack, grupos, rotinas e helpers aguardam na fila, mas uma mensagem sua no chat individual pode interromper ou parar o turno atual.
 
-## Cada conversa tem uma fila
+Imagine um pedido pelo Slack: incluir alguém numa reunião, depois acrescentar outra pessoa e, por último, agradecer. Essas mensagens podem virar um único turno. Se você mudar o dia pelo chat individual, com “na verdade, faz na quinta”, a correção entra na frente e redireciona o trabalho em andamento.
 
-Uma mensagem sua é só uma das entradas. O sistema também recebe rotinas, webhooks, menções, DMs e threads no Slack, ligações, reuniões, mensagens de outro agente e avisos de trabalho em background concluído. Check-ins agendados também podem acordá-lo.
+## Como retomar sem repetir um pagamento
 
-O caminho de entrada é este:
+Reiniciar um job do começo depois de uma queda pode repetir uma ação já concluída. Em um pagamento, isso deixa de ser apenas desperdício de processamento.
 
-1. O roteador descarta duplicatas e escolhe a conversa.
-2. A fila da conversa permite um turno por vez.
-3. O agente trabalha e decide se tem algo que valha dizer.
+A palestra usa Temporal para executar workflows duráveis: sequências de trabalho com cada passo registrado. Outro servidor consegue retomar do último passo salvo. As etapas também precisam ser idempotentes, isto é, uma repetição deve manter o mesmo resultado, sem criar outra ação. O motor oferece timers e cancelamento; cada helper tem seu próprio workflow.
 
-Toda ativação registra a origem. O agente consegue distinguir um pedido seu de uma rotina ou de um webhook.
+Num cenário hipotético, uma compra já autorizada é concluída e o servidor cai antes de salvar o resultado. Ao retomar, o passo de pagamento pode ser tentado novamente. A idempotência precisa reconhecer aquela mesma operação e impedir outra cobrança.
 
-No chat individual, sua mensagem entra na frente e interrompe ou para o turno atual. Grupos, Slack, rotinas e helpers entram no fim da fila. Mensagens rápidas são agrupadas em um lote, e cada lote vira um turno. O agente trabalha um lote por vez. Uma correção como “na verdade, faz na quinta” interrompe o trabalho e continua o mesmo pedido.
+## Trocar de aparelho não pode duplicar a conversa
 
-## O envio sobrevive a falhas
+Uma conexão instável pode fazer o aplicativo reenviar a mensagem. Ao mesmo tempo, o celular e o computador precisam mostrar a mesma conversa.
 
-Quando você aperta enviar, o app mostra a mensagem imediatamente e a salva localmente com um ID único. O servidor descarta IDs que já recebeu. Se o app tentar de novo, a mensagem não entra duplicada.
+O cliente exibe a mensagem e a salva localmente com um identificador único. O servidor ignora identificadores já recebidos. Outros aplicativos recebem um aviso de mudança e buscam os dados no banco. Os updates têm uma sequência; uma lacuna faz o cliente recarregar os dados.
 
-A mensagem segue para a fila. Durante o turno, o servidor salva cada passo no banco, incluindo a interação com o modelo e as tools.
+Imagine enviar um pedido no celular e perder a conexão antes da confirmação. O aplicativo tenta de novo com o mesmo identificador, sem criar outro pedido. Quando você abre o computador, ele busca a conversa salva. Perder um aviso de atualização não apaga a mensagem.
 
-Para atualizar os dispositivos, o servidor manda um sinal mínimo de que algo mudou. Os apps buscam as mensagens novas no banco. A notificação não carrega os dados da conversa. Se o sinal se perde, as mensagens continuam no banco.
+## Ferramentas demais ocupam o espaço da tarefa
 
-Cada atualização tem um número de sequência. Os apps aplicam as mudanças em ordem e recarregam do banco quando falta uma sequência.
+Carregar a definição completa de toda ferramenta deixa menos contexto para entender o pedido. Muitas dessas ferramentas nem serão usadas naquele turno.
 
-### Qualquer servidor retoma o workflow
+A solução da aula é levar só os nomes no prompt e carregar descrição e schema sob demanda. Cada definição fica abaixo de 4.000 caracteres. O conjunto permanece estável: uma ferramenta indisponível devolve um erro claro, em vez de desaparecer. Salvar estado merece uma ferramenta própria; se o modelo passa 90% do tempo repetindo um padrão de shell, esse padrão deve virar ferramenta.
 
-Uma fila de jobs comum pode reiniciar um trabalho desde o começo depois de uma falha. O workflow durável registra cada passo, e qualquer servidor retoma do último passo salvo. Os passos precisam ser idempotentes: repetir sua execução deve preservar o resultado esperado.
+A escolha também segue uma ordem de custo crescente: contexto e memória, API do aplicativo, busca na web, navegador logado, desktop e pergunta ao usuário. Um conector quebrado exige avisar e perguntar, sem contornar a falha pelo navegador.
 
-Na aula, esse motor é o Temporal, open source. O motor cuida dos timers, do cancelamento e dos health checks.
+Suponha que você peça os compromissos de amanhã. O agente carrega a ferramenta de calendário e consulta a API. Se o conector falhar, informa o problema e pede orientação. Ele não abre o navegador por conta própria para tentar recuperar acesso.
 
-Cada helper também tem seu próprio workflow durável. Se o helper de vídeo cair por falta de memória, ele reinicia sem perder o progresso.
+## O agente precisa saber ficar quieto
 
-## Os agentes do usuário dividem um computador
+Exibir toda resposta do modelo enche o chat de comentários sobre cada tentativa e texto privado. Alguns eventos nem trazem algo útil para dizer.
 
-O sistema mostrado usa uma microVM Firecracker por usuário. Um supervisor mantém um container Debian rodando dentro dela.
+No harness da aula, o código que organiza o uso do modelo e das ferramentas, `SendToUser` é a única saída visível. Texto comum e raciocínio ficam privados. O agente pode terminar um turno em silêncio. Quando precisa falar, a ferramenta envia texto, arquivos ou controles para uma decisão; a última mensagem pode encerrar o turno sem outra chamada ao modelo.
 
-O servidor de arquivos expõe arquivos, conexões de apps e uma visão ao vivo do desktop. O usuário pode assistir ao trabalho e assumir o controle. Um command runner executa shell, manipula arquivos, captura screenshots e faz cliques.
+Imagine uma rotina autorizada que verifica se um documento mudou. Se encontrar a mesma versão, ela termina sem mandar uma atualização vazia. Quando houver uma mudança relevante, o agente envia o que mudou.
 
-Os agentes do mesmo usuário dividem a máquina, mas cada agente ativo tem uma tela virtual e seu próprio Chrome. Arquivos, ferramentas instaladas e logins do browser persistem entre sessões.
+## Delegar mantém a conversa disponível
 
-A VM dorme alguns minutos depois da última atividade, nunca no meio de um turno. Antes de parar, sincroniza arquivos com o storage na nuvem e salva memória e disco em snapshot. Na próxima chamada de tool que precisar dela, restaura o snapshot no lugar. Os comandos continuam vindo do servidor.
+Uma tarefa longa pode ocupar o agente principal e encher o contexto com screenshots. Você ainda precisa conseguir corrigir o pedido.
 
-## O harness controla a interação
+Lee separa o principal dos helpers. O principal entrega uma descrição completa da tarefa e recebe um relatório curto. Uma lista acompanha os pedidos, e ele pode consultar, orientar ou parar um helper. Cada helper executa seu próprio workflow durável.
 
-O harness é a parte que organiza a interação do modelo com as tools e com o usuário. Na aula, ele controla desde a saída visível até a delegação de trabalho.
+O helper de computador concentra os cliques e screenshots. Na web, pode ler a estrutura da página; para ações em pixels, a aula usa uma tela de 1280x800. Quando precisa de intervenção humana, entrega o controle. Já o cloud coding agent faz mudanças de código **na própria VM**.
 
-### SendToUser é a única saída visível
+Imagine pedir a revisão de um vídeo e depois perguntar sobre o prazo de outra tarefa. O helper cuida do vídeo, enquanto o principal continua disponível no chat. Ao terminar, devolve um relatório curto, sem colocar todo o material analisado na conversa principal.
 
-`SendToUser` é a única ponte de envio para desktop, web, mobile, Slack, email e voz. O texto comum do modelo fica privado; só a chamada dessa tool vira mensagem para o usuário.
+## Cache: o detalhe que define o custo
 
-Ela suporta texto, arquivos, múltipla escolha e entrada segura de senha. Um cliente novo precisa entender essa saída. A última mensagem também pode encerrar o turno, poupando outra chamada ao modelo.
+Mudanças pequenas no prompt podem impedir o uso do cache e aumentar o custo. Até alterar a ordem das ferramentas pode ter esse efeito.
 
-### A UI acompanha a tool
+Na aula, o prefixo do prompt segue uma ordem fixa e fica idêntico até o próximo resumo. O histórico cresce no final. Horário e notas sobre mudanças entram na mensagem nova. Se um deploy altera a descrição de uma ferramenta, a conversa em andamento recebe uma nota, sem substituir o texto antigo. Hashes por seção ajudam a localizar mudanças; Lee trata cache miss como bug.
 
-O cliente intercepta o payload e mostra um controle apropriado à ação. No login mostrado, a integração com 1Password preenche a senha apenas no site aberto, sem entregá-la ao modelo. No pagamento com Stripe Link, a compra espera o usuário permitir ou negar.
+A compactação aproveita essa estabilidade. No caso apresentado, um turno termina acima de 100 mil tokens. Cerca de 10 minutos depois, o sistema resume enquanto o cache ainda está quente, numa janela de 10 a 60 minutos. Preserva as últimas mensagens ao usuário palavra por palavra. Se um trabalho em background estiver prestes a acordar o agente, pula essa compactação.
 
-Um rascunho de email aparece inteiro, com as opções de enviar ou descartar. Em outros casos, a resposta pode ser uma reação com emoji.
+Suponha que uma pesquisa longa termine e você saia do chat. O sistema pode resumir durante a pausa usando o prefixo em cache. Seu próximo pedido começa com o resumo menor. Há perda de informação na compressão, então a qualidade desse resumo continua sendo um problema a resolver.
 
-### As definições de tools carregam sob demanda
+## Memória útil precisa caber no prompt
 
-O prompt leva os nomes das tools. Quando o modelo decide usar uma, carrega a descrição e o schema sob demanda, como um arquivo. Isso deixa mais contexto disponível para a conversa e reduz custo.
+Guardar tudo não garante encontrar uma preferência quando ela importa. Carregar tudo no prompt consome o espaço da tarefa atual.
 
-A ordem de tentativa vai do recurso mais barato ao mais caro:
+A palestra divide a memória em camadas. O perfil, sempre no prompt, comporta até 100 fatos em 4.000 caracteres. O log traz eventos datados, com os 30 mais relevantes e recentes no contexto. Notas guardam detalhes de curto prazo; o restante fica disponível por busca.
 
-1. Contexto e memória que já estão disponíveis.
-2. API do app, por conector ou MCP.
-3. Busca na web.
-4. Browser logado.
-5. Desktop inteiro.
-6. Perguntar ao usuário.
+Depois de cada turno, uma revisão adiciona fatos e substitui informações antigas. Ela só pode remover fatos que recebeu para examinar. A memória entra como informação, nunca como instrução com autoridade para comandar ações.
 
-Cada avanço aumenta tempo, custo e risco. Se um conector quebrar, o agente avisa e pergunta, sem contornar o problema pelo browser.
+Imagine dizer que prefere reuniões à tarde. Essa preferência vai para o perfil e acompanha os próximos pedidos. Quando você precisar recuperar o motivo de uma reunião antiga, o agente busca o histórico específico, sem carregar todas as conversas para sugerir um horário.
 
-### Um helper cuida dos cliques
+## Um email recebido não pode autorizar uma ação
 
-Para páginas web, o agente pode ler a árvore de acessibilidade ou o DOM, identificar botões, links e campos e clicar diretamente. A aula apresenta isso como mais rápido e confiável que trabalhar por screenshot.
+Um email de phishing pode mandar o agente enviar dinheiro e se apresentar como uma instrução urgente. O sistema precisa preservar a origem daquele texto para não confundir conteúdo recebido com um pedido seu.
 
-Quando precisa interagir com apps de desktop ou diálogos do sistema, usa mouse e teclado por pixels, em uma tela de 1280x800. Login, código de verificação, captcha e pagamento podem exigir uma pessoa. Nesse caso, ele para, explica onde está e entrega a tela.
+A aula marca textos de email e webhook como não confiáveis. Antes de uma ação arriscada, outro modelo faz o auto-review. Se essa revisão não responder em 15 segundos, a ação fica bloqueada. Uma rejeição leva a um pedido de aprovação ao usuário.
 
-Quem faz os cliques é um helper separado. Os screenshots ficam com ele, e o principal recebe o que foi encontrado.
+Envios irreversíveis passam por rascunho e confirmação. O agente não manda mensagens a outras pessoas sem você pedir, e rotinas novas precisam do seu OK. Segredos ficam em variáveis de ambiente, fora do modelo.
 
-### O principal continua disponível
+Suponha que um email peça uma transferência para uma conta nova. O agente deve tratar a solicitação como conteúdo externo, sem tomá-la como autorização sua. Qualquer tentativa de ação arriscada passa pela revisão; o silêncio do revisor mantém o bloqueio. Se você pedir uma resposta por email, verá o rascunho antes de enviar.
 
-O agente principal responde perguntas rápidas e delega tarefas grandes. Envia ao helper uma descrição completa do pedido e recebe um relatório curto, enquanto continua disponível no chat.
+## Minha proposta: o que eu construiria primeiro
 
-Os helpers cuidam de trabalho geral (shell, web, conectores e cloud agents), uso de browser e desktop e revisão de arquivos de vídeo. O cloud coding agent altera código na mesma VM do usuário. O de computador faz uma tarefa por vez. Uma lista de tarefas acompanha os pedidos; o principal pode checar um helper, mandar uma mensagem ou pará-lo.
-
-O conjunto de tools fica estável entre turnos; indisponibilidade vira erro claro. Descrição e schema de cada tool têm menos de 4.000 caracteres. Salvar estado usa uma tool dedicada, para que a revisão veja a mudança, em vez de tentar entendê-la por comandos de shell.
-
-Se o modelo passa 90% do tempo no mesmo padrão de shell, esse padrão vira uma tool. Os erros devem orientar a próxima ação. O exemplo da aula é:
-
-> "The computer is asleep. Use Shell or Read to wake it, then try again."
-
-## Ações arriscadas passam por revisão
-
-Um modelo separado revisa ações arriscadas antes da execução. Se essa revisão automática bloquear a ação, o usuário recebe um pedido de aprovação. Sem resposta em 15 segundos, ela continua bloqueada.
-
-A origem do texto também importa. O sistema marca conteúdo de email e webhook como não confiável. Memória é informação, não instrução.
-
-O sistema não envia email nem mensagem a terceiros sem um pedido do usuário. Rotinas novas precisam de aprovação. Envios irreversíveis, como email e Slack, passam por rascunho e confirmação de envio.
-
-Senhas ficam em variáveis de ambiente, fora do modelo. Ações no próprio laptop do usuário exigem aprovação.
-
-## O prefixo permanece estável
-
-O prompt é montado em ordem fixa. As definições de tools vêm antes do system prompt, que inclui um snapshot da memória e das rotinas. A primeira mensagem traz o ambiente e os nomes das tools.
-
-Esse começo permanece idêntico até o próximo resumo. O histórico cresce no final; a mensagem nova traz a hora atual, notas curtas sobre mudanças e o pedido do usuário. Na chamada seguinte, o histórico vira parte do prefixo reaproveitável.
-
-Lee trata cache miss como bug. Até testes A/B precisam respeitar a montagem ordenada. Cada seção tem seu hash para localizar mudanças. Se um deploy alterar a descrição de uma tool, uma conversa em andamento recebe uma nota sobre a mudança, preservando o prefixo existente.
-
-Quando o usuário abre o chat ou começa a digitar, o servidor já prepara o prompt e aquece o cache.
-
-<div class="overflow-x-auto">
-<table>
-<thead><tr><th>Conteúdo pesado</th><th>O que fica no contexto principal</th></tr></thead>
-<tbody>
-<tr><th scope="row">Saída longa</th><td>O caminho do arquivo que recebeu a saída.</td></tr>
-<tr><th scope="row">Trabalho com muitas tools</th><td>Um relatório curto do helper.</td></tr>
-<tr><th scope="row">Mensagens antigas</th><td>Um resumo.</td></tr>
-<tr><th scope="row">Memórias antigas</th><td>Os fatos mais importantes; o restante fica pesquisável.</td></tr>
-<tr><th scope="row">Instruções</th><td>Um ponteiro de uma linha para a skill.</td></tr>
-</tbody>
-</table>
-</div>
-
-Um turno grande termina com mais de 100 mil tokens no prompt. Passam cerca de 10 minutos, e o sistema resume enquanto o cache do provedor ainda está quente, numa janela de 10 a 60 minutos. O resumo é escrito reaproveitando o mesmo prefixo, e a próxima mensagem começa desse resumo curto.
-
-O sistema pula essa compactação quando um trabalho em background já vai acordar o agente. As últimas mensagens enviadas ao usuário são preservadas palavra por palavra. Também é possível resumir no meio de um turno longo demais.
-
-A aula lembra: "Toda compressão perde informação". O algoritmo de resumo é o ponto difícil.
-
-## A memória tem camadas
-
-<div class="overflow-x-auto">
-<table>
-<thead><tr><th>Camada</th><th>Regra</th></tr></thead>
-<tbody>
-<tr><th scope="row">Profile</th><td>Fatos centrais sobre o usuário, sempre no prompt: até 100 fatos em 4.000 caracteres.</td></tr>
-<tr><th scope="row">Log</th><td>Eventos datados. Os 30 mais relevantes e recentes entram no prompt.</td></tr>
-<tr><th scope="row">Notes</th><td>Detalhes de curto prazo, que somem rápido.</td></tr>
-<tr><th scope="row">Todo o resto</th><td>Uma tool busca na memória quando necessário.</td></tr>
-</tbody>
-</table>
-</div>
-
-Depois de cada turno, o sistema revisa a memória, adiciona fatos novos e substitui antigos. Só pode remover fatos que recebeu nessa revisão. Os mais importantes ficam acima; os antigos perdem posição aos poucos.
-
-Fatos sobre o usuário são compartilhados entre os agentes dele, e cada agente escreve no próprio arquivo.
-
-Lee chama de "everything is computer" o conhecimento salvo em texto puro. Você e o agente podem ler, buscar e editar esses arquivos. Uma preferência dita uma vez vai para a memória.
-
-```text
-memory/
-  profile.md        # sempre no prompt
-  log/2026-10.md    # fatos datados, um por linha
-skills/
-  linkedin-sourcing/SKILL.md   # "Use this when..."
-  weekly-metrics/SKILL.md
-routines/
-  morning-brief     # prompt + dias úteis 8:00
-```
-
-Skills só carregam quando necessárias; fica um ponteiro de uma linha no prompt. Plugins agrupam skills e servidores MCP. Rotinas são prompts com agenda, no estilo cron. Você mostra uma tarefa no computador do agente, e ele salva os passos como skill.
-
-## Para onde isso vai
-
-Na aula, SFT ensina os formatos e as tools do harness, além de quando responder rápido. Com RL, o modelo aprende a seguir instruções longas, escolher a skill certa entre centenas, clicar no lugar certo e trabalhar com outros agentes. O principal é ajustado para responder em segundos; os helpers, para terminar horas de trabalho com confiabilidade.
-
-O ciclo diário começa com um erro: ele vira uma eval, o harness, o prompt ou a inferência mudam, as evals rodam e a correção é publicada. O próximo modelo é treinado nesse harness e nessas evals.
-
-"Delete the product" é a direção que Lee propõe: construir o mínimo em volta do modelo e remover código conforme ele deixa de ser necessário.
-
-Ainda falta avaliar agentes que trabalham por semanas; substituir memórias antigas, esquecer quando pedirem e nunca inventar lembranças; lidar com prompt injection; e decidir quando falar. Agentes no mesmo computador e na mesma memória trazem problemas clássicos de sistemas distribuídos. Um agente ocioso precisa sair quase de graça.
-
-Os blocos básicos vão além do loop: workflows duráveis, uso de computador, memória e skills, gatilhos e jobs agendados, conectores e autenticação, canais de texto e voz, pagamentos e identidade, evals e observabilidade.
-
-## O que eu faria para replicar
-
-**Esta parte é minha proposta e não está na aula.** Quero começar com um conjunto mínimo que permita testar continuidade, interrupção e memória em um projeto meu.
-
-1. Criaria um servidor com Postgres para conversas, mensagens com sequência e ID único do cliente, eventos com origem e chave de deduplicação, `memory_facts(tier, agent_id, importance, created_at)` e rotinas. As skills poderiam ficar em arquivos versionados.
-2. Usaria Temporal, com um workflow por conversa e outro por helper. Cada chamada de tool seria uma activity idempotente. Uma mensagem minha no chat individual cancelaria o turno atual e entraria na frente. As demais entradas usariam uma janela curta, por exemplo 2 a 3 segundos, para agrupar mensagens rápidas em um lote por turno.
-3. Montaria o loop com prefixo fixo, hash por seção e `SendToUser` como única saída visível. Uma meta-tool `get_tool(name)` carregaria as definições necessárias, e saídas longas iriam para arquivos.
-4. Enviaria notificações com apenas conversa e sequência, usando SSE, websocket ou LISTEN/NOTIFY do Postgres. O cliente buscaria mensagens depois da última sequência recebida e recarregaria se encontrasse um buraco.
-5. Começaria o computador com um container Docker Debian por usuário, Chrome com Xvfb, um display por agente, Playwright pela árvore de acessibilidade e noVNC para acompanhar a tela. Evoluiria para Firecracker com snapshot quando o custo de manter máquinas ligadas pesasse.
-6. Manteria o profile sempre no prompt, com até 4.000 caracteres, e os 30 itens de log mais relevantes. Usaria notas com TTL e busca full-text ou embeddings para o restante. Um modelo mais barato revisaria a memória depois do turno, propondo adições e substituições e removendo apenas IDs que tivesse visto.
-7. Um timer faria a compactação depois de turnos grandes, dentro da janela de cache, preservando as últimas mensagens do agente ao usuário palavra por palavra.
-8. Colocaria auto-review antes de shell, envio e pagamento, com bloqueio no timeout. Marcaria entradas externas com `<untrusted source=...>`, guardaria segredos em variáveis de ambiente e exigiria rascunho e confirmação para ações irreversíveis.
-9. Cada falha real viraria uma eval desde o início: tool errada, falou quando devia ficar quieto, cache miss ou ignorou a interrupção do usuário.
-
-Eu só aceito a implementação, incluindo a suspensão por snapshot, quando estes resultados aparecerem. São critérios propostos por mim:
-
-- Fechar o cliente durante uma tarefa e reabrir mostra o progresso sem passos repetidos.
-- Matar o worker durante um turno permite retomar do último passo.
-- Uma correção como “na verdade, faz na quinta” interrompe o turno em menos de 1 segundo.
-- Três mensagens rápidas viram um turno só.
-- A taxa de cache hit do prefixo supera minha meta de 90% numa conversa longa: um hit é a próxima chamada reaproveitar o prefixo. Os hashes por seção mostram onde ele mudou.
-- Um agente ocioso fica sem processo nem VM em execução.
+Este plano é meu, baseado nas sugestões da especificação, separado da aula do Lee. Eu começaria pela continuidade: uma tarefa interrompida obriga o usuário a descobrir o que já foi feito.
+
+1. Colocar o loop no servidor e salvar conversas e progresso em Postgres. Os aplicativos buscariam o estado salvo quando recebessem um aviso de atualização.
+2. Usar Temporal para retomar tarefas, com etapas idempotentes. Organizar a fila por conversa, agrupar mensagens rápidas e dar prioridade às correções no chat individual.
+3. Limitar a saída visível a `SendToUser`. Carregar ferramentas conforme a necessidade e manter o prefixo estável, com memória curta e busca para detalhes antigos.
+4. Começar o computador do agente com um container isolado por usuário. Adicionar helpers às tarefas longas e evoluir para snapshots quando o custo das máquinas ociosas pesar.
+5. Colocar revisão automática antes das ações arriscadas e confirmação nos envios irreversíveis. Transformar cada falha real em um teste que ajude a corrigir o comportamento.
+
+Meu primeiro cenário seria uma pesquisa que continua com o laptop fechado e aceita uma correção pelo celular. Depois eu ampliaria o acesso do agente a ações com consequências externas.

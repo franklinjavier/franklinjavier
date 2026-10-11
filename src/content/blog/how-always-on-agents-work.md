@@ -1,20 +1,22 @@
 ---
-title: How always-on agents work
+title: Building an agent you can leave running
 date: 2026-10-11
-description: The architecture, event handling, tools, and memory behind the agent in Lee Robinson's Stanford lecture. Includes my proposed implementation and acceptance criteria.
+description: How an always-on agent survives failures, handles interruptions, and keeps context costs down. Lessons from Lee Robinson's Stanford lecture, followed by my own starting plan.
 author: Franklin Javier
 tags: ai, agents, architecture, llm
 lang: en
 translationKey: always-on-agents
 ---
 
-I want to give an agent a task over chat, close my laptop, and come back to work that has continued without me. Lee Robinson (@leerob) explains the engineering behind that behavior in [How always-on agents work](https://x.com/leerob/status/2108650243365736855), his Stanford CS146S lecture from October 8, 2026.
+An open terminal makes you responsible for keeping the agent alive. A server helps, but crashes can still interrupt purchases, corrections arrive mid-task, and growing conversations cost more.
 
-The figures shown on the slides are 2 minutes, 15 seconds, 4,000 characters, 100 facts, 30 events, 1280x800, and 100k tokens. The 90% shell rule below, the roughly 10-minute delay, and the 10-to-60-minute cache window also come from the lecture. The final section is my own plan: its example 2-to-3-second batch window, interruption under 1 second, and cache-hit target above 90% are my proposals.
+I use agents like this daily. Lee Robinson's (@leerob) [How always-on agents work](https://x.com/leerob/status/2108650243365736855), delivered at Stanford CS146S on October 8, 2026, gave me a useful way to think about those problems. What stood out was how much of the design concerns recovering work and keeping the user in control. I'd copy the separation between saved state and execution first.
 
-## Start with the loop we already know
+The engineering comes from the lecture. Examples are hypothetical, with no measured outcomes. My proposal is separate, at the end.
 
-The lecture starts with the week-1 terminal loop:
+## Closing the app should leave the work intact
+
+A process running on your laptop depends on your laptop staying awake. The lecture starts with the week-1 loop, which captures the basic interaction:
 
 ```python
 messages = [system_prompt, user_message]
@@ -27,210 +29,118 @@ while True:
         messages.append(run_tool(call))
 ```
 
-The model reads messages, requests tools, and uses their results to decide what to do next. Running that interaction over months adds requirements the message list alone can't handle.
+The model requests tools and uses their results to decide what comes next. The server runs this loop and saves each step. Apps display progress; a separate cloud computer runs tools that need a machine.
 
-<div class="overflow-x-auto">
-<table>
-<thead><tr><th>Concern</th><th>Terminal agent</th><th>Agent in the lecture</th></tr></thead>
-<tbody>
-<tr><th scope="row">Execution</th><td>Stops when the laptop closes.</td><td>Server execution survives crashes and deployments.</td></tr>
-<tr><th scope="row">Computer access</th><td>Uses the user's laptop.</td><td>Uses a cloud VM with a desktop, browser, and files.</td></tr>
-<tr><th scope="row">Memory</th><td>Remembers only the message list.</td><td>Saves state, memory, and skills, and summarizes old messages.</td></tr>
-<tr><th scope="row">Output</th><td>Prints the model's response.</td><td>Sends messages through a tool when there is something to say.</td></tr>
-<tr><th scope="row">Activation</th><td>Waits for terminal input.</td><td>Responds to messages, schedules, and other events.</td></tr>
-<tr><th scope="row">Continuity</th><td>Does one task and exits.</td><td>Works for months with the same memory across conversations.</td></tr>
-</tbody>
-</table>
-</div>
+There doesn't need to be a process waiting forever. The agent stops after 2 idle minutes, and the next event brings it back with its saved state. The figures throughout this post come from the lecture slides.
 
-The intended interaction feels like messaging a colleague. You direct the work and can change course while it's running. A correction that moves the task to Thursday interrupts the work and continues the same request. The agent should send useful updates and stay quiet otherwise. A separate model reviews risky actions so that routine work doesn't require approval for every command.
+Suppose you ask for a comparison of some documents before leaving for the evening. You shut the laptop and check from your phone the next morning. The server can continue overnight, and the conversation comes from saved state rather than a terminal session you kept open.
 
-## Put the loop on the server
+## A replaceable computer makes maintenance possible
 
-The architecture separates the apps, the agent server, and the agent's computer. Apps accept input and display progress. The server validates and routes events, manages conversation queues, calls the model, and saves state. The VM runs tools that need a computer.
+If rebuilding the agent's machine destroys its progress, a security patch becomes a decision about abandoning work. The lecture keeps conversations, memory, routines, and skills in server-side storage so the VM can be rebuilt.
 
-The loop belongs on the server. That lets a user switch from desktop to phone without moving the work, and allows server changes to ship without waiting for App Store review. Heavy work such as transcription and image processing also stays off the client. This separation lets the system scale as it grows rapidly. An agent that works for months can't depend on keeping one device open.
+The agent's computer is a Firecracker microVM per user. Agents belonging to that user share it, with separate virtual displays and Chrome instances. Files, installed tools, and browser sessions persist between sessions.
 
-The same separation applies to the VM. Conversations, memory, routines, and skills live in server-side storage. If a zero-day vulnerability needs a patch, the VM must be rebuilt without losing the agent's work. If the loop ran on the VM, rebuilding or shutting down that VM would stop the agent.
+When idle, the VM synchronizes files to cloud storage, snapshots memory and disk, and stops. It never sleeps during a turn. A tool call that needs the computer restores the snapshot; commands still arrive from the server.
 
-### Stop the process when it’s idle
+For a hypothetical example, an agent has prepared a spreadsheet and its computer has gone to sleep. You ask it to change the formatting. The relevant tool wakes the VM with the file and browser session preserved.
 
-After completing a turn, the agent process stops after 2 idle minutes. The VM saves a disk snapshot when idle and wakes when a tool needs it.
+## Corrections need priority over queued work
 
-When nothing happens, nothing runs. The saved state lets the next trigger bring the agent back. A scheduled routine that doesn't need computer access can finish while the VM stays asleep.
+Separate runs let related messages race each other. The agent may act before a correction arrives.
 
-## Each conversation has a queue
+The lecture uses a router to discard duplicates and select a conversation. Each conversation has a queue, with one turn running at a time. Rapid messages form a batch. Slack events, group messages, routines, and helper results wait their turn. Your message in a one-to-one chat can interrupt or stop the current turn and take priority.
 
-User messages can arrive through different apps. Other triggers include schedules, webhooks, Slack mentions, DMs, and threads, calls, meetings, another agent, a completed background task, and scheduled check-ins.
+Imagine asking in Slack to add a colleague to a meeting, immediately adding another attendee, then sending a thank-you. The agent can handle the batch as one request. If you then use the direct chat to move the meeting to Thursday, that correction cuts in rather than waiting behind the scheduling work.
 
-A router deduplicates those events and chooses the conversation. Each conversation has a queue, with a single turn running at a time. Every activation records its source so the agent can distinguish a user request from a routine or an external service.
+## A retry must not charge you again
 
-The queue treats a direct message from the owner differently from other input. In a one-to-one chat, that message interrupts or stops the current turn and moves to the front. Group messages, Slack events, routines, and helpers go to the back. Rapid messages become one turn. The agent processes one batch at a time.
+A job that restarts from the beginning after a failure may repeat work it already completed. A payment makes the consequences easy to see.
 
-Once activated, the agent still decides whether it has anything useful to say. Getting an event doesn't mean the agent has to reply.
+The lecture uses Temporal for durable workflows. The engine records steps so another server can resume from saved progress. It also supplies timers, cancellation, and health checks. Helpers each have their own durable workflow.
 
-## Retries and sync
+The steps must be idempotent too: retrying an operation must preserve its intended result without creating another effect. Recording progress alone can't close every gap between an external action and saving its outcome.
 
-Sending begins on the client. The app displays the message immediately and stores it locally with a unique ID. The server ignores IDs it has already received, allowing the client to retry without creating duplicate messages.
+Consider a hypothetical authorized purchase. The payment succeeds, but the server crashes before recording the result. Recovery may retry that step. The payment operation needs to recognize the same request and avoid a second charge. Durable execution handles resuming the task; idempotency handles repeating the operation safely.
 
-The server queues the message and saves every step of the turn, including model interactions and tool calls. Other open apps receive a small notification that something changed, then fetch new messages from the database. The notification carries no conversation data. A lost notification doesn't take the stored messages with it.
+## Your devices should read the same saved conversation
 
-Updates have sequence numbers. Clients apply them in order and reload from the database when they detect a gap.
+A weak connection can leave the client unsure whether a message arrived. Meanwhile, another device may miss a notification about new progress.
 
-### A workflow must resume from its recorded progress
+The client displays the message and saves it locally with a unique identifier. Retries reuse it; the server discards duplicates. Change notifications tell clients to fetch new messages from the database.
 
-A job queue can restart a failed job from the beginning, repeating work that already finished. A durable workflow records each step so any server can resume from the last recorded step, provided those steps are idempotent. The lecture uses Temporal, an open-source workflow engine, for this.
+Clients apply numbered updates in order and reload from the database if they detect a gap. Notifications carry no conversation data; losing one leaves the stored work intact.
 
-Idempotent steps preserve the intended result when retried. The engine supplies timers, cancellation, and health checks, while recorded progress survives a server failure.
+Suppose your phone drops offline just after you submit a task. It can resend the same message without creating another task. When you return to the desktop app, it retrieves the saved conversation, including progress made while the phone was disconnected.
 
-Helpers get their own durable workflows too. A video helper that runs out of memory can restart without discarding everything it has done.
+## Give the agent an explicit way to speak
 
-## The VM is the agent's workspace
+Showing every model response floods the chat with commentary and private reasoning. An event can warrant work without needing a reply.
 
-The computer shown in the lecture is a Firecracker microVM per user. A supervisor keeps a Debian container running inside it. A file server exposes files, app connections, and a live desktop view that the user can watch or take over. A command runner handles shell commands, file operations, screenshots, and clicks.
+The harness, the code that coordinates the model and its tools, makes `SendToUser` the only visible output. Ordinary model text stays private. A turn can end quietly. When there is something useful to report, the tool sends text, files, or controls for a user decision. The final send can also finish the turn without another model call.
 
-Agents belonging to the same user share the machine. Each active agent gets a virtual display and its own Chrome instance. Installed tools, files, and browser logins persist across sessions.
+For example, imagine an approved routine checking for changes to a shared document. If the document is unchanged, the agent can finish silently. A meaningful revision gives it a reason to send an update. The user sees the change, without a running account of each check.
 
-After a few minutes without activity, the VM synchronizes files to cloud storage, snapshots memory and disk, and stops. It never sleeps in the middle of a turn. The next tool call that needs the machine restores the snapshot in place, with commands still arriving from the server.
+## Load the tool you need, when you need it
 
-## Control the model through the harness
+Unused tool definitions consume context. The lecture includes tool names in the prompt and loads descriptions and schemas on demand, as files.
 
-The harness is the code and tool interface around the model. In the lecture, the harness decides what the user sees, how the model discovers tools, and how work gets delegated.
+Each definition stays below 4,000 characters. The tool set remains stable between turns; an unavailable tool returns a clear error. State changes get a dedicated tool so a reviewer can see what changed. If the model spends 90% of its time repeating a shell pattern, that pattern should become a tool.
 
-### Sending is an explicit action
+Tool selection follows an ascending cost order: existing context and memory, an app API, web search, the logged-in browser, the whole desktop, then asking the user. A broken connector is a reason to report the problem and ask. The agent must not bypass it through the browser.
 
-`SendToUser` is the only outbound bridge to the clients, including web, desktop, mobile, Slack, email, and voice. Ordinary model text stays private. A turn can therefore finish without producing a user-facing message.
+Suppose you ask whether you're free tomorrow afternoon. The agent can load the calendar tool and query the API. If the connection fails, it tells you and asks how to proceed instead of attempting browser access on its own.
 
-The tool supports text, files, multiple-choice controls, and secure password input. New clients need to understand that output interface. The final send can also end the turn directly, saving another model call.
+## Long tasks shouldn't take over the main conversation
 
-The client intercepts the payload and shows a control for that action. The lecture's login flow uses 1Password to fill only the open site; the model never receives the password. A Stripe Link payment waits for the user's allow-or-deny decision. An email draft shows the entire message with send and discard controls. Sometimes an emoji is enough.
+Screenshots can crowd out useful context. Long tasks also leave the main agent unavailable when you need to redirect it.
 
-### Load tool definitions when needed
+The lecture delegates that work to helpers. The main agent supplies a complete task description and receives a short report. A task list tracks requests, and the main agent can check a helper, send it guidance, or stop it.
 
-The prompt lists tool names. The model loads a tool's schema and description on demand, reading them as a file. Keeping unused definitions out of the prompt leaves room for conversation and reduces cost.
+A computer-use helper handles clicks and screenshots. It can inspect page structure for web interactions; pixel-based work uses a 1280x800 display. When human intervention is needed, it stops and hands over control. The cloud coding helper makes changes **in its own VM**.
 
-The agent tries available approaches in this order:
+Imagine asking for a video review, then remembering a question about an unrelated deadline. The video helper can continue while the main agent answers you. Its final report brings the relevant findings back without filling the main conversation with all the material it examined.
 
-1. Existing context and memory.
-2. An app API through a connector or MCP.
-3. Web search.
-4. Its logged-in browser.
-5. The full desktop.
-6. Asking the user.
+## A stable prompt keeps repeated input cheaper
 
-Moving down that list increases latency, cost, and risk. A broken connector is an exception to the fallback order: the agent reports the failure and asks, rather than bypassing it through the browser.
+An agent repeatedly sends much of the same context to the model. If that prefix changes unnecessarily, it loses the opportunity to reuse cached input.
 
-For web pages, the agent can inspect the accessibility tree or DOM and target buttons, links, and fields directly. The lecture describes this as faster and more reliable than screenshots. Desktop apps and system dialogs require mouse and keyboard interaction with pixels on a 1280x800 display. Login, verification codes, captchas, and payments can require a handoff: the agent stops, explains where it is, and gives the person control.
+The lecture assembles the prompt in a fixed order and keeps the prefix identical until the next summary. History grows at the end. The latest message adds the time and brief notes about changes. A deployment that changes a tool description adds a note to an active conversation instead of rewriting its existing tool text.
 
-### Delegate without losing the conversation
+Lee treats a cache miss as a bug. Each section has a hash to help find what changed. This also shapes compaction: in the case described, a turn finishes above 100k tokens, then the system waits roughly 10 minutes before summarizing. It reuses the prefix while the provider cache remains warm, within a 10–60 minute window.
 
-The main agent answers quick questions itself and delegates longer work so it remains available in chat. It sends a complete task description and gets a short report back. Helpers handle general work (shell, web, connectors, and cloud agents), browser and desktop use, and watching and reviewing video files. The cloud coding agent changes code on the same per-user VM. The computer-use helper takes one task at a time, handles clicks, and keeps screenshots out of the main agent's context. A task list tracks requests, and the main agent can check a helper, message it, or stop it.
+The latest user-facing agent messages survive word for word. Compaction is skipped if background work is about to wake the agent anyway. Compression loses information, so a smaller prompt still depends on a good summary.
 
-Keep the tool set stable between turns. An unavailable tool returns a clear error. Each tool's description and schema stay under 4,000 characters. Save state with a dedicated tool instead of shell, so the reviewer sees the change directly. If the model spends 90% of its time on the same shell pattern, that pattern becomes a tool.
+Picture a long research task ending just as you leave the chat. During that pause, the system can summarize using the cached prefix. Your follow-up starts with a shorter history, while the last response you saw remains intact.
 
-Errors should tell the agent how to proceed. The lecture supplies this example:
+## Remember preferences without carrying every conversation
 
-> The computer is asleep. Use Shell or Read to wake it, then try again.
+Saving everything doesn't guarantee the agent will find a preference when it matters. Loading everything consumes context needed for the current request.
 
-## Risky actions need a check
+The lecture's profile always enters the prompt, with up to 100 facts in 4,000 characters. A dated log contributes the 30 most relevant and recent events. Notes hold short-lived details, and a memory-search tool retrieves the rest.
 
-A separate model checks risky actions before execution. If it blocks an action, the user receives an approval request. No response within 15 seconds leaves the action blocked.
+After each turn, a memory pass adds facts and replaces old ones. It can remove only facts it was shown. Stored memory supplies information; it doesn't have authority to issue instructions.
 
-Email and webhook content are marked as untrusted input. Treat saved memories as information, not instructions.
+For instance, you might say you prefer afternoon meetings. The profile can carry that preference into later scheduling requests. If you ask why an old meeting was moved, the agent searches for the specific history instead of reading every past conversation just to suggest a time.
 
-The agent doesn't email or message other people without a user request, and new routines require approval. Irreversible sends, including email and Slack, go through a draft and an explicit send confirmation. Passwords stay in environment variables, outside the model. Actions on the user's own laptop also require approval.
+## External text must not become permission
 
-## Keep the prompt prefix stable
+A phishing email can tell an agent to send money and claim the request is urgent. The system needs to distinguish text it received from an instruction you authorized.
 
-The prompt has a fixed assembly order. Tool definitions come first, followed by the system prompt with a snapshot of memory and routines. The first message contains environment details and the list of tool names. That prefix stays identical until the next summary.
+The lecture tags email and webhook content as untrusted. A separate model reviews risky actions before they run. If the reviewer gives no answer within 15 seconds, the action stays blocked. A rejection triggers a request for user approval.
 
-History grows at the end. The newest message adds the current time, short notes about changes, and the user's input. On the next call, the earlier history becomes part of the reusable prefix.
+Irreversible sends go through a draft and an explicit send confirmation. The agent doesn't message other people without a user request, and new routines need approval. Secrets stay in environment variables, outside the model.
 
-Lee treats a cache miss as a bug. Each prompt section has a hash so engineers can locate the change. Ordering must remain stable, including during A/B tests. If a deployment changes a tool description, an active conversation receives a note instead of a rewritten prefix. Opening the chat or starting to type lets the server prepare the prompt and warm the cache ahead of the request.
+Imagine an incoming email announcing new bank details and requesting a transfer. That text remains external content, with no authority to approve a payment. Any attempted risky action faces review, and a silent reviewer leaves it blocked. If you ask the agent to reply, you get a draft to inspect before sending.
 
-Caching helps with repeated input, but the main agent still needs to limit what it carries:
+## My proposal for getting started
 
-<div class="overflow-x-auto">
-<table>
-<thead><tr><th>Large input</th><th>What the main agent keeps</th></tr></thead>
-<tbody>
-<tr><th scope="row">Long tool output</th><td>A path to the file containing it.</td></tr>
-<tr><th scope="row">Tool-heavy work</th><td>A short helper report.</td></tr>
-<tr><th scope="row">Old messages</th><td>A summary.</td></tr>
-<tr><th scope="row">Older memories</th><td>The most important facts; the rest stay searchable.</td></tr>
-<tr><th scope="row">Task instructions</th><td>A one-line pointer to a skill.</td></tr>
-</tbody>
-</table>
-</div>
+This is my proposal, drawn from the specification's suggestions, separate from Lee's lecture. I'd build continuity before granting broad access to consequential actions.
 
-A large turn ends with more than 100k tokens in the prompt. About 10 minutes pass, then the system summarizes while the provider cache is still warm. The lecture gives a cache window of 10 to 60 minutes. The summary is written reusing that same prefix, and the next message starts from the short summary.
+1. Run the loop on a server and save conversations and progress in Postgres. Have clients retrieve that state when notified of a change.
+2. Use Temporal to resume tasks, with idempotent steps. Add a conversation queue that batches quick messages and lets direct corrections interrupt ongoing work.
+3. Make `SendToUser` the visible output boundary. Load tool definitions as needed, preserve the prompt prefix, and combine a short profile with searchable memory.
+4. Start computer access with an isolated container per user. Give long tasks to helpers and move toward VM snapshots when idle machine costs justify the work.
+5. Review risky actions automatically and require confirmation for irreversible sends. Turn actual failures into evaluation cases that guide the next fix.
 
-This compaction is skipped when background work is about to wake the agent anyway. The latest messages sent to the user remain verbatim, and an excessively long turn can also be compacted before it ends. Compression loses information. The summary algorithm is the hard part.
-
-## Memory needs limits and update rules
-
-The lecture separates memory into layers:
-
-<div class="overflow-x-auto">
-<table>
-<thead><tr><th>Layer</th><th>Prompt behavior</th></tr></thead>
-<tbody>
-<tr><th scope="row">Profile</th><td>Core user facts always included, capped at 100 facts in 4,000 characters.</td></tr>
-<tr><th scope="row">Log</th><td>Dated events, with the 30 most relevant and recent included.</td></tr>
-<tr><th scope="row">Notes</th><td>Short-lived details that expire quickly.</td></tr>
-<tr><th scope="row">Remaining memory</th><td>Retrieved by a memory-search tool when needed.</td></tr>
-</tbody>
-</table>
-</div>
-
-After each turn, a memory pass adds new facts and replaces old ones. It may remove only facts it was shown. Important facts rank higher, while older facts gradually move down. User facts are shared across that user's agents, with each agent writing to its own file.
-
-Lee uses the phrase "everything is computer" for knowledge stored as plain text. Both the user and agent can read, search, and edit it. A preference said once goes to memory. Skills load only when needed. A one-line pointer stays in the prompt, and the skill file describes its use with wording such as "Use this when...". Plugins can package skills and MCP servers.
-
-The files have a concrete layout:
-
-```text
-memory/
-  profile.md        # always in the prompt
-  log/2026-10.md    # dated facts, one per line
-skills/
-  linkedin-sourcing/SKILL.md   # "Use this when..."
-  weekly-metrics/SKILL.md
-routines/
-  morning-brief     # prompt + weekdays at 8:00
-```
-
-Routines are prompts with cron-style schedules. Show the agent a task on its computer, and it saves the steps as a skill.
-
-## Training and evaluation keep changing the implementation
-
-The lecture discusses training models for the harness. Supervised fine-tuning teaches the harness's tools and formats, and when to answer quickly. Reinforcement learning teaches the model to follow long instructions, pick the right skill among hundreds, click the right place, and work with other agents. The main agent is tuned to answer in seconds; helpers are tuned to finish hours of work reliably.
-
-Errors feed a daily development cycle: turn a failure into an evaluation case, change the harness, prompt, or inference, run the evaluations, and publish. The next model is trained on that harness and those evals.
-
-"Delete the product" is Lee's direction for reducing the code around the model as the model becomes able to do more of the work itself. The remaining problems include evaluating agents over weeks, replacing stale memories, honoring requests to forget, avoiding invented memories, prompt injection, deciding when to speak, coordinating agents that share a computer and memory (classic distributed-systems problems), and keeping idle costs close to zero.
-
-The building blocks extend beyond the model loop: durable workflows, computer use, memory and skills, scheduled jobs and triggers, connectors and authentication, text and voice channels, payments and identity, evaluations, and observability.
-
-## My implementation proposal, separate from the lecture
-
-**This section is my own plan, not part of Lee's lecture.** I'd start with the pieces needed to test whether work survives failures and whether the user can redirect it.
-
-1. Use a server and Postgres to store conversations, sequenced messages with unique client IDs, events with source and deduplication keys, `memory_facts(tier, agent_id, importance, created_at)`, and routines. Skills could live in versioned files.
-2. Give each conversation and helper a Temporal workflow. Process a batch per turn, with each tool call implemented as an idempotent activity. A direct message from the owner would signal cancellation and take priority; other events would use a short batching window, such as 2 to 3 seconds.
-3. Build a fixed prompt prefix with a hash per section. Keep `SendToUser` as the only visible output, load tool definitions through `get_tool(name)`, and write long outputs to files.
-4. Send only conversation and sequence identifiers through Postgres LISTEN/NOTIFY, SSE, or a websocket. Clients would fetch after their last sequence and reload when they found a gap.
-5. Begin with a Debian Docker container per user, Chrome on Xvfb, a display per agent, Playwright using the accessibility tree, and noVNC for the live view. Move to Firecracker snapshots when keeping idle computers running becomes too expensive.
-6. Keep the profile within 4,000 characters and include the 30 most relevant log entries. Use notes with a time to live (TTL) and full-text search or embeddings for other memories. A cheaper model would propose additions and replacements after each turn, removing only IDs it had seen.
-7. Schedule compaction after large turns, within the cache window, preserving the latest user-facing agent messages verbatim.
-8. Put automatic review before shell operations, sends, and payments, with timeouts leaving actions blocked. Mark external input with `<untrusted source=...>`, keep secrets in environment variables, and require drafts and confirmation for irreversible actions.
-9. Turn real failures into evaluations from the start: selecting the wrong tool, speaking unnecessarily, breaking the prompt cache, or ignoring an interruption.
-
-I'd accept the implementation, including idle suspension, only when it met these proposed criteria:
-
-- Closing the client during a task and reopening it shows progress without repeated steps.
-- Killing the worker during a turn resumes work from the last recorded step.
-- A correction that moves the task to Thursday interrupts the active turn in less than 1 second.
-- Three rapid messages produce a single turn.
-- The prefix cache-hit rate stays above my 90% target over a long conversation: a hit means the next call reuses the prefix. Section hashes identify where the prefix changed.
-- An idle agent has no running process or VM.
+I'd begin with an overnight document comparison that I can redirect from my phone. That gives me a concrete task to build around before adding payments or messages to other people.
