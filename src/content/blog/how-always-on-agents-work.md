@@ -26,13 +26,13 @@ toc:
 
 My other Mac already went to sleep halfway through a task. From my phone, I asked the agent on the server to find where the work had stopped. It retrieved the shared history, then checked GitHub to see what had actually been pushed.
 
-In the [video](https://x.com/leerob/status/2108650243365736855): 2:35 (how we got here); 6:13 (models); 10:06 (architecture); 18:07 (harness); 27:26 (context); 34:26 (where this is going.)
+In the [video](https://x.com/leerob/status/2108650243365736855): 2:35 (how we got here); 6:13 (models); 10:06 (architecture); 18:07 (harness); 27:26 (context); 34:26 (where this is going).
 
 The architecture comes from the lecture. The MacBook stories come from my experiences in the previous post; the other examples are hypothetical. The plan at the end is mine.
 
 ## Why the agent can't live on a machine you close
 
-A local process needs the computer to stay awake. My MacBook solves that problem by spending its days as a server: lid shut, plugged in, on all day, with sleep disabled. I've stopped using it as a laptop. The lecture starts with the week-1 loop:
+A local process needs the computer to stay awake. My MacBook solves that problem by running as a server rather than a laptop: lid shut, plugged in, on all day, with sleep disabled. The lecture starts with the week-1 loop:
 
 ```python
 messages = [system_prompt, user_message]
@@ -137,7 +137,7 @@ The lecture assembles the prompt in a fixed order and keeps the prefix identical
 
 <figure data-diagram="prompt-cache"></figure>
 
-Lee treats a cache miss as a bug. Each section has a hash to help find what changed. This also shapes compaction: in the case described, the system waits roughly 10 minutes after a large turn ends before summarizing. It reuses the prefix while the provider cache remains warm, within a 10–60 minute window.
+Lee treats a cache miss as a bug. Each section has a hash to help find what changed. This also shapes compaction: in the case described, the system waits roughly 10 minutes after a turn ends with the prompt above 100k tokens before summarizing. It reuses the prefix while the provider cache remains warm, within a 10–60 minute window.
 
 The latest user-facing agent messages survive word for word. Compaction is skipped if background work is about to wake the agent anyway. Compression loses information, so a smaller prompt still depends on a good summary.
 

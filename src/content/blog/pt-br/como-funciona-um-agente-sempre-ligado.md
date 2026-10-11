@@ -26,13 +26,13 @@ No [post anterior](/pt-br/blog/macbook-velho-virou-servidor-de-contexto/), conte
 
 Meu outro Mac já dormiu no meio de uma tarefa. Do celular, pedi ao agente no servidor para descobrir onde ela tinha parado. Ele encontrou o histórico na memória compartilhada e conferiu no GitHub o que já tinha sido enviado.
 
-No [vídeo](https://x.com/leerob/status/2108650243365736855): 2:35 (como chegamos aqui); 6:13 (modelos); 10:06 (arquitetura); 18:07 (harness); 27:26 (contexto); 34:26 (próximos passos.)
+No [vídeo](https://x.com/leerob/status/2108650243365736855): 2:35 (como chegamos aqui); 6:13 (modelos); 10:06 (arquitetura); 18:07 (harness); 27:26 (contexto); 34:26 (próximos passos).
 
 A arquitetura vem da aula. Os relatos do MacBook vêm das experiências que contei no post anterior; os outros exemplos são hipotéticos. O plano final é uma proposta minha.
 
 ## Por que o agente não roda na máquina que você fecha
 
-Se a tarefa depende do processo aberto no terminal, suspender o computador interrompe o trabalho. Meu MacBook resolve essa parte porque deixou de ser usado como laptop: fica de tampa fechada, na tomada, ligado o dia inteiro, com o modo de suspensão desativado. A aula começa pelo loop da semana 1:
+Se a tarefa depende do processo aberto no terminal, suspender o computador interrompe o trabalho. Meu MacBook resolve essa parte porque funciona como servidor em vez de laptop: fica de tampa fechada, na tomada, ligado o dia inteiro, com o modo de suspensão desativado. A aula começa pelo loop da semana 1:
 
 ```python
 messages = [system_prompt, user_message]
@@ -79,7 +79,7 @@ Imagine um pedido pelo Slack: incluir alguém numa reunião, depois acrescentar 
 
 Reiniciar um job do começo depois de uma queda pode repetir uma ação já concluída. No MacBook, testei reiniciar a máquina e derrubar o Wi-Fi; os serviços voltaram sozinhos. Retomar cada etapa de uma tarefa é o teste que quero fazer agora. Em um pagamento, repetir uma etapa pode significar outra cobrança.
 
-A aula usa Temporal para executar workflows duráveis: sequências de trabalho com cada passo registrado. Outro servidor consegue retomar do último passo salvo. As etapas também precisam ser idempotentes, isto é, uma repetição deve manter o mesmo resultado, sem criar outra ação. O motor oferece timers e cancelamento; cada helper tem seu próprio workflow.
+A aula usa Temporal para executar workflows duráveis: sequências de trabalho com cada passo registrado. Outro servidor consegue retomar do último passo salvo. As etapas também precisam ser idempotentes, isto é, uma repetição deve manter o mesmo resultado, sem criar outra ação. O motor oferece timers, cancelamento e verificações de saúde (health checks); cada helper tem seu próprio workflow.
 
 <figure data-diagram="durable"></figure>
 
@@ -133,7 +133,7 @@ Na aula, o prefixo do prompt segue uma ordem fixa e fica idêntico até o próxi
 
 <figure data-diagram="prompt-cache"></figure>
 
-A compactação aproveita essa estabilidade. No caso apresentado, o sistema espera cerca de 10 minutos depois de um turno grande e resume enquanto o cache ainda está quente, numa janela de 10 a 60 minutos. Preserva as últimas mensagens ao usuário palavra por palavra. Se um trabalho em background estiver prestes a acordar o agente, pula essa compactação.
+A compactação aproveita essa estabilidade. No caso apresentado, o sistema espera cerca de 10 minutos depois de um turno que termina com o prompt acima de 100 mil tokens e resume enquanto o cache ainda está quente, numa janela de 10 a 60 minutos. Preserva as últimas mensagens ao usuário palavra por palavra. Se um trabalho em background estiver prestes a acordar o agente, pula essa compactação.
 
 Suponha que uma pesquisa longa termine e você saia do chat. O sistema pode resumir durante a pausa usando o prefixo em cache. Seu próximo pedido começa com o resumo menor. Há perda de informação na compressão, então a qualidade desse resumo continua sendo um problema a resolver.
 

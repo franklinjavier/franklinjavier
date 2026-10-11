@@ -25,7 +25,17 @@ export function toPostSummary(post: CollectionEntry<'blog'>): PostSummary {
 }
 
 // Fails the build when src/data/series.ts and the published posts disagree.
-async function checkSeriesData(): Promise<void> {
+// Called from the blog post routes' getStaticPaths, so stale series data fails
+// the build even when no published post carries `series` frontmatter.
+// Memoized for the build; dev re-checks so edits show up without a restart.
+let seriesCheck: Promise<void> | undefined
+
+export function checkSeriesData(): Promise<void> {
+  if (!seriesCheck || !import.meta.env.PROD) seriesCheck = runSeriesCheck()
+  return seriesCheck
+}
+
+async function runSeriesCheck(): Promise<void> {
   const posts = await getPublishedPosts()
   const problems = seriesDrift(
     posts.map((post) => ({

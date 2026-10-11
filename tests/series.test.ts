@@ -75,12 +75,12 @@ describe('seriesNav', () => {
 })
 
 describe('series labels', () => {
-  const nav = seriesNav({ key: 'agent-experiments', part: 2 }, 'pt-br')
-
   test('marker reads "Part N of M · <series name>"', () => {
-    expect(seriesMarker(nav, 'pt-br')).toBe('Parte 2 de 2 · experimentos com agentes')
-    expect(seriesMarker(seriesNav({ key: 'agent-experiments', part: 1 }, 'en'), 'en')).toBe(
-      'Part 1 of 2 · experiments with agents',
+    expect(seriesMarker(seriesNav({ key: 'agents', part: 2 }, 'pt-br', catalog), 'pt-br')).toBe(
+      'Parte 2 de 3 · experimentos',
+    )
+    expect(seriesMarker(seriesNav({ key: 'agents', part: 1 }, 'en', catalog), 'en')).toBe(
+      'Part 1 of 3 · experiments',
     )
   })
 
@@ -125,6 +125,21 @@ describe('seriesDrift', () => {
     expect(seriesDrift([...postsFor(catalog), extra], catalog)).toEqual([
       '/blog/p4/: series agents part 4 is not listed in the data',
     ])
+  })
+
+  test('reports stale data when no published post is a member any more', () => {
+    const posts = postsFor(catalog).map((post) => ({ ...post, series: undefined }))
+    const problems = seriesDrift(posts, catalog)
+    expect(problems).toHaveLength(6)
+    expect(problems).toContain('agents part 1 (en): post frontmatter series is undefined')
+    expect(problems).toContain('agents part 3 (pt-br): post frontmatter series is undefined')
+  })
+
+  test('reports stale data when every listed part is drafted', () => {
+    const problems = seriesDrift([], catalog)
+    expect(problems).toHaveLength(6)
+    expect(problems).toContain('agents part 1 (en): no published post at /blog/p1/')
+    expect(problems).toContain('agents part 3 (pt-br): no published post at /pt-br/blog/p3/')
   })
 
   test('reports gaps in part numbering', () => {

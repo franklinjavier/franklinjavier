@@ -174,30 +174,24 @@ describe('blog post pages', () => {
 })
 
 describe('post series', () => {
-  const cases = [
-    {
-      lang: 'en',
-      part1: '/blog/old-macbook-context-server/',
-      part2: '/blog/how-always-on-agents-work/',
-      marker: (n: number) => `Part ${n} of 2 · experiments with agents`,
-      backLink: 'Part 1: My old MacBook is now a context server',
-      nextLink: 'Next: Part 2 · How an agent loop works',
+  const labels = {
+    en: {
+      marker: (part: number, total: number, name: string) => `Part ${part} of ${total} · ${name}`,
+      back: (part: number, title: string) => `Part ${part}: ${title}`,
+      next: (part: number, title: string) => `Next: Part ${part} · ${title}`,
       nextPrefix: 'Next: Part',
       navLabel: 'Post series',
       nextNavLabel: 'Next part of the series',
     },
-    {
-      lang: 'pt-br',
-      part1: '/pt-br/blog/macbook-velho-virou-servidor-de-contexto/',
-      part2: '/pt-br/blog/como-funciona-um-agente-sempre-ligado/',
-      marker: (n: number) => `Parte ${n} de 2 · experimentos com agentes`,
-      backLink: 'Parte 1: MacBook velho virou servidor de contexto',
-      nextLink: 'Próximo: Parte 2 · Como funciona um agente em loop',
+    'pt-br': {
+      marker: (part: number, total: number, name: string) => `Parte ${part} de ${total} · ${name}`,
+      back: (part: number, title: string) => `Parte ${part}: ${title}`,
+      next: (part: number, title: string) => `Próximo: Parte ${part} · ${title}`,
       nextPrefix: 'Próximo: Parte',
       navLabel: 'Série de posts',
       nextNavLabel: 'Próxima parte da série',
     },
-  ]
+  }
 
   function page(url: string): string {
     return read(`${url.slice(1)}index.html`)
@@ -211,51 +205,78 @@ describe('post series', () => {
     return new RegExp(`<nav aria-label="${label}"[^>]*>(.*?)</nav>`, 's').exec(html)?.[1]
   }
 
-  for (const c of cases) {
-    test(`${c.lang}: part 1 shows "${c.marker(1)}" with no link at the top`, () => {
-      const top = nav(page(c.part1), c.navLabel)
-      expect(top).toContain(c.marker(1))
-      expect(top).not.toContain('<a')
-    })
+  function header(md: string): string {
+    return md.slice(0, md.indexOf('- Author:'))
+  }
 
-    test(`${c.lang}: part 2 shows "${c.marker(2)}" and links back to part 1`, () => {
-      const top = nav(page(c.part2), c.navLabel)
-      expect(top).toContain(c.marker(2))
-      expect(top).toContain(`href="${c.part1}"`)
-      expect(top).toContain(c.backLink)
-    })
+  // Totals, neighbours and the last part come from the data, so these keep
+  // passing as parts are added.
+  for (const [key, series] of Object.entries(SERIES)) {
+    const parts = [...series.parts].sort((a, b) => a.part - b.part)
+    const total = parts.length
+    const first = parts[0]
+    const last = parts[total - 1]
 
-    test(`${c.lang}: part 1 ends with "${c.nextLink}" after the body`, () => {
-      const html = page(c.part1)
-      const end = nav(html, c.nextNavLabel)
-      expect(end).toContain(`href="${c.part2}"`)
-      expect(end).toContain(c.nextLink)
-      const at = html.indexOf(`aria-label="${c.nextNavLabel}"`)
-      expect(at).toBeGreaterThan(html.indexOf('class="prose"'))
-      expect(at).toBeLessThan(html.indexOf('</article>'))
-    })
+    for (const lang of ['en', 'pt-br'] as const) {
+      const l = labels[lang]
+      const marker = (part: number) => l.marker(part, total, series.name[lang])
 
-    test(`${c.lang}: the last part has no forward link`, () => {
-      const html = page(c.part2)
-      expect(nav(html, c.nextNavLabel)).toBeUndefined()
-      expect(html).not.toContain(c.nextPrefix)
-    })
+      test(`${key} ${lang}: part 1 shows "${marker(1)}" with no link at the top`, () => {
+        const top = nav(page(first.posts[lang].url), l.navLabel)
+        expect(top).toContain(marker(1))
+        expect(top).not.toContain('<a')
+        const md = header(twin(first.posts[lang].url))
+        expect(md).toContain(marker(1))
+        expect(md).not.toContain('](')
+      })
 
-    test(`${c.lang}: markdown twins carry the marker, back link and next line`, () => {
-      const part1 = twin(c.part1)
-      const part2 = twin(c.part2)
-      const header = (md: string) => md.slice(0, md.indexOf('- Author:'))
-      expect(header(part1)).toContain(c.marker(1))
-      expect(header(part1)).not.toContain('](')
-      expect(header(part2)).toContain(c.marker(2))
-      expect(header(part2)).toContain(`← [${c.backLink}](https://`)
-      expect(header(part2)).toContain(`${c.part1})`)
-      const next = `[${c.nextLink}](https://`
-      expect(part1).toContain(next)
-      expect(part1).toContain(`${c.part2})`)
-      expect(part1.indexOf(next)).toBeGreaterThan(part1.indexOf('- Canonical:'))
-      expect(part2).not.toContain(c.nextPrefix)
-    })
+      test(`${key} ${lang}: the last part shows "${marker(last.part)}" and has no forward link`, () => {
+        const html = page(last.posts[lang].url)
+        expect(nav(html, l.navLabel)).toContain(marker(last.part))
+        expect(nav(html, l.nextNavLabel)).toBeUndefined()
+        expect(html).not.toContain(l.nextPrefix)
+        expect(twin(last.posts[lang].url)).not.toContain(l.nextPrefix)
+      })
+
+      for (const [i, entry] of parts.entries()) {
+        const url = entry.posts[lang].url
+        const previous = parts[i - 1]
+        const next = parts[i + 1]
+
+        if (previous) {
+          test(`${key} ${lang}: part ${entry.part} links back to part ${previous.part}`, () => {
+            const back = l.back(previous.part, previous.posts[lang].title)
+            const top = nav(page(url), l.navLabel)
+            expect(top).toContain(marker(entry.part))
+            expect(top).toContain(`href="${previous.posts[lang].url}"`)
+            expect(top).toContain(back)
+            const md = header(twin(url))
+            expect(md).toContain(marker(entry.part))
+            expect(md).toContain(`← [${back}](https://`)
+            expect(md).toContain(`${previous.posts[lang].url})`)
+          })
+        }
+
+        if (next) {
+          test(`${key} ${lang}: part ${entry.part} ends with a link to part ${entry.part + 1}`, () => {
+            expect(next.part).toBe(entry.part + 1)
+            const nextLabel = l.next(next.part, next.posts[lang].title)
+            const html = page(url)
+            const end = nav(html, l.nextNavLabel)
+            expect(end).toContain(`href="${next.posts[lang].url}"`)
+            expect(end).toContain(nextLabel)
+            const at = html.indexOf(`aria-label="${l.nextNavLabel}"`)
+            expect(at).toBeGreaterThan(html.indexOf('class="prose"'))
+            expect(at).toBeLessThan(html.indexOf('</article>'))
+            const md = twin(url)
+            const line = `[${nextLabel}](https://`
+            expect(md).toContain(line)
+            expect(md).toContain(`${next.posts[lang].url})`)
+            expect(md.indexOf(line)).toBeGreaterThan(md.indexOf('- Canonical:'))
+          })
+        }
+      }
+    }
   }
 
   test('every series part in the data matches a built post (title, URL, language, part)', () => {
