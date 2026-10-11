@@ -1,6 +1,7 @@
 ---
 title: My old MacBook is now a context server
 date: 2026-10-08
+updated: 2026-10-11
 description: "Shared context across coding agents, machines, and projects: my 2017 MacBook stores session history and summaries, with repository checks before resuming work."
 author: Franklin Javier
 tags: ai, agents, self-hosting, tooling, productivity

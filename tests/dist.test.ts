@@ -221,8 +221,7 @@ describe('blog post pages', () => {
   })
 
   test('TOC falls back to the heading text, numbers sections and keeps the full heading', () => {
-    // No post on this branch sets `toc` frontmatter labels; tests/toc.test.ts
-    // covers the overrides.
+    // These posts set no `toc` frontmatter labels (see the custom-label test).
     const cases = [
       {
         path: 'blog/old-macbook-context-server/index.html',
@@ -317,6 +316,8 @@ describe('heading links', () => {
     'pt-br/blog/stylex-nao-deixou-o-site-mais-rapido/index.html',
     'blog/old-macbook-context-server/index.html',
     'pt-br/blog/macbook-velho-virou-servidor-de-contexto/index.html',
+    'blog/how-always-on-agents-work/index.html',
+    'pt-br/blog/como-funciona-um-agente-sempre-ligado/index.html',
   ]
   const prose = (html: string) =>
     html.match(/<div class="prose" data-sidenotes>([\s\S]*?)<p data-heading-anchor-status/)?.[1] ??
@@ -370,16 +371,27 @@ describe('heading links', () => {
         const full = /<span class="toc-full[^"]*">(.*?)<\/span>/s.exec(inner)
         expect(full).not.toBeNull()
         expect(stripTags(full![1])).toBe(headings[index])
-        // A short label, when there is one, is shown but hidden from screen readers.
-        if (inner.includes('toc-short')) {
-          expect(inner).toMatch(/<span aria-hidden="true" class="toc-short[^"]*">/)
-        }
         // One name, from content only; the title only repeats it as a tooltip.
         expect(attrs).not.toContain('aria-label')
         expect(decode(/title="([^"]*)"/.exec(attrs)?.[1] ?? '')).toBe(headings[index])
-        expect(accessibleName(inner)).toBe(headings[index])
+        // A short label, when there is one, is visible and starts the name.
+        const short = /<span class="toc-short[^"]*">(.*?)<\/span>/s.exec(inner)
+        expect(accessibleName(inner)).toBe(
+          short ? `${stripTags(short[1])}: ${headings[index]}` : headings[index],
+        )
       }
     }
+  })
+
+  test('custom TOC labels are visible and start the link name (label in name)', () => {
+    const path = 'blog/how-always-on-agents-work/index.html'
+    const links = tocLinks(inlineToc(read(path)))
+    const link = links.find(({ inner }) => inner.includes('>Safe retries<'))
+    expect(link).toBeDefined()
+    expect(link!.inner).toMatch(/<span class="toc-short[^"]*">Safe retries<\/span>/)
+    expect(link!.inner).not.toMatch(/aria-hidden="true"[^>]*class="toc-(short|full)/)
+    expect(accessibleName(link!.inner)).toBe('Safe retries: A retry must not charge you again')
+    expect(links.filter(({ inner }) => inner.includes('toc-short')).length).toBeGreaterThan(1)
   })
 
   test('the list ships once: the sidebar rail is an empty slot', () => {
@@ -950,6 +962,18 @@ describe('publish and modified dates', () => {
     expect(meta(plain, 'article:modified_time')).toBe(meta(plain, 'article:published_time'))
   })
 
+  test('posts revised on 2026-10-11 carry that dateModified', () => {
+    for (const path of [
+      'blog/old-macbook-context-server/index.html',
+      'pt-br/blog/macbook-velho-virou-servidor-de-contexto/index.html',
+      'blog/how-always-on-agents-work/index.html',
+      'pt-br/blog/como-funciona-um-agente-sempre-ligado/index.html',
+    ]) {
+      expect(posting(path).dateModified).toBe('2026-10-11T00:00:00.000Z')
+      expect(meta(path, 'article:modified_time')).toBe('2026-10-11T00:00:00.000Z')
+    }
+  })
+
   test('every post carries both article times', () => {
     for (const path of htmlPages().filter((path) =>
       /^(pt-br\/)?blog\/(?!tag\/)[^/]+\/index\.html$/.test(path),
@@ -1069,11 +1093,16 @@ describe('lisbon post markup', () => {
   const paths = ['blog/lisbon-ai-2026/index.html', 'pt-br/blog/lisbon-ai-2026/index.html']
 
   test('slides use the real column for sizes and offer a 1200w step', () => {
+    // sizes caps at the post column's max-width, read from the stylesheet.
+    const column = /\.post-column \{\s*max-width: ([\d.]+rem);/.exec(
+      readFileSync(join(import.meta.dir, '..', 'src', 'styles', 'prose.css'), 'utf8'),
+    )?.[1]
+    expect(column).toBeDefined()
     for (const path of paths) {
       const imgs = [...read(path).matchAll(/<img [^>]*srcset="([^"]+)"[^>]*>/g)]
       expect(imgs.length).toBe(17)
       for (const [tag, srcset] of imgs) {
-        expect(tag).toContain('sizes="(max-width: 639px) calc(100vw - 3rem), 34.5rem"')
+        expect(tag).toContain(`sizes="min(calc(100vw - 3rem), ${column})"`)
         for (const candidate of srcset.split(', ')) {
           expect(existsSync(join(DIST, candidate.split(' ')[0]))).toBe(true)
         }

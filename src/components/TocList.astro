@@ -5,13 +5,14 @@
  * the rail, so long posts don't ship the list twice.
  * Numbers are decorative (aria-hidden), so links are announced by text only.
  *
- * Every link names itself with the full heading text (`toc-full`). When the
- * post's `toc` frontmatter shortens a label, the short label (`toc-short`,
- * aria-hidden) is what shows while compact and the full text stays visually
- * hidden; otherwise the full text is the visible, truncated label. The
- * sidebar's expanded overlay shows the full text either way (TableOfContents
- * styles both states). `title` carries the full heading for the truncated
- * inline copy; the rail clone drops it.
+ * Without a `toc` frontmatter label, the full heading text (`toc-full`) is
+ * the visible, truncated label and the link's name. With one, the short
+ * label (`toc-short`) shows while compact and the full text stays visually
+ * hidden, so the name reads "short: full" and contains whatever is visible
+ * (label in name). The sidebar's expanded overlay swaps which one is visible
+ * but keeps both in the name (TableOfContents styles both states). `title`
+ * carries the full heading for the truncated inline copy; the rail clone
+ * drops it.
  */
 import type { TocItem } from '../lib/toc'
 
@@ -48,9 +49,8 @@ const { items } = Astro.props
           <span class="toc-full min-w-0 truncate">{item.text}</span>
         ) : (
           <>
-            <span aria-hidden="true" class="toc-short min-w-0 truncate">
-              {item.label}
-            </span>
+            <span class="toc-short min-w-0 truncate">{item.label}</span>
+            <span class="sr-only">: </span>
             <span class="toc-full sr-only">{item.text}</span>
           </>
         )}

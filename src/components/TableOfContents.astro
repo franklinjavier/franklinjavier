@@ -321,8 +321,14 @@ const labelId = `toc-label-${variant}`
       animation: toc-reveal 180ms var(--ease);
     }
 
+    /* Visually hidden, not display: none, so the link name keeps the label. */
     .toc-panel:hover:not([data-toc-collapsed]) :global(.toc-short) {
-      display: none;
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
     }
 
     .toc-panel:hover:not([data-toc-collapsed]) :global(.toc-full) {
@@ -350,7 +356,12 @@ const labelId = `toc-label-${variant}`
   }
 
   .toc-panel:has(:focus-visible):not([data-toc-collapsed]) :global(.toc-short) {
-    display: none;
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
   }
 
   .toc-panel:has(:focus-visible):not([data-toc-collapsed]) :global(.toc-full) {

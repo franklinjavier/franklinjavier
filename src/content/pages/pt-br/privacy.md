@@ -9,7 +9,7 @@ Este site, franklinjavier.com, é o site pessoal e blog de Franklin Javier. É u
 
 ## O que este site coleta
 
-- **Analytics agregado da Vercel, sem cookies.** Este site mede visualizações de páginas e sites de origem das visitas de forma agregada, sem cookies nem rastreamento entre sites. Não roda Google Analytics nem scripts de publicidade ou fingerprinting.
+- **Analytics agregado da Vercel, sem cookies.** Este site mede visualizações de páginas e sites de origem das visitas de forma agregada, sem cookies nem rastreamento entre sites. A Vercel identifica visitantes com um hash derivado da requisição recebida, válido por um dia. Não roda Google Analytics nem scripts de publicidade.
 - **Nenhum cookie.** O site não define cookies. Sua preferência de tema (modo claro ou escuro) é armazenada no `localStorage` do seu navegador e nunca sai do seu dispositivo.
 - **Nenhuma conta ou formulário.** Não há nada para se cadastrar, então nenhuma informação pessoal é solicitada ou armazenada por este site.
 

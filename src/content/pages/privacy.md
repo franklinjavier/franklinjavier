@@ -9,7 +9,7 @@ This website, franklinjavier.com, is the personal site and blog of Franklin Javi
 
 ## What this site collects
 
-- **Cookieless, aggregated Vercel Web Analytics.** This site measures page views and referrers in aggregate, without cookies or cross-site tracking. It does not run Google Analytics, advertising, or fingerprinting scripts.
+- **Cookieless, aggregated Vercel Web Analytics.** This site measures page views and referrers in aggregate, without cookies or cross-site tracking. Vercel identifies visitors using a hash derived from the incoming request, valid for one day. The site does not run Google Analytics or advertising scripts.
 - **No cookies.** The site does not set cookies. Your theme preference (light or dark mode) is stored in your browser's `localStorage` and never leaves your device.
 - **No accounts or forms.** There is nothing to sign up for, so no personal information is ever requested or stored by this site.
 

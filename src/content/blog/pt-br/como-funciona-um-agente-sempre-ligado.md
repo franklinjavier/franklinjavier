@@ -1,6 +1,7 @@
 ---
 title: Como funciona um agente em loop
 date: 2026-10-11
+updated: 2026-10-11
 description: Como agentes sempre ligados lidam com filas, falhas e contexto, com base na aula de Lee Robinson em Stanford CS146S, seguida do meu plano de experimento.
 author: Franklin Javier
 tags: ia, agentes, arquitetura, llm
