@@ -21,13 +21,13 @@ toc:
   my-proposal-for-getting-started: Where to start
 ---
 
-If the agent runs in your terminal, keeping it alive is your responsibility. A server helps, but crashes can still interrupt purchases, corrections arrive mid-task, and growing conversations cost more.
+[Last time](/blog/old-macbook-context-server/), I turned an old MacBook into a server so context could carry over between sessions and agents. That leaves the next step: keeping the agent itself available and working after I walk away. Lee Robinson (@leerob) shows how to build that in his lecture [How always-on agents work](https://x.com/leerob/status/2108650243365736855), delivered at Stanford CS146S on October 8, 2026.
 
-I use agents like this daily. Lee Robinson's (@leerob) [How always-on agents work](https://x.com/leerob/status/2108650243365736855), delivered at Stanford CS146S on October 8, 2026, gave me a useful way to think about those problems. What stood out was how much of the design concerns recovering work and keeping the user in control. I'd copy the separation between saved state and execution first.
+I use agents like this daily. What stood out in the lecture was the attention to recovering work and letting the user interrupt it. I'd start by copying the separation between execution and saved state.
 
 In the [video](https://x.com/leerob/status/2108650243365736855): 2:35 — how we got here; 6:13 — models; 10:06 — architecture; 18:07 — harness; 27:26 — context; 34:26 — where this is going.
 
-The engineering comes from the lecture. Examples are hypothetical, with no measured outcomes. My proposal is separate, at the end.
+The architecture comes from the lecture. The examples are hypothetical, with no measured outcomes, and the plan at the end is my own proposal.
 
 ## Closing the app should leave the work intact
 

@@ -21,13 +21,13 @@ toc:
   minha-proposta-o-que-eu-construiria-primeiro: Por onde começar
 ---
 
-A tarefa deveria continuar mesmo depois de você fechar o laptop. Mover o script para a nuvem ajuda, mas ele ainda precisa sobreviver a falhas e aceitar correções.
+No [post anterior](/pt-br/blog/macbook-velho-virou-servidor-de-contexto/), contei como um MacBook velho virou servidor para manter o contexto vivo entre sessões e agentes. O próximo passo é o próprio agente continuar disponível e trabalhando quando eu saio. A aula [How always-on agents work, de Lee Robinson (@leerob)](https://x.com/leerob/status/2108650243365736855), apresentada em Stanford CS146S em 8 de outubro de 2026, mostra como construir isso.
 
-Uso agentes assim todos os dias. A aula [How always-on agents work, de Lee Robinson (@leerob)](https://x.com/leerob/status/2108650243365736855), apresentada em Stanford CS146S em 8 de outubro de 2026, me chamou a atenção pelo cuidado com falhas e interrupções. Eu copiaria primeiro a separação entre execução e estado salvo.
+Uso agentes assim todos os dias. O que me chamou a atenção na aula foi o cuidado com falhas e interrupções; eu copiaria primeiro a separação entre execução e estado salvo.
 
 No [vídeo](https://x.com/leerob/status/2108650243365736855): 2:35 — como chegamos aqui; 6:13 — modelos; 10:06 — arquitetura; 18:07 — harness; 27:26 — contexto; 34:26 — próximos passos.
 
-A arquitetura vem da aula. Os exemplos são hipotéticos, sem resultados medidos. O plano final é uma proposta minha.
+A arquitetura vem da aula. Os exemplos são hipotéticos, sem resultados medidos, e o plano final é uma proposta minha.
 
 ## Por que o agente não roda no seu laptop
 
