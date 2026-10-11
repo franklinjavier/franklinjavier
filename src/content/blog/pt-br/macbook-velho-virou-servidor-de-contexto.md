@@ -6,6 +6,7 @@ author: Franklin Javier
 tags: ia, agentes, self-hosting, tooling, produtividade
 lang: pt-br
 translationKey: old-macbook-context-server
+series: { key: agent-experiments, part: 1 }
 ---
 
 Meu outro Mac dormiu no meio de uma tarefa do Codex. Do celular, pedi ao Claude Code, rodando num MacBook antigo, para descobrir onde o trabalho tinha parado. Ele achou na memória compartilhada os pedidos completos que o Codex tinha feito ao Claude Code, com o texto exato das mudanças que ficaram sem commit, e conferiu no GitHub o que já tinha subido no PR e o que não.

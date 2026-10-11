@@ -10,12 +10,14 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "test": "bun run build && bun test tests",
+    "test:cache": "bun test tests/diagram-cache.test.ts",
     "updatedeps": "bun update --latest"
   },
   "author": "Franklin Javier <franklinjalves@gmail.com>",
   "license": "MIT",
   "dependencies": {
     "@astrojs/check": "^0.9.10",
+    "@astrojs/markdown-satteri": "^0.4.2",
     "@astrojs/rss": "^4.0.19",
     "@tailwindcss/vite": "^4.3.3",
     "@vercel/analytics": "^2.0.1",

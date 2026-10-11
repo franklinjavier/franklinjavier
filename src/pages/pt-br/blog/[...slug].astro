@@ -1,9 +1,10 @@
 ---
 import { getCollection, render } from 'astro:content'
-import { postImage } from '../../../lib/content'
+import { checkSeriesData, postImage } from '../../../lib/content'
 import PostLayout from '../../../layouts/PostLayout.astro'
 
 export async function getStaticPaths() {
+  await checkSeriesData()
   const posts = await getCollection('blog', ({ data }) => {
     return data.draft !== true && data.lang === 'pt-br'
   })
@@ -15,15 +16,18 @@ export async function getStaticPaths() {
 }
 
 const post = Astro.props
-const { Content } = await render(post)
+const { Content, headings } = await render(post)
 ---
 
 <PostLayout
+  headings={headings}
+  tocLabels={post.data.toc}
   title={post.data.title}
   date={post.data.date}
   description={post.data.description}
   tags={post.data.tags}
   image={postImage(post)}
+  series={post.data.series}
 >
   <Content />
 </PostLayout>

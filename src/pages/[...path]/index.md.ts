@@ -2,6 +2,7 @@ import type { APIRoute } from 'astro'
 import type { CollectionEntry } from 'astro:content'
 import {
   getPublishedPosts,
+  getSeriesNav,
   getTagPages,
   getTrustPages,
   toPostSummary,
@@ -97,6 +98,7 @@ async function buildMarkdown(props: Props): Promise<string> {
         ...toPostSummary(props.post),
         lang: props.post.data.lang,
         body: props.post.body ?? '',
+        seriesNav: await getSeriesNav(props.post.data.lang, props.post.data.series),
       })
     }
     case 'page': {

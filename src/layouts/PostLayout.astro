@@ -3,6 +3,9 @@ import '../styles/prose.css'
 import BaseLayout from './BaseLayout.astro'
 import Navigation from '../components/Navigation.astro'
 import ImageViewer from '../components/ImageViewer.astro'
+import TableOfContents from '../components/TableOfContents.astro'
+import type { MarkdownHeading } from 'astro'
+import { hasToc, type TocLabels } from '../lib/toc'
 import {
   getLangFromUrl,
   useTranslations,
@@ -12,6 +15,8 @@ import {
   getPostTranslationUrl,
 } from '../i18n/utils'
 import { blogPostingJsonLd } from '../lib/site'
+import { getSeriesNav } from '../lib/content'
+import { seriesMarker, seriesNextLabel, seriesPartLabel, type SeriesRef } from '../lib/series'
 
 interface Props {
   title: string
@@ -19,9 +24,24 @@ interface Props {
   description?: string
   tags?: string | string[]
   image?: string
+  headings?: MarkdownHeading[]
+  /** Short TOC labels from the post's `toc` frontmatter, keyed by heading slug. */
+  tocLabels?: TocLabels
+  /** Series membership from the post's `series` frontmatter. */
+  series?: SeriesRef
 }
 
-const { title, date, description, tags: rawTags, image } = Astro.props
+const {
+  title,
+  date,
+  description,
+  tags: rawTags,
+  image,
+  headings = [],
+  tocLabels,
+  series,
+} = Astro.props
+const showToc = hasToc(headings)
 
 const tags = parseTags(rawTags)
 const lang = getLangFromUrl(Astro.url)
@@ -29,6 +49,7 @@ const t = useTranslations(lang)
 const blogUrl = lang === 'en' ? '/blog/' : '/pt-br/blog/'
 const formattedDate = formatDate(date, lang)
 const translation = await getPostTranslationUrl(Astro.url, lang)
+const seriesNav = await getSeriesNav(lang, series)
 const flags = { en: '🇺🇸', 'pt-br': '🇧🇷' }
 const jsonLd = blogPostingJsonLd({
   title,
@@ -48,11 +69,21 @@ const jsonLd = blogPostingJsonLd({
   type="article"
   jsonLd={jsonLd}
   image={image}
+  markdownTwin
 >
   <Navigation />
 
-  <main class="pt-24 pb-20">
-    <article class="mx-auto max-w-3xl px-8">
+  <main
+    class:list={[
+      'pt-24 pb-20',
+      // Side columns around the unchanged max-w-3xl article; the right one holds the TOC.
+      showToc && 'lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(0,48rem)_minmax(16rem,1fr)]',
+    ]}
+  >
+    <article
+      data-toc-article={showToc || undefined}
+      class:list={['mx-auto max-w-3xl px-8', showToc && 'lg:col-start-2 lg:row-start-1 lg:mx-0']}
+    >
       <div class="mb-8 flex flex-wrap items-center justify-between gap-x-4 gap-y-2 text-sm">
         <a
           href={blogUrl}
@@ -77,6 +108,22 @@ const jsonLd = blogPostingJsonLd({
 
       <header class="mb-12">
         <h1 class="mb-4 text-5xl leading-tight font-bold">{title}</h1>
+        {seriesNav && (
+          <nav aria-label={t('series.nav')} class="mb-4 text-sm text-gray-500 dark:text-gray-400">
+            <p>{seriesMarker(seriesNav, lang)}</p>
+            {seriesNav.previous && (
+              <p class="mt-1">
+                <a
+                  href={seriesNav.previous.url}
+                  rel="prev"
+                  class="transition hover:text-gray-900 dark:hover:text-gray-100"
+                >
+                  ← {seriesPartLabel(seriesNav.previous, lang)}
+                </a>
+              </p>
+            )}
+          </nav>
+        )}
         <div class="flex flex-wrap items-center gap-4">
           <time class="text-sm text-gray-500 dark:text-gray-400">{formattedDate}</time>
           {tags.length > 0 && (
@@ -94,10 +141,34 @@ const jsonLd = blogPostingJsonLd({
         </div>
       </header>
 
+      <TableOfContents lang={lang} headings={headings} labels={tocLabels} variant="inline" />
+
       <div class="prose">
         <slot />
       </div>
+
+      {seriesNav?.next && (
+        <nav
+          aria-label={t('series.navNext')}
+          class="mt-12 border-t border-gray-200 pt-6 text-sm text-gray-500 dark:border-gray-800 dark:text-gray-400"
+        >
+          <a
+            href={seriesNav.next.url}
+            rel="next"
+            class="transition hover:text-gray-900 dark:hover:text-gray-100"
+          >
+            {seriesNextLabel(seriesNav.next, lang)}
+          </a>
+        </nav>
+      )}
     </article>
+
+    {/* lg:pt-13 skips the back-link row (h-5 + mb-8) so the TOC starts level with the h1. */}
+    {showToc && (
+      <aside class="hidden pr-6 lg:col-start-3 lg:row-start-1 lg:block lg:pt-13 lg:pl-6 xl:pl-14">
+        <TableOfContents lang={lang} headings={headings} labels={tocLabels} variant="sidebar" />
+      </aside>
+    )}
   </main>
 
   <ImageViewer lang={lang} />

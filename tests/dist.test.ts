@@ -1,8 +1,9 @@
 // Assertions against the built site in dist/. Run `bun run build` first
 // (the `bun test` script in package.json does this for you via `bun run check`).
 import { beforeAll, describe, expect, test } from 'bun:test'
-import { existsSync, readFileSync } from 'node:fs'
-import { join } from 'node:path'
+import { existsSync, readdirSync, readFileSync } from 'node:fs'
+import { join, sep } from 'node:path'
+import { SERIES } from '../src/data/series'
 
 const DIST = join(import.meta.dir, '..', 'dist')
 
@@ -111,6 +112,310 @@ describe('blog post pages', () => {
     expect(posting).toBeDefined()
     expect(posting?.headline).toBeTruthy()
     expect(posting?.datePublished).toBeTruthy()
+  })
+
+  test('render a localized table of contents when the post has headings', () => {
+    const cases = [
+      { path: 'blog/stylex-personal-site/index.html', label: 'On this page' },
+      { path: 'pt-br/blog/stylex-nao-deixou-o-site-mais-rapido/index.html', label: 'Nesta página' },
+    ]
+    for (const { path, label } of cases) {
+      const html = read(path)
+      const tocs = [...html.matchAll(/<nav data-toc[^>]*>(.*?)<\/nav>/gs)].map((m) => m[0])
+      // Sidebar (lg+) and collapsed <details> (mobile) variants.
+      expect(tocs).toHaveLength(2)
+      expect(html).toContain(`>${label}</p>`)
+      expect(html).toContain(`aria-label="${label}"`)
+      for (const toc of tocs) {
+        const ids = [...toc.matchAll(/href="#([^"]+)"/g)].map((m) => m[1])
+        expect(ids.length).toBeGreaterThanOrEqual(2)
+        for (const id of ids) expect(html).toContain(`id="${id}"`)
+      }
+    }
+  })
+
+  test('render no table of contents when the post has no headings', () => {
+    const html = read('blog/the-great-suspender/index.html')
+    expect(html).not.toContain('data-toc')
+    expect(html).not.toContain('<aside')
+    expect(html).not.toContain('lg:grid-cols-')
+  })
+
+  test('TOC uses short frontmatter labels, numbers sections and keeps the full heading as title', () => {
+    const cases = [
+      {
+        path: 'blog/how-always-on-agents-work/index.html',
+        slug: 'a-retry-must-not-charge-you-again',
+        heading: 'A retry must not charge you again',
+        label: 'Safe retries',
+      },
+      {
+        path: 'pt-br/blog/como-funciona-um-agente-sempre-ligado/index.html',
+        slug: 'cache-o-detalhe-que-define-o-custo',
+        heading: 'Cache: o detalhe que define o custo',
+        label: 'Cache do prompt',
+      },
+    ]
+    for (const { path, slug, heading, label } of cases) {
+      const html = read(path)
+      const tocs = [...html.matchAll(/<nav data-toc[^>]*>(.*?)<\/nav>/gs)].map((m) => m[1])
+      expect(tocs).toHaveLength(2)
+      for (const toc of tocs) {
+        const link = new RegExp(`<a href="#${slug}"[^>]*>(.*?)</a>`, 's').exec(toc)
+        expect(link).not.toBeNull()
+        expect(link![0]).toContain(`title="${heading}"`)
+        expect(link![1]).toContain(`>${label}</span>`)
+        expect(link![1]).not.toContain(heading)
+        // Section numbers are decorative: hidden from screen readers.
+        expect(toc).toMatch(/<span aria-hidden="true"[^>]*>01<\/span>/)
+      }
+    }
+  })
+})
+
+describe('post series', () => {
+  const labels = {
+    en: {
+      marker: (part: number, total: number, name: string) => `Part ${part} of ${total} · ${name}`,
+      back: (part: number, title: string) => `Part ${part}: ${title}`,
+      next: (part: number, title: string) => `Next: Part ${part} · ${title}`,
+      nextPrefix: 'Next: Part',
+      navLabel: 'Post series',
+      nextNavLabel: 'Next part of the series',
+    },
+    'pt-br': {
+      marker: (part: number, total: number, name: string) => `Parte ${part} de ${total} · ${name}`,
+      back: (part: number, title: string) => `Parte ${part}: ${title}`,
+      next: (part: number, title: string) => `Próximo: Parte ${part} · ${title}`,
+      nextPrefix: 'Próximo: Parte',
+      navLabel: 'Série de posts',
+      nextNavLabel: 'Próxima parte da série',
+    },
+  }
+
+  function page(url: string): string {
+    return read(`${url.slice(1)}index.html`)
+  }
+
+  function twin(url: string): string {
+    return read(`${url.slice(1)}index.md`)
+  }
+
+  function nav(html: string, label: string): string | undefined {
+    return new RegExp(`<nav aria-label="${label}"[^>]*>(.*?)</nav>`, 's').exec(html)?.[1]
+  }
+
+  function header(md: string): string {
+    return md.slice(0, md.indexOf('- Author:'))
+  }
+
+  // Totals, neighbours and the last part come from the data, so these keep
+  // passing as parts are added.
+  for (const [key, series] of Object.entries(SERIES)) {
+    const parts = [...series.parts].sort((a, b) => a.part - b.part)
+    const total = parts.length
+    const first = parts[0]
+    const last = parts[total - 1]
+
+    for (const lang of ['en', 'pt-br'] as const) {
+      const l = labels[lang]
+      const marker = (part: number) => l.marker(part, total, series.name[lang])
+
+      test(`${key} ${lang}: part 1 shows "${marker(1)}" with no link at the top`, () => {
+        const top = nav(page(first.posts[lang].url), l.navLabel)
+        expect(top).toContain(marker(1))
+        expect(top).not.toContain('<a')
+        const md = header(twin(first.posts[lang].url))
+        expect(md).toContain(marker(1))
+        expect(md).not.toContain('](')
+      })
+
+      test(`${key} ${lang}: the last part shows "${marker(last.part)}" and has no forward link`, () => {
+        const html = page(last.posts[lang].url)
+        expect(nav(html, l.navLabel)).toContain(marker(last.part))
+        expect(nav(html, l.nextNavLabel)).toBeUndefined()
+        expect(html).not.toContain(l.nextPrefix)
+        expect(twin(last.posts[lang].url)).not.toContain(l.nextPrefix)
+      })
+
+      for (const [i, entry] of parts.entries()) {
+        const url = entry.posts[lang].url
+        const previous = parts[i - 1]
+        const next = parts[i + 1]
+
+        if (previous) {
+          test(`${key} ${lang}: part ${entry.part} links back to part ${previous.part}`, () => {
+            const back = l.back(previous.part, previous.posts[lang].title)
+            const top = nav(page(url), l.navLabel)
+            expect(top).toContain(marker(entry.part))
+            expect(top).toContain(`href="${previous.posts[lang].url}"`)
+            expect(top).toContain(back)
+            const md = header(twin(url))
+            expect(md).toContain(marker(entry.part))
+            expect(md).toContain(`← [${back}](https://`)
+            expect(md).toContain(`${previous.posts[lang].url})`)
+          })
+        }
+
+        if (next) {
+          test(`${key} ${lang}: part ${entry.part} ends with a link to part ${entry.part + 1}`, () => {
+            expect(next.part).toBe(entry.part + 1)
+            const nextLabel = l.next(next.part, next.posts[lang].title)
+            const html = page(url)
+            const end = nav(html, l.nextNavLabel)
+            expect(end).toContain(`href="${next.posts[lang].url}"`)
+            expect(end).toContain(nextLabel)
+            const at = html.indexOf(`aria-label="${l.nextNavLabel}"`)
+            expect(at).toBeGreaterThan(html.indexOf('class="prose"'))
+            expect(at).toBeLessThan(html.indexOf('</article>'))
+            const md = twin(url)
+            const line = `[${nextLabel}](https://`
+            expect(md).toContain(line)
+            expect(md).toContain(`${next.posts[lang].url})`)
+            expect(md.indexOf(line)).toBeGreaterThan(md.indexOf('- Canonical:'))
+          })
+        }
+      }
+    }
+  }
+
+  test('every series part in the data matches a built post (title, URL, language, part)', () => {
+    for (const series of Object.values(SERIES)) {
+      for (const entry of series.parts) {
+        for (const lang of ['en', 'pt-br'] as const) {
+          const post = entry.posts[lang]
+          const html = page(post.url)
+          const pt = lang === 'pt-br'
+          expect(html).toContain(`<html lang="${pt ? 'pt-BR' : 'en'}"`)
+          expect(/<h1[^>]*>(.*?)<\/h1>/s.exec(html)?.[1]).toBe(post.title)
+          const marker = `${pt ? 'Parte' : 'Part'} ${entry.part} ${pt ? 'de' : 'of'} ${series.parts.length} · ${series.name[lang]}`
+          expect(nav(html, pt ? 'Série de posts' : 'Post series')).toContain(marker)
+        }
+      }
+    }
+  })
+
+  test('every built post with a series marker is listed in the series data', () => {
+    const listed = Object.values(SERIES).flatMap((series) =>
+      series.parts.flatMap((entry) => [entry.posts.en.url, entry.posts['pt-br'].url]),
+    )
+    const marked: string[] = []
+    for (const base of ['blog', 'pt-br/blog']) {
+      for (const slug of readdirSync(join(DIST, base))) {
+        const file = join(DIST, base, slug, 'index.html')
+        if (!existsSync(file)) continue
+        if (/<nav aria-label="(Post series|Série de posts)"/.test(readFileSync(file, 'utf-8'))) {
+          marked.push(`/${base}/${slug}/`)
+        }
+      }
+    }
+    expect(marked.sort()).toEqual(listed.sort())
+  })
+
+  test('posts outside a series have no series nav', () => {
+    const html = read('blog/the-great-suspender/index.html')
+    expect(html).not.toContain('aria-label="Post series"')
+    expect(html).not.toContain('aria-label="Next part of the series"')
+  })
+})
+
+describe('markdown alternate link', () => {
+  function markdownAlternates(html: string): string[] {
+    const hrefs: string[] = []
+    for (const [tag] of html.matchAll(/<link\b[^>]*>/g)) {
+      const attrs = Object.fromEntries(
+        [...tag.matchAll(/([\w-]+)="([^"]*)"/g)].map((m) => [m[1], m[2]]),
+      )
+      if (attrs.rel === 'alternate' && attrs.type === 'text/markdown') hrefs.push(attrs.href)
+    }
+    return hrefs
+  }
+
+  test('post HTML links its markdown twin via rel=alternate', () => {
+    expect(markdownAlternates(read('blog/how-always-on-agents-work/index.html'))).toEqual([
+      'https://franklinjavier.com/blog/how-always-on-agents-work/index.md',
+    ])
+    expect(
+      markdownAlternates(read('pt-br/blog/como-funciona-um-agente-sempre-ligado/index.html')),
+    ).toEqual([
+      'https://franklinjavier.com/pt-br/blog/como-funciona-um-agente-sempre-ligado/index.md',
+    ])
+    expect(markdownAlternates(read('404.html'))).toEqual([])
+  })
+
+  test('is present on exactly the HTML pages that have a markdown twin', () => {
+    const files = (readdirSync(DIST, { recursive: true }) as string[]).map((f) =>
+      f.split(sep).join('/'),
+    )
+    const twins = new Set(files.filter((f) => f === 'index.md' || f.endsWith('/index.md')))
+    const pages = files.filter((f) => f.endsWith('.html'))
+    expect(twins.size).toBeGreaterThan(10)
+    for (const page of pages) {
+      const twin = page.replace(/index\.html$/, 'index.md')
+      const expected = twins.has(twin) ? [encodeURI(`https://franklinjavier.com/${twin}`)] : []
+      expect({ page, links: markdownAlternates(read(page)) }).toEqual({ page, links: expected })
+    }
+    for (const twin of twins) expect(pages).toContain(twin.replace(/index\.md$/, 'index.html'))
+  })
+})
+
+describe('inline diagrams', () => {
+  const posts = [
+    {
+      lang: 'en',
+      html: 'blog/how-always-on-agents-work/index.html',
+      md: 'blog/how-always-on-agents-work/index.md',
+      credit: 'source: Lee Robinson, CS146S',
+      described: '*Diagram: ',
+    },
+    {
+      lang: 'pt-br',
+      html: 'pt-br/blog/como-funciona-um-agente-sempre-ligado/index.html',
+      md: 'pt-br/blog/como-funciona-um-agente-sempre-ligado/index.md',
+      credit: 'fonte: Lee Robinson, CS146S',
+      described: '*Diagrama: ',
+    },
+  ]
+
+  test('the always-on post renders seven accessible SVG figures per language', () => {
+    for (const post of posts) {
+      const html = read(post.html)
+      const figures = [...html.matchAll(/<figure class="diagram"[^>]*>(.*?)<\/figure>/gs)].map(
+        (m) => m[1],
+      )
+      expect(figures).toHaveLength(7)
+      for (const figure of figures) {
+        const svg = /<svg [^>]*>/.exec(figure)?.[0] ?? ''
+        expect(svg).toContain('role="img"')
+        const [titleId, descId] = /aria-labelledby="([^"]+)"/.exec(svg)?.[1].split(' ') ?? []
+        expect(titleId).toStartWith('dg-')
+        expect(titleId).toContain(`-${post.lang}-`)
+        // <title> is the first child, then <desc>.
+        expect(figure).toContain(`${svg}<title id="${titleId}">`)
+        expect(figure).toContain(`<desc id="${descId}">`)
+        expect(figure).toContain(`<figcaption>`)
+        expect(figure).toContain(post.credit)
+      }
+      const ids = [...html.matchAll(/\sid="([^"]+)"/g)].map((m) => m[1])
+      expect(new Set(ids).size).toBe(ids.length)
+      expect(html).not.toContain('<figure data-diagram=')
+      // The TOC still renders both variants.
+      expect([...html.matchAll(/<nav data-toc/g)]).toHaveLength(2)
+    }
+  })
+
+  test('the markdown twin describes each diagram instead of leaking placeholders', () => {
+    for (const post of posts) {
+      const md = read(post.md)
+      expect(md).not.toContain('<figure')
+      expect(md.split(post.described)).toHaveLength(8)
+    }
+  })
+
+  test('other posts are unaffected', () => {
+    for (const path of ['blog/how-to-be-proactive/index.html', 'blog/lisbon-ai-2026/index.html']) {
+      expect(read(path)).not.toContain('class="diagram"')
+    }
   })
 })
 

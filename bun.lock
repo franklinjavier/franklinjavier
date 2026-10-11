@@ -6,6 +6,7 @@
       "name": "franklinjavier",
       "dependencies": {
         "@astrojs/check": "^0.9.10",
+        "@astrojs/markdown-satteri": "^0.4.2",
         "@astrojs/rss": "^4.0.19",
         "@tailwindcss/vite": "^4.3.3",
         "@vercel/analytics": "^2.0.1",

@@ -7,9 +7,11 @@ import {
   SITE_DESCRIPTION,
   SITE_IMAGE,
   SITE_X_HANDLE,
+  SITE_URL,
   absoluteUrl,
   baseJsonLd,
 } from '../lib/site'
+import { markdownPathFor } from '../lib/negotiation'
 
 interface Props {
   title?: string
@@ -21,6 +23,12 @@ interface Props {
   bare?: boolean
   /** Social preview image (og:image, twitter:image); defaults to the site photo. */
   image?: string
+  /**
+   * The page has a markdown twin (built by src/pages/[...path]/index.md.ts),
+   * so it advertises it with <link rel="alternate" type="text/markdown">.
+   * Only set it from pages that endpoint covers.
+   */
+  markdownTwin?: boolean
 }
 
 const {
@@ -31,6 +39,7 @@ const {
   jsonLd,
   bare = false,
   image,
+  markdownTwin = false,
 } = Astro.props
 const htmlLang = lang === 'pt-br' ? 'pt-BR' : 'en'
 const siteTitle = SITE_TITLE
@@ -40,6 +49,7 @@ const pageDescription = description || siteDescription
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site ?? 'https://franklinjavier.com').href
 const ogImage = absoluteUrl(image ?? SITE_IMAGE, Astro.site)
 const ogLocale = lang === 'pt-br' ? 'pt_BR' : 'en_US'
+const markdownUrl = markdownTwin ? `${SITE_URL}${markdownPathFor(Astro.url.pathname)}` : undefined
 ---
 
 <!doctype html>
@@ -69,6 +79,7 @@ const ogLocale = lang === 'pt-br' ? 'pt_BR' : 'en_US'
     {jsonLd && <script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} />}
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="alternate" href="/rss.xml" type="application/rss+xml" title="Feed" />
+    {markdownUrl && <link rel="alternate" type="text/markdown" href={markdownUrl} />}
 
     <script is:inline>
       /* prettier-ignore */
