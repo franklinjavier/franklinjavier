@@ -10,6 +10,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "test": "bun run build && bun test tests",
+    "test:cache": "bun test tests/diagram-cache.test.ts",
     "updatedeps": "bun update --latest"
   },
   "author": "Franklin Javier <franklinjalves@gmail.com>",
