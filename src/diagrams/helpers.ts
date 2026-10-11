@@ -24,7 +24,7 @@ const t = {
       ['Geral', 'shell · web · conectores'],
       ['Uso de computador', 'uma tarefa por vez'],
       ['Vídeo', 'assiste e revisa arquivos'],
-      ['Cloud coding agent', 'muda código na própria VM'],
+      ['Agente de código na nuvem', 'muda código na própria VM'],
     ],
   },
 }
@@ -35,9 +35,9 @@ export const helpers: Diagram = {
     'pt-br': 'Agente principal e helpers',
   },
   desc: {
-    en: 'You talk to the main agent, which sends full task descriptions to general, computer-use, video and cloud coding helpers and gets short reports back.',
+    en: 'You talk to the main agent, which sends full task descriptions to general, computer-use and video helpers and to a cloud coding helper that works in its own VM, separate from yours, and gets short reports back.',
     'pt-br':
-      'Você conversa com o agente principal, que manda descrições completas de tarefas aos helpers geral, de uso de computador, de vídeo e de código na nuvem e recebe relatórios curtos de volta.',
+      'Você conversa com o agente principal, que manda descrições completas de tarefas aos helpers geral, de uso de computador e de vídeo e a um helper de código na nuvem que trabalha numa VM só dele, separada da sua, e recebe relatórios curtos de volta.',
   },
   caption: {
     en: 'The main agent keeps talking to you while helpers work. It can check on a helper, send it a message, or stop it.',
@@ -47,22 +47,22 @@ export const helpers: Diagram = {
   lecture: true,
   draw(lang, id) {
     const l = t[lang]
-    const mids = [228, 296, 364, 432]
+    const mids = [216, 276, 336, 396]
     return {
-      height: 476,
+      height: 436,
       body: [
         path(id, 'M160,56 V88'),
         path(id, 'M192,88 V56'),
         // task descriptions down the left trunk, reports up the right one
-        path(id, 'M72,144 V424 Q72,432 80,432 H96'),
+        path(id, 'M72,136 V388 Q72,396 80,396 H96'),
         ...mids.slice(0, 3).map((y) => path(id, `M72,${y} H96`)),
-        path(id, 'M304,432 H312 Q320,432 320,424 V124 Q320,116 312,116 H296'),
+        path(id, 'M304,396 H312 Q320,396 320,388 V120 Q320,112 312,112 H296'),
         ...mids.slice(0, 3).map((y) => path(id, `M304,${y} H320`, 'muted', false)),
-        label(l.task, 'right', { x: 72, y: 160 }),
-        label(l.report, 'left', { x: 320, y: 184 }),
+        label(l.task, 'right', { x: 72, y: 152 }),
+        label(l.report, 'left', { x: 320, y: 176 }),
         node({ x: 120, y: 16, w: 112, h: 40, rx: 20, name: l.you, kind: 'input' }),
-        node({ x: 56, y: 88, w: 240, h: 56, ...ns(l.main), kind: 'focal' }),
-        ...l.helpers.map((pair, i) => node({ x: 96, y: mids[i] - 28, w: 208, h: 56, ...ns(pair) })),
+        node({ x: 56, y: 88, w: 240, h: 48, ...ns(l.main), kind: 'focal' }),
+        ...l.helpers.map((pair, i) => node({ x: 96, y: mids[i] - 24, w: 208, h: 48, ...ns(pair) })),
       ],
     }
   },

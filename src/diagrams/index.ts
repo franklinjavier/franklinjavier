@@ -42,14 +42,14 @@ function lookup(name: string): Diagram {
   return diagram
 }
 
-/** The `<figure>` with the inline SVG and a localized caption. */
+/** The `<figure>` with the inline SVG (in a sideways scroller) and a localized caption. */
 export function renderFigure(name: string, lang: Lang): string {
   const diagram = lookup(name)
   const id = `dg-${name}-${lang}`
   const { height, body } = diagram.draw(lang, id)
   const svgMarkup = svg({ id, height, title: diagram.title[lang], desc: diagram.desc[lang], body })
   const source = diagram.lecture ? ` <span class="diagram-credit">${credit[lang]}</span>` : ''
-  return `<figure class="diagram" data-diagram="${name}">${svgMarkup}<figcaption>${esc(diagram.caption[lang])}${source}</figcaption></figure>`
+  return `<figure class="diagram" data-diagram="${name}"><div class="diagram-scroll">${svgMarkup}</div><figcaption>${esc(diagram.caption[lang])}${source}</figcaption></figure>`
 }
 
 /** Markdown: each placeholder line becomes a one-line description. */

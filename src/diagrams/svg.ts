@@ -1,7 +1,8 @@
 // SVG building blocks for the post diagrams. Every shape gets a class instead
 // of a color; the colors live in prose.css as --dg-* tokens that flip under
-// .dark. Geometry stays on a 4px grid; the viewBox is 352 wide so 12px text
-// still renders at 10px+ in a 360px-wide phone viewport.
+// .dark. Geometry stays on a 4px grid. The SVG renders 1:1 (352 CSS px for a
+// 352-wide viewBox) and scrolls sideways in narrow columns instead of
+// shrinking, so 13px names and 12px mono text render at those sizes everywhere.
 
 export type Lang = 'en' | 'pt-br'
 
@@ -19,7 +20,8 @@ export function esc(text: string): string {
 
 // Rough advance widths (px per character) used to catch labels that would not
 // fit their box. Deliberately on the wide side of common system fonts.
-const ADVANCE = { name: 9, small: 6.8, mono: 7.2, eyebrow: 7.9 } as const
+// Labels and eyebrows are tracked (0.04em), hence their wider advance.
+const ADVANCE = { name: 7.4, small: 6.8, mono: 7.2, label: 7.7, eyebrow: 7.9 } as const
 type TextKind = keyof typeof ADVANCE
 
 /** Labels whose estimated width exceeds their slot; checked by the tests. */
@@ -48,8 +50,10 @@ export interface NodeOptions {
   rx?: number
   /** Left-align the text this far from the box's left edge instead of centering it. */
   left?: number
-  /** Use the 12px sans name (source pills) instead of the 16px one. */
+  /** Use the 12px sans name (source pills) instead of the 13px one. */
   small?: boolean
+  /** Keep text clear of this many px at the box's right edge (e.g. a chip). */
+  right?: number
 }
 
 /** `[name, sub]` label pair → node options. */
@@ -63,7 +67,7 @@ export function node(o: NodeOptions): string {
   const rx = o.rx ?? 6
   const tx = o.left ? o.x + o.left : o.x + o.w / 2
   const anchor: Anchor = o.left ? 'start' : 'middle'
-  const room = o.left ? o.w - o.left - 8 : o.w - 8
+  const room = (o.left ? o.w - o.left - 8 : o.w - 8) - (o.right ?? 0)
   const nameCls = (o.small ? 'dg-small' : 'dg-name') + (kind === 'ghost' ? ' dg-faint' : '')
   const parts = [
     `<rect x="${o.x}" y="${o.y}" width="${o.w}" height="${o.h}" rx="${rx}" class="dg-under"/>`,
@@ -85,7 +89,7 @@ export function node(o: NodeOptions): string {
 /** A decision diamond centered at (cx, cy) with a one-line question. */
 export function diamond(cx: number, cy: number, hw: number, hh: number, question: string, kind: NodeKind = 'node'): string {
   const points = `${cx},${cy - hh} ${cx + hw},${cy} ${cx},${cy + hh} ${cx - hw},${cy}`
-  // Width available to a 16px line at the diamond's middle.
+  // Width available to a 13px line at the diamond's middle.
   fit(question, 'name', 2 * hw * (1 - 8 / hh) - 8)
   return (
     `<polygon points="${points}" class="dg-under"/>` +
@@ -104,7 +108,7 @@ export function lines(x: number, y: number, values: string[], room: number, cls 
     .join('')
 }
 
-/** A single centered 16px name for a box drawn without one (e.g. the router). */
+/** A single centered 13px name for a box drawn without one (e.g. the router). */
 export function name(x: number, y: number, value: string, room: number, cls = 'dg-name'): string {
   fit(value, 'name', room)
   return text(x, y, value, cls)
@@ -132,7 +136,7 @@ export function label(
   at: { x: number; y: number },
   accent = false,
 ): string {
-  const w = Math.ceil((value.length * ADVANCE.mono + 8) / 8) * 8
+  const w = Math.ceil((value.length * ADVANCE.label + 8) / 8) * 8
   const cls = accent ? 'dg-label dg-label-accent' : 'dg-label'
   let mx: number
   let my: number

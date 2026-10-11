@@ -46,25 +46,25 @@ export const durable: Diagram = {
     const l = t[lang]
     // One row of three steps at y; `subs` labels each step (undefined = none).
     const row = (y: number, subs: (string | undefined)[]) => [
-      path(id, `M120,${y + 28} H144`),
-      path(id, `M208,${y + 28} H232`),
-      ...X.map((x, i) => node({ x, y, w: 64, h: 56, name: String(i + 1), sub: subs[i] })),
+      path(id, `M120,${y + 24} H144`),
+      path(id, `M208,${y + 24} H232`),
+      ...X.map((x, i) => node({ x, y, w: 64, h: 48, name: String(i + 1), sub: subs[i] })),
     ]
     return {
-      height: 436,
+      height: 404,
       body: [
         eyebrow(16, 28, l.queue),
-        path(id, 'M264,96 V108 Q264,116 256,116 H96 Q88,116 88,124 V148'),
-        label(l.restarts, 'below', { x: 176, y: 116 }),
+        path(id, 'M264,88 V100 Q264,108 256,108 H96 Q88,108 88,116 V140'),
+        label(l.restarts, 'below', { x: 176, y: 108 }),
         ...row(40, [undefined, undefined, l.crash]),
-        ...row(148, [l.again, l.again, undefined]),
-        eyebrow(16, 244, l.durable),
-        path(id, 'M264,312 V364', 'accent'),
-        label(l.resumes, 'left', { x: 264, y: 336 }, true),
-        ...row(256, [l.saved, l.saved, l.crash]),
-        node({ x: 56, y: 364, w: 64, h: 56, name: '1', kind: 'ghost' }),
-        node({ x: 144, y: 364, w: 64, h: 56, name: '2', kind: 'ghost' }),
-        node({ x: 232, y: 364, w: 64, h: 56, name: '3', kind: 'focal' }),
+        ...row(140, [l.again, l.again, undefined]),
+        eyebrow(16, 228, l.durable),
+        path(id, 'M264,288 V340', 'accent'),
+        label(l.resumes, 'left', { x: 264, y: 312 }, true),
+        ...row(240, [l.saved, l.saved, l.crash]),
+        node({ x: 56, y: 340, w: 64, h: 48, name: '1', kind: 'ghost' }),
+        node({ x: 144, y: 340, w: 64, h: 48, name: '2', kind: 'ghost' }),
+        node({ x: 232, y: 340, w: 64, h: 48, name: '3', kind: 'focal' }),
       ],
     }
   },

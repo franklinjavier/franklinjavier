@@ -57,13 +57,13 @@ export const wakeups: Diagram = {
     const rows = [32, 72, 112, 152, 192]
     const slotX = [32, 108, 184, 260]
     return {
-      height: 452,
+      height: 444,
       body: [
         `<rect x="16" y="264" width="320" height="96" rx="8" class="dg-zone dg-zone-fill"/>`,
         eyebrow(32, 344, l.queue),
         ...rows.map((y) => path(id, `M192,${y} H232`)),
-        path(id, 'M248,208 V232 Q248,240 240,240 H72 Q64,240 64,248 V276'),
-        path(id, 'M292,208 V276', 'accent'),
+        path(id, 'M248,208 V232 Q248,240 240,240 H72 Q64,240 64,248 V272'),
+        path(id, 'M292,208 V272', 'accent'),
         path(id, 'M292,320 V388'),
         label(l.back, 'above', { x: 148, y: 240 }),
         label(l.cuts, 'left', { x: 292, y: 256 }, true),
@@ -71,13 +71,13 @@ export const wakeups: Diagram = {
           node({ x: 16, y: rows[i] - 16, w: 176, h: 32, name: source, kind: 'input', small: true }),
         ),
         node({ x: 232, y: 16, w: 104, h: 192 }),
-        name(284, 84, l.router, 96),
-        lines(284, 108, l.routerSub, 96),
+        name(284, 80, l.router, 96),
+        lines(284, 104, l.routerSub, 96),
         ...l.slots.map(([a, b], i) =>
-          node({ x: slotX[i], y: 276, w: 64, h: 44, kind: i === 3 ? 'focal' : 'node' }) +
-          lines(slotX[i] + 32, 294, [a, b], 56, i === 3 ? 'dg-sub dg-sub-accent' : 'dg-sub'),
+          node({ x: slotX[i], y: 272, w: 64, h: 48, kind: i === 3 ? 'focal' : 'node' }) +
+          lines(slotX[i] + 32, 292, [a, b], 56, i === 3 ? 'dg-sub dg-sub-accent' : 'dg-sub'),
         ),
-        node({ x: 248, y: 388, w: 88, h: 48, rx: 20, name: l.turn }),
+        node({ x: 248, y: 388, w: 88, h: 40, rx: 20, name: l.turn }),
       ],
     }
   },

@@ -214,8 +214,10 @@
 /* Inline SVG diagrams (src/diagrams, injected by the markdown plugin).
    Shapes carry classes, never colors: the --dg-* tokens below are the site's
    grays plus one accent (the peach of the Vesper code theme, darkened for
-   light mode), and they flip under .dark. The 352-wide viewBox keeps 12px
-   labels at 10px+ on a 360px phone; 26rem caps the scale on desktop. */
+   light mode), and they flip under .dark. The SVG renders 1:1 with its
+   352-wide viewBox, so names are 13px and mono text 12px at every width;
+   columns narrower than 352px scroll the drawing sideways instead of
+   shrinking it. The caption keeps to the drawing's width. */
 .prose :where(figure.diagram) {
   --dg-paper: #fff;
   --dg-ink: var(--color-gray-900, #111827);
@@ -225,7 +227,7 @@
   --dg-wash: var(--color-gray-50, #f9fafb);
   --dg-accent: #b45309;
   --dg-accent-tint: rgb(180 83 9 / 0.08);
-  max-width: 26rem;
+  max-width: 352px;
   margin-inline: auto;
 }
 
@@ -240,9 +242,16 @@
   --dg-accent-tint: rgb(255 199 153 / 0.1);
 }
 
+.prose :where(.diagram-scroll) {
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+}
+
 .prose :where(figure.diagram svg) {
   display: block;
-  width: 100%;
+  width: 352px;
+  min-width: 352px;
+  max-width: none;
   height: auto;
 }
 
@@ -252,7 +261,7 @@
 }
 
 .diagram .dg-name {
-  font-size: 16px;
+  font-size: 13px;
   font-weight: 600;
 }
 

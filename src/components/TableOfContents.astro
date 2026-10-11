@@ -10,9 +10,9 @@
  *   page, so render it whenever `inline` is.
  * - `inline`: collapsed <details> at the top of the article below lg.
  *
- * Scroll-spy uses IntersectionObserver; reading progress uses a
- * rAF-throttled scroll handler. Clicks smooth-scroll (instant with
- * prefers-reduced-motion) and push the hash without the native jump.
+ * Scroll-spy and reading progress share one rAF-throttled scroll handler.
+ * Clicks smooth-scroll (instant with prefers-reduced-motion) and push the
+ * hash without the native jump.
  * Renders nothing for fewer than two headings (`hasToc()` in lib/toc).
  */
 import type { MarkdownHeading } from 'astro'
@@ -91,7 +91,7 @@ const labelId = `toc-label-${variant}`
         const headings = [...new Set(links.map(idOf))]
           .map((id) => document.getElementById(id))
           .filter(Boolean)
-        if (!headings.length || !('IntersectionObserver' in window)) return
+        if (!headings.length) return
 
         const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)')
         const root = document.documentElement
@@ -155,26 +155,17 @@ const labelId = `toc-label-${variant}`
           setActive(current ? current.id : null)
         }
 
-        // The root box spans from far above the viewport down to the 30% line,
-        // so every heading crossing that line toggles its intersection, even
-        // on big jumps (scrollbar drag, Page Down). The first callback also
-        // sets the active item on load, including for #hash URLs.
-        const observer = new IntersectionObserver(update, {
-          rootMargin: '100000px 0px -70% 0px',
-        })
-        headings.forEach((heading) => observer.observe(heading))
-
         let ticking = false
         const onScroll = () => {
           if (ticking) return
           ticking = true
           requestAnimationFrame(() => {
             ticking = false
-            const bottom = innerHeight + scrollY >= root.scrollHeight - 2
-            if (bottom !== atBottom) {
-              atBottom = bottom
-              update()
-            }
+            // Recomputed every frame from live geometry, so slow scrolls in
+            // either direction, big jumps and #hash loads all land on the
+            // heading above the same 30% line.
+            atBottom = innerHeight + scrollY >= root.scrollHeight - 2
+            update()
             if (article) {
               const rect = article.getBoundingClientRect()
               const span = rect.height - innerHeight
@@ -184,7 +175,17 @@ const labelId = `toc-label-${variant}`
           })
         }
         addEventListener('scroll', onScroll, { passive: true })
-        addEventListener('resize', () => navs.forEach(placeIndicator), { passive: true })
+        addEventListener(
+          'resize',
+          () => {
+            navs.forEach(placeIndicator)
+            onScroll()
+          },
+          { passive: true },
+        )
+        // The browser may jump to a #hash (or restore scroll) after this runs.
+        addEventListener('load', onScroll)
+        addEventListener('hashchange', onScroll)
         onScroll()
 
         for (const link of links) {
