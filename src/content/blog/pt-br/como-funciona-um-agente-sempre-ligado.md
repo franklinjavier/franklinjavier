@@ -1,5 +1,5 @@
 ---
-title: Como um agente fica sempre ligado
+title: Como funciona um agente em loop
 date: 2026-10-11
 description: Laptop fechado, mensagens chegando juntas, servidor caindo e contexto caro. As soluções da aula de Lee Robinson para um agente sempre ligado e o que eu construiria primeiro.
 author: Franklin Javier
@@ -170,4 +170,4 @@ Este plano é meu, separado da aula do Lee. Eu começaria pela continuidade: uma
 
 Meu primeiro cenário seria uma pesquisa que continua com o laptop fechado e aceita uma correção pelo celular. Depois eu ampliaria o acesso do agente a ações com consequências externas.
 
-O próximo passo é pôr vários agentes para trabalhar juntos na oficina de agentes que estou construindo, sobre a qual vou escrever em outro post.
+O próximo passo é colocar vários agentes para rodar juntos em loops na oficina de agentes que estou construindo, e vou contar mais sobre ela em outro post.

@@ -1,5 +1,5 @@
 ---
-title: How an agent stays always on
+title: How an agent loop works
 date: 2026-10-11
 description: How an always-on agent survives failures, handles interruptions, and keeps context costs down. Lessons from Lee Robinson's Stanford lecture, followed by my own starting plan.
 author: Franklin Javier
@@ -176,4 +176,4 @@ This is my proposal, separate from Lee's lecture. I'd build continuity before gr
 
 I'd begin with an overnight document comparison that I can redirect from my phone. That gives me a concrete task to build around before adding payments or messages to other people.
 
-I'm building an agent workshop to get several agents working together, and I'll write about that next step in another post.
+I'll write another post about the agent workshop I'm building to get several agents running in loops together.
