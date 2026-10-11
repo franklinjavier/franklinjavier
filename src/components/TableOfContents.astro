@@ -1,36 +1,38 @@
 ---
 /**
  * "On this page" table of contents for blog posts, built from the h2/h3
- * headings that `render()` returns. Two variants share the same markup:
+ * headings that `render()` returns plus optional short labels from the
+ * post's `toc` frontmatter. Two variants share the list (TocList):
  *
- * - `sidebar`: sticky column on lg+ with a sliding active indicator and a
- *   thin reading-progress line. Renders the (only) script, which drives
- *   every `[data-toc]` nav on the page, so render it whenever `inline` is.
+ * - `sidebar`: sticky column on lg+ with its own scroll, a vertical
+ *   reading-progress rail and a sliding active indicator on top of it.
+ *   Renders the (only) script, which drives every `[data-toc]` nav on the
+ *   page, so render it whenever `inline` is.
  * - `inline`: collapsed <details> at the top of the article below lg.
  *
- * Scroll-spy uses IntersectionObserver; clicks smooth-scroll (instant with
+ * Scroll-spy uses IntersectionObserver; reading progress uses a
+ * rAF-throttled scroll handler. Clicks smooth-scroll (instant with
  * prefers-reduced-motion) and push the hash without the native jump.
  * Renders nothing for fewer than two headings (`hasToc()` in lib/toc).
  */
 import type { MarkdownHeading } from 'astro'
+import TocList from './TocList.astro'
 import { ui } from '../i18n/ui'
 import { useTranslations } from '../i18n/utils'
-import { hasToc, tocHeadings } from '../lib/toc'
+import { hasToc, tocItems, type TocLabels } from '../lib/toc'
 
 interface Props {
   lang: keyof typeof ui
   headings: MarkdownHeading[]
+  labels?: TocLabels
   variant: 'sidebar' | 'inline'
 }
 
-const { lang, headings, variant } = Astro.props
+const { lang, headings, labels, variant } = Astro.props
 const t = useTranslations(lang)
-const items = tocHeadings(headings)
+const items = tocItems(headings, labels)
 const show = hasToc(headings)
 const labelId = `toc-label-${variant}`
-
-const linkClass =
-  'toc-link block rounded-sm py-1 text-gray-500 transition-colors hover:text-gray-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900 aria-[current=location]:font-medium aria-[current=location]:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 dark:focus-visible:outline-gray-100 dark:aria-[current=location]:text-gray-100'
 ---
 
 {
@@ -38,32 +40,29 @@ const linkClass =
     <nav
       data-toc
       aria-labelledby={labelId}
-      class="sticky top-24 max-h-[calc(100vh-8rem)] overflow-y-auto pr-8 pb-4 text-sm"
+      class="sticky top-28 flex max-h-[calc(100dvh-9rem)] flex-col text-sm"
     >
-      <p id={labelId} class="mb-2 font-medium text-gray-900 dark:text-gray-100">
+      <p
+        id={labelId}
+        class="mb-4 pl-4 text-xs font-medium tracking-widest text-gray-500 uppercase dark:text-gray-400"
+      >
         {t('blog.onThisPage')}
       </p>
-      <div class="mb-4 h-px bg-gray-200 dark:bg-gray-800" aria-hidden="true">
-        <div class="toc-progress h-px origin-left bg-gray-900 dark:bg-gray-100" />
-      </div>
-      <div data-toc-track class="relative border-l border-gray-200 dark:border-gray-800">
-        <span
-          data-toc-indicator
-          class="toc-indicator absolute top-0 -left-px w-0.5 rounded-full bg-gray-900 dark:bg-gray-100"
-          aria-hidden="true"
-        />
-        <ol>
-          {items.map((heading) => (
-            <li>
-              <a
-                href={`#${heading.slug}`}
-                class:list={[linkClass, heading.depth === 3 ? 'pl-7' : 'pl-4']}
-              >
-                {heading.text}
-              </a>
-            </li>
-          ))}
-        </ol>
+      <div data-toc-scroll class="relative min-h-0 overflow-y-auto overscroll-contain pb-1">
+        <div data-toc-track class="relative">
+          <span
+            class="pointer-events-none absolute inset-y-0 left-0 z-10 w-px bg-gray-200 dark:bg-gray-800"
+            aria-hidden="true"
+          >
+            <span class="toc-progress absolute inset-0 origin-top bg-gray-400 dark:bg-gray-500" />
+          </span>
+          <span
+            data-toc-indicator
+            class="toc-indicator pointer-events-none absolute top-0 -left-px z-10 w-0.75 rounded-full bg-gray-900 dark:bg-gray-100"
+            aria-hidden="true"
+          />
+          <TocList items={items} variant="rail" />
+        </div>
       </div>
     </nav>
   )
@@ -72,22 +71,11 @@ const linkClass =
 {
   show && variant === 'inline' && (
     <details class="mb-10 rounded-lg border border-gray-200 text-sm lg:hidden dark:border-gray-800">
-      <summary class="cursor-pointer rounded-lg px-4 py-3 font-medium text-gray-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900 dark:text-gray-300 dark:focus-visible:outline-gray-100">
+      <summary class="cursor-pointer rounded-lg px-4 py-3 text-xs font-medium tracking-widest text-gray-500 uppercase focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900 dark:text-gray-400 dark:focus-visible:outline-gray-100">
         {t('blog.onThisPage')}
       </summary>
-      <nav data-toc aria-label={t('blog.onThisPage')} class="px-4 pb-3">
-        <ol>
-          {items.map((heading) => (
-            <li>
-              <a
-                href={`#${heading.slug}`}
-                class:list={[linkClass, heading.depth === 3 ? 'pl-4' : 'pl-0']}
-              >
-                {heading.text}
-              </a>
-            </li>
-          ))}
-        </ol>
+      <nav data-toc aria-label={t('blog.onThisPage')} class="px-1.5 pb-3">
+        <TocList items={items} variant="plain" />
       </nav>
     </details>
   )
@@ -106,14 +94,18 @@ const linkClass =
         if (!headings.length || !('IntersectionObserver' in window)) return
 
         const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)')
+        const root = document.documentElement
         const article = document.querySelector('[data-toc-article]')
         let activeId = null
         let lockedId = null
         let atBottom = false
 
+        // Slide the indicator to the active link and keep that link visible
+        // inside the TOC's own scroll box (never scrolls the page).
         const placeIndicator = (nav) => {
           const indicator = nav.querySelector('[data-toc-indicator]')
-          if (!indicator) return
+          const box = nav.querySelector('[data-toc-scroll]')
+          if (!indicator || !box) return
           const link = nav.querySelector('a[aria-current]')
           if (!link || !link.offsetParent) {
             indicator.style.opacity = '0'
@@ -128,10 +120,14 @@ const linkClass =
             indicator.getBoundingClientRect()
             indicator.style.transition = ''
           }
-          // Keep the active item visible when the list scrolls (long posts).
-          const top = link.offsetTop + indicator.parentElement.offsetTop
-          if (top < nav.scrollTop || top + link.offsetHeight > nav.scrollTop + nav.clientHeight) {
-            nav.scrollTop = top - nav.clientHeight / 3
+          const top = link.offsetTop
+          const bottom = top + link.offsetHeight
+          const pad = link.offsetHeight * 2
+          if (top - pad < box.scrollTop || bottom + pad > box.scrollTop + box.clientHeight) {
+            box.scrollTo({
+              top: top - box.clientHeight / 3,
+              behavior: firstPlacement || reduceMotion.matches ? 'auto' : 'smooth',
+            })
           }
         }
 
@@ -145,8 +141,8 @@ const linkClass =
           navs.forEach(placeIndicator)
         }
 
-        // Active = last heading above the line 30% down the viewport;
-        // at the very bottom of the page, the last heading wins.
+        // Active = last heading above the line 30% down the viewport (none
+        // while reading the intro); at the very bottom, the last heading wins.
         const update = () => {
           if (lockedId) return
           if (atBottom) return setActive(headings[headings.length - 1].id)
@@ -159,7 +155,13 @@ const linkClass =
           setActive(current ? current.id : null)
         }
 
-        const observer = new IntersectionObserver(update, { rootMargin: '0px 0px -70% 0px' })
+        // The root box spans from far above the viewport down to the 30% line,
+        // so every heading crossing that line toggles its intersection, even
+        // on big jumps (scrollbar drag, Page Down). The first callback also
+        // sets the active item on load, including for #hash URLs.
+        const observer = new IntersectionObserver(update, {
+          rootMargin: '100000px 0px -70% 0px',
+        })
         headings.forEach((heading) => observer.observe(heading))
 
         let ticking = false
@@ -168,7 +170,6 @@ const linkClass =
           ticking = true
           requestAnimationFrame(() => {
             ticking = false
-            const root = document.documentElement
             const bottom = innerHeight + scrollY >= root.scrollHeight - 2
             if (bottom !== atBottom) {
               atBottom = bottom
@@ -208,6 +209,7 @@ const linkClass =
               addEventListener('scrollend', unlock, { once: true })
               setTimeout(unlock, 1000)
             }
+            // scroll-margin-top on headings (prose.css) clears the sticky nav.
             target.scrollIntoView({ behavior: smooth ? 'smooth' : 'auto', block: 'start' })
             history.pushState(null, '', link.hash)
             target.setAttribute('tabindex', '-1')
@@ -229,13 +231,21 @@ const linkClass =
       opacity 150ms ease;
   }
 
+  /* Links render in TocList, outside this component's style scope. */
+  :global(.toc-link) {
+    transition:
+      color 150ms ease,
+      background-color 150ms ease;
+  }
+
+  /* Updated every frame from the scroll handler; never animated. */
   .toc-progress {
-    transform: scaleX(var(--toc-progress, 0));
+    transform: scaleY(var(--toc-progress, 0));
   }
 
   @media (prefers-reduced-motion: reduce) {
     .toc-indicator,
-    .toc-link {
+    :global(.toc-link) {
       transition: none;
     }
   }

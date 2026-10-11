@@ -19,7 +19,7 @@ const allPosts = await getCollection('blog', ({ data }) => {
 const sortedPosts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
 ---
 
-<BaseLayout title="Principal Engineer" lang={lang}>
+<BaseLayout title="Principal Engineer" lang={lang} markdownTwin>
   <Navigation />
 
   <main class="pt-32 pb-20">

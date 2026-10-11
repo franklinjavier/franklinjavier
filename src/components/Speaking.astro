@@ -19,6 +19,7 @@ const appearances = [...APPEARANCES].sort((a, b) => (b.date ?? '').localeCompare
   description={t('speaking.description')}
   lang={lang}
   jsonLd={speakingJsonLd(lang)}
+  markdownTwin
 >
   <Navigation />
 

@@ -14,6 +14,8 @@ const blog = defineCollection({
     translationKey: z.string().optional(),
     /** Social preview image; defaults to the first image in the post. */
     image: z.string().optional(),
+    /** Short table-of-contents labels keyed by heading slug; falls back to the heading text. */
+    toc: z.record(z.string(), z.string()).optional(),
   }),
 })
 

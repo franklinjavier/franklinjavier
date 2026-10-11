@@ -33,7 +33,7 @@ const otherLang = lang === 'en' ? 'pt-br' : 'en'
 const flags = { en: '🇺🇸', 'pt-br': '🇧🇷' }
 ---
 
-<BaseLayout title={entry.data.title} description={entry.data.description} lang={lang} bare>
+<BaseLayout title={entry.data.title} description={entry.data.description} lang={lang} bare markdownTwin>
   <div class="cv-desk">
     <div class="cv-toolbar">
       <a href={getLocalizedPath('/', lang)}>← {site}</a>

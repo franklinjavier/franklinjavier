@@ -1,8 +1,8 @@
 // Assertions against the built site in dist/. Run `bun run build` first
 // (the `bun test` script in package.json does this for you via `bun run check`).
 import { beforeAll, describe, expect, test } from 'bun:test'
-import { existsSync, readFileSync } from 'node:fs'
-import { join } from 'node:path'
+import { existsSync, readdirSync, readFileSync } from 'node:fs'
+import { join, sep } from 'node:path'
 
 const DIST = join(import.meta.dir, '..', 'dist')
 
@@ -138,6 +138,77 @@ describe('blog post pages', () => {
     expect(html).not.toContain('data-toc')
     expect(html).not.toContain('<aside')
     expect(html).not.toContain('lg:grid-cols-')
+  })
+
+  test('TOC uses short frontmatter labels, numbers sections and keeps the full heading as title', () => {
+    const cases = [
+      {
+        path: 'blog/how-always-on-agents-work/index.html',
+        slug: 'a-retry-must-not-charge-you-again',
+        heading: 'A retry must not charge you again',
+        label: 'Safe retries',
+      },
+      {
+        path: 'pt-br/blog/como-funciona-um-agente-sempre-ligado/index.html',
+        slug: 'cache-o-detalhe-que-define-o-custo',
+        heading: 'Cache: o detalhe que define o custo',
+        label: 'Cache do prompt',
+      },
+    ]
+    for (const { path, slug, heading, label } of cases) {
+      const html = read(path)
+      const tocs = [...html.matchAll(/<nav data-toc[^>]*>(.*?)<\/nav>/gs)].map((m) => m[1])
+      expect(tocs).toHaveLength(2)
+      for (const toc of tocs) {
+        const link = new RegExp(`<a href="#${slug}"[^>]*>(.*?)</a>`, 's').exec(toc)
+        expect(link).not.toBeNull()
+        expect(link![0]).toContain(`title="${heading}"`)
+        expect(link![1]).toContain(`>${label}</span>`)
+        expect(link![1]).not.toContain(heading)
+        // Section numbers are decorative: hidden from screen readers.
+        expect(toc).toMatch(/<span aria-hidden="true"[^>]*>01<\/span>/)
+      }
+    }
+  })
+})
+
+describe('markdown alternate link', () => {
+  function markdownAlternates(html: string): string[] {
+    const hrefs: string[] = []
+    for (const [tag] of html.matchAll(/<link\b[^>]*>/g)) {
+      const attrs = Object.fromEntries(
+        [...tag.matchAll(/([\w-]+)="([^"]*)"/g)].map((m) => [m[1], m[2]]),
+      )
+      if (attrs.rel === 'alternate' && attrs.type === 'text/markdown') hrefs.push(attrs.href)
+    }
+    return hrefs
+  }
+
+  test('post HTML links its markdown twin via rel=alternate', () => {
+    expect(markdownAlternates(read('blog/how-always-on-agents-work/index.html'))).toEqual([
+      'https://franklinjavier.com/blog/how-always-on-agents-work/index.md',
+    ])
+    expect(
+      markdownAlternates(read('pt-br/blog/como-funciona-um-agente-sempre-ligado/index.html')),
+    ).toEqual([
+      'https://franklinjavier.com/pt-br/blog/como-funciona-um-agente-sempre-ligado/index.md',
+    ])
+    expect(markdownAlternates(read('404.html'))).toEqual([])
+  })
+
+  test('is present on exactly the HTML pages that have a markdown twin', () => {
+    const files = (readdirSync(DIST, { recursive: true }) as string[]).map((f) =>
+      f.split(sep).join('/'),
+    )
+    const twins = new Set(files.filter((f) => f === 'index.md' || f.endsWith('/index.md')))
+    const pages = files.filter((f) => f.endsWith('.html'))
+    expect(twins.size).toBeGreaterThan(10)
+    for (const page of pages) {
+      const twin = page.replace(/index\.html$/, 'index.md')
+      const expected = twins.has(twin) ? [encodeURI(`https://franklinjavier.com/${twin}`)] : []
+      expect({ page, links: markdownAlternates(read(page)) }).toEqual({ page, links: expected })
+    }
+    for (const twin of twins) expect(pages).toContain(twin.replace(/index\.md$/, 'index.html'))
   })
 })
 

@@ -1,0 +1,50 @@
+---
+/**
+ * The numbered link list shared by both TableOfContents variants.
+ * Numbers are decorative (aria-hidden), so links are announced by label only;
+ * the full heading text lives in `title` for labels that are shortened or
+ * truncated.
+ */
+import type { TocItem } from '../lib/toc'
+
+interface Props {
+  items: TocItem[]
+  /** `rail` leaves room on the left for the sidebar's progress rail. */
+  variant: 'rail' | 'plain'
+}
+
+const { items, variant } = Astro.props
+const rail = variant === 'rail'
+---
+
+<ol>
+  {
+    items.map((item) => (
+      <li>
+        <a
+          href={`#${item.slug}`}
+          title={item.text}
+          class:list={[
+            'toc-link group flex items-baseline gap-2.5 py-1.5 pr-2 text-gray-500 hover:bg-gray-100/70 hover:text-gray-900 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-gray-900 aria-[current=location]:font-medium aria-[current=location]:text-gray-900 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-100 dark:focus-visible:outline-gray-100 dark:aria-[current=location]:text-gray-100',
+            rail ? 'rounded-r-md' : 'rounded-md',
+            item.depth === 3
+              ? ['text-[0.8125rem]', rail ? 'pl-11.5' : 'pl-10']
+              : rail
+                ? 'pl-4'
+                : 'pl-2.5',
+          ]}
+        >
+          {item.number && (
+            <span
+              aria-hidden="true"
+              class="w-5 shrink-0 text-xs font-normal text-gray-400 tabular-nums group-hover:text-gray-500 group-aria-[current=location]:text-gray-500 dark:text-gray-600 dark:group-hover:text-gray-400 dark:group-aria-[current=location]:text-gray-400"
+            >
+              {item.number}
+            </span>
+          )}
+          <span class="min-w-0 truncate">{item.label}</span>
+        </a>
+      </li>
+    ))
+  }
+</ol>

@@ -20,7 +20,7 @@ if (!entry) {
 const { Content } = await render(entry)
 ---
 
-<BaseLayout title={entry.data.title} description={entry.data.description} lang={lang}>
+<BaseLayout title={entry.data.title} description={entry.data.description} lang={lang} markdownTwin>
   <Navigation />
 
   <main class="pt-32 pb-20">

@@ -20,6 +20,7 @@ const { Content, headings } = await render(post)
 
 <PostLayout
   headings={headings}
+  tocLabels={post.data.toc}
   title={post.data.title}
   date={post.data.date}
   description={post.data.description}
