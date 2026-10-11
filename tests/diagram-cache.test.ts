@@ -15,7 +15,11 @@ function build() {
     cwd: dir,
     stdout: 'pipe',
     stderr: 'pipe',
+    // Kill a hung build so the test fails instead of waiting forever.
+    timeout: 240_000,
   })
+  if (run.exitedDueToTimeout)
+    throw new Error(`astro build timed out:\n${run.stdout}\n${run.stderr}`)
   if (run.exitCode !== 0) throw new Error(`astro build failed:\n${run.stdout}\n${run.stderr}`)
   return run.stdout.toString()
 }
