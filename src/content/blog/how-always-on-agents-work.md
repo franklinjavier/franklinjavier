@@ -156,17 +156,17 @@ For instance, you might say you prefer afternoon meetings. The profile can carry
 
 A phishing email can tell an agent to send money and claim the request is urgent. The system needs to distinguish text it received from an instruction you authorized.
 
-The lecture tags email and webhook content as untrusted. A separate model reviews risky actions before they run. If the reviewer gives no answer within 15 seconds, the action stays blocked. A rejection triggers a request for user approval.
+The lecture tags email and webhook content as untrusted. A separate model reviews risky actions before they run. If the model blocks the action, the user receives an approval request. If the user doesn't answer within 15 seconds, the action stays blocked.
 
 Irreversible sends go through a draft and an explicit send confirmation. The agent doesn't message other people without a user request, and new routines need approval. Secrets stay in environment variables, outside the model.
 
-Imagine an incoming email announcing new bank details and requesting a transfer. That text remains external content, with no authority to approve a payment. Any attempted risky action faces review, and a silent reviewer leaves it blocked. If you ask the agent to reply, you get a draft to inspect before sending.
+Imagine an incoming email announcing new bank details and requesting a transfer. That text remains external content, with no authority to approve a payment. Any attempted risky action faces review. If the model blocks it, you receive an approval request; if you don't answer within 15 seconds, the action stays blocked. If you ask the agent to reply, you get a draft to inspect before sending.
 
 ## My proposal for getting started
 
 In the final part of the [lecture](https://x.com/leerob/status/2108650243365736855) (from 34:26), Lee proposes “Delete the product”: build the minimum around the model and remove what it no longer needs.
 
-This is my proposal, drawn from the specification's suggestions, separate from Lee's lecture. I'd build continuity before granting broad access to consequential actions.
+This is my proposal, separate from Lee's lecture. I'd build continuity before granting broad access to consequential actions.
 
 1. Run the loop on a server and save conversations and progress in Postgres. Have clients retrieve that state when notified of a change.
 2. Use Temporal to resume tasks, with idempotent steps. Add a conversation queue that batches quick messages and lets direct corrections interrupt ongoing work.

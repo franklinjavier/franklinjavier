@@ -150,17 +150,17 @@ Imagine dizer que prefere reuniões à tarde. Essa preferência vai para o perfi
 
 Um email de phishing pode mandar o agente enviar dinheiro e se apresentar como uma instrução urgente. O sistema precisa preservar a origem daquele texto para não confundir conteúdo recebido com um pedido seu.
 
-A aula marca textos de email e webhook como não confiáveis. Antes de uma ação arriscada, outro modelo faz o auto-review. Se essa revisão não responder em 15 segundos, a ação fica bloqueada. Uma rejeição leva a um pedido de aprovação ao usuário.
+A aula marca textos de email e webhook como não confiáveis. Antes de uma ação arriscada, outro modelo faz o auto-review. Se o modelo bloquear a ação, o usuário recebe um pedido de aprovação. Se o usuário não responder em 15 segundos, a ação continua bloqueada.
 
 Envios irreversíveis passam por rascunho e confirmação. O agente não manda mensagens a outras pessoas sem você pedir, e rotinas novas precisam do seu OK. Segredos ficam em variáveis de ambiente, fora do modelo.
 
-Suponha que um email peça uma transferência para uma conta nova. O agente deve tratar a solicitação como conteúdo externo, sem tomá-la como autorização sua. Qualquer tentativa de ação arriscada passa pela revisão; o silêncio do revisor mantém o bloqueio. Se você pedir uma resposta por email, verá o rascunho antes de enviar.
+Suponha que um email peça uma transferência para uma conta nova. O agente deve tratar a solicitação como conteúdo externo, sem tomá-la como autorização sua. Qualquer tentativa de ação arriscada passa pela revisão. Se o modelo bloquear a ação, você recebe um pedido de aprovação; sem resposta sua em 15 segundos, ela continua bloqueada. Se você pedir uma resposta por email, verá o rascunho antes de enviar.
 
 ## Minha proposta: o que eu construiria primeiro
 
 Na parte final da [aula](https://x.com/leerob/status/2108650243365736855) (a partir de 34:26), Lee propõe “Delete the product”: construir o mínimo em volta do modelo e remover o que ele não precisa mais.
 
-Este plano é meu, baseado nas sugestões da especificação, separado da aula do Lee. Eu começaria pela continuidade: uma tarefa interrompida obriga o usuário a descobrir o que já foi feito.
+Este plano é meu, separado da aula do Lee. Eu começaria pela continuidade: uma tarefa interrompida obriga o usuário a descobrir o que já foi feito.
 
 1. Colocar o loop no servidor e salvar conversas e progresso em Postgres. Os aplicativos buscariam o estado salvo quando recebessem um aviso de atualização.
 2. Usar Temporal para retomar tarefas, com etapas idempotentes. Organizar a fila por conversa, agrupar mensagens rápidas e dar prioridade às correções no chat individual.
