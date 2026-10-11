@@ -211,6 +211,169 @@
   color: var(--tw-prose-counters);
 }
 
+/* Inline SVG diagrams (src/diagrams, injected by the markdown plugin).
+   Shapes carry classes, never colors: the --dg-* tokens below are the site's
+   grays plus one accent (the peach of the Vesper code theme, darkened for
+   light mode), and they flip under .dark. The 352-wide viewBox keeps 12px
+   labels at 10px+ on a 360px phone; 26rem caps the scale on desktop. */
+.prose :where(figure.diagram) {
+  --dg-paper: #fff;
+  --dg-ink: var(--color-gray-900, #111827);
+  --dg-muted: var(--color-gray-500, #6b7280);
+  --dg-soft: var(--color-gray-400, #9ca3af);
+  --dg-rule: var(--color-gray-200, #e5e7eb);
+  --dg-wash: var(--color-gray-50, #f9fafb);
+  --dg-accent: #b45309;
+  --dg-accent-tint: rgb(180 83 9 / 0.08);
+  max-width: 26rem;
+  margin-inline: auto;
+}
+
+.dark .prose :where(figure.diagram) {
+  --dg-paper: #000;
+  --dg-ink: var(--color-gray-100, #f3f4f6);
+  --dg-muted: var(--color-gray-400, #9ca3af);
+  --dg-soft: var(--color-gray-500, #6b7280);
+  --dg-rule: var(--color-gray-800, #1f2937);
+  --dg-wash: var(--color-gray-900, #111827);
+  --dg-accent: #ffc799;
+  --dg-accent-tint: rgb(255 199 153 / 0.1);
+}
+
+.prose :where(figure.diagram svg) {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.prose :where(figure.diagram text) {
+  fill: var(--dg-ink);
+  font-family: var(--font-sans, sans-serif);
+}
+
+.diagram .dg-name {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.diagram .dg-small {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.diagram .dg-sub,
+.diagram .dg-label,
+.diagram .dg-eyebrow {
+  fill: var(--dg-muted);
+  font-family: var(--font-mono, monospace);
+  font-size: 12px;
+}
+
+.diagram .dg-label,
+.diagram .dg-eyebrow {
+  letter-spacing: 0.04em;
+}
+
+.diagram .dg-eyebrow {
+  font-weight: 500;
+}
+
+.diagram .dg-faint {
+  fill: var(--dg-muted);
+}
+
+.diagram .dg-label-accent,
+.diagram .dg-sub-accent {
+  fill: var(--dg-accent);
+}
+
+.diagram .dg-under,
+.diagram .dg-mask {
+  fill: var(--dg-paper);
+}
+
+.diagram .dg-node {
+  fill: var(--dg-paper);
+  stroke: var(--dg-ink);
+  stroke-width: 1;
+}
+
+.diagram .dg-input {
+  fill: var(--dg-wash);
+  stroke: var(--dg-soft);
+  stroke-width: 1;
+}
+
+.diagram .dg-store {
+  fill: var(--dg-wash);
+  stroke: var(--dg-muted);
+  stroke-width: 1;
+}
+
+.diagram .dg-ghost {
+  fill: none;
+  stroke: var(--dg-soft);
+  stroke-width: 1;
+  stroke-dasharray: 4 3;
+}
+
+.diagram .dg-focal {
+  fill: var(--dg-accent-tint);
+  stroke: var(--dg-accent);
+  stroke-width: 1.2;
+}
+
+.diagram .dg-zone {
+  fill: none;
+  stroke: var(--dg-rule);
+  stroke-width: 1;
+}
+
+.diagram .dg-zone-fill {
+  fill: var(--dg-wash);
+}
+
+.diagram .dg-zone-dashed {
+  stroke: var(--dg-soft);
+  stroke-dasharray: 4 4;
+}
+
+.diagram .dg-chip {
+  fill: none;
+  stroke: var(--dg-rule);
+  stroke-width: 1;
+}
+
+.diagram .dg-line {
+  fill: none;
+  stroke: var(--dg-muted);
+  stroke-width: 1.2;
+}
+
+.diagram .dg-line-accent {
+  stroke: var(--dg-accent);
+}
+
+.diagram .dg-line-dashed {
+  stroke-dasharray: 5 4;
+}
+
+.diagram .dg-mk {
+  fill: var(--dg-muted);
+}
+
+.diagram .dg-mk-accent {
+  fill: var(--dg-accent);
+}
+
+.prose :where(figure.diagram figcaption) {
+  margin-top: 1em;
+}
+
+.prose :where(.diagram-credit) {
+  white-space: nowrap;
+}
+
 /* Photo gallery: a stack of prints that opens a native <dialog> carousel.
    Opens via invoker commands (commandfor/command), no JS. Scroll buttons and
    markers are progressive; without them the track still swipes and scrolls. */

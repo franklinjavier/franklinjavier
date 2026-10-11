@@ -5,6 +5,7 @@
 import { ui } from '../i18n/ui'
 import { SITE_TITLE, SITE_DESCRIPTION, SITE_EMAIL, SITE_URL, SOCIAL_LINKS, DEV_STACK, SIDE_PROJECTS } from './site'
 import { APPEARANCES, speakingUrl } from './speaking'
+import { describeDiagrams } from '../diagrams'
 
 export type Lang = 'en' | 'pt-br'
 
@@ -119,7 +120,7 @@ export function postMarkdown(post: PostSummary & { lang: Lang; body: string }): 
     ...(post.tags.length > 0 ? [`- Tags: ${post.tags.join(', ')}`] : []),
     `- Canonical: ${absolute(post.url)}`,
     '',
-    post.body.trim(),
+    describeDiagrams(post.body, post.lang).trim(),
     '',
     footerNote(post.lang),
     '',

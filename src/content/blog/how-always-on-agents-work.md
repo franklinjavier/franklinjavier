@@ -31,6 +31,8 @@ while True:
 
 The model requests tools and uses their results to decide what comes next. The server runs this loop and saves each step. Apps display progress; a separate cloud computer runs tools that need a machine.
 
+<figure data-diagram="architecture"></figure>
+
 There doesn't need to be a process waiting forever. The agent stops after 2 idle minutes, and the next event brings it back with its saved state. The figures throughout this post come from the lecture slides.
 
 Suppose you ask for a comparison of some documents before leaving for the evening. You shut the laptop and check from your phone the next morning. The server can continue overnight, and the conversation comes from saved state rather than a terminal session you kept open.
@@ -43,6 +45,8 @@ The agent's computer is a Firecracker microVM per user. Agents belonging to that
 
 When idle, the VM synchronizes files to cloud storage, snapshots memory and disk, and stops. It never sleeps during a turn. A tool call that needs the computer restores the snapshot; commands still arrive from the server.
 
+<figure data-diagram="lifecycle"></figure>
+
 For a hypothetical example, an agent has prepared a spreadsheet and its computer has gone to sleep. You ask it to change the formatting. The relevant tool wakes the VM with the file and browser session preserved.
 
 ## Corrections need priority over queued work
@@ -50,6 +54,8 @@ For a hypothetical example, an agent has prepared a spreadsheet and its computer
 Separate runs let related messages race each other. The agent may act before a correction arrives.
 
 The lecture uses a router to discard duplicates and select a conversation. Each conversation has a queue, with one turn running at a time. Rapid messages form a batch. Slack events, group messages, routines, and helper results wait their turn. Your message in a one-to-one chat can interrupt or stop the current turn and take priority.
+
+<figure data-diagram="wakeups"></figure>
 
 Imagine asking in Slack to add a colleague to a meeting, immediately adding another attendee, then sending a thank-you. The agent can handle the batch as one request. If you then use the direct chat to move the meeting to Thursday, that correction cuts in rather than waiting behind the scheduling work.
 
@@ -60,6 +66,8 @@ A job that restarts from the beginning after a failure may repeat work it alread
 The lecture uses Temporal for durable workflows. The engine records steps so another server can resume from saved progress. It also supplies timers, cancellation, and health checks. Helpers each have their own durable workflow.
 
 The steps must be idempotent too: retrying an operation must preserve its intended result without creating another effect. Recording progress alone can't close every gap between an external action and saving its outcome.
+
+<figure data-diagram="durable"></figure>
 
 Consider a hypothetical authorized purchase. The payment succeeds, but the server crashes before recording the result. Recovery may retry that step. The payment operation needs to recognize the same request and avoid a second charge. Durable execution handles resuming the task; idempotency handles repeating the operation safely.
 
@@ -89,6 +97,8 @@ Each definition stays below 4,000 characters. The tool set remains stable betwee
 
 Tool selection follows an ascending cost order: existing context and memory, an app API, web search, the logged-in browser, the whole desktop, then asking the user. A broken connector is a reason to report the problem and ask. The agent must not bypass it through the browser.
 
+<figure data-diagram="ladder"></figure>
+
 Suppose you ask whether you're free tomorrow afternoon. The agent can load the calendar tool and query the API. If the connection fails, it tells you and asks how to proceed instead of attempting browser access on its own.
 
 ## Long tasks shouldn't take over the main conversation
@@ -96,6 +106,8 @@ Suppose you ask whether you're free tomorrow afternoon. The agent can load the c
 Screenshots can crowd out useful context. Long tasks also leave the main agent unavailable when you need to redirect it.
 
 The lecture delegates that work to helpers. The main agent supplies a complete task description and receives a short report. A task list tracks requests, and the main agent can check a helper, send it guidance, or stop it.
+
+<figure data-diagram="helpers"></figure>
 
 A computer-use helper handles clicks and screenshots. It can inspect page structure for web interactions; pixel-based work uses a 1280x800 display. When human intervention is needed, it stops and hands over control. The cloud coding helper makes changes **in its own VM**.
 
@@ -106,6 +118,8 @@ Imagine asking for a video review, then remembering a question about an unrelate
 An agent repeatedly sends much of the same context to the model. If that prefix changes unnecessarily, it loses the opportunity to reuse cached input.
 
 The lecture assembles the prompt in a fixed order and keeps the prefix identical until the next summary. History grows at the end. The latest message adds the time and brief notes about changes. A deployment that changes a tool description adds a note to an active conversation instead of rewriting its existing tool text.
+
+<figure data-diagram="prompt-cache"></figure>
 
 Lee treats a cache miss as a bug. Each section has a hash to help find what changed. This also shapes compaction: in the case described, a turn finishes above 100k tokens, then the system waits roughly 10 minutes before summarizing. It reuses the prefix while the provider cache remains warm, within a 10–60 minute window.
 

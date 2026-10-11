@@ -1,6 +1,8 @@
 // @ts-check
 import { defineConfig } from 'astro/config'
 import tailwindcss from '@tailwindcss/vite'
+import { satteri } from '@astrojs/markdown-satteri'
+import { diagramsPlugin } from './src/diagrams/plugin.ts'
 
 // https://astro.build/config
 export default defineConfig({
@@ -21,6 +23,9 @@ export default defineConfig({
     },
   },
   markdown: {
+    // Sätteri is Astro's default processor; the plugin swaps
+    // <figure data-diagram="…"></figure> placeholders for inline SVG figures.
+    processor: satteri({ hastPlugins: [diagramsPlugin] }),
     syntaxHighlight: 'shiki',
     shikiConfig: {
       theme: 'vesper',

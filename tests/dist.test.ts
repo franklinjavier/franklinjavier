@@ -141,6 +141,64 @@ describe('blog post pages', () => {
   })
 })
 
+describe('inline diagrams', () => {
+  const posts = [
+    {
+      lang: 'en',
+      html: 'blog/how-always-on-agents-work/index.html',
+      md: 'blog/how-always-on-agents-work/index.md',
+      credit: 'source: Lee Robinson, CS146S',
+      described: '*Diagram: ',
+    },
+    {
+      lang: 'pt-br',
+      html: 'pt-br/blog/como-funciona-um-agente-sempre-ligado/index.html',
+      md: 'pt-br/blog/como-funciona-um-agente-sempre-ligado/index.md',
+      credit: 'fonte: Lee Robinson, CS146S',
+      described: '*Diagrama: ',
+    },
+  ]
+
+  test('the always-on post renders seven accessible SVG figures per language', () => {
+    for (const post of posts) {
+      const html = read(post.html)
+      const figures = [...html.matchAll(/<figure class="diagram"[^>]*>(.*?)<\/figure>/gs)].map((m) => m[1])
+      expect(figures).toHaveLength(7)
+      for (const figure of figures) {
+        const svg = /<svg [^>]*>/.exec(figure)?.[0] ?? ''
+        expect(svg).toContain('role="img"')
+        const [titleId, descId] = /aria-labelledby="([^"]+)"/.exec(svg)?.[1].split(' ') ?? []
+        expect(titleId).toStartWith('dg-')
+        expect(titleId).toContain(`-${post.lang}-`)
+        // <title> is the first child, then <desc>.
+        expect(figure).toContain(`${svg}<title id="${titleId}">`)
+        expect(figure).toContain(`<desc id="${descId}">`)
+        expect(figure).toContain(`<figcaption>`)
+        expect(figure).toContain(post.credit)
+      }
+      const ids = [...html.matchAll(/\sid="([^"]+)"/g)].map((m) => m[1])
+      expect(new Set(ids).size).toBe(ids.length)
+      expect(html).not.toContain('<figure data-diagram=')
+      // The TOC still renders both variants.
+      expect([...html.matchAll(/<nav data-toc/g)]).toHaveLength(2)
+    }
+  })
+
+  test('the markdown twin describes each diagram instead of leaking placeholders', () => {
+    for (const post of posts) {
+      const md = read(post.md)
+      expect(md).not.toContain('<figure')
+      expect(md.split(post.described)).toHaveLength(8)
+    }
+  })
+
+  test('other posts are unaffected', () => {
+    for (const path of ['blog/how-to-be-proactive/index.html', 'blog/lisbon-ai-2026/index.html']) {
+      expect(read(path)).not.toContain('class="diagram"')
+    }
+  })
+})
+
 describe('markdown variants', () => {
   test('exist for the homepage, indexes, posts and trust pages in both languages', () => {
     const paths = [

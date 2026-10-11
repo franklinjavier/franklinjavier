@@ -31,6 +31,8 @@ while True:
 
 O modelo pede ferramentas, recebe os resultados e decide o próximo passo. Para continuar depois que você sai, esse loop roda no servidor, que salva cada passo. O aplicativo recebe mensagens e mostra o progresso. A VM, o computador do agente na nuvem, executa as ferramentas que precisam de uma máquina.
 
+<figure data-diagram="architecture"></figure>
+
 Sempre ligado também permite parar quando não há trabalho. O processo encerra após 2 minutos ocioso; um novo evento carrega o estado e inicia outro turno. Os números usados neste texto vêm dos slides da aula.
 
 Imagine pedir uma pesquisa antes de dormir. Você fecha o laptop, mas o servidor continua a tarefa. De manhã, abre a conversa no celular e encontra o progresso salvo, sem precisar manter o terminal aberto durante a noite.
@@ -43,6 +45,8 @@ O servidor guarda conversas, memória, rotinas e skills. Cada usuário tem uma m
 
 Quando fica ociosa, a VM sincroniza os arquivos com o armazenamento na nuvem, salva um snapshot da memória e do disco e para. Nunca dorme no meio de um turno. Uma chamada de ferramenta que precise dela restaura o snapshot, incluindo ferramentas instaladas e sessões do navegador.
 
+<figure data-diagram="lifecycle"></figure>
+
 Suponha que o agente tenha preparado uma planilha e a máquina durma. Ao pedir uma alteração, você provoca uma nova chamada de ferramenta. A VM acorda com os arquivos e o navegador preservados; o servidor mantém a conversa.
 
 ## Mensagens rápidas precisam virar um pedido só
@@ -51,6 +55,8 @@ Executar cada mensagem separadamente cria concorrência sobre o mesmo pedido. O 
 
 Na aula, um roteador elimina eventos duplicados e escolhe a conversa. Cada conversa tem sua fila e executa um turno por vez. Mensagens rápidas entram em lote. Eventos de Slack, grupos, rotinas e helpers aguardam na fila, mas uma mensagem sua no chat individual pode interromper ou parar o turno atual.
 
+<figure data-diagram="wakeups"></figure>
+
 Imagine um pedido pelo Slack: incluir alguém numa reunião, depois acrescentar outra pessoa e, por último, agradecer. Essas mensagens podem virar um único turno. Se você mudar o dia pelo chat individual, com “na verdade, faz na quinta”, a correção entra na frente e redireciona o trabalho em andamento.
 
 ## Como retomar sem repetir um pagamento
@@ -58,6 +64,8 @@ Imagine um pedido pelo Slack: incluir alguém numa reunião, depois acrescentar 
 Reiniciar um job do começo depois de uma queda pode repetir uma ação já concluída. Em um pagamento, isso deixa de ser apenas desperdício de processamento.
 
 A palestra usa Temporal para executar workflows duráveis: sequências de trabalho com cada passo registrado. Outro servidor consegue retomar do último passo salvo. As etapas também precisam ser idempotentes, isto é, uma repetição deve manter o mesmo resultado, sem criar outra ação. O motor oferece timers e cancelamento; cada helper tem seu próprio workflow.
+
+<figure data-diagram="durable"></figure>
 
 Num cenário hipotético, uma compra já autorizada é concluída e o servidor cai antes de salvar o resultado. Ao retomar, o passo de pagamento pode ser tentado novamente. A idempotência precisa reconhecer aquela mesma operação e impedir outra cobrança.
 
@@ -77,6 +85,8 @@ A solução da aula é levar só os nomes no prompt e carregar descrição e sch
 
 A escolha também segue uma ordem de custo crescente: contexto e memória, API do aplicativo, busca na web, navegador logado, desktop e pergunta ao usuário. Um conector quebrado exige avisar e perguntar, sem contornar a falha pelo navegador.
 
+<figure data-diagram="ladder"></figure>
+
 Suponha que você peça os compromissos de amanhã. O agente carrega a ferramenta de calendário e consulta a API. Se o conector falhar, informa o problema e pede orientação. Ele não abre o navegador por conta própria para tentar recuperar acesso.
 
 ## O agente precisa saber ficar quieto
@@ -93,6 +103,8 @@ Uma tarefa longa pode ocupar o agente principal e encher o contexto com screensh
 
 Lee separa o principal dos helpers. O principal entrega uma descrição completa da tarefa e recebe um relatório curto. Uma lista acompanha os pedidos, e ele pode consultar, orientar ou parar um helper. Cada helper executa seu próprio workflow durável.
 
+<figure data-diagram="helpers"></figure>
+
 O helper de computador concentra os cliques e screenshots. Na web, pode ler a estrutura da página; para ações em pixels, a aula usa uma tela de 1280x800. Quando precisa de intervenção humana, entrega o controle. Já o cloud coding agent faz mudanças de código **na própria VM**.
 
 Imagine pedir a revisão de um vídeo e depois perguntar sobre o prazo de outra tarefa. O helper cuida do vídeo, enquanto o principal continua disponível no chat. Ao terminar, devolve um relatório curto, sem colocar todo o material analisado na conversa principal.
@@ -102,6 +114,8 @@ Imagine pedir a revisão de um vídeo e depois perguntar sobre o prazo de outra 
 Mudanças pequenas no prompt podem impedir o uso do cache e aumentar o custo. Até alterar a ordem das ferramentas pode ter esse efeito.
 
 Na aula, o prefixo do prompt segue uma ordem fixa e fica idêntico até o próximo resumo. O histórico cresce no final. Horário e notas sobre mudanças entram na mensagem nova. Se um deploy altera a descrição de uma ferramenta, a conversa em andamento recebe uma nota, sem substituir o texto antigo. Hashes por seção ajudam a localizar mudanças; Lee trata cache miss como bug.
+
+<figure data-diagram="prompt-cache"></figure>
 
 A compactação aproveita essa estabilidade. No caso apresentado, um turno termina acima de 100 mil tokens. Cerca de 10 minutos depois, o sistema resume enquanto o cache ainda está quente, numa janela de 10 a 60 minutos. Preserva as últimas mensagens ao usuário palavra por palavra. Se um trabalho em background estiver prestes a acordar o agente, pula essa compactação.
 
