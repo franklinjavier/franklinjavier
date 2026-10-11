@@ -112,6 +112,33 @@ describe('blog post pages', () => {
     expect(posting?.headline).toBeTruthy()
     expect(posting?.datePublished).toBeTruthy()
   })
+
+  test('render a localized table of contents when the post has headings', () => {
+    const cases = [
+      { path: 'blog/stylex-personal-site/index.html', label: 'On this page' },
+      { path: 'pt-br/blog/stylex-nao-deixou-o-site-mais-rapido/index.html', label: 'Nesta página' },
+    ]
+    for (const { path, label } of cases) {
+      const html = read(path)
+      const tocs = [...html.matchAll(/<nav data-toc[^>]*>(.*?)<\/nav>/gs)].map((m) => m[0])
+      // Sidebar (lg+) and collapsed <details> (mobile) variants.
+      expect(tocs).toHaveLength(2)
+      expect(html).toContain(`>${label}</p>`)
+      expect(html).toContain(`aria-label="${label}"`)
+      for (const toc of tocs) {
+        const ids = [...toc.matchAll(/href="#([^"]+)"/g)].map((m) => m[1])
+        expect(ids.length).toBeGreaterThanOrEqual(2)
+        for (const id of ids) expect(html).toContain(`id="${id}"`)
+      }
+    }
+  })
+
+  test('render no table of contents when the post has no headings', () => {
+    const html = read('blog/the-great-suspender/index.html')
+    expect(html).not.toContain('data-toc')
+    expect(html).not.toContain('<aside')
+    expect(html).not.toContain('lg:grid-cols-')
+  })
 })
 
 describe('markdown variants', () => {

@@ -1,0 +1,242 @@
+---
+/**
+ * "On this page" table of contents for blog posts, built from the h2/h3
+ * headings that `render()` returns. Two variants share the same markup:
+ *
+ * - `sidebar`: sticky column on lg+ with a sliding active indicator and a
+ *   thin reading-progress line. Renders the (only) script, which drives
+ *   every `[data-toc]` nav on the page, so render it whenever `inline` is.
+ * - `inline`: collapsed <details> at the top of the article below lg.
+ *
+ * Scroll-spy uses IntersectionObserver; clicks smooth-scroll (instant with
+ * prefers-reduced-motion) and push the hash without the native jump.
+ * Renders nothing for fewer than two headings (`hasToc()` in lib/toc).
+ */
+import type { MarkdownHeading } from 'astro'
+import { ui } from '../i18n/ui'
+import { useTranslations } from '../i18n/utils'
+import { hasToc, tocHeadings } from '../lib/toc'
+
+interface Props {
+  lang: keyof typeof ui
+  headings: MarkdownHeading[]
+  variant: 'sidebar' | 'inline'
+}
+
+const { lang, headings, variant } = Astro.props
+const t = useTranslations(lang)
+const items = tocHeadings(headings)
+const show = hasToc(headings)
+const labelId = `toc-label-${variant}`
+
+const linkClass =
+  'toc-link block rounded-sm py-1 text-gray-500 transition-colors hover:text-gray-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900 aria-[current=location]:font-medium aria-[current=location]:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 dark:focus-visible:outline-gray-100 dark:aria-[current=location]:text-gray-100'
+---
+
+{
+  show && variant === 'sidebar' && (
+    <nav
+      data-toc
+      aria-labelledby={labelId}
+      class="sticky top-24 max-h-[calc(100vh-8rem)] overflow-y-auto pr-8 pb-4 text-sm"
+    >
+      <p id={labelId} class="mb-2 font-medium text-gray-900 dark:text-gray-100">
+        {t('blog.onThisPage')}
+      </p>
+      <div class="mb-4 h-px bg-gray-200 dark:bg-gray-800" aria-hidden="true">
+        <div class="toc-progress h-px origin-left bg-gray-900 dark:bg-gray-100" />
+      </div>
+      <div data-toc-track class="relative border-l border-gray-200 dark:border-gray-800">
+        <span
+          data-toc-indicator
+          class="toc-indicator absolute top-0 -left-px w-0.5 rounded-full bg-gray-900 dark:bg-gray-100"
+          aria-hidden="true"
+        />
+        <ol>
+          {items.map((heading) => (
+            <li>
+              <a
+                href={`#${heading.slug}`}
+                class:list={[linkClass, heading.depth === 3 ? 'pl-7' : 'pl-4']}
+              >
+                {heading.text}
+              </a>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </nav>
+  )
+}
+
+{
+  show && variant === 'inline' && (
+    <details class="mb-10 rounded-lg border border-gray-200 text-sm lg:hidden dark:border-gray-800">
+      <summary class="cursor-pointer rounded-lg px-4 py-3 font-medium text-gray-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900 dark:text-gray-300 dark:focus-visible:outline-gray-100">
+        {t('blog.onThisPage')}
+      </summary>
+      <nav data-toc aria-label={t('blog.onThisPage')} class="px-4 pb-3">
+        <ol>
+          {items.map((heading) => (
+            <li>
+              <a
+                href={`#${heading.slug}`}
+                class:list={[linkClass, heading.depth === 3 ? 'pl-4' : 'pl-0']}
+              >
+                {heading.text}
+              </a>
+            </li>
+          ))}
+        </ol>
+      </nav>
+    </details>
+  )
+}
+
+{
+  show && variant === 'sidebar' && (
+    <script is:inline>
+      ;(() => {
+        const navs = [...document.querySelectorAll('[data-toc]')]
+        const links = navs.flatMap((nav) => [...nav.querySelectorAll('a[href^="#"]')])
+        const idOf = (link) => decodeURIComponent(link.hash.slice(1))
+        const headings = [...new Set(links.map(idOf))]
+          .map((id) => document.getElementById(id))
+          .filter(Boolean)
+        if (!headings.length || !('IntersectionObserver' in window)) return
+
+        const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)')
+        const article = document.querySelector('[data-toc-article]')
+        let activeId = null
+        let lockedId = null
+        let atBottom = false
+
+        const placeIndicator = (nav) => {
+          const indicator = nav.querySelector('[data-toc-indicator]')
+          if (!indicator) return
+          const link = nav.querySelector('a[aria-current]')
+          if (!link || !link.offsetParent) {
+            indicator.style.opacity = '0'
+            return
+          }
+          const firstPlacement = indicator.style.opacity !== '1'
+          if (firstPlacement) indicator.style.transition = 'none'
+          indicator.style.opacity = '1'
+          indicator.style.transform = `translateY(${link.offsetTop}px)`
+          indicator.style.height = `${link.offsetHeight}px`
+          if (firstPlacement) {
+            indicator.getBoundingClientRect()
+            indicator.style.transition = ''
+          }
+          // Keep the active item visible when the list scrolls (long posts).
+          const top = link.offsetTop + indicator.parentElement.offsetTop
+          if (top < nav.scrollTop || top + link.offsetHeight > nav.scrollTop + nav.clientHeight) {
+            nav.scrollTop = top - nav.clientHeight / 3
+          }
+        }
+
+        const setActive = (id) => {
+          if (id === activeId) return
+          activeId = id
+          for (const link of links) {
+            if (idOf(link) === id) link.setAttribute('aria-current', 'location')
+            else link.removeAttribute('aria-current')
+          }
+          navs.forEach(placeIndicator)
+        }
+
+        // Active = last heading above the line 30% down the viewport;
+        // at the very bottom of the page, the last heading wins.
+        const update = () => {
+          if (lockedId) return
+          if (atBottom) return setActive(headings[headings.length - 1].id)
+          const line = innerHeight * 0.3
+          let current = null
+          for (const heading of headings) {
+            if (heading.getBoundingClientRect().top > line) break
+            current = heading
+          }
+          setActive(current ? current.id : null)
+        }
+
+        const observer = new IntersectionObserver(update, { rootMargin: '0px 0px -70% 0px' })
+        headings.forEach((heading) => observer.observe(heading))
+
+        let ticking = false
+        const onScroll = () => {
+          if (ticking) return
+          ticking = true
+          requestAnimationFrame(() => {
+            ticking = false
+            const root = document.documentElement
+            const bottom = innerHeight + scrollY >= root.scrollHeight - 2
+            if (bottom !== atBottom) {
+              atBottom = bottom
+              update()
+            }
+            if (article) {
+              const rect = article.getBoundingClientRect()
+              const span = rect.height - innerHeight
+              const progress = span > 0 ? Math.min(Math.max(-rect.top / span, 0), 1) : 1
+              root.style.setProperty('--toc-progress', progress.toFixed(4))
+            }
+          })
+        }
+        addEventListener('scroll', onScroll, { passive: true })
+        addEventListener('resize', () => navs.forEach(placeIndicator), { passive: true })
+        onScroll()
+
+        for (const link of links) {
+          link.addEventListener('click', (event) => {
+            if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey) return
+            const target = document.getElementById(idOf(link))
+            if (!target) return
+            event.preventDefault()
+            // Collapse the mobile <details> first so the target doesn't move.
+            link.closest('details')?.removeAttribute('open')
+            const smooth = !reduceMotion.matches
+            setActive(target.id)
+            if (smooth) {
+              // Hold the indicator on the target while smooth-scrolling past
+              // the headings in between.
+              lockedId = target.id
+              const unlock = () => {
+                if (lockedId !== target.id) return
+                lockedId = null
+                update()
+              }
+              addEventListener('scrollend', unlock, { once: true })
+              setTimeout(unlock, 1000)
+            }
+            target.scrollIntoView({ behavior: smooth ? 'smooth' : 'auto', block: 'start' })
+            history.pushState(null, '', link.hash)
+            target.setAttribute('tabindex', '-1')
+            target.focus({ preventScroll: true })
+          })
+        }
+      })()
+    </script>
+  )
+}
+
+<style>
+  .toc-indicator {
+    --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+    opacity: 0;
+    transition:
+      transform 300ms var(--ease-out),
+      height 300ms var(--ease-out),
+      opacity 150ms ease;
+  }
+
+  .toc-progress {
+    transform: scaleX(var(--toc-progress, 0));
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .toc-indicator,
+    .toc-link {
+      transition: none;
+    }
+  }
+</style>

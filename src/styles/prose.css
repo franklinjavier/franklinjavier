@@ -169,6 +169,16 @@
   line-height: 1.5;
 }
 
+/* Anchor and TOC jumps land below the sticky nav. The TOC focuses the
+   heading (tabindex=-1) for keyboard users; no ring on that programmatic focus. */
+.prose :where(h2, h3) {
+  scroll-margin-top: 5rem;
+}
+
+.prose :where(h2, h3)[tabindex='-1']:focus {
+  outline: none;
+}
+
 .prose :where(hr + *),
 .prose :where(h2 + *),
 .prose :where(h3 + *) {
