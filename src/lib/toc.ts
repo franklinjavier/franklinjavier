@@ -14,9 +14,14 @@ export interface TocItem {
   number?: string
 }
 
+/** Slug of the visually hidden h2 that GFM footnotes add; not a section. */
+const FOOTNOTE_LABEL = 'footnote-label'
+
 /** h2/h3 headings that make up a post's table of contents. */
 export function tocHeadings(headings: MarkdownHeading[] = []): MarkdownHeading[] {
-  return headings.filter((heading) => heading.depth === 2 || heading.depth === 3)
+  return headings.filter(
+    (heading) => (heading.depth === 2 || heading.depth === 3) && heading.slug !== FOOTNOTE_LABEL,
+  )
 }
 
 /** A TOC with a single entry is noise; only render it from two headings up. */

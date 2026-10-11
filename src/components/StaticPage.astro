@@ -23,10 +23,10 @@ const { Content } = await render(entry)
 <BaseLayout title={entry.data.title} description={entry.data.description} lang={lang} markdownTwin>
   <Navigation />
 
-  <main class="pt-32 pb-20">
-    <article class="mx-auto max-w-3xl px-8">
-      <header class="mb-12">
-        <h1 class="text-5xl leading-tight font-bold">{entry.data.title}</h1>
+  <main class="site-container pt-20 pb-24">
+    <article>
+      <header class="mb-8">
+        <h1 class="text-[1.375rem] leading-tight font-[550] text-ink">{entry.data.title}</h1>
       </header>
 
       <div class="prose">

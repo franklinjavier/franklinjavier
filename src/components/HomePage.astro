@@ -22,13 +22,13 @@ const sortedPosts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.
 <BaseLayout title="Principal Engineer" lang={lang} markdownTwin>
   <Navigation />
 
-  <main class="pt-32 pb-20">
+  <main class="site-container pt-20 pb-24">
     <!-- Hero Section -->
-    <section class="mx-auto mb-24 max-w-7xl px-8" id="about">
-      <div class="grid grid-cols-1 items-center gap-16 lg:grid-cols-2">
+    <section class="mb-20" id="about">
+      <div class="grid grid-cols-1 items-center gap-10 sm:grid-cols-[minmax(0,1fr)_11rem]">
         <div>
-          <h1 class="mb-6 text-4xl leading-tight font-bold lg:text-5xl">{t('hero.title')}</h1>
-          <div class="max-w-xl space-y-5 text-base text-gray-700 dark:text-gray-300">
+          <h1 class="mb-4 text-[1.375rem] leading-tight font-[550] text-ink">{t('hero.title')}</h1>
+          <div class="space-y-3 text-ink-2">
             <p>{t('hero.bio1')}</p>
             <p>{t('hero.bio2')}</p>
             <p>{t('hero.bio3')}</p>
@@ -36,12 +36,12 @@ const sortedPosts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.
         </div>
 
         <!-- Photo -->
-        <div class="relative mx-auto w-full max-w-md">
-          <div class="hero-photo shadow-2xl">
+        <div class="relative mx-auto w-full max-w-44">
+          <div class="hero-photo">
             <img
               src="/img/frank.jpeg"
               alt="Franklin Javier"
-              class="h-auto w-full rounded-3xl"
+              class="h-auto w-full rounded-2xl shadow-[0_0_0_1px_rgb(0_0_0_/_0.04)]"
               width="600"
               height="600"
             />
@@ -51,32 +51,32 @@ const sortedPosts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.
     </section>
 
     <!-- Info Section -->
-    <section class="mx-auto max-w-7xl px-8">
-      <div class="grid grid-cols-1 gap-16 md:grid-cols-3">
+    <section class="border-t border-rule pt-8">
+      <div class="grid grid-cols-1 gap-10 text-[0.8125rem] leading-5 sm:grid-cols-3 sm:gap-8">
         <div>
-          <h2 class="mb-6 text-lg font-bold">{t('experience.title')}</h2>
-          <div class="space-y-6 text-sm">
+          <h2 class="mb-3 font-[550] text-ink">{t('experience.title')}</h2>
+          <div class="space-y-3">
             <div>
-              <p class="text-gray-700 dark:text-gray-300">{t('experience.role1')}</p>
-              <p class="text-gray-500 dark:text-gray-400">{t('experience.company1')}</p>
-              <p class="text-gray-500 dark:text-gray-400">{t('experience.period1')}</p>
+              <p class="text-ink-2">{t('experience.role1')}</p>
+              <p class="text-muted">{t('experience.company1')}</p>
+              <p class="text-muted">{t('experience.period1')}</p>
             </div>
             <div>
-              <p class="text-gray-700 dark:text-gray-300">{t('experience.role2')}</p>
-              <p class="text-gray-500 dark:text-gray-400">{t('experience.company2')}</p>
-              <p class="text-gray-500 dark:text-gray-400">{t('experience.period2')}</p>
+              <p class="text-ink-2">{t('experience.role2')}</p>
+              <p class="text-muted">{t('experience.company2')}</p>
+              <p class="text-muted">{t('experience.period2')}</p>
             </div>
             <div>
-              <p class="text-gray-700 dark:text-gray-300">{t('experience.role3')}</p>
-              <p class="text-gray-500 dark:text-gray-400">{t('experience.company3')}</p>
-              <p class="text-gray-500 dark:text-gray-400">{t('experience.period3')}</p>
+              <p class="text-ink-2">{t('experience.role3')}</p>
+              <p class="text-muted">{t('experience.company3')}</p>
+              <p class="text-muted">{t('experience.period3')}</p>
             </div>
           </div>
         </div>
 
         <div>
-          <h2 class="mb-6 text-lg font-bold">{t('stack.title')}</h2>
-          <div class="space-y-2 text-sm text-gray-700 dark:text-gray-300">
+          <h2 class="mb-3 font-[550] text-ink">{t('stack.title')}</h2>
+          <div class="space-y-1 text-ink-2">
             {DEV_STACK.map((item) => (
               <p>{item}</p>
             ))}
@@ -84,12 +84,12 @@ const sortedPosts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.
         </div>
 
         <div>
-          <h2 class="mb-6 text-lg font-bold">{t('contact.title')}</h2>
-          <div class="space-y-2 text-sm">
-            <p class="text-gray-700 dark:text-gray-300">{t('contact.location')}</p>
+          <h2 class="mb-3 font-[550] text-ink">{t('contact.title')}</h2>
+          <div class="space-y-1">
+            <p class="text-ink-2">{t('contact.location')}</p>
             <a
               href="mailto:franklinjalves@gmail.com"
-              class="block text-gray-700 underline hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-100"
+              class="block w-fit text-ink-2 underline decoration-muted underline-offset-3 transition-colors duration-200 ease-smooth hover:text-ink hover:decoration-current"
             >
               franklinjalves@gmail.com
             </a>
@@ -97,7 +97,7 @@ const sortedPosts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.
               href="https://www.linkedin.com/in/franklin-javier-98504321"
               target="_blank"
               rel="noopener"
-              class="block text-gray-700 underline hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-100"
+              class="block w-fit text-ink-2 underline decoration-muted underline-offset-3 transition-colors duration-200 ease-smooth hover:text-ink hover:decoration-current"
             >
               LinkedIn
             </a>
@@ -105,13 +105,13 @@ const sortedPosts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.
               href="https://x.com/franklinjavier"
               target="_blank"
               rel="noopener"
-              class="block text-gray-700 underline hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-100"
+              class="block w-fit text-ink-2 underline decoration-muted underline-offset-3 transition-colors duration-200 ease-smooth hover:text-ink hover:decoration-current"
             >
               X
             </a>
             <a
               href={getLocalizedPath('/cv/', lang)}
-              class="block text-gray-700 underline hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-100"
+              class="block w-fit text-ink-2 underline decoration-muted underline-offset-3 transition-colors duration-200 ease-smooth hover:text-ink hover:decoration-current"
             >
               {t('nav.cv')}
             </a>
@@ -121,35 +121,44 @@ const sortedPosts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.
     </section>
 
     <!-- Blog Posts Section -->
-    <section class="mx-auto mt-32 max-w-7xl px-8" id="posts">
-      <h2 class="mb-12 text-3xl font-bold">{t('blog.recentPosts')}</h2>
-      <div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+    <section class="mt-20" id="posts">
+      <h2 class="mb-4 font-[550] text-ink">{t('blog.recentPosts')}</h2>
+      <ul class="border-t border-rule">
         {sortedPosts.slice(0, 6).map((post) => {
           const formattedDate = formatDate(post.data.date, lang)
           const postUrl = getPostUrl(post.id, lang)
 
           return (
-            <article class="group">
-              <a href={postUrl} class="block">
-                <h3 class="mb-2 text-xl font-semibold group-hover:underline">{post.data.title}</h3>
-                <time class="text-sm text-gray-500 dark:text-gray-400">{formattedDate}</time>
+            <li class="border-b border-rule">
+              <a href={postUrl} class="group block py-3">
+                <div class="flex flex-col gap-x-6 gap-y-0.5 sm:flex-row sm:items-baseline sm:justify-between">
+                  <h3 class="font-[550] text-ink decoration-muted underline-offset-3 group-hover:underline">
+                    {post.data.title}
+                  </h3>
+                  <time
+                    datetime={post.data.date.toISOString()}
+                    class="shrink-0 text-meta text-muted tabular-nums"
+                  >
+                    {formattedDate}
+                  </time>
+                </div>
                 {post.data.description && (
-                  <p class="mt-3 text-gray-700 dark:text-gray-300">{post.data.description}</p>
+                  <p class="mt-1 text-[0.8125rem] leading-5 text-ink-2">{post.data.description}</p>
                 )}
               </a>
-            </article>
+            </li>
           )
         })}
-      </div>
+      </ul>
     </section>
 
     <!-- Side Projects Section -->
-    <section class="mx-auto mt-32 max-w-7xl px-8" id="projects">
-      <h2 class="mb-12 text-3xl font-bold">{t('projects.title')}</h2>
-      <div class="grid grid-cols-1 gap-8 md:grid-cols-3">
+    <section class="mt-20" id="projects">
+      <h2 class="mb-4 font-[550] text-ink">{t('projects.title')}</h2>
+      <div class="grid grid-cols-1 gap-6 sm:grid-cols-3">
         {SIDE_PROJECTS.map((project) => (
           <article class="group">
-            <a href={project.url} target="_blank" rel="noopener" class="flex gap-4 md:block">
+            <a href={project.url} target="_blank" rel="noopener" class="flex gap-4 sm:block">
               <img
                 src={project.image}
                 alt=""
@@ -157,11 +166,13 @@ const sortedPosts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.
                 height="420"
                 loading="lazy"
                 decoding="async"
-                class="aspect-[40/21] w-36 shrink-0 rounded-xl border border-gray-100 object-cover md:mb-4 md:w-full md:rounded-2xl dark:border-gray-800"
+                class="aspect-[40/21] w-32 shrink-0 rounded-md object-cover shadow-[0_0_0_1px_rgb(0_0_0_/_0.04)] sm:mb-3 sm:w-full dark:shadow-[0_0_0_1px_rgb(255_255_255_/_0.05)]"
               />
               <div>
-                <h3 class="mb-2 text-xl font-semibold group-hover:underline">{project.name}</h3>
-                <p class="text-gray-700 dark:text-gray-300">{t(`projects.${project.key}`)}</p>
+                <h3 class="mb-1 font-[550] text-ink decoration-muted underline-offset-3 group-hover:underline">
+                  {project.name}
+                </h3>
+                <p class="text-[0.8125rem] leading-5 text-muted">{t(`projects.${project.key}`)}</p>
               </div>
             </a>
           </article>
@@ -175,7 +186,7 @@ const sortedPosts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.
   /* Hero photo: settles into its tilt on load, straightens a little on hover.
      Opacity stays at 1 so the photo (the page's LCP) paints on the first frame. */
   .hero-photo {
-    --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+    --ease-out: var(--ease);
     rotate: 3deg;
     transition:
       rotate 250ms var(--ease-out),

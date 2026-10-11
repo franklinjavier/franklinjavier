@@ -1,9 +1,14 @@
 ---
 /**
  * The numbered link list shared by both TableOfContents variants.
- * Numbers are decorative (aria-hidden), so links are announced by label only;
- * the full heading text lives in `title` for labels that are shortened or
- * truncated.
+ * Numbers are decorative (aria-hidden), so links are announced by text only.
+ *
+ * - `plain` shows the (possibly shortened) label, truncated, with the full
+ *   heading text in `title`.
+ * - `rail` renders both: the short label (aria-hidden, shown while compact)
+ *   and the full heading text (visually hidden while compact, shown when the
+ *   sidebar expands; TableOfContents styles both states). Screen readers hear
+ *   only the full heading text.
  */
 import type { TocItem } from '../lib/toc'
 
@@ -18,33 +23,37 @@ const rail = variant === 'rail'
 ---
 
 <ol>
-  {
-    items.map((item) => (
-      <li>
-        <a
-          href={`#${item.slug}`}
-          title={item.text}
-          class:list={[
-            'toc-link group flex items-baseline gap-2.5 py-1.5 pr-2 text-gray-500 hover:bg-gray-100/70 hover:text-gray-900 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-gray-900 aria-[current=location]:font-medium aria-[current=location]:text-gray-900 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-100 dark:focus-visible:outline-gray-100 dark:aria-[current=location]:text-gray-100',
-            rail ? 'rounded-r-md' : 'rounded-md',
-            item.depth === 3
-              ? ['text-[0.8125rem]', rail ? 'pl-11.5' : 'pl-10']
-              : rail
-                ? 'pl-4'
-                : 'pl-2.5',
-          ]}
-        >
-          {item.number && (
-            <span
-              aria-hidden="true"
-              class="w-5 shrink-0 text-xs font-normal text-gray-400 tabular-nums group-hover:text-gray-500 group-aria-[current=location]:text-gray-500 dark:text-gray-600 dark:group-hover:text-gray-400 dark:group-aria-[current=location]:text-gray-400"
-            >
-              {item.number}
+  {items.map((item) => (
+    <li>
+      <a
+        href={`#${item.slug}`}
+        title={rail ? undefined : item.text}
+        class:list={[
+          'toc-link group flex items-baseline gap-2 py-1 pr-1 leading-[1.125rem] text-muted hover:text-ink focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ink aria-[current=location]:text-ink',
+          rail ? 'rounded-r-sm' : 'rounded-sm',
+          // h3 text lines up with h2 text (number column w-4 + gap-2).
+          item.depth === 3 ? (rail ? 'pl-9' : 'pl-6') : rail ? 'pl-3' : 'pl-0',
+        ]}
+      >
+        {item.number && (
+          <span
+            aria-hidden="true"
+            class="w-4 shrink-0 text-[0.6875rem] text-muted tabular-nums group-hover:text-ink-2 group-aria-[current=location]:text-ink-2"
+          >
+            {item.number}
+          </span>
+        )}
+        {rail ? (
+          <>
+            <span aria-hidden="true" class="toc-short min-w-0 truncate">
+              {item.label}
             </span>
-          )}
+            <span class="toc-full sr-only">{item.text}</span>
+          </>
+        ) : (
           <span class="min-w-0 truncate">{item.label}</span>
-        </a>
-      </li>
-    ))
-  }
+        )}
+      </a>
+    </li>
+  ))}
 </ol>

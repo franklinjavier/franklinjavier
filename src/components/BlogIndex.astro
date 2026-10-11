@@ -31,60 +31,65 @@ const summary = `${countLabel} - ${description}`
 <BaseLayout title={title} description={description} lang={lang} markdownTwin>
   <Navigation />
 
-  <main class="pt-32 pb-20">
-    <div class="mx-auto max-w-4xl px-8">
-      <!-- Header -->
-      <header class="mb-16">
-        <h1 class="mb-4 text-5xl font-bold">{t('blog.title')}</h1>
-        <p class="text-lg text-gray-600 dark:text-gray-400">{summary}</p>
-      </header>
+  <main class="site-container pt-20 pb-24">
+    <!-- Header -->
+    <header class="mb-8">
+      <h1 class="mb-2 text-[1.375rem] leading-tight font-[550] text-ink">{t('blog.title')}</h1>
+      <p class="text-[0.8125rem] leading-5 text-muted">{summary}</p>
+    </header>
 
-      <!-- Posts list -->
-      <div class="space-y-12">
-        {sortedPosts.map((post) => {
-          const formattedDate = formatDate(post.data.date, lang)
-          const postUrl = getPostUrl(post.id, lang)
-          const tags = parseTags(post.data.tags)
+    <!-- Posts list -->
+    <div class="border-t border-rule">
+      {sortedPosts.map((post) => {
+        const formattedDate = formatDate(post.data.date, lang)
+        const postUrl = getPostUrl(post.id, lang)
+        const tags = parseTags(post.data.tags)
 
-          return (
-            <article class="group border-b border-gray-200 pb-12 last:border-0 dark:border-gray-800">
-              <div>
-                <a href={postUrl} class="block">
-                  <time class="text-sm text-gray-500 dark:text-gray-400">{formattedDate}</time>
-                  <h2 class="mt-2 mb-3 text-2xl font-bold group-hover:underline">
-                    {post.data.title}
-                  </h2>
-                  {post.data.description && (
-                    <p class="leading-relaxed text-gray-700 dark:text-gray-300">
-                      {post.data.description}
-                    </p>
-                  )}
-                </a>
-                {tags.length > 0 && (
-                  <div class="mt-4 flex flex-wrap gap-2">
-                    {tags.map((tag) => {
-                      return (
+        return (
+          <article class="group border-b border-rule py-5">
+            <a href={postUrl} class="block">
+              <time
+                datetime={post.data.date.toISOString()}
+                class="text-meta text-muted tabular-nums"
+              >
+                {formattedDate}
+              </time>
+              <h2 class="mt-0.5 font-[550] text-ink decoration-muted underline-offset-3 group-hover:underline">
+                {post.data.title}
+              </h2>
+              {post.data.description && (
+                <p class="mt-1 text-[0.8125rem] leading-5 text-ink-2">{post.data.description}</p>
+              )}
+            </a>
+            <p class="mt-2 flex flex-wrap items-baseline gap-x-1.5 text-meta text-muted">
+              {tags.length > 0 && (
+                <>
+                  <span>
+                    {tags.map((tag, index) => (
+                      <>
+                        {index > 0 && ', '}
                         <a
                           href={getTagUrl(tag, lang)}
-                          class="rounded-full bg-gray-100 px-3 py-1 text-xs text-gray-600 transition hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700"
+                          class="underline decoration-dotted underline-offset-3 transition-colors duration-200 ease-smooth hover:text-ink hover:decoration-solid"
                         >
                           {tag}
                         </a>
-                      )
-                    })}
-                  </div>
-                )}
-                <a
-                  href={postUrl}
-                  class="mt-4 block text-sm text-gray-600 transition hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100"
-                >
-                  {t('blog.readMore')}
-                </a>
-              </div>
-            </article>
-          )
-        })}
-      </div>
+                      </>
+                    ))}
+                  </span>
+                  <span aria-hidden="true">·</span>
+                </>
+              )}
+              <a
+                href={postUrl}
+                class="underline decoration-dotted underline-offset-3 transition-colors duration-200 ease-smooth hover:text-ink hover:decoration-solid"
+              >
+                {t('blog.readMore')}
+              </a>
+            </p>
+          </article>
+        )
+      })}
     </div>
   </main>
 </BaseLayout>

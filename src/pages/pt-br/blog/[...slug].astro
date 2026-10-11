@@ -1,6 +1,7 @@
 ---
 import { getCollection, render } from 'astro:content'
 import { checkSeriesData, postImage } from '../../../lib/content'
+import { readingMinutes } from '../../../lib/reading-time'
 import PostLayout from '../../../layouts/PostLayout.astro'
 
 export async function getStaticPaths() {
@@ -28,6 +29,7 @@ const { Content, headings } = await render(post)
   tags={post.data.tags}
   image={postImage(post)}
   series={post.data.series}
+  readingTime={readingMinutes(post.body)}
 >
   <Content />
 </PostLayout>

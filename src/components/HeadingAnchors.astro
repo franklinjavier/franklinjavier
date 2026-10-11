@@ -1,0 +1,46 @@
+---
+/**
+ * Shareable section links for a post body (wraps the .prose block).
+ * At build time every TOC heading gets a real <a href="#id"> (lib/heading-
+ * anchors), so it works without JS. With JS, a plain click copies the full
+ * URL, updates the hash without jumping and announces it once through the
+ * live region below (or that the copy failed; the URL is then in the
+ * address bar). Click logic: createHeadingAnchorHandler in lib/heading-anchors.
+ * Styles live in prose.css (.heading-anchor).
+ */
+import type { MarkdownHeading } from 'astro'
+import { ui } from '../i18n/ui'
+import { useTranslations } from '../i18n/utils'
+import { addHeadingAnchors } from '../lib/heading-anchors'
+
+interface Props {
+  lang: keyof typeof ui
+  headings: MarkdownHeading[]
+}
+
+const { lang, headings } = Astro.props
+const t = useTranslations(lang)
+const html = addHeadingAnchors(
+  await Astro.slots.render('default'),
+  headings,
+  t('blog.copySectionLink'),
+)
+const hasAnchors = html.includes('data-heading-anchor')
+---
+
+<Fragment set:html={html} />
+{hasAnchors && (
+  <p
+    data-heading-anchor-status
+    data-message={t('blog.linkCopied')}
+    data-error-message={t('blog.linkCopyFailed')}
+    aria-live="polite"
+    class="sr-only"
+  />
+)}
+
+{hasAnchors && <script>
+  import { createHeadingAnchorHandler } from '../lib/heading-anchors'
+
+  document.addEventListener('click', createHeadingAnchorHandler(document))
+</script>}

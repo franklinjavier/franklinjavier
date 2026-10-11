@@ -6,18 +6,106 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+/*
+ * Neutral palette. Text tokens (ink, ink-2, muted) pass WCAG AA (4.5:1) on
+ * their own background; ratios are WCAG 2 contrast against --bg.
+ * faint, decor and rule are decoration only (never body text). muted is
+ * page-only: on --well (4.20:1 light) use ink-2 or ink instead.
+ */
+:root {
+  --bg: #fafafa;
+  --ink: #171717; /* 17.18:1 */
+  --ink-2: #525252; /* 7.49:1 */
+  --muted: #737373; /* 4.54:1 (#8f8f8f is 3.13:1, kept as --decor) */
+  --decor: #8f8f8f; /* decoration only */
+  --faint: #bdbdbd; /* decoration only */
+  --rule: #ebebeb;
+  --well: #f1f1f1; /* ink on well 15.87:1, ink-2 6.92:1 */
+  --selection: #e3e8ef;
+  --ease: cubic-bezier(0.22, 0.75, 0.2, 1);
+}
+
+.dark {
+  --bg: #111111;
+  --ink: #ededed; /* 16.13:1 */
+  --ink-2: #a3a3a3; /* 7.49:1 */
+  --muted: #808080; /* 4.78:1 */
+  --decor: #5c5c5c; /* decoration only */
+  --faint: #3a3a3a; /* decoration only */
+  --rule: #262626;
+  --well: #1a1a1a; /* ink on well 14.87:1, ink-2 6.90:1 */
+  --selection: #2c3440;
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-page: var(--bg);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-muted: var(--muted);
+  --color-decor: var(--decor);
+  --color-faint: var(--faint);
+  --color-rule: var(--rule);
+  --color-well: var(--well);
+  --color-selection: var(--selection);
+  --ease-smooth: var(--ease);
+  /* 12.5px: code, meta lines */
+  --text-meta: 0.78125rem;
+  --text-meta--line-height: 1.125rem;
+  /* 15px body on a 22px line */
+  --text-body: 0.9375rem;
+  --text-body--line-height: 1.375rem;
+}
+
+/* Native system faces only: no web fonts, so nothing to download or swap. */
 @theme {
-  /* Map Tailwind v4 gray to v3's default gray (cool gray) for visual parity */
-  --color-gray-50: #f9fafb;
-  --color-gray-100: #f3f4f6;
-  --color-gray-200: #e5e7eb;
-  --color-gray-300: #d1d5db;
-  --color-gray-400: #9ca3af;
-  --color-gray-500: #6b7280;
-  --color-gray-600: #4b5563;
-  --color-gray-700: #374151;
-  --color-gray-800: #1f2937;
-  --color-gray-900: #111827;
+  --font-sans:
+    ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
+    sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji';
+  /* Post titles only (PostLayout). */
+  --font-serif:
+    ui-serif, 'New York', 'Iowan Old Style', 'Apple Garamond', Georgia, Cambria, 'Times New Roman',
+    serif;
+  --font-mono:
+    ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
+}
+
+/*
+ * The one outer container every page and the header share, so left/right
+ * edges line up: 42rem including the side padding (1.5rem, 2rem from sm),
+ * a 38rem text box on wide screens. Post rails hang outside it (prose.css).
+ */
+:root {
+  --container-max: 42rem;
+  --gutter: 1.5rem;
+}
+
+@media (min-width: 40rem) {
+  :root {
+    --gutter: 2rem;
+  }
+}
+
+@utility site-container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+@layer base {
+  body {
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
+    /* Variable system fonts (SF Pro, Segoe UI Variable) render 450; others round to 400. */
+    font-weight: 450;
+  }
+
+  /* Ink on the selection passes everywhere, including Shiki's light text. */
+  ::selection {
+    background-color: var(--selection);
+    color: var(--ink);
+  }
 }
 
 /* Theme toggle uses View Transitions. html.theme-transition is never set. */
@@ -36,6 +124,14 @@
 }
 
 ::view-transition-new(root) {
-  animation: 600ms cubic-bezier(0.4, 0, 0.2, 1) both page-reveal;
+  animation: 600ms var(--ease) both page-reveal;
   z-index: 999;
+}
+
+/* BaseLayout skips the transition too; this covers any other caller. */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+  }
 }

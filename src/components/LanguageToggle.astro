@@ -1,8 +1,15 @@
 ---
-import { getLangFromUrl, getAlternateUrl, getTranslatedPost } from '../i18n/utils'
+import { getLangFromUrl, getAlternateUrl, getTranslatedPost, useTranslations } from '../i18n/utils'
 
+interface Props {
+  class?: string
+}
+
+const { class: className } = Astro.props
 const lang = getLangFromUrl(Astro.url)
 const targetLang = lang === 'pt-br' ? 'en' : 'pt-br'
+// Label and code are in the target language, like the link's lang attribute.
+const target = useTranslations(targetLang)
 
 // Detect if we're on a blog post page
 const isBlogPost = Astro.url.pathname.includes('/blog/')
@@ -30,9 +37,11 @@ if (isBlogPost) {
 <a
   id="language-toggle"
   href={alternateUrl}
-  class="inline-flex items-center gap-1 px-2 py-1.5 text-2xl transition-opacity hover:opacity-80"
-  aria-label={lang === 'pt-br' ? 'Switch to English' : 'Mudar para Português'}
-  title={lang === 'pt-br' ? 'Switch to English' : 'Mudar para Português'}
+  hreflang={targetLang}
+  lang={targetLang}
+  class:list={['text-meta tracking-[0.04em] text-muted', className]}
+  aria-label={target('lang.switch')}
+  title={target('lang.switch')}
 >
-  <span>{lang === 'pt-br' ? '🇺🇸' : '🇧🇷'}</span>
+  {target('lang.short')}
 </a>

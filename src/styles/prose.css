@@ -2,10 +2,10 @@
  * Thin article typography for markdown bodies.
  * Loaded from PostLayout and StaticPage only — not BaseLayout.
  *
- * Bakes production .prose.prose-lg (base size moved to 16px) + the live modifier classes
- * (dark invert, headings bold, p leading-relaxed, link underline,
- * code text-sm/mono/no-backticks, pre/img rounded-lg shadow-lg).
- * Measure stays 65ch. max-w-none is not applied.
+ * 15px body on a 22px line, weight 450. h2 is 17px/600, h3 body-size/600;
+ * space above separates sections. Code is 12.5px. Colors
+ * come from the palette tokens in global.css (--ink, --muted, --rule, …).
+ * The measure is the post column (34.5rem, .post-grid below).
  *
  * Kept img: /blog/the-great-suspender/ embeds one.
  * Kept figure/figcaption: /blog/lisbon-ai-2026/ captions its photos.
@@ -16,49 +16,38 @@
  */
 
 .prose {
-  --tw-prose-headings: oklch(21% 0.034 264.665);
-  --tw-prose-bold: oklch(21% 0.034 264.665);
-  --tw-prose-counters: oklch(55.1% 0.027 264.364);
-  --tw-prose-bullets: oklch(87.2% 0.01 258.338);
-  --tw-prose-hr: oklch(92.8% 0.006 264.531);
-  --tw-prose-code: oklch(21% 0.034 264.665);
-  --tw-prose-pre-code: oklch(92.8% 0.006 264.531);
-  --tw-prose-pre-bg: oklch(27.8% 0.033 256.848);
-  --tw-prose-page-bg: #fff;
-  font-size: 1rem;
-  line-height: 1.7777777777777777;
-  max-width: 65ch;
-  color: inherit;
-}
-
-.dark .prose {
-  --tw-prose-headings: #fff;
-  --tw-prose-bold: #fff;
-  --tw-prose-counters: oklch(70.7% 0.022 261.325);
-  --tw-prose-bullets: oklch(44.6% 0.03 256.802);
-  --tw-prose-hr: oklch(37.3% 0.034 259.733);
-  --tw-prose-code: #fff;
-  --tw-prose-pre-code: oklch(87.2% 0.01 258.338);
-  --tw-prose-pre-bg: #00000080;
-  --tw-prose-page-bg: #000;
+  --tw-prose-headings: var(--ink);
+  --tw-prose-bold: var(--ink);
+  --tw-prose-counters: var(--muted);
+  --tw-prose-bullets: var(--muted);
+  --tw-prose-hr: var(--rule);
+  --tw-prose-code: var(--ink);
+  --tw-prose-page-bg: var(--bg);
+  --code-size: 0.78125rem;
+  font-size: 0.9375rem;
+  line-height: 1.375rem;
+  font-weight: 450;
+  max-width: 34.5rem;
+  color: var(--ink);
 }
 
 .prose :where(p) {
-  margin-top: 1.3333333333333333em;
-  margin-bottom: 1.3333333333333333em;
-  line-height: 1.625;
+  margin-top: 1em;
+  margin-bottom: 1em;
 }
 
 .prose :where(a) {
   color: inherit;
-  font-weight: 500;
   text-decoration: underline;
+  /* muted clears 3:1 against the page in both themes (WCAG 1.4.11). */
+  text-decoration-color: var(--muted);
   text-decoration-thickness: 1px;
-  text-underline-offset: 2px;
+  text-underline-offset: 3px;
+  transition: text-decoration-color 200ms var(--ease);
 }
 
 .prose :where(a):hover {
-  opacity: 0.8;
+  text-decoration-color: currentColor;
 }
 
 .prose :where(strong) {
@@ -72,51 +61,51 @@
 
 .prose :where(ol) {
   list-style-type: decimal;
-  margin-top: 1.3333333333333333em;
-  margin-bottom: 1.3333333333333333em;
-  padding-inline-start: 1.5555555555555556em;
+  margin-top: 1em;
+  margin-bottom: 1em;
+  padding-inline-start: 1.5em;
 }
 
 .prose :where(ul) {
   list-style-type: disc;
-  margin-top: 1.3333333333333333em;
-  margin-bottom: 1.3333333333333333em;
-  padding-inline-start: 1.5555555555555556em;
+  margin-top: 1em;
+  margin-bottom: 1em;
+  padding-inline-start: 1.5em;
 }
 
 .prose :where(li) {
-  margin-top: 0.6666666666666666em;
-  margin-bottom: 0.6666666666666666em;
+  margin-top: 0.375em;
+  margin-bottom: 0.375em;
 }
 
 .prose :where(ol > li),
 .prose :where(ul > li) {
-  padding-inline-start: 0.4444444444444444em;
+  padding-inline-start: 0.25em;
 }
 
 .prose :where(.prose > ul > li p) {
-  margin-top: 0.8888888888888888em;
-  margin-bottom: 0.8888888888888888em;
+  margin-top: 0.75em;
+  margin-bottom: 0.75em;
 }
 
 .prose :where(.prose > ul > li > p:first-child),
 .prose :where(.prose > ol > li > p:first-child) {
-  margin-top: 1.3333333333333333em;
+  margin-top: 1em;
 }
 
 .prose :where(.prose > ul > li > p:last-child),
 .prose :where(.prose > ol > li > p:last-child) {
-  margin-bottom: 1.3333333333333333em;
+  margin-bottom: 1em;
 }
 
 .prose :where(ul ul, ul ol, ol ul, ol ol) {
-  margin-top: 0.8888888888888888em;
-  margin-bottom: 0.8888888888888888em;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
 }
 
 .prose :where(hr) {
-  margin-top: 3.111111111111111em;
-  margin-bottom: 3.111111111111111em;
+  margin-top: 2.5em;
+  margin-bottom: 2.5em;
   border-color: var(--tw-prose-hr);
 }
 
@@ -151,32 +140,39 @@
   background-color: var(--tw-prose-page-bg);
 }
 
+/*
+ * Hierarchy with native faces: title (serif 26/28px) > h2 (17px/24px, 600)
+ * > h3 (body size, 600) > body (15px/22px, 450). h2 opens a section with
+ * more space above; h3 sits closer to its text.
+ */
 .prose :where(h2) {
   color: var(--tw-prose-headings);
-  font-weight: 700;
-  font-size: 1.6666666666666667em;
-  margin-top: 1.8666666666666667em;
-  margin-bottom: 1.0666666666666667em;
-  line-height: 1.3333333333333333;
+  font-weight: 600;
+  font-size: 1.0625rem;
+  line-height: 1.5rem;
+  margin-top: 2.5rem;
+  margin-bottom: 0.625rem;
 }
 
 .prose :where(h3) {
   color: var(--tw-prose-headings);
-  font-weight: 700;
-  font-size: 1.3333333333333333em;
-  margin-top: 1.6666666666666667em;
-  margin-bottom: 0.6666666666666666em;
-  line-height: 1.5;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  line-height: 1.375rem;
+  margin-top: 1.75rem;
+  margin-bottom: 0.375rem;
 }
 
 /* Anchor and TOC jumps land below the sticky nav. The TOC focuses the
-   heading (tabindex=-1) for keyboard users; no ring on that programmatic focus. */
-.prose :where(h2, h3) {
+   heading (tabindex=-1); a quiet ring shows when that came from the keyboard. */
+.prose :where(h2, h3, .sidenote, section[data-footnotes] li) {
   scroll-margin-top: 5rem;
 }
 
-.prose :where(h2, h3)[tabindex='-1']:focus {
-  outline: none;
+.prose :where(h2, h3, .sidenote):focus-visible {
+  outline: 1px solid var(--muted);
+  outline-offset: 4px;
+  border-radius: 2px;
 }
 
 .prose :where(hr + *),
@@ -185,18 +181,105 @@
   margin-top: 0;
 }
 
+/*
+ * Section links (HeadingAnchors.astro). Narrow or touch screens: always
+ * shown, inline after the heading text. Desktop with a mouse: in the left
+ * gutter (absolute, no layout shift), shown on heading hover or keyboard focus.
+ */
+.prose :where(h2, h3) {
+  position: relative;
+}
+
+.prose :where(.heading-anchor) {
+  display: inline-block;
+  width: 1em;
+  margin-inline-start: 0.25em;
+  border-radius: 2px;
+  color: var(--muted);
+  font-weight: 400;
+  text-align: center;
+  text-decoration: none;
+  transition:
+    color 150ms var(--ease),
+    opacity 150ms var(--ease);
+}
+
+.prose :where(.heading-anchor):hover,
+.prose :where(.heading-anchor[data-copied]) {
+  color: var(--ink);
+}
+
+.prose :where(.heading-anchor):focus-visible {
+  outline: 1px solid var(--ink);
+  outline-offset: 1px;
+}
+
+/* Copied cue: the glyph turns into a check for a moment. */
+.prose :where(.heading-anchor[data-copied] > span) {
+  display: none;
+}
+
+.prose :where(.heading-anchor[data-copied])::after {
+  content: '✓';
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .prose :where(.heading-anchor[data-copied])::after {
+    display: inline-block;
+    animation: anchor-copied 250ms var(--ease);
+  }
+}
+
+@keyframes anchor-copied {
+  from {
+    opacity: 0;
+    scale: 0.6;
+  }
+}
+
+@media (hover: hover) and (min-width: 40rem) {
+  .prose :where(.heading-anchor) {
+    position: absolute;
+    top: 0;
+    left: -1.25rem;
+    margin: 0;
+    opacity: 0;
+  }
+
+  .prose :where(h2:hover, h3:hover) :where(.heading-anchor),
+  .prose :where(.heading-anchor):focus-visible,
+  .prose :where(.heading-anchor[data-copied]) {
+    opacity: 1;
+  }
+}
+
+/* Any touch input (hybrid tablets/laptops): no reliable hover, keep it visible. */
+@media (hover: hover) and (min-width: 40rem) and (any-pointer: coarse) {
+  .prose :where(.heading-anchor) {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .prose :where(.heading-anchor) {
+    transition: none;
+  }
+}
+
 .prose :where(img) {
-  margin-top: 1.7777777777777777em;
-  margin-bottom: 1.7777777777777777em;
-  border-radius: 0.5rem;
-  box-shadow:
-    0 10px 15px -3px #0000001a,
-    0 4px 6px -4px #0000001a;
+  margin-top: 1.75em;
+  margin-bottom: 1.75em;
+  border-radius: 0.25rem;
+  box-shadow: 0 0 0 1px rgb(0 0 0 / 0.04);
+}
+
+.dark .prose :where(img) {
+  box-shadow: 0 0 0 1px rgb(255 255 255 / 0.05);
 }
 
 .prose :where(figure) {
-  margin-top: 1.7777777777777777em;
-  margin-bottom: 1.7777777777777777em;
+  margin-top: 1.75em;
+  margin-bottom: 1.75em;
 }
 
 .prose :where(figure img) {
@@ -205,40 +288,37 @@
 }
 
 .prose :where(figcaption) {
-  margin-top: 0.8888888888888888em;
-  font-size: 0.875rem;
-  line-height: 1.4285714285714286;
-  color: var(--tw-prose-counters);
+  margin-top: 0.625rem;
+  font-size: 0.78125rem;
+  line-height: 1.125rem;
+  color: var(--muted);
 }
 
 /* Inline SVG diagrams (src/diagrams, injected by the markdown plugin).
-   Shapes carry classes, never colors: the --dg-* tokens below are the site's
-   grays plus one accent (the peach of the Vesper code theme, darkened for
-   light mode), and they flip under .dark. The SVG renders 1:1 with its
-   352-wide viewBox, so names are 13px and mono text 12px at every width;
-   columns narrower than 352px scroll the drawing sideways instead of
-   shrinking it. The caption keeps to the drawing's width. */
+   Shapes carry classes, never colors: the --dg-* tokens below map to the
+   site tokens (global.css) plus one accent (the peach of the Vesper code
+   theme, darkened for light mode), so they flip with the theme. Nodes are
+   filled with the page color, so a drawing sits on the page like text.
+   Secondary text is ink-2, not muted: it also sits on the well fill, where
+   muted drops under 4.5:1. The SVG renders 1:1 with its 352-wide viewBox,
+   so names are 13px and mono text 12px at every width; columns narrower
+   than 352px scroll the drawing sideways instead of shrinking it. The
+   caption keeps to the drawing's width. */
 .prose :where(figure.diagram) {
-  --dg-paper: #fff;
-  --dg-ink: var(--color-gray-900, #111827);
-  --dg-muted: var(--color-gray-500, #6b7280);
-  --dg-soft: var(--color-gray-400, #9ca3af);
-  --dg-rule: var(--color-gray-200, #e5e7eb);
-  --dg-wash: var(--color-gray-50, #f9fafb);
-  --dg-accent: #b45309;
+  --dg-paper: var(--bg);
+  --dg-ink: var(--ink);
+  --dg-muted: var(--ink-2);
+  --dg-soft: var(--decor);
+  --dg-rule: var(--rule);
+  --dg-wash: var(--well);
+  --dg-accent: #b45309; /* 4.81:1 on light bg */
   --dg-accent-tint: rgb(180 83 9 / 0.08);
   max-width: 352px;
   margin-inline: auto;
 }
 
 .dark .prose :where(figure.diagram) {
-  --dg-paper: #000;
-  --dg-ink: var(--color-gray-100, #f3f4f6);
-  --dg-muted: var(--color-gray-400, #9ca3af);
-  --dg-soft: var(--color-gray-500, #6b7280);
-  --dg-rule: var(--color-gray-800, #1f2937);
-  --dg-wash: var(--color-gray-900, #111827);
-  --dg-accent: #ffc799;
+  --dg-accent: #ffc799; /* 12.48:1 on dark bg */
   --dg-accent-tint: rgb(255 199 153 / 0.1);
 }
 
@@ -387,7 +467,7 @@
    Opens via invoker commands (commandfor/command), no JS. Scroll buttons and
    markers are progressive; without them the track still swipes and scrolls. */
 .prose :where(.photo-stack) {
-  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-out: var(--ease);
   display: flex;
   justify-content: center;
   margin-top: 2.5em;
@@ -500,7 +580,7 @@
 }
 
 .prose :where(.gallery) {
-  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-out: var(--ease);
   width: 100%;
   max-width: 100%;
   height: 100%;
@@ -711,10 +791,12 @@ html:has(.gallery[open]) {
 
 .prose :where(code) {
   color: var(--tw-prose-code);
-  font-weight: 600;
-  font-size: 0.875rem;
-  line-height: calc(1.25 / 0.875);
+  font-weight: 450;
+  font-size: var(--code-size);
   font-family: var(--font-mono);
+  padding: 0.125em 0.3em;
+  border-radius: 0.25rem;
+  background-color: var(--well);
 }
 
 .prose :where(code)::before,
@@ -734,13 +816,11 @@ html:has(.gallery[open]) {
  * shadows (scroll) once an edge is reached; nothing shows when it fits.
  */
 .prose :where(.overflow-x-auto) {
-  --scroll-shadow: oklch(0 0 0 / 0.22);
+  --scroll-shadow: oklch(0 0 0 / 0.14);
   overflow-x: auto;
-  margin-top: 1.7777777777777777em;
-  margin-bottom: 1.7777777777777777em;
+  margin-top: 1.75em;
+  margin-bottom: 1.75em;
   -webkit-overflow-scrolling: touch;
-  border: 1px solid var(--tw-prose-hr);
-  border-radius: 0.5rem;
   background:
     linear-gradient(to right, var(--tw-prose-page-bg) 30%, transparent) left / 2.5rem 100% no-repeat
       local,
@@ -753,42 +833,48 @@ html:has(.gallery[open]) {
 }
 
 .dark .prose :where(.overflow-x-auto) {
-  --scroll-shadow: oklch(1 0 0 / 0.24);
+  --scroll-shadow: oklch(1 0 0 / 0.16);
 }
 
 .prose :where(table) {
   width: max-content;
   min-width: 100%;
   border-collapse: collapse;
-  font-size: 0.875rem;
-  line-height: 1.5;
+  font-size: 0.8125rem;
+  line-height: 1.25rem;
 }
 
 .prose :where(th),
 .prose :where(td) {
-  padding: 0.5rem 1rem 0.5rem 0;
+  padding: 0.4375rem 0.875rem 0.4375rem 0;
   text-align: left;
   vertical-align: top;
   border-bottom: 1px solid var(--tw-prose-hr);
 }
 
 .prose :where(th) {
-  font-weight: 600;
+  font-weight: 550;
+  background-color: var(--well);
 }
 
-/* Inside the rounded table box: side padding, and no rule under the last row
-   (the box border closes it). */
-.prose :where(.overflow-x-auto th:first-child, .overflow-x-auto td:first-child) {
-  padding-inline-start: 1rem;
-}
-
-.prose :where(.overflow-x-auto tr:last-child td) {
-  border-bottom: 0;
+.prose :where(th:first-child, td:first-child) {
+  padding-inline-start: 0.625rem;
 }
 
 .prose :where(th:not(:first-child)),
 .prose :where(td:not(:first-child)) {
   white-space: nowrap;
+}
+
+/* Tables straight from markdown have no .overflow-x-auto wrapper: on phones
+   the table itself becomes the scroll box so it never widens the page. */
+@media (max-width: 719.98px) {
+  .prose :where(table:not(.overflow-x-auto > table)) {
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
 }
 
 /* Desktop: the column is wide enough, so let cells wrap and the table fit
@@ -804,23 +890,28 @@ html:has(.gallery[open]) {
   }
 }
 
+/* Shiki (Vesper) sets its own #101010 background inline: kept in light mode,
+   swapped for the dark well in dark mode so the block reads on #111. */
 .prose :where(pre) {
-  color: var(--tw-prose-pre-code);
-  background-color: var(--tw-prose-pre-bg);
   font-weight: 400;
-  font-size: 0.8888888888888888em;
-  line-height: 1.75;
-  margin-top: 2em;
-  margin-bottom: 2em;
+  font-size: var(--code-size);
+  line-height: 1.25rem;
+  margin-top: 1.75em;
+  margin-bottom: 1.75em;
   overflow-x: auto;
-  border-radius: 0.5rem;
-  padding-top: 1em;
-  padding-inline-end: 1.5em;
-  padding-bottom: 1em;
-  padding-inline-start: 1.5em;
-  box-shadow:
-    0 10px 15px -3px #0000001a,
-    0 4px 6px -4px #0000001a;
+  border-radius: 0.375rem;
+  padding: 0.875rem 1rem;
+}
+
+.dark .prose :where(pre.astro-code) {
+  background-color: var(--well) !important;
+  box-shadow: 0 0 0 1px rgb(255 255 255 / 0.04);
+}
+
+/* Vesper comments are #8B8B8B at ~58% alpha (2.6:1). Opaque, the same gray
+   is 5.6:1 on #101010 and 5.1:1 on the dark well. */
+.prose :where(pre.astro-code span[style*='#8B8B8B94' i]) {
+  color: #8b8b8b !important;
 }
 
 .prose :where(pre code) {
@@ -830,10 +921,9 @@ html:has(.gallery[open]) {
   padding: 0;
   font-weight: inherit;
   color: inherit;
-  /* text-sm / font-mono land after pre code inherit in production */
-  font-size: 0.875rem;
+  font-size: inherit;
   font-family: var(--font-mono);
-  line-height: calc(1.25 / 0.875);
+  line-height: inherit;
 }
 
 .prose :where(pre code)::before,
@@ -856,4 +946,165 @@ html:has(.gallery[open]) {
 
 .prose :where(.prose > :last-child) {
   margin-bottom: 0;
+}
+
+/*
+ * Post page grid (PostLayout), inside the shared .site-container: the text
+ * column starts at the container's left edge like every other page, with a
+ * 34.5rem measure. lg+: the TOC rail hangs in the left margin, outside the
+ * container (negative margin), and sidenotes float into the right margin
+ * beside the prose. At 64rem the 38rem container leaves 13rem per side;
+ * rail + gap take 11.5rem.
+ */
+.post-grid {
+  --rail: 9.5rem;
+  --rail-gap: 2rem;
+}
+
+.post-column {
+  max-width: 34.5rem;
+}
+
+@media (min-width: 64rem) {
+  .post-grid {
+    display: grid;
+    grid-template-columns: var(--rail) minmax(0, 1fr);
+    column-gap: var(--rail-gap);
+    margin-inline-start: calc(-1 * (var(--rail) + var(--rail-gap)));
+  }
+
+  .post-column {
+    grid-column: 2;
+    grid-row: 1;
+    min-width: 0;
+  }
+
+  .post-rail {
+    grid-column: 1;
+    grid-row: 1;
+  }
+}
+
+@media (min-width: 80rem) {
+  .post-grid {
+    --rail: 10.5rem;
+    --rail-gap: 3rem;
+  }
+}
+
+/*
+ * Footnotes. Sidenotes (components/Sidenotes.astro) are spans floated into
+ * the right rail beside the line that references them; they only exist with
+ * JS and only show on lg+, where the bottom footnotes section is hidden.
+ */
+.prose :where(sup) {
+  font-size: 0.7em;
+  line-height: 0;
+  vertical-align: super;
+}
+
+.prose :where(sup > a[data-footnote-ref]) {
+  text-decoration: none;
+  color: var(--muted);
+  padding-inline: 0.1em;
+}
+
+/* Muted is page-only (4.20:1 on the light well). */
+.prose :where(th sup > a[data-footnote-ref]) {
+  color: var(--ink-2);
+}
+
+.prose :where(section[data-footnotes]) {
+  margin-top: 2.5em;
+  padding-top: 1em;
+  border-top: 1px solid var(--rule);
+  font-size: 0.8125rem;
+  line-height: 1.25rem;
+  color: var(--ink-2);
+}
+
+.prose :where(section[data-footnotes] .sr-only) {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.prose :where(.sidenote) {
+  display: none;
+}
+
+@media (min-width: 64rem) {
+  .prose :where(.sidenote) {
+    display: block;
+    float: right;
+    clear: right;
+    position: relative;
+    width: var(--rail);
+    margin-right: calc(-1 * (var(--rail) + var(--rail-gap)));
+    margin-bottom: 0.75rem;
+    font-size: 0.75rem;
+    line-height: 1.125rem;
+    color: var(--muted);
+    transition: color 300ms var(--ease);
+  }
+
+  .prose :where(.sidenote.is-target) {
+    color: var(--ink);
+  }
+
+  .prose :where(.sidenote-number) {
+    color: var(--ink-2);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .prose :where(.sidenote-number)::after {
+    content: '.';
+  }
+
+  .prose :where(.sidenote code) {
+    font-size: 0.6875rem;
+  }
+
+  /* Linked code would inherit the note's muted, which fails on the well. */
+  .prose :where(.sidenote a code) {
+    color: var(--ink-2);
+  }
+
+  /* Notes keep the footnote's blocks (paragraphs, lists, quotes). */
+  .prose :where(.sidenote > *) {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+
+  .prose :where(.sidenote > * + *) {
+    margin-top: 0.375rem;
+  }
+
+  .prose :where(.sidenote ul, .sidenote ol) {
+    padding-inline-start: 1em;
+  }
+
+  .prose :where(.sidenote li) {
+    margin-top: 0.125rem;
+    margin-bottom: 0.125rem;
+    padding-inline-start: 0;
+  }
+
+  .prose :where(.sidenote-back) {
+    text-decoration: none;
+    color: var(--muted);
+  }
+
+  .prose :where(.sidenote-back):hover {
+    color: var(--ink);
+  }
+
+  .prose:where(.has-sidenotes) :where(section[data-footnotes]) {
+    display: none;
+  }
 }
