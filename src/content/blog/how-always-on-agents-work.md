@@ -6,11 +6,26 @@ author: Franklin Javier
 tags: ai, agents, architecture, llm
 lang: en
 translationKey: always-on-agents
+toc:
+  closing-the-app-should-leave-the-work-intact: Work after closing
+  a-replaceable-computer-makes-maintenance-possible: Replaceable computer
+  corrections-need-priority-over-queued-work: Message queue
+  a-retry-must-not-charge-you-again: Safe retries
+  your-devices-should-read-the-same-saved-conversation: Conversation across devices
+  give-the-agent-an-explicit-way-to-speak: Speaking to users
+  load-the-tool-you-need-when-you-need-it: Tools on demand
+  long-tasks-shouldnt-take-over-the-main-conversation: Delegating long tasks
+  a-stable-prompt-keeps-repeated-input-cheaper: Prompt caching
+  remember-preferences-without-carrying-every-conversation: Layered memory
+  external-text-must-not-become-permission: Action authorization
+  my-proposal-for-getting-started: Where to start
 ---
 
-An open terminal makes you responsible for keeping the agent alive. A server helps, but crashes can still interrupt purchases, corrections arrive mid-task, and growing conversations cost more.
+If the agent runs in your terminal, keeping it alive is your responsibility. A server helps, but crashes can still interrupt purchases, corrections arrive mid-task, and growing conversations cost more.
 
 I use agents like this daily. Lee Robinson's (@leerob) [How always-on agents work](https://x.com/leerob/status/2108650243365736855), delivered at Stanford CS146S on October 8, 2026, gave me a useful way to think about those problems. What stood out was how much of the design concerns recovering work and keeping the user in control. I'd copy the separation between saved state and execution first.
+
+In the [video](https://x.com/leerob/status/2108650243365736855): 2:35 — how we got here; 6:13 — models; 10:06 — architecture; 18:07 — harness; 27:26 — context; 34:26 — where this is going.
 
 The engineering comes from the lecture. Examples are hypothetical, with no measured outcomes. My proposal is separate, at the end.
 
@@ -29,7 +44,7 @@ while True:
         messages.append(run_tool(call))
 ```
 
-The model requests tools and uses their results to decide what comes next. The server runs this loop and saves each step. Apps display progress; a separate cloud computer runs tools that need a machine.
+The model requests tools and uses their results to decide what comes next. The server runs this loop and saves each step. Apps display progress; a separate cloud computer runs tools that need a machine. Lee explains this split in the [video](https://x.com/leerob/status/2108650243365736855) (from 10:06).
 
 <figure data-diagram="architecture"></figure>
 
@@ -93,7 +108,7 @@ For example, imagine an approved routine checking for changes to a shared docume
 
 Unused tool definitions consume context. The lecture includes tool names in the prompt and loads descriptions and schemas on demand, as files.
 
-Each definition stays below 4,000 characters. The tool set remains stable between turns; an unavailable tool returns a clear error. State changes get a dedicated tool so a reviewer can see what changed. If the model spends 90% of its time repeating a shell pattern, that pattern should become a tool.
+This part of the harness is covered in the [video](https://x.com/leerob/status/2108650243365736855) (from 18:07). Each definition stays below 4,000 characters. The tool set remains stable between turns; an unavailable tool returns a clear error. State changes get a dedicated tool so a reviewer can see what changed. If the model spends 90% of its time repeating a shell pattern, that pattern should become a tool.
 
 Tool selection follows an ascending cost order: existing context and memory, an app API, web search, the logged-in browser, the whole desktop, then asking the user. A broken connector is a reason to report the problem and ask. The agent must not bypass it through the browser.
 
@@ -109,13 +124,13 @@ The lecture delegates that work to helpers. The main agent supplies a complete t
 
 <figure data-diagram="helpers"></figure>
 
-A computer-use helper handles clicks and screenshots. It can inspect page structure for web interactions; pixel-based work uses a 1280x800 display. When human intervention is needed, it stops and hands over control. The cloud coding helper makes changes **in its own VM**.
+A computer-use helper handles clicks and screenshots. It can inspect page structure for web interactions; pixel-based work uses a 1280x800 display. When human intervention is needed, it stops and hands over control. The cloud coding helper makes changes **in its own VM, separate from the user’s VM**.
 
 Imagine asking for a video review, then remembering a question about an unrelated deadline. The video helper can continue while the main agent answers you. Its final report brings the relevant findings back without filling the main conversation with all the material it examined.
 
 ## A stable prompt keeps repeated input cheaper
 
-An agent repeatedly sends much of the same context to the model. If that prefix changes unnecessarily, it loses the opportunity to reuse cached input.
+An agent repeatedly sends much of the same context to the model. If that prefix changes unnecessarily, it loses the opportunity to reuse cached input. The context engineering chapter starts in the [video](https://x.com/leerob/status/2108650243365736855) (from 27:26).
 
 The lecture assembles the prompt in a fixed order and keeps the prefix identical until the next summary. History grows at the end. The latest message adds the time and brief notes about changes. A deployment that changes a tool description adds a note to an active conversation instead of rewriting its existing tool text.
 
@@ -148,6 +163,8 @@ Irreversible sends go through a draft and an explicit send confirmation. The age
 Imagine an incoming email announcing new bank details and requesting a transfer. That text remains external content, with no authority to approve a payment. Any attempted risky action faces review, and a silent reviewer leaves it blocked. If you ask the agent to reply, you get a draft to inspect before sending.
 
 ## My proposal for getting started
+
+In the final part of the [lecture](https://x.com/leerob/status/2108650243365736855) (from 34:26), Lee proposes “Delete the product”: build the minimum around the model and remove what it no longer needs.
 
 This is my proposal, drawn from the specification's suggestions, separate from Lee's lecture. I'd build continuity before granting broad access to consequential actions.
 

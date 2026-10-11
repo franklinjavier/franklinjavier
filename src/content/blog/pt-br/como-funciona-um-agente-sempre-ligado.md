@@ -6,13 +6,28 @@ author: Franklin Javier
 tags: ia, agentes, arquitetura, llm
 lang: pt-br
 translationKey: always-on-agents
+toc:
+  por-que-o-agente-não-roda-no-seu-laptop: Laptop fechado
+  a-máquina-precisa-poder-ser-reconstruída: Máquina reconstruível
+  mensagens-rápidas-precisam-virar-um-pedido-só: Fila de mensagens
+  como-retomar-sem-repetir-um-pagamento: Retomada sem duplicação
+  trocar-de-aparelho-não-pode-duplicar-a-conversa: Conversa entre aparelhos
+  ferramentas-demais-ocupam-o-espaço-da-tarefa: Ferramentas sob demanda
+  o-agente-precisa-saber-ficar-quieto: Saída ao usuário
+  delegar-mantém-a-conversa-disponível: Delegação de tarefas
+  cache-o-detalhe-que-define-o-custo: Cache do prompt
+  memória-útil-precisa-caber-no-prompt: Memória em camadas
+  um-email-recebido-não-pode-autorizar-uma-ação: Autorização de ações
+  minha-proposta-o-que-eu-construiria-primeiro: Por onde começar
 ---
 
-Fechar o laptop deveria deixar a tarefa em andamento. Mover o script para a nuvem ajuda, mas ele ainda precisa sobreviver a falhas e aceitar correções.
+A tarefa deveria continuar mesmo depois de você fechar o laptop. Mover o script para a nuvem ajuda, mas ele ainda precisa sobreviver a falhas e aceitar correções.
 
 Uso agentes assim todos os dias. A aula [How always-on agents work, de Lee Robinson (@leerob)](https://x.com/leerob/status/2108650243365736855), apresentada em Stanford CS146S em 8 de outubro de 2026, me chamou a atenção pelo cuidado com falhas e interrupções. Eu copiaria primeiro a separação entre execução e estado salvo.
 
-A arquitetura vem da palestra. Os exemplos são hipotéticos, sem resultados medidos. O plano final é uma proposta minha.
+No [vídeo](https://x.com/leerob/status/2108650243365736855): 2:35 — como chegamos aqui; 6:13 — modelos; 10:06 — arquitetura; 18:07 — harness; 27:26 — contexto; 34:26 — próximos passos.
+
+A arquitetura vem da aula. Os exemplos são hipotéticos, sem resultados medidos. O plano final é uma proposta minha.
 
 ## Por que o agente não roda no seu laptop
 
@@ -29,7 +44,7 @@ while True:
         messages.append(run_tool(call))
 ```
 
-O modelo pede ferramentas, recebe os resultados e decide o próximo passo. Para continuar depois que você sai, esse loop roda no servidor, que salva cada passo. O aplicativo recebe mensagens e mostra o progresso. A VM, o computador do agente na nuvem, executa as ferramentas que precisam de uma máquina.
+O modelo pede ferramentas, recebe os resultados e decide o próximo passo. Para continuar depois que você sai, esse loop roda no servidor, que salva cada passo. O aplicativo recebe mensagens e mostra o progresso. A VM, o computador do agente na nuvem, executa as ferramentas que precisam de uma máquina. Lee explica essa divisão [no vídeo](https://x.com/leerob/status/2108650243365736855) (a partir de 10:06).
 
 <figure data-diagram="architecture"></figure>
 
@@ -63,7 +78,7 @@ Imagine um pedido pelo Slack: incluir alguém numa reunião, depois acrescentar 
 
 Reiniciar um job do começo depois de uma queda pode repetir uma ação já concluída. Em um pagamento, isso deixa de ser apenas desperdício de processamento.
 
-A palestra usa Temporal para executar workflows duráveis: sequências de trabalho com cada passo registrado. Outro servidor consegue retomar do último passo salvo. As etapas também precisam ser idempotentes, isto é, uma repetição deve manter o mesmo resultado, sem criar outra ação. O motor oferece timers e cancelamento; cada helper tem seu próprio workflow.
+A aula usa Temporal para executar workflows duráveis: sequências de trabalho com cada passo registrado. Outro servidor consegue retomar do último passo salvo. As etapas também precisam ser idempotentes, isto é, uma repetição deve manter o mesmo resultado, sem criar outra ação. O motor oferece timers e cancelamento; cada helper tem seu próprio workflow.
 
 <figure data-diagram="durable"></figure>
 
@@ -81,7 +96,7 @@ Imagine enviar um pedido no celular e perder a conexão antes da confirmação. 
 
 Carregar a definição completa de toda ferramenta deixa menos contexto para entender o pedido. Muitas dessas ferramentas nem serão usadas naquele turno.
 
-A solução da aula é levar só os nomes no prompt e carregar descrição e schema sob demanda. Cada definição fica abaixo de 4.000 caracteres. O conjunto permanece estável: uma ferramenta indisponível devolve um erro claro, em vez de desaparecer. Salvar estado merece uma ferramenta própria; se o modelo passa 90% do tempo repetindo um padrão de shell, esse padrão deve virar ferramenta.
+A solução da aula é levar só os nomes no prompt e carregar descrição e schema sob demanda. Essa parte do harness aparece [no vídeo](https://x.com/leerob/status/2108650243365736855) (a partir de 18:07). Cada definição fica abaixo de 4.000 caracteres. O conjunto permanece estável: uma ferramenta indisponível devolve um erro claro, em vez de desaparecer. Salvar estado merece uma ferramenta própria; se o modelo passa 90% do tempo repetindo um padrão de shell, esse padrão deve virar ferramenta.
 
 A escolha também segue uma ordem de custo crescente: contexto e memória, API do aplicativo, busca na web, navegador logado, desktop e pergunta ao usuário. Um conector quebrado exige avisar e perguntar, sem contornar a falha pelo navegador.
 
@@ -105,13 +120,13 @@ Lee separa o principal dos helpers. O principal entrega uma descrição completa
 
 <figure data-diagram="helpers"></figure>
 
-O helper de computador concentra os cliques e screenshots. Na web, pode ler a estrutura da página; para ações em pixels, a aula usa uma tela de 1280x800. Quando precisa de intervenção humana, entrega o controle. Já o cloud coding agent faz mudanças de código **na própria VM**.
+O helper de computador concentra os cliques e screenshots. Na web, pode ler a estrutura da página; para ações em pixels, a aula usa uma tela de 1280x800. Quando precisa de intervenção humana, entrega o controle. Já o cloud coding agent faz mudanças de código **numa VM só dele, separada da VM do usuário**.
 
 Imagine pedir a revisão de um vídeo e depois perguntar sobre o prazo de outra tarefa. O helper cuida do vídeo, enquanto o principal continua disponível no chat. Ao terminar, devolve um relatório curto, sem colocar todo o material analisado na conversa principal.
 
 ## Cache: o detalhe que define o custo
 
-Mudanças pequenas no prompt podem impedir o uso do cache e aumentar o custo. Até alterar a ordem das ferramentas pode ter esse efeito.
+Mudanças pequenas no prompt podem impedir o uso do cache e aumentar o custo. Até alterar a ordem das ferramentas pode ter esse efeito. A engenharia de contexto começa [no vídeo](https://x.com/leerob/status/2108650243365736855) (a partir de 27:26).
 
 Na aula, o prefixo do prompt segue uma ordem fixa e fica idêntico até o próximo resumo. O histórico cresce no final. Horário e notas sobre mudanças entram na mensagem nova. Se um deploy altera a descrição de uma ferramenta, a conversa em andamento recebe uma nota, sem substituir o texto antigo. Hashes por seção ajudam a localizar mudanças; Lee trata cache miss como bug.
 
@@ -125,7 +140,7 @@ Suponha que uma pesquisa longa termine e você saia do chat. O sistema pode resu
 
 Guardar tudo não garante encontrar uma preferência quando ela importa. Carregar tudo no prompt consome o espaço da tarefa atual.
 
-A palestra divide a memória em camadas. O perfil, sempre no prompt, comporta até 100 fatos em 4.000 caracteres. O log traz eventos datados, com os 30 mais relevantes e recentes no contexto. Notas guardam detalhes de curto prazo; o restante fica disponível por busca.
+A aula divide a memória em camadas. O perfil, sempre no prompt, comporta até 100 fatos em 4.000 caracteres. O log traz eventos datados, com os 30 mais relevantes e recentes no contexto. Notas guardam detalhes de curto prazo; o restante fica disponível por busca.
 
 Depois de cada turno, uma revisão adiciona fatos e substitui informações antigas. Ela só pode remover fatos que recebeu para examinar. A memória entra como informação, nunca como instrução com autoridade para comandar ações.
 
@@ -142,6 +157,8 @@ Envios irreversíveis passam por rascunho e confirmação. O agente não manda m
 Suponha que um email peça uma transferência para uma conta nova. O agente deve tratar a solicitação como conteúdo externo, sem tomá-la como autorização sua. Qualquer tentativa de ação arriscada passa pela revisão; o silêncio do revisor mantém o bloqueio. Se você pedir uma resposta por email, verá o rascunho antes de enviar.
 
 ## Minha proposta: o que eu construiria primeiro
+
+Na parte final da [aula](https://x.com/leerob/status/2108650243365736855) (a partir de 34:26), Lee propõe “Delete the product”: construir o mínimo em volta do modelo e remover o que ele não precisa mais.
 
 Este plano é meu, baseado nas sugestões da especificação, separado da aula do Lee. Eu começaria pela continuidade: uma tarefa interrompida obriga o usuário a descobrir o que já foi feito.
 
