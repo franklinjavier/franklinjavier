@@ -59,5 +59,33 @@
     "auto": false,
     "quietMinutes": 10
   },
-  "gateTimeoutSec": 300
+  "gateTimeoutSec": 300,
+  "plans": {
+    "autoApprove": "unless-high-risk"
+  },
+  "deploy": {
+    "kind": "vercel-git",
+    "statusRepo": "franklinjavier/franklinjavier",
+    "productionUrl": "https://franklinjavier.com",
+    "smoke": [
+      {
+        "path": "/",
+        "status": 200
+      },
+      {
+        "path": "/pt-br/",
+        "status": 200
+      },
+      {
+        "path": "/pt-br/rss.xml",
+        "status": 200
+      },
+      {
+        "path": "/blog/which-is-the-best-os/",
+        "status": 200,
+        "accept": "text/markdown"
+      }
+    ],
+    "observeMinutes": 30
+  }
 }
