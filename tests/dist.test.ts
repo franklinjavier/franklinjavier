@@ -421,7 +421,13 @@ describe('heading links', () => {
     })
     const document = window.document
     document.write(html.replace(/<script\b[\s\S]*?<\/script>/g, ''))
-    window.eval(script!)
+    // happy-dom 20 dropped window.eval, and under Bun its window leaves JS builtins such as
+    // decodeURIComponent undefined, so fill those in and run the script with the window as its scope.
+    for (const name of Object.getOwnPropertyNames(globalThis)) {
+      if (name in window && (window as any)[name] === undefined)
+        (window as any)[name] = (globalThis as any)[name]
+    }
+    new Function('window', `with (window) {\n${script}\n}`)(window)
     const inline = [...document.querySelectorAll('[data-toc-inline] a')]
     const rail = [...document.querySelectorAll('[data-toc-rail] a')]
     expect(rail).toHaveLength(headingTexts(html).length)
