@@ -65,6 +65,8 @@ export const ui = {
     'oss.retabnews': 'Clone do TabNews feito com Remix, Tailwind e Jest.',
     'oss.skills': 'Skills testadas em produção para Claude Code (e Cursor, Codex, Gemini CLI).',
     'projects.title': 'Projetos paralelos',
+    'projects.wallofai':
+      'Um mural digital permanente de startups e ferramentas de IA, inspirado na Million Dollar Homepage.',
     'projects.zelus':
       'Gestão de condomínios, com acompanhamento de ocorrências e um assistente de IA baseado nos dados do condomínio.',
     'projects.campfire':
@@ -164,6 +166,8 @@ export const ui = {
     'oss.retabnews': 'A TabNews clone built with Remix, Tailwind and Jest.',
     'oss.skills': 'Production-tested skills for Claude Code (and Cursor, Codex, Gemini CLI).',
     'projects.title': 'Side projects',
+    'projects.wallofai':
+      'A permanent digital wall showcasing AI startups and tools, inspired by the Million Dollar Homepage.',
     'projects.zelus':
       "Condominium management, with issue tracking and an AI assistant grounded in the condominium's data.",
     'projects.campfire':

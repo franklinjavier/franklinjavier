@@ -74,7 +74,7 @@ ${postList(recent)}
 
 ## ${t['projects.title']}
 
-${SIDE_PROJECTS.map((project) => `- [${project.name}](${project.url}): ${t[`projects.${project.key}`]}`).join('\n')}
+${SIDE_PROJECTS.map((project) => `- [${project.name}](${project.url}): ${t[`projects.${project.key}`]}\n  ![${project.name}](${project.image})`).join('\n')}
 
 ## ${t['oss.title']}
 

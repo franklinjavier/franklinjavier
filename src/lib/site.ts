@@ -45,6 +45,12 @@ export const KNOWS_ABOUT = [
 // resized to 800x420 webp in public/images/projects/.
 export const SIDE_PROJECTS = [
   {
+    key: 'wallofai',
+    name: 'Wall of AI',
+    url: 'https://wallofai.app/?utm_source=FranklinJavier&utm_medium=site',
+    image: '/images/projects/wallofai.webp',
+  },
+  {
     key: 'zelus',
     name: 'Zelus',
     url: 'https://zelus.sh/?utm_source=FranklinJavier&utm_medium=site',
