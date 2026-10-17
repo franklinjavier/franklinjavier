@@ -135,3 +135,10 @@
     animation: none;
   }
 }
+
+/* Shared keyboard focus, including native gallery scroll controls. */
+:focus-visible,
+::scroll-button(*):focus-visible {
+  outline: 2px solid #767676;
+  outline-offset: 2px;
+}

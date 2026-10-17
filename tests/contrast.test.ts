@@ -1,7 +1,7 @@
 // WCAG 2 contrast for the text tokens in src/styles/global.css (both themes)
 // and the code-comment gray forced in prose.css on the dark code backgrounds.
 import { describe, expect, test } from 'bun:test'
-import { readFileSync } from 'node:fs'
+import { readFileSync, readdirSync } from 'node:fs'
 
 const css = readFileSync(new URL('../src/styles/global.css', import.meta.url), 'utf8')
 
@@ -45,4 +45,22 @@ describe('text contrast (WCAG AA, 4.5:1)', () => {
     expect(ratio('#8b8b8b', '#101010')).toBeGreaterThanOrEqual(4.5)
     expect(ratio('#8b8b8b', '#1a1a1a')).toBeGreaterThanOrEqual(4.5)
   })
+})
+
+// guards: global stylesheet/build drift can hide keyboard focus across all controls.
+test('built shared keyboard focus is visible with 3:1 contrast in both themes', () => {
+  const built = readdirSync(new URL('../dist/_astro/', import.meta.url))
+    .filter((file) => file.endsWith('.css'))
+    .map((file) => readFileSync(new URL(`../dist/_astro/${file}`, import.meta.url), 'utf8'))
+    .join('\n')
+  const rule = built.match(/(?:^|}):focus-visible\{([^}]+)\}/)
+  expect(rule).not.toBeNull()
+  expect(rule![1]).toContain('outline:2px solid #767676')
+  expect(rule![1]).toContain('outline-offset:2px')
+  for (const selector of [':root', '.dark']) {
+    const t = tokens(selector)
+    for (const background of [t.bg, t.well, '#000000']) {
+      expect(ratio('#767676', background)).toBeGreaterThanOrEqual(3)
+    }
+  }
 })

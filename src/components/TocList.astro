@@ -31,7 +31,7 @@ const { items } = Astro.props
         title={item.text}
         data-depth={item.depth}
         class:list={[
-          'toc-link group flex items-baseline gap-2 rounded-sm py-1 pr-1 leading-[1.125rem] text-muted hover:text-ink focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ink aria-[current=location]:text-ink',
+          'toc-link group flex items-baseline gap-2 rounded-sm py-1 pr-1 leading-[1.125rem] text-muted hover:text-ink aria-[current=location]:text-ink',
           // h3 text lines up with h2 text (number column w-4 + gap-2). The rail
           // shifts both right of its progress line (TableOfContents styles).
           item.depth === 3 ? 'pl-6' : 'pl-0',

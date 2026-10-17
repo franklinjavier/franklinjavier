@@ -170,8 +170,6 @@
 }
 
 .prose :where(h2, h3, .sidenote):focus-visible {
-  outline: 1px solid var(--muted);
-  outline-offset: 4px;
   border-radius: 2px;
 }
 
@@ -207,11 +205,6 @@
 .prose :where(.heading-anchor):hover,
 .prose :where(.heading-anchor[data-copied]) {
   color: var(--ink);
-}
-
-.prose :where(.heading-anchor):focus-visible {
-  outline: 1px solid var(--ink);
-  outline-offset: 1px;
 }
 
 /* Copied cue: the glyph turns into a check for a moment. */
@@ -491,8 +484,6 @@
 }
 
 .prose :where(.photo-stack-trigger):focus-visible {
-  outline: 2px solid currentColor;
-  outline-offset: 0.75rem;
   border-radius: 0.75rem;
 }
 
@@ -639,7 +630,6 @@
   overscroll-behavior-x: contain;
   scroll-snap-type: x mandatory;
   scrollbar-width: none;
-  outline: none;
   scroll-marker-group: after;
 }
 
@@ -740,12 +730,6 @@
   color: #fff;
   cursor: pointer;
   transition: background-color 150ms var(--ease-out);
-}
-
-.prose :where(.gallery-close):focus-visible,
-.prose :where(.gallery-track)::scroll-button(*):focus-visible {
-  outline: 2px solid #fff;
-  outline-offset: 2px;
 }
 
 @media (hover: hover) and (pointer: fine) {
