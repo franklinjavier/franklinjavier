@@ -18,6 +18,7 @@ globalThis.fetch = originalFetch
 test('offline metadata failure preserves the curated bilingual HTML and Markdown contract', () => {
   expect(stars).toEqual({})
   expect(OPEN_SOURCE.map(({ name }) => name)).toEqual([
+    'storefront',
     'remix-ecommerce',
     'translate',
     'shadcn-widget',
@@ -28,6 +29,7 @@ test('offline metadata failure preserves the curated bilingual HTML and Markdown
     'stonegiantstudio/skills',
   ])
   expect(OPEN_SOURCE.map(({ language }) => language)).toEqual([
+    'JavaScript',
     'TypeScript',
     'Swift',
     'TypeScript',
@@ -126,6 +128,7 @@ test('bounded unauthenticated fetch validates counts and tolerates upstream fail
       return Response.json({ name: 'skills', stargazers_count: 8 })
     expect(url).toBe('https://api.github.com/users/franklinjavier/repos?per_page=100')
     return Response.json([
+      { name: 'storefront', stargazers_count: 42 },
       { name: 'remix-ecommerce', stargazers_count: 16 },
       { name: 'oficina', stargazers_count: 0 },
       { name: 'translate', stargazers_count: 1200 },
@@ -140,6 +143,7 @@ test('bounded unauthenticated fetch validates counts and tolerates upstream fail
   expect(timeout).toHaveBeenCalledWith(2000)
   timeout.mockRestore()
   expect(counts).toEqual({
+    storefront: 42,
     'remix-ecommerce': 16,
     oficina: 0,
     translate: 1200,
@@ -172,13 +176,13 @@ test('ranking uses stars, then most recent push, and preserves curated offline o
   expect(orderOpenSource({}, {})).toEqual(OPEN_SOURCE)
   expect(
     orderOpenSource(
-      { translate: 10, oficina: 10, retabnews: 20 },
+      { translate: 10, oficina: 10, retabnews: 20, storefront: 30 },
       {
         translate: '2026-01-01T00:00:00Z',
         oficina: '2026-02-01T00:00:00Z',
       },
     )
-      .slice(0, 3)
+      .slice(0, 4)
       .map(({ name }) => name),
-  ).toEqual(['retabnews', 'oficina', 'translate'])
+  ).toEqual(['storefront', 'retabnews', 'oficina', 'translate'])
 })

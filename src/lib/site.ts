@@ -66,6 +66,12 @@ export const SIDE_PROJECTS = [
 
 export const OPEN_SOURCE = [
   {
+    key: 'storefront',
+    name: 'storefront',
+    language: 'JavaScript',
+    url: 'https://github.com/franklinjavier/storefront?utm_source=FranklinJavier&utm_medium=site',
+  },
+  {
     key: 'remix-ecommerce',
     name: 'remix-ecommerce',
     language: 'TypeScript',
