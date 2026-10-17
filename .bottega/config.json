@@ -1,0 +1,39 @@
+{
+  "integrationBranch": "next",
+  "releaseBranch": "main",
+  "remote": "origin",
+  "stations": {
+    "plan": {
+      "family": ["codex", "claude"]
+    },
+    "implement": {
+      "family": ["codex", "claude"]
+    }
+  },
+  "flow": {
+    "tweak": ["implement"],
+    "feature": ["plan", "implement"],
+    "risky": ["plan", "implement"]
+  },
+  "setup": ["bun install --frozen-lockfile"],
+  "gates": {
+    "quick": ["bun run test"],
+    "full": ["bun run test"]
+  },
+  "risk": {
+    "high": [
+      "vercel.json",
+      "middleware.ts",
+      "astro.config.mjs",
+      "package.json",
+      "bun.lock",
+      ".bottega/**"
+    ],
+    "medium": ["src/layouts/**", "src/lib/site.ts"]
+  },
+  "promote": {
+    "auto": false,
+    "quietMinutes": 10
+  },
+  "gateTimeoutSec": 300
+}
