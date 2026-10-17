@@ -1,24 +1,45 @@
 {
+  "taskPrefix": "BLOG",
   "integrationBranch": "next",
   "releaseBranch": "main",
   "remote": "origin",
   "stations": {
     "plan": {
-      "family": ["codex", "claude"]
+      "family": [
+        "codex",
+        "claude"
+      ]
     },
     "implement": {
-      "family": ["codex", "claude"]
+      "family": [
+        "codex",
+        "claude"
+      ]
     }
   },
   "flow": {
-    "tweak": ["implement"],
-    "feature": ["plan", "implement"],
-    "risky": ["plan", "implement"]
+    "tweak": [
+      "implement"
+    ],
+    "feature": [
+      "plan",
+      "implement"
+    ],
+    "risky": [
+      "plan",
+      "implement"
+    ]
   },
-  "setup": ["bun install --frozen-lockfile"],
+  "setup": [
+    "bun install --frozen-lockfile"
+  ],
   "gates": {
-    "quick": ["bun run test"],
-    "full": ["bun run test"]
+    "quick": [
+      "bun run test"
+    ],
+    "full": [
+      "bun run test"
+    ]
   },
   "risk": {
     "high": [
@@ -29,7 +50,10 @@
       "bun.lock",
       ".bottega/**"
     ],
-    "medium": ["src/layouts/**", "src/lib/site.ts"]
+    "medium": [
+      "src/layouts/**",
+      "src/lib/site.ts"
+    ]
   },
   "promote": {
     "auto": false,
