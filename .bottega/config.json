@@ -48,7 +48,7 @@
       "astro.config.mjs",
       "package.json",
       "bun.lock",
-      ".bottega/**"
+      ".bottega/config.json"
     ],
     "medium": [
       "src/layouts/**",
