@@ -108,10 +108,10 @@ export const OPEN_SOURCE = [
     url: 'https://github.com/franklinjavier/retabnews?utm_source=FranklinJavier&utm_medium=site',
   },
   {
-    key: 'A-Byte-of-Python-pt_BR',
-    name: 'A-Byte-of-Python-pt_BR',
-    language: null,
-    url: 'https://github.com/franklinjavier/A-Byte-of-Python-pt_BR?utm_source=FranklinJavier&utm_medium=site',
+    key: 'skills',
+    name: 'stonegiantstudio/skills',
+    language: 'JavaScript',
+    url: 'https://github.com/stonegiantstudio/skills?utm_source=FranklinJavier&utm_medium=site',
   },
 ] as const
 

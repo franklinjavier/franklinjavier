@@ -61,8 +61,7 @@ export const ui = {
       'Acompanhe cotas e custos de CLIs de programação e do Grok Bot por bot em um painel estático.',
     'oss.remix-starter-template': 'Template inicial para projetos Remix.',
     'oss.retabnews': 'Clone do TabNews feito com Remix, Tailwind e Jest.',
-    'oss.A-Byte-of-Python-pt_BR':
-      'Tradução para português brasileiro do livro A Byte of Python, de Swaroop C H.',
+    'oss.skills': 'Skills testadas em produção para Claude Code (e Cursor, Codex, Gemini CLI).',
     'projects.title': 'Projetos paralelos',
     'projects.zelus':
       'Gestão de condomínios, com acompanhamento de ocorrências e um assistente de IA baseado nos dados do condomínio.',
@@ -159,8 +158,7 @@ export const ui = {
       'Track coding CLI and Grok Bot quotas and costs per bot with a static dashboard.',
     'oss.remix-starter-template': 'A starter template for Remix projects.',
     'oss.retabnews': 'A TabNews clone built with Remix, Tailwind and Jest.',
-    'oss.A-Byte-of-Python-pt_BR':
-      'Brazilian Portuguese translation of Swaroop C H’s A Byte of Python.',
+    'oss.skills': 'Production-tested skills for Claude Code (and Cursor, Codex, Gemini CLI).',
     'projects.title': 'Side projects',
     'projects.zelus':
       "Condominium management, with issue tracking and an AI assistant grounded in the condominium's data.",

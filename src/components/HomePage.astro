@@ -9,8 +9,8 @@ import {
   getLocalizedPath,
   getAlternateUrl,
 } from '../i18n/utils'
-import { stars, formatStars } from '../lib/oss'
-import { DEV_STACK, SIDE_PROJECTS, OPEN_SOURCE } from '../lib/site'
+import { stars, formatStars, orderOpenSource } from '../lib/oss'
+import { DEV_STACK, SIDE_PROJECTS } from '../lib/site'
 
 interface Props {
   lang: 'pt-br' | 'en'
@@ -195,7 +195,7 @@ const sortedPosts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.
     <section class="mt-20" id="open-source">
       <h2 class="mb-4 font-[550] text-ink">{t('oss.title')}</h2>
       <ul class="border-t border-rule">
-        {OPEN_SOURCE.map((repo) => (
+        {orderOpenSource(stars).map((repo) => (
           <li class="border-b border-rule py-3">
             <h3 class="font-[550] text-ink">
               <a

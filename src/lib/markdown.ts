@@ -2,16 +2,9 @@
 // Kept free of astro:content imports so they stay unit-testable;
 // callers pass plain data extracted from content collections.
 
+import { orderOpenSource } from './oss'
 import { ui } from '../i18n/ui'
-import {
-  SITE_TITLE,
-  SITE_EMAIL,
-  SITE_URL,
-  SOCIAL_LINKS,
-  DEV_STACK,
-  SIDE_PROJECTS,
-  OPEN_SOURCE,
-} from './site'
+import { SITE_TITLE, SITE_EMAIL, SITE_URL, SOCIAL_LINKS, DEV_STACK, SIDE_PROJECTS } from './site'
 import { APPEARANCES, speakingUrl } from './speaking'
 import { describeDiagrams } from '../diagrams'
 import { seriesMarker, seriesNextLabel, seriesPartLabel, type SeriesNav } from './series'
@@ -95,15 +88,17 @@ ${SIDE_PROJECTS.map((project) => `- [${project.name}](${project.url}): ${t[`proj
 
 ## ${t['oss.title']}
 
-${OPEN_SOURCE.map((repo) => {
-  const meta = [
-    repo.language,
-    stars[repo.name] !== undefined ? `${formatStars(stars[repo.name])} ${t['oss.stars']}` : null,
-  ]
-    .filter(Boolean)
-    .join(' · ')
-  return `- [${repo.name}](${repo.url}): ${t[`oss.${repo.key}`]}${meta ? ` (${meta})` : ''}`
-}).join('\n')}
+${orderOpenSource(stars)
+  .map((repo) => {
+    const meta = [
+      repo.language,
+      stars[repo.name] !== undefined ? `${formatStars(stars[repo.name])} ${t['oss.stars']}` : null,
+    ]
+      .filter(Boolean)
+      .join(' · ')
+    return `- [${repo.name}](${repo.url}): ${t[`oss.${repo.key}`]}${meta ? ` (${meta})` : ''}`
+  })
+  .join('\n')}
 
 [${t['nav.blog']}](${absolute(`${prefix}/blog/`)}) · [${t['nav.about']}](${absolute(`${prefix}/about/`)}) · [${t['nav.contact']}](${absolute(`${prefix}/contact/`)}) · [${t['nav.privacy']}](${absolute(`${prefix}/privacy/`)})
 
