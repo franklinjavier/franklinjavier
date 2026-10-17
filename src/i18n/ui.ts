@@ -32,7 +32,7 @@ export const ui = {
       'Sou Principal Engineer com 19 anos de experiência em front-end. Hoje construo produtos de IA e os harnesses que coordenam seus agentes e ferramentas.',
     'hero.title': 'Olá, sou Frank',
     'hero.bio1':
-      'Principal Engineer, com 19 anos de front-end em aplicações web e mobile de alta performance. Hoje quase todo o trabalho passa por IA: harnesses para agentes, orquestração e as ferramentas que deixam agentes de código confiáveis.',
+      'Principal Engineer na Stone Giant Studio, com 19 anos de front-end. Hoje construo produtos de IA e ferramentas para agentes de código.',
     'hero.bio2':
       'A base é arquitetura React e Node.js, performance e observabilidade, e desenvolvimento com agentes: skills, evals e orquestração entre Claude Code, Cursor, Codex e Gemini CLI. Acessibilidade e design systems também fazem parte, para a interface funcionar para todo mundo.',
     'hero.bio3':
@@ -129,7 +129,7 @@ export const ui = {
       "I'm a Principal Engineer with 19 years of front-end development experience, now building AI products and the agent harnesses behind them.",
     'hero.title': "Hi, I'm Frank",
     'hero.bio1':
-      "I'm a Principal Engineer and I've been doing front-end for 19 years, building fast web and mobile apps. These days almost everything I do involves AI: I build agent harnesses, handle orchestration and write the tooling that makes coding agents reliable.",
+      "I'm a Principal Engineer at Stone Giant Studio, with 19 years in front-end. Today I build AI products and tools for coding agents.",
     'hero.bio2':
       'I work on React and Node.js architecture, performance and observability, and on agentic development: skills, evals and orchestration across Claude Code, Cursor, Codex and Gemini CLI. I also care about accessibility and design systems, so the interface works for everyone.',
     'hero.bio3':

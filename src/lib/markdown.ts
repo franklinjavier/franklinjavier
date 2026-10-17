@@ -57,16 +57,6 @@ export function homeMarkdown(
 
 > ${t['hero.bio1']}
 
-${t['hero.bio2']}
-
-${t['hero.bio3']}
-
-## ${t['experience.title']}
-
-- ${t['experience.role1']} — ${t['experience.company1']} (${t['experience.period1']})
-- ${t['experience.role2']} — ${t['experience.company2']} (${t['experience.period2']})
-- ${t['experience.role3']} — ${t['experience.company3']} (${t['experience.period3']})
-
 ## ${t['stack.title']}
 
 ${DEV_STACK.join(', ')}

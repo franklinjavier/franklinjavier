@@ -11,20 +11,7 @@ These days almost everything I do involves AI. I build harnesses and orchestrati
 
 Beyond that, I work on React and Node.js architecture, web performance and observability, design systems and accessibility (a11y). Day to day I use React, TypeScript, React Router, Remix, Node.js, Tailwind CSS, Drizzle and Postgres, plus the Vercel AI SDK, Playwright and Vitest.
 
-## Experience
-
-- **Principal Engineer** at Stone Giant Studio (2023 - Present), home of [Erastus](https://erast.us/?utm_source=CV_FranklinJavier&utm_medium=cv), practice management software for architecture and engineering firms that puts timesheets, time off, staffing, project scheduling and profitability in one place, with payroll and accounting integrations, now with over 1,500 registered users
-- **Principal Engineer** at Grupo Boticário (2021 - 2023)
-- **Sr Digital Product Manager** at Grupo Boticário (2020)
-- **Head of Technology** at Beleza na Web (2015 - 2020)
-
-The full history is on the [CV](/cv/).
-
-## Side projects
-
-- [Zelus](https://zelus.sh/?utm_source=CV_FranklinJavier&utm_medium=cv): condominium management, with issue tracking and an AI assistant grounded in the condominium's data
-- [Project Campfire](https://projectcampfire.io/?utm_source=CV_FranklinJavier&utm_medium=cv): pulls tasks, decisions and deadlines out of conversations, with owners, due dates and a trail back to the source
-- [Robot Loupe](https://robotloupe.com/?utm_source=CV_FranklinJavier&utm_medium=cv): human-in-the-loop review for AI-generated database changes, checking impact and standards before they ship
+I work as Principal Engineer at Stone Giant Studio (2023 - Present), home of [Erastus](https://erast.us/?utm_source=CV_FranklinJavier&utm_medium=cv), practice management software for architecture and engineering firms that puts timesheets, time off, staffing, project scheduling and profitability in one place, with payroll and accounting integrations, now with over 1,500 registered users. The full history is on the [CV](/cv/).
 
 ## Open source
 

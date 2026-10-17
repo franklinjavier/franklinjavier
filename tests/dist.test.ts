@@ -1463,3 +1463,56 @@ describe('related posts', () => {
     })
   }
 })
+
+// guards: HTML/Markdown generated-file drift restores duplicate profiles or loses About-only facts.
+describe('Home showcase and About narrative', () => {
+  for (const [prefix, experience, projects, city] of [
+    ['', 'Work Experience', 'Side projects', 'Lisbon'],
+    ['pt-br/', 'Experiência Profissional', 'Projetos paralelos', 'Lisboa'],
+  ]) {
+    test(`${prefix || 'en/'} keeps both formats aligned and the localized CV reachable`, () => {
+      const window = new Window()
+      try {
+        const home = new window.DOMParser().parseFromString(
+          read(`${prefix}index.html`),
+          'text/html',
+        )
+        const about = new window.DOMParser().parseFromString(
+          read(`${prefix}about/index.html`),
+          'text/html',
+        )
+        const homeMd = read(`${prefix}index.md`)
+        const aboutMd = read(`${prefix}about/index.md`)
+        expect([...home.querySelectorAll('h2')].map((h) => h.textContent)).not.toContain(experience)
+        expect(homeMd).not.toContain(`## ${experience}`)
+        expect(home.querySelector('#about')?.textContent).toContain('Principal Engineer')
+        expect(home.querySelector('#about')?.textContent).toContain('Stone Giant Studio')
+        expect(homeMd).toContain('Principal Engineer')
+        expect(homeMd).toContain('Stone Giant Studio')
+        for (const id of ['posts', 'projects', 'open-source']) {
+          expect(homeMd).toContain(`## ${home.querySelector(`#${id} h2`)?.textContent}`)
+        }
+        expect(about.querySelector('article ul')).toBeNull()
+        expect(about.querySelector(`article a[href="/${prefix}cv/"]`)).not.toBeNull()
+        expect(aboutMd).toContain(`](/${prefix}cv/)`)
+        expect(aboutMd).not.toContain(`## ${projects}`)
+        expect(aboutMd.match(/^- .+/gm)).toEqual([
+          `- Canonical: https://franklinjavier.com/${prefix}about/`,
+        ])
+        for (const fact of [
+          city,
+          'React',
+          'stonegiantstudio/skills',
+          'storefront',
+          '1M',
+          'Erastus',
+        ]) {
+          expect(about.querySelector('article')?.textContent).toContain(fact)
+          expect(aboutMd).toContain(fact)
+        }
+      } finally {
+        window.close()
+      }
+    })
+  }
+})

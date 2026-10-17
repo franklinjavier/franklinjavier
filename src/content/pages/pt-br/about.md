@@ -11,20 +11,7 @@ Quase tudo passa por IA agora. Harnesses e orquestração para agentes de códig
 
 Fora isso, tenho experiência com arquitetura React e Node.js, performance e observabilidade, design systems e acessibilidade (a11y). Stack do dia a dia: React, TypeScript, React Router, Remix, Node.js, Tailwind CSS, Drizzle e Postgres, além de Vercel AI SDK, Playwright e Vitest.
 
-## Experiência
-
-- **Principal Engineer** na Stone Giant Studio (2023 - Presente), onde nasceu o [Erastus](https://erast.us/?utm_source=CV_FranklinJavier&utm_medium=cv), software de gestão para escritórios de arquitetura e engenharia que reúne apontamento de horas, férias e folgas, alocação de equipe, cronograma e rentabilidade dos projetos num só lugar, com integrações de folha de pagamento e contabilidade, hoje com mais de 1.500 usuários cadastrados
-- **Principal Engineer** no Grupo Boticário (2021 - 2023)
-- **Sr Digital Product Manager** no Grupo Boticário (2020)
-- **Head de Tecnologia** na Beleza na Web (2015 - 2020)
-
-O histórico completo está no [currículo](/pt-br/cv/).
-
-## Projetos paralelos
-
-- [Zelus](https://zelus.sh/?utm_source=CV_FranklinJavier&utm_medium=cv): gestão de condomínios, com acompanhamento de ocorrências e um assistente de IA baseado nos dados do condomínio
-- [Project Campfire](https://projectcampfire.io/?utm_source=CV_FranklinJavier&utm_medium=cv): extrai tarefas, decisões e prazos de conversas, com responsáveis, datas e o rastro até a fonte
-- [Robot Loupe](https://robotloupe.com/?utm_source=CV_FranklinJavier&utm_medium=cv): revisão com humano no loop para mudanças de banco de dados geradas por IA, checando impacto e padrões antes de publicar
+Trabalho como Principal Engineer na Stone Giant Studio (2023 - Presente), onde nasceu o [Erastus](https://erast.us/?utm_source=CV_FranklinJavier&utm_medium=cv), software de gestão para escritórios de arquitetura e engenharia que reúne apontamento de horas, férias e folgas, alocação de equipe, cronograma e rentabilidade dos projetos num só lugar, com integrações de folha de pagamento e contabilidade, hoje com mais de 1.500 usuários cadastrados. O histórico completo está no [currículo](/pt-br/cv/).
 
 ## Open source
 
