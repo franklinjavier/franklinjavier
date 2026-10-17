@@ -56,7 +56,8 @@ const siteTitle = SITE_TITLE
 const siteDescription = SITE_DESCRIPTION
 const pageTitle = title ? `${title} - ${siteTitle}` : `${siteTitle} - ${siteDescription}`
 const pageDescription = description || siteDescription
-const canonicalUrl = new URL(Astro.url.pathname, Astro.site ?? 'https://franklinjavier.com').href
+const canonicalPath = Astro.url.pathname === '/404/' ? '/404.html' : Astro.url.pathname
+const canonicalUrl = new URL(canonicalPath, Astro.site ?? 'https://franklinjavier.com').href
 const ogImage = absoluteUrl(image ?? SITE_IMAGE, Astro.site)
 const ogLocale = lang === 'pt-br' ? 'pt_BR' : 'en_US'
 const pageLang = lang === 'pt-br' ? 'pt-br' : 'en'

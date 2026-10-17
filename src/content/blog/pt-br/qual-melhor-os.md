@@ -11,20 +11,20 @@ translationKey: which-is-the-best-os
 Síntese clichê: Não existe o melhor [sistema operacional](https://pt.wikipedia.org/wiki/Sistema_operativo). 
 É tudo uma questão de preferência.
 
-O [Windows](/tags/windows.html) é o mais popular, em grande parte devido 
+O [Windows](/pt-br/blog/tag/windows/) é o mais popular, em grande parte devido
 à acessibilidade das máquinas. 
 Uma das desvantagens é que as máquinas Windows 
 são enormes alvos de vírus e são mais propensas à pirataria, 
 mas isso pode ser evitado com um bom antivírus e antimalware. 
 Windows é uma escolha ideal se você faz edição de vídeo, joga, etc.
 
-[Mac OSX](/tags/osx.html) é outro sistema operacional popular, 
+[Mac OSX](/pt-br/blog/tag/osx/) é outro sistema operacional popular,
 mas é muitas vezes evitado principalmente por causa do alto custo.
 Mac OSX é muito utilizado por programadores, designers, arquitetos, etc. 
 A sincronização do Hardware e Software é 100% eficiente, 
 fora que o OS é minimalista e muito bonito.
 
-Finalmente, o [Linux](/tags/linux.html) é um dos menos populares (para usuários finais), 
+Finalmente, o [Linux](/pt-br/blog/tag/linux/) é um dos menos populares (para usuários finais),
 em contrapartida é o mais popular para servidores. 
 Desenvolvido pelo programador finlandês chamado Linus Torvalds, 
 o Linux é um sistema operacional de código aberto, 

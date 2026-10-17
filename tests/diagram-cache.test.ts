@@ -1,7 +1,7 @@
 // Run alone with `bun run test:cache`. Builds a throwaway copy of the project twice, sharing the content layer cache
 // between builds (like Vercel restoring node_modules/.astro), and checks that a
 // diagram-only change still reaches the rendered post.
-import { afterAll, beforeAll, expect, test } from 'bun:test'
+import { expect, test } from 'bun:test'
 import { cpSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
@@ -24,7 +24,7 @@ function build() {
   return run.stdout.toString()
 }
 
-beforeAll(() => {
+function prepare() {
   dir = mkdtempSync(join(tmpdir(), 'diagram-cache-'))
   for (const name of readdirSync(repo)) {
     if (!skip.has(name)) cpSync(join(repo, name), join(dir, name), { recursive: true })
@@ -42,39 +42,41 @@ beforeAll(() => {
     if (!copy('-a')) throw new Error('could not copy node_modules')
   }
   rmSync(join(dir, 'node_modules/.astro'), { recursive: true, force: true })
-})
+}
 
-afterAll(() => {
-  if (dir) rmSync(dir, { recursive: true, force: true })
-})
-
+// guards: Diagram source and Astro's persisted content cache must stay in sync or stale diagrams ship.
 test(
   'changing a diagram source re-renders the post without touching its text',
   () => {
-    const post = join(dir, 'src/content/blog/how-always-on-agents-work.md')
-    const html = join(dir, 'dist/blog/how-always-on-agents-work/index.html')
-    const wakeups = join(dir, 'src/diagrams/wakeups.ts')
-    const postBefore = readFileSync(post, 'utf8')
+    try {
+      prepare()
+      const post = join(dir, 'src/content/blog/how-always-on-agents-work.md')
+      const html = join(dir, 'dist/blog/how-always-on-agents-work/index.html')
+      const wakeups = join(dir, 'src/diagrams/wakeups.ts')
+      const postBefore = readFileSync(post, 'utf8')
 
-    build()
-    expect(readFileSync(html, 'utf8').includes('TO THE BACK')).toBe(true)
+      build()
+      expect(readFileSync(html, 'utf8').includes('TO THE BACK')).toBe(true)
 
-    const source = readFileSync(wakeups, 'utf8')
-    expect(source).toContain(`back: 'TO THE BACK'`)
-    writeFileSync(wakeups, source.replace(`back: 'TO THE BACK'`, `back: 'TO THE REAR'`))
+      const source = readFileSync(wakeups, 'utf8')
+      expect(source).toContain(`back: 'TO THE BACK'`)
+      writeFileSync(wakeups, source.replace(`back: 'TO THE BACK'`, `back: 'TO THE REAR'`))
 
-    // Second build reuses node_modules/.astro/data-store.json from the first.
-    expect(readdirSync(join(dir, 'node_modules/.astro'))).toContain('data-store.json')
-    build()
-    const after = readFileSync(html, 'utf8')
-    expect({
-      newLabel: after.includes('TO THE REAR'),
-      oldLabel: after.includes('TO THE BACK'),
-    }).toEqual({
-      newLabel: true,
-      oldLabel: false,
-    })
-    expect(readFileSync(post, 'utf8')).toBe(postBefore)
+      // Second build reuses node_modules/.astro/data-store.json from the first.
+      expect(readdirSync(join(dir, 'node_modules/.astro'))).toContain('data-store.json')
+      build()
+      const after = readFileSync(html, 'utf8')
+      expect({
+        newLabel: after.includes('TO THE REAR'),
+        oldLabel: after.includes('TO THE BACK'),
+      }).toEqual({
+        newLabel: true,
+        oldLabel: false,
+      })
+      expect(readFileSync(post, 'utf8')).toBe(postBefore)
+    } finally {
+      if (dir) rmSync(dir, { recursive: true, force: true })
+    }
   },
   { timeout: 600_000 },
 )

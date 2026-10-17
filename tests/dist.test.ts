@@ -8,11 +8,7 @@ import { SERIES } from '../src/data/series'
 import middleware from '../middleware'
 import { isPostPath, POST_SLUG_PATTERN } from '../src/lib/negotiation'
 
-const DIST = join(import.meta.dir, '..', 'dist')
-
-function read(path: string): string {
-  return readFileSync(join(DIST, path), 'utf-8')
-}
+import { DIST, read, htmlPages } from './dist-helpers'
 
 function cssHrefs(html: string): string[] {
   return [...html.matchAll(/<link[^>]+href="([^"]+\.css)"/g)].map((match) => match[1])
@@ -882,12 +878,6 @@ function sitemapEntries(): Map<string, { lastmod?: string; alternates: Record<st
     entries.set(loc, { lastmod, alternates })
   }
   return entries
-}
-
-function htmlPages(dir = DIST): string[] {
-  return readdirSync(dir, { recursive: true, encoding: 'utf-8' })
-    .filter((file) => file.endsWith('index.html'))
-    .map((file) => file.split(sep).join('/'))
 }
 
 function distPathFor(url: string): string {
