@@ -5,7 +5,7 @@ import Footer from '../components/Footer.astro'
 import {
   SITE_TITLE,
   SITE_DESCRIPTION,
-  SITE_IMAGE,
+  SITE_SOCIAL_IMAGE,
   SITE_X_HANDLE,
   absoluteUrl,
   baseJsonLd,
@@ -59,7 +59,7 @@ const pageTitle = title ? `${title} - ${siteTitle}` : `${siteTitle} - ${siteDesc
 const pageDescription = description || siteDescription
 const canonicalPath = Astro.url.pathname === '/404/' ? '/404.html' : Astro.url.pathname
 const canonicalUrl = new URL(canonicalPath, Astro.site ?? 'https://franklinjavier.com').href
-const ogImage = absoluteUrl(image ?? SITE_IMAGE, Astro.site)
+const ogImage = absoluteUrl(image ?? SITE_SOCIAL_IMAGE, Astro.site)
 const ogLocale = lang === 'pt-br' ? 'pt_BR' : 'en_US'
 const pageLang = lang === 'pt-br' ? 'pt-br' : 'en'
 const alternates = hreflangLinks(translationPair(pageLang, Astro.url.pathname, alternate))
@@ -85,9 +85,11 @@ const markdownUrl = markdownTwin ? markdownUrlFor(Astro.url.pathname) : undefine
     <meta property="og:description" content={pageDescription} />
     <meta property="og:url" content={canonicalUrl} />
     <meta property="og:image" content={ogImage} />
+    {!image && <meta property="og:image:width" content="300" />}
+    {!image && <meta property="og:image:height" content="300" />}
     <meta property="og:site_name" content={siteTitle} />
     <meta property="og:locale" content={ogLocale} />
-    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:card" content={image ? 'summary_large_image' : 'summary'} />
     <meta name="twitter:site" content={SITE_X_HANDLE} />
     <meta name="twitter:creator" content={SITE_X_HANDLE} />
     <meta name="twitter:title" content={pageTitle} />

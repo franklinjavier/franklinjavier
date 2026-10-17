@@ -7,6 +7,7 @@ export const SITE_DESCRIPTION = ui.en['home.description']
 export const SITE_AUTHOR = 'Franklin Javier'
 export const SITE_EMAIL = 'franklinjalves@gmail.com'
 export const SITE_IMAGE = '/img/frank.jpeg'
+export const SITE_SOCIAL_IMAGE = '/img/frank-social.webp'
 export const SITE_JOB_TITLE = 'Principal Engineer'
 export const SITE_LOCATION = { locality: 'Lisbon', country: 'PT' }
 export const SITE_X_HANDLE = '@franklinjavier'

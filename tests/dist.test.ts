@@ -4,6 +4,7 @@ import { beforeAll, describe, expect, test } from 'bun:test'
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs'
 import { join, sep } from 'node:path'
 import { Window } from 'happy-dom'
+import sharp from 'sharp'
 import { SERIES } from '../src/data/series'
 import middleware from '../middleware'
 import { isPostPath, POST_SLUG_PATTERN } from '../src/lib/negotiation'
@@ -62,12 +63,17 @@ beforeAll(() => {
 describe('homepage metadata', () => {
   const html = () => read('index.html')
 
-  test('has canonical URL, og:image and og:type', () => {
+  // guards: Layout metadata drift makes non-post pages share the oversized author photo.
+  test('has canonical URL, og:image and og:type', async () => {
     expect(html()).toContain('<link rel="canonical" href="https://franklinjavier.com/">')
     expect(html()).toContain('property="og:type" content="website"')
     expect(html()).toContain(
-      'property="og:image" content="https://franklinjavier.com/img/frank.jpeg"',
+      'property="og:image" content="https://franklinjavier.com/img/frank-social.webp"',
     )
+    expect(html()).toContain('property="og:image:width" content="300"')
+    expect(html()).toContain('property="og:image:height" content="300"')
+    const { width, height } = await sharp(join(DIST, 'img/frank-social.webp')).metadata()
+    expect([width, height]).toEqual([300, 300])
     expect(html()).toContain('<html lang="en"')
   })
 
@@ -99,8 +105,9 @@ describe('homepage metadata', () => {
     expect(person?.sameAs).toContain('https://dev.to/franklinjavier')
   })
 
-  test('attributes X cards to the author with a large image', () => {
-    expect(html()).toContain('name="twitter:card" content="summary_large_image"')
+  // guards: Layout/card drift expands fallback portraits on social shares.
+  test('attributes small X cards to the author', () => {
+    expect(html()).toContain('name="twitter:card" content="summary"')
     expect(html()).toContain('name="twitter:creator" content="@franklinjavier"')
   })
 })
@@ -1103,12 +1110,14 @@ describe('series social cards', () => {
     ],
   ]
 
+  // guards: Localized route/layout drift replaces post previews with the author fallback.
   test('og:image, twitter:image and BlogPosting.image point at an existing 1200x630 PNG', () => {
     for (const [path, image] of cases) {
       const html = read(path)
       const url = `https://franklinjavier.com${image}`
       expect(html).toContain(`<meta property="og:image" content="${url}">`)
       expect(html).toContain(`<meta name="twitter:image" content="${url}">`)
+      expect(html).toContain('name="twitter:card" content="summary_large_image"')
       const posting = jsonLdBlocks(html).find((block) => block['@type'] === 'BlogPosting')
       expect(posting?.image).toBe(url)
       const file = join(DIST, image)
