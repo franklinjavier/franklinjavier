@@ -95,7 +95,13 @@ const markdownUrl = markdownTwin ? markdownUrlFor(Astro.url.pathname) : undefine
     <script type="application/ld+json" is:inline set:html={JSON.stringify(baseJsonLd(pageLang))} />
     {jsonLd && <script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} />}
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="alternate" href="/rss.xml" type="application/rss+xml" title="Feed" />
+    <link
+      rel="alternate"
+      href={pageLang === 'pt-br' ? '/pt-br/rss.xml' : '/rss.xml'}
+      hreflang={htmlLang}
+      type="application/rss+xml"
+      title="Feed"
+    />
     {markdownUrl && <link rel="alternate" type="text/markdown" href={markdownUrl} />}
     <slot name="head" />
 

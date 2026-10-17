@@ -1275,6 +1275,7 @@ describe('vercel.json', () => {
     })
   })
 
+  // guards: HTTP/HTML discovery drift subscribes Portuguese readers to English posts.
   test('sets RFC 8288 Link discovery headers on both homepages', () => {
     const config = JSON.parse(readFileSync(join(import.meta.dir, '..', 'vercel.json'), 'utf-8'))
     const linkRules = (
@@ -1286,7 +1287,9 @@ describe('vercel.json', () => {
     for (const rule of linkRules) {
       const value = rule.headers.find((header) => header.key === 'Link')?.value ?? ''
       expect(value).toContain('</llms.txt>; rel="describedby"')
-      expect(value).toContain('</rss.xml>; rel="alternate"')
+      expect(value).toContain(
+        `<${rule.source.startsWith('/pt-br') ? '/pt-br' : ''}/rss.xml>; rel="alternate"`,
+      )
       expect(value).toContain('</sitemap.xml>; rel="sitemap"')
     }
   })
@@ -1348,5 +1351,59 @@ describe('accessibility guards', () => {
     const section = /<section[^>]*id="posts"[^>]*>(.*?)<\/section>/s.exec(read('index.html'))![1]
     expect((section.match(/<h3\b/g) ?? []).length).toBe(6)
     expect(section).toMatch(/<\/h3>.*?<\/time>\s*<\/div>\s*<p\b/s)
+  })
+})
+
+// guards: RSS/content routing drift sends subscribers mixed languages or broken post links.
+describe('localized RSS feeds', () => {
+  const window = new Window()
+  for (const [prefix, lang] of [
+    ['', 'en'],
+    ['pt-br/', 'pt-BR'],
+  ]) {
+    test(`${lang} feed parses and matches every published page in its language`, () => {
+      const xml = new window.DOMParser().parseFromString(
+        read(`${prefix}rss.xml`),
+        'application/xml',
+      )
+      expect(xml.querySelector('parsererror')).toBeNull()
+      expect(xml.documentElement.tagName).toBe('rss')
+      expect(xml.querySelector('channel > language')?.textContent).toBe(lang)
+      const links = [...xml.querySelectorAll('item')].map((item) => {
+        const url = new URL(item.querySelector('link')!.textContent)
+        expect(url.origin).toBe('https://franklinjavier.com')
+        const path = `${url.pathname.slice(1)}index.html`
+        expect(existsSync(join(DIST, path))).toBe(true)
+        expect(read(path)).toContain(`<html lang="${lang}"`)
+        const post = jsonLdBlocks(read(path)).find((block) => block['@type'] === 'BlogPosting')!
+        expect(new Date(item.querySelector('pubDate')!.textContent).toISOString()).toBe(
+          String(post.datePublished),
+        )
+        expect(sitemapEntries().has(url.href)).toBe(true)
+        return path
+      })
+      const pages = htmlPages().filter(
+        (path) =>
+          path.startsWith(`${prefix}blog/`) &&
+          jsonLdBlocks(read(path)).some(
+            (block) => block['@type'] === 'BlogPosting' && block.inLanguage === lang,
+          ),
+      )
+      expect(links.sort()).toEqual(pages.sort())
+      expect(links.length).toBeGreaterThan(0)
+      expect(read('llms.txt')).toContain(`https://franklinjavier.com/${prefix}rss.xml`)
+    })
+  }
+
+  // guards: Layout/feed discovery drift subscribes readers to the wrong language.
+  test('every page advertises the feed matching its HTML language in head', () => {
+    for (const path of htmlPages()) {
+      const doc = new window.DOMParser().parseFromString(read(path), 'text/html')
+      const lang = doc.documentElement.lang
+      const feeds = doc.head.querySelectorAll('link[rel="alternate"][type="application/rss+xml"]')
+      expect(feeds).toHaveLength(1)
+      expect(feeds[0].getAttribute('hreflang')).toBe(lang)
+      expect(feeds[0].getAttribute('href')).toBe(lang === 'pt-BR' ? '/pt-br/rss.xml' : '/rss.xml')
+    }
   })
 })

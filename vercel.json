@@ -53,7 +53,7 @@
       "headers": [
         {
           "key": "Link",
-          "value": "</llms.txt>; rel=\"describedby\"; type=\"text/plain\", </rss.xml>; rel=\"alternate\"; type=\"application/rss+xml\", </sitemap.xml>; rel=\"sitemap\"; type=\"application/xml\""
+          "value": "</llms.txt>; rel=\"describedby\"; type=\"text/plain\", </pt-br/rss.xml>; rel=\"alternate\"; type=\"application/rss+xml\", </sitemap.xml>; rel=\"sitemap\"; type=\"application/xml\""
         }
       ]
     }

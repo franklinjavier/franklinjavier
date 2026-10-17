@@ -41,7 +41,7 @@ The site uses cookieless, aggregated Vercel Web Analytics for page views and ref
 
 - Every HTML page has a markdown variant: request any URL with the header \`Accept: text/markdown\`, or fetch \`<page-url>/index.md\` directly (e.g. \`${absolute('/blog/')}index.md\`). Appending \`.md\` to a page URL works too (e.g. \`${absolute('/about')}.md\`).
 - English content lives at the root; Portuguese (pt-BR) translations of the same content live under \`/pt-br/\`.
-- Machine-readable indexes: [sitemap.xml](${absolute('/sitemap.xml')}) and [RSS feed](${absolute('/rss.xml')}).
+- Machine-readable indexes: [sitemap.xml](${absolute('/sitemap.xml')}) and [English RSS feed](${absolute('/rss.xml')}) and [Portuguese RSS feed](${absolute('/pt-br/rss.xml')}).
 
 ## Core pages
 
