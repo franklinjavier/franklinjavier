@@ -17,7 +17,7 @@ import {
   getPostTranslationUrl,
 } from '../i18n/utils'
 import { blogPostingJsonLd } from '../lib/site'
-import { getSeriesNav } from '../lib/content'
+import { getRelatedPosts, getSeriesNav } from '../lib/content'
 import { seriesMarker, seriesNextLabel, seriesPartLabel, type SeriesRef } from '../lib/series'
 
 interface Props {
@@ -58,6 +58,7 @@ const blogUrl = lang === 'en' ? '/blog/' : '/pt-br/blog/'
 const formattedDate = formatDate(date, lang)
 const translation = await getPostTranslationUrl(Astro.url, lang)
 const seriesNav = await getSeriesNav(lang, series)
+const relatedPosts = await getRelatedPosts(lang, Astro.url.pathname, rawTags)
 const flags = { en: '🇺🇸', 'pt-br': '🇧🇷' }
 const readingLabel = readingTime ? `${readingTime} ${t('blog.minRead')}` : undefined
 const modified = updated ?? date
@@ -198,6 +199,26 @@ const jsonLd = blogPostingJsonLd({
               {seriesNextLabel(seriesNav.next, lang)}
             </a>
           </nav>
+        )}
+        {relatedPosts.length > 0 && (
+          <section
+            aria-labelledby="related-posts"
+            class="mt-12 border-t border-rule pt-5 text-meta text-muted"
+          >
+            <h2 id="related-posts">{t('blog.relatedPosts')}</h2>
+            <ul class="mt-3 space-y-2">
+              {relatedPosts.map((post) => (
+                <li>
+                  <a
+                    href={post.url}
+                    class="transition-colors duration-200 ease-smooth hover:text-ink"
+                  >
+                    {post.title}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </section>
         )}
       </article>
 

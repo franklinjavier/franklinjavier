@@ -1407,3 +1407,59 @@ describe('localized RSS feeds', () => {
     }
   })
 })
+
+describe('related posts', () => {
+  const cases = [
+    {
+      path: 'blog/old-macbook-context-server/',
+      heading: 'Related posts',
+      prefix: '/blog/',
+      expected: ['open-source-agent-skills', 'how-always-on-agents-work', 'lisbon-ai-2026'],
+      unmatched: 'blog/git-password-cache/',
+    },
+    {
+      path: 'pt-br/blog/macbook-velho-virou-servidor-de-contexto/',
+      heading: 'Posts relacionados',
+      prefix: '/pt-br/blog/',
+      expected: [
+        'skills-open-source-para-agentes',
+        'como-funciona-um-agente-sempre-ligado',
+        'lisbon-ai-2026',
+      ],
+      unmatched: 'pt-br/blog/cache-de-senha-no-git/',
+    },
+  ]
+  for (const entry of cases) {
+    // guards: HTML/Markdown content-flow divergence and language leakage send readers to different or foreign posts.
+    test(`${entry.prefix} ranks shared tags before recency in both formats`, () => {
+      const window = new Window()
+      try {
+        const doc = new window.DOMParser().parseFromString(
+          read(`${entry.path}index.html`),
+          'text/html',
+        )
+        const section = doc.querySelector('section[aria-labelledby="related-posts"]')!
+        expect(section.querySelector('h2')?.textContent).toBe(entry.heading)
+        const urls = [...section.querySelectorAll('a')].map((a) => a.getAttribute('href') ?? '')
+        expect(urls).toEqual(entry.expected.map((slug) => `${entry.prefix}${slug}/`))
+        expect(urls).toHaveLength(3)
+        expect(urls).not.toContain(`/${entry.path}`)
+        expect(urls.every((url) => url?.startsWith(entry.prefix))).toBe(true)
+        const md = read(`${entry.path}index.md`)
+          .split(`## ${entry.heading}\n\n`)[1]
+          .split('\n\n')[0]
+        const markdownUrls = [...md.matchAll(/^- \[[^\]]+\]\(([^)]+)\)/gm)].map(
+          (match) => new URL(match[1]).pathname,
+        )
+        expect(markdownUrls).toEqual(urls)
+      } finally {
+        window.close()
+      }
+    })
+    // guards: HTML/Markdown content-flow divergence renders empty recommendation sections for alternate readers.
+    test(`${entry.prefix} omits related posts without shared tags`, () => {
+      expect(read(`${entry.unmatched}index.html`)).not.toContain('aria-labelledby="related-posts"')
+      expect(read(`${entry.unmatched}index.md`)).not.toContain(`## ${entry.heading}`)
+    })
+  }
+})

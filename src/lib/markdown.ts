@@ -125,7 +125,12 @@ function seriesFooterLines(nav: SeriesNav | undefined, lang: Lang): string[] {
 }
 
 export function postMarkdown(
-  post: PostSummary & { lang: Lang; body: string; seriesNav?: SeriesNav },
+  post: PostSummary & {
+    lang: Lang
+    body: string
+    seriesNav?: SeriesNav
+    relatedPosts?: PostSummary[]
+  },
 ): string {
   const lines = [
     `# ${post.title}`,
@@ -141,6 +146,9 @@ export function postMarkdown(
     describeDiagrams(post.body, post.lang).trim(),
     '',
     ...seriesFooterLines(post.seriesNav, post.lang),
+    ...(post.relatedPosts?.length
+      ? [`## ${ui[post.lang]['blog.relatedPosts']}`, '', postList(post.relatedPosts), '']
+      : []),
     footerNote(post.lang),
     '',
   ]

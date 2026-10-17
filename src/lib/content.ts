@@ -24,6 +24,27 @@ export function toPostSummary(post: CollectionEntry<'blog'>): PostSummary {
   }
 }
 
+export async function getRelatedPosts(
+  lang: Lang,
+  currentUrl: string,
+  rawTags: string | string[] | undefined,
+): Promise<PostSummary[]> {
+  const tags = new Set(parseTags(rawTags).filter(Boolean))
+  if (tags.size === 0) return []
+  const posts = await getPublishedPosts(lang)
+  return posts
+    .filter((post) => getPostUrl(post.id, lang) !== currentUrl)
+    .map((post) => ({
+      post,
+      score: [...new Set(parseTags(post.data.tags).filter(Boolean))].filter((tag) => tags.has(tag))
+        .length,
+    }))
+    .filter(({ score }) => score > 0)
+    .sort((a, b) => b.score - a.score || b.post.data.date.valueOf() - a.post.data.date.valueOf())
+    .slice(0, 3)
+    .map(({ post }) => toPostSummary(post))
+}
+
 // Fails the build when src/data/series.ts and the published posts disagree.
 // Called from the blog post routes' getStaticPaths, so stale series data fails
 // the build even when no published post carries `series` frontmatter.
