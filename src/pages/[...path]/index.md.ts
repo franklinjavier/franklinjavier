@@ -1,3 +1,4 @@
+import { stars, formatStars } from '../../lib/oss'
 import type { APIRoute } from 'astro'
 import type { CollectionEntry } from 'astro:content'
 import {
@@ -80,7 +81,7 @@ async function buildMarkdown(props: Props): Promise<string> {
   switch (props.kind) {
     case 'home': {
       const posts = await getPublishedPosts(props.lang)
-      return homeMarkdown(props.lang, posts.map(toPostSummary))
+      return homeMarkdown(props.lang, posts.map(toPostSummary), stars, formatStars)
     }
     case 'blogIndex': {
       const posts = await getPublishedPosts(props.lang)

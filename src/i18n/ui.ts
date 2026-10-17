@@ -51,6 +51,18 @@ export const ui = {
     'contact.title': 'Contato',
     'contact.location': 'Lisboa, Portugal',
     'blog.recentPosts': 'Posts Recentes',
+    'oss.title': 'Código aberto',
+    'oss.stars': 'estrelas',
+    'oss.remix-ecommerce': 'Demo de e-commerce da palestra Remix @ React Conf 2022.',
+    'oss.translate': 'Tradutor na barra de menus do macOS.',
+    'oss.shadcn-widget': 'Um widget baseado em shadcn.',
+    'oss.oficina': 'Registro compatível com shadcn para templates do Grok Bot.',
+    'oss.grokbot-quota-template':
+      'Acompanhe cotas e custos de CLIs de programação e do Grok Bot por bot em um painel estático.',
+    'oss.remix-starter-template': 'Template inicial para projetos Remix.',
+    'oss.retabnews': 'Clone do TabNews feito com Remix, Tailwind e Jest.',
+    'oss.A-Byte-of-Python-pt_BR':
+      'Tradução para português brasileiro do livro A Byte of Python, de Swaroop C H.',
     'projects.title': 'Projetos paralelos',
     'projects.zelus':
       'Gestão de condomínios, com acompanhamento de ocorrências e um assistente de IA baseado nos dados do condomínio.',
@@ -137,6 +149,18 @@ export const ui = {
     'contact.title': 'Contact',
     'contact.location': 'Lisbon, Portugal',
     'blog.recentPosts': 'Recent Posts',
+    'oss.title': 'Open source',
+    'oss.stars': 'stars',
+    'oss.remix-ecommerce': 'E-commerce demo from the Remix @ React Conf 2022 talk.',
+    'oss.translate': 'A macOS menu-bar translator.',
+    'oss.shadcn-widget': 'A shadcn-based widget.',
+    'oss.oficina': 'A shadcn-compatible registry for Grok Bot templates.',
+    'oss.grokbot-quota-template':
+      'Track coding CLI and Grok Bot quotas and costs per bot with a static dashboard.',
+    'oss.remix-starter-template': 'A starter template for Remix projects.',
+    'oss.retabnews': 'A TabNews clone built with Remix, Tailwind and Jest.',
+    'oss.A-Byte-of-Python-pt_BR':
+      'Brazilian Portuguese translation of Swaroop C H’s A Byte of Python.',
     'projects.title': 'Side projects',
     'projects.zelus':
       "Condominium management, with issue tracking and an AI assistant grounded in the condominium's data.",

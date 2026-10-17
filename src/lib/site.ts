@@ -64,6 +64,57 @@ export const SIDE_PROJECTS = [
   },
 ] as const
 
+export const OPEN_SOURCE = [
+  {
+    key: 'remix-ecommerce',
+    name: 'remix-ecommerce',
+    language: 'TypeScript',
+    url: 'https://github.com/franklinjavier/remix-ecommerce?utm_source=FranklinJavier&utm_medium=site',
+  },
+  {
+    key: 'translate',
+    name: 'translate',
+    language: 'Swift',
+    url: 'https://github.com/franklinjavier/translate?utm_source=FranklinJavier&utm_medium=site',
+  },
+  {
+    key: 'shadcn-widget',
+    name: 'shadcn-widget',
+    language: 'TypeScript',
+    url: 'https://github.com/franklinjavier/shadcn-widget?utm_source=FranklinJavier&utm_medium=site',
+  },
+  {
+    key: 'oficina',
+    name: 'oficina',
+    language: 'TypeScript',
+    url: 'https://github.com/franklinjavier/oficina?utm_source=FranklinJavier&utm_medium=site',
+  },
+  {
+    key: 'grokbot-quota-template',
+    name: 'grokbot-quota-template',
+    language: 'Python',
+    url: 'https://github.com/franklinjavier/grokbot-quota-template?utm_source=FranklinJavier&utm_medium=site',
+  },
+  {
+    key: 'remix-starter-template',
+    name: 'remix-starter-template',
+    language: 'TypeScript',
+    url: 'https://github.com/franklinjavier/remix-starter-template?utm_source=FranklinJavier&utm_medium=site',
+  },
+  {
+    key: 'retabnews',
+    name: 'retabnews',
+    language: 'TypeScript',
+    url: 'https://github.com/franklinjavier/retabnews?utm_source=FranklinJavier&utm_medium=site',
+  },
+  {
+    key: 'A-Byte-of-Python-pt_BR',
+    name: 'A-Byte-of-Python-pt_BR',
+    language: null,
+    url: 'https://github.com/franklinjavier/A-Byte-of-Python-pt_BR?utm_source=FranklinJavier&utm_medium=site',
+  },
+] as const
+
 // Day-to-day stack, rendered on the homepage and in its markdown twin.
 export const DEV_STACK = [
   'React / Typescript',

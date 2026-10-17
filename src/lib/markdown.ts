@@ -3,7 +3,15 @@
 // callers pass plain data extracted from content collections.
 
 import { ui } from '../i18n/ui'
-import { SITE_TITLE, SITE_EMAIL, SITE_URL, SOCIAL_LINKS, DEV_STACK, SIDE_PROJECTS } from './site'
+import {
+  SITE_TITLE,
+  SITE_EMAIL,
+  SITE_URL,
+  SOCIAL_LINKS,
+  DEV_STACK,
+  SIDE_PROJECTS,
+  OPEN_SOURCE,
+} from './site'
 import { APPEARANCES, speakingUrl } from './speaking'
 import { describeDiagrams } from '../diagrams'
 import { seriesMarker, seriesNextLabel, seriesPartLabel, type SeriesNav } from './series'
@@ -42,7 +50,12 @@ function footerNote(lang: Lang): string {
     : `---\n\nTodas as páginas deste site também estão disponíveis em markdown: solicite qualquer URL com o header \`Accept: text/markdown\`. Veja o [llms.txt](${absolute('/llms.txt')}) e o [sitemap](${absolute('/sitemap.xml')}).`
 }
 
-export function homeMarkdown(lang: Lang, posts: PostSummary[]): string {
+export function homeMarkdown(
+  lang: Lang,
+  posts: PostSummary[],
+  stars: Record<string, number> = {},
+  formatStars: (count: number) => string = String,
+): string {
   const t = ui[lang]
   const prefix = lang === 'en' ? '' : '/pt-br'
   const recent = posts.slice(0, 6)
@@ -79,6 +92,18 @@ ${postList(recent)}
 ## ${t['projects.title']}
 
 ${SIDE_PROJECTS.map((project) => `- [${project.name}](${project.url}): ${t[`projects.${project.key}`]}`).join('\n')}
+
+## ${t['oss.title']}
+
+${OPEN_SOURCE.map((repo) => {
+  const meta = [
+    repo.language,
+    stars[repo.name] !== undefined ? `${formatStars(stars[repo.name])} ${t['oss.stars']}` : null,
+  ]
+    .filter(Boolean)
+    .join(' · ')
+  return `- [${repo.name}](${repo.url}): ${t[`oss.${repo.key}`]}${meta ? ` (${meta})` : ''}`
+}).join('\n')}
 
 [${t['nav.blog']}](${absolute(`${prefix}/blog/`)}) · [${t['nav.about']}](${absolute(`${prefix}/about/`)}) · [${t['nav.contact']}](${absolute(`${prefix}/contact/`)}) · [${t['nav.privacy']}](${absolute(`${prefix}/privacy/`)})
 
