@@ -1,0 +1,17 @@
+/*
+  Vary: Accept
+
+/*.md
+  Content-Type: text/markdown; charset=utf-8
+
+/llms.txt
+  Content-Type: text/plain; charset=utf-8
+
+/
+  Link: </llms.txt>; rel="describedby"; type="text/plain", </rss.xml>; rel="alternate"; type="application/rss+xml", </sitemap.xml>; rel="sitemap"; type="application/xml"
+
+/pt-br
+  Link: </llms.txt>; rel="describedby"; type="text/plain", </pt-br/rss.xml>; rel="alternate"; type="application/rss+xml", </sitemap.xml>; rel="sitemap"; type="application/xml"
+
+/pt-br/
+  Link: </llms.txt>; rel="describedby"; type="text/plain", </pt-br/rss.xml>; rel="alternate"; type="application/rss+xml", </sitemap.xml>; rel="sitemap"; type="application/xml"

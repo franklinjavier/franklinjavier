@@ -51,6 +51,7 @@ const {
   alternate,
   noindex = false,
 } = Astro.props
+const vercelAnalytics = process.env.VERCEL === '1'
 const htmlLang = lang === 'pt-br' ? 'pt-BR' : 'en'
 const siteTitle = SITE_TITLE
 const siteDescription = SITE_DESCRIPTION
@@ -113,6 +114,6 @@ const markdownUrl = markdownTwin ? markdownUrlFor(Astro.url.pathname) : undefine
   <body class="min-h-screen bg-page text-ink antialiased transition-colors ease-smooth">
     <slot />
     {!bare && <Footer />}
-    <Analytics />
+    {vercelAnalytics && <Analytics />}
   </body>
 </html>

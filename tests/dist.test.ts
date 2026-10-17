@@ -1215,7 +1215,8 @@ describe('payload cuts', () => {
     }
   })
 
-  test('only emits Vercel Analytics client JS', () => {
+  // guards: Hosting build selection must not leak Vercel analytics onto Cloudflare or remove it from Vercel.
+  test('only emits Vercel Analytics client JS on Vercel builds', () => {
     const html = read('index.html')
     expect(html).not.toMatch(/_astro\/[^"]+\.js/)
 
@@ -1223,9 +1224,14 @@ describe('payload cuts', () => {
       (match) => match[1],
     )
 
-    expect(moduleScripts).toHaveLength(1)
-    expect(moduleScripts[0]).toContain('vercel-analytics')
-    expect(moduleScripts[0]).toContain('@vercel/analytics')
+    if (process.env.VERCEL === '1') {
+      expect(moduleScripts).toHaveLength(1)
+      expect(moduleScripts[0]).toContain('vercel-analytics')
+      expect(moduleScripts[0]).toContain('@vercel/analytics')
+    } else {
+      expect(moduleScripts).toHaveLength(0)
+      expect(html).not.toContain('/_vercel/insights/script.js')
+    }
   })
 })
 
