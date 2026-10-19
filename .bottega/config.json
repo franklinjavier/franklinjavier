@@ -95,8 +95,7 @@
         "src/components/Footer.astro",
         "src/components/Navigation.astro",
         "src/components/ThemeToggle.astro",
-        "src/i18n/ui.ts",
-        "src/i18n/utils.ts"
+        "src/i18n/**"
       ],
       "verifySkill": ".agents/skills/verify-franklinjavier-blog/SKILL.md",
       "prototype": null,
