@@ -98,3 +98,9 @@ Keep `$BLOG_PROOF` intact, including failed attempts. Confirm proof files still 
 No custom driver script or browser package is shipped. Use the repository's `bun run build`,
 `bun run preview`, native browser API, `curl`, and standard XML parsing tools.
 For upkeep, use `/maintain-verification-skill` whenever routes or controls change.
+
+## Bottega receipt adapter
+
+After completing the native workflow above, follow [receipt-contract.md](receipt-contract.md)
+when a Bottega task requires a UI receipt. This adapter adds provenance and coverage records;
+it does not replace Launch, Doctor, Drive, Evidence, Cleanup, or the feature map.
