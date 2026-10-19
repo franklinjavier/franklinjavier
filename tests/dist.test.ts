@@ -1411,6 +1411,23 @@ describe('localized RSS feeds', () => {
   }
 
   // guards: Layout/feed discovery drift subscribes readers to the wrong language.
+  test('every footer links to its locale feed without changing its other destinations', () => {
+    for (const path of htmlPages()) {
+      const doc = new window.DOMParser().parseFromString(read(path), 'text/html')
+      const footer = doc.querySelector('footer')
+      if (!footer) continue
+      const prefix = doc.documentElement.lang === 'pt-BR' ? '/pt-br' : ''
+      expect([...footer.querySelectorAll('a')].map((link) => link.getAttribute('href'))).toEqual([
+        `${prefix}/about/`,
+        `${prefix}/cv/`,
+        `${prefix}/contact/`,
+        `${prefix}/privacy/`,
+        `${prefix}/rss.xml`,
+      ])
+      expect(footer.querySelector('a:last-child')?.textContent?.trim()).toBe('RSS')
+    }
+  })
+
   test('every page advertises the feed matching its HTML language in head', () => {
     for (const path of htmlPages()) {
       const doc = new window.DOMParser().parseFromString(read(path), 'text/html')
