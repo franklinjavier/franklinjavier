@@ -21,3 +21,5 @@ Restore the starting theme before closing the owned tab.
 External social, project, and mail links need href inspection only; do not send messages.
 Theme is stored in localStorage, so a fresh tab can inherit an earlier run's preference.
 Some footer-only routes need scrolling; keep the visible click as proof.
+CV has its own layout without the standard footer. Use its visible return-home link before
+continuing footer journeys. Its language switch is named English or Português.

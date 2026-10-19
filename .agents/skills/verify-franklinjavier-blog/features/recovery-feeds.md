@@ -7,14 +7,15 @@
 ## How to get to it (user POV)
 
 Open an unknown path. Use Go home or Blog. Sitemap is a visible 404 help link.
-RSS is available at `/rss.xml`, and sitemap at `/sitemap.xml`.
+English RSS is `/rss.xml`, Portuguese RSS is `/pt-br/rss.xml`, and sitemap is `/sitemap.xml`.
 
 ## Driving it with IAB and HTTP
 
 Open `/verify-missing-page/`, assert HTTP 404, inspect 404 and recovery links, and click Go home.
-Fetch and save both XML responses. Parse RSS channel items and sitemap loc entries.
+Fetch and save all three XML responses. Parse RSS channel items and sitemap loc entries.
 Require nonempty entries, valid canonical URLs, and successful local article destinations.
-Check Portuguese RSS item paths against real `/pt-br/blog/` routes and the sitemap.
+Require separate language-filtered feeds. Check Portuguese RSS item paths against real
+`/pt-br/blog/` routes and the sitemap. Check sitemap HTML and markdown alternate entries.
 Record every unresolved path as a failure, with status and response body.
 
 ## Gotchas

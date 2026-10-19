@@ -13,6 +13,13 @@ Read [the feature map](features/README.md) before deciding coverage.
 ## Launch
 
 Run from the repository root with the existing Bun installation and locked dependencies.
+Run `bun install --frozen-lockfile` if the current lockfile is not installed.
+Read `.bottega/config.json` before selecting the source baseline. It currently declares `origin/next`
+as integration and `origin/main` as release. Fetch both and record their exact SHA values.
+Do not infer the registered factory baseline from the local default branch or `origin/HEAD`.
+Confirm the coordinator-reviewed delivery base matches the current registered integration ref.
+Require `git merge-base --is-ancestor <reviewed-base> HEAD`; stop and resolve any stale baseline
+before spending browser proof effort. A product source change requires fresh proof after rebasing.
 Freeze the source commit before building or capturing proof. Keep evidence outside the checkout.
 
 ```sh
@@ -32,8 +39,8 @@ Astro 7 detects agent execution and starts a detached preview. Read its actual P
 `.astro/preview.json`; the short-lived launcher PID is not the server PID.
 Use the built preview, not a dev server that can change beneath the proof.
 Readiness is a successful `curl -fsS http://127.0.0.1:4322/` plus the preview log's Local URL.
-Parallel verification is safe only with separate ports, evidence directories, and owned tabs.
-Do not build concurrently in this checkout because `dist/` is shared.
+Parallel verification requires separate checkouts, ports, evidence directories, and owned tabs.
+Astro keeps one preview lock per checkout; `dist/` is shared. Never build or preview concurrently here.
 
 ## Doctor
 
@@ -57,24 +64,28 @@ A stale build, foreign listener, failed build, or changed source invalidates the
 Use `mcp__cua_repl` and the existing IAB browser. Do not install a browser dependency.
 Read its returned documentation before using locators or optional viewport capabilities.
 Create a hidden owned tab with `cua.createBrowserTab('iab', url, {visible:false})`.
+If subagent visibility is unsupported, omit that option; use the default background behavior.
 Inspect `tab.playwright.domSnapshot()` after each transition; derive selectors from current content.
 Use real clicks via `getByRole`, `getByLabel`, or observed `href` locators.
 Do not change the DOM, call internal setters, or use fabricated pages to demonstrate behavior.
 
 Start at `/`, click a visible recent article, and check its heading, date, prose, and URL.
 Use its visible tag link to reach a filtered list, open a result, and use Back to blog.
-Click `Mudar para Português` and then `Switch to English`, verifying translated routes and content.
+Click `PT, Mudar para Português` then `EN, Switch to English`, verifying translated routes and content.
 The language toggle is `#language-toggle`; the theme button is `#theme-toggle`.
 Exercise the image viewer when an article contains an eligible image. Open by clicking the image,
 verify `#image-viewer[open]` and the enlarged image, close with the visible close button or Escape.
-The blog has no drawer, popover, command menu, or tooltip UI. Do not invent those states.
+Long articles also have a table of contents: click desktop heading links and open the mobile
+`On this page` summary, then click a section. Capture open and closed contents states.
+There is no drawer, popover, command menu, or tooltip UI. Do not invent those states.
 Repeat relevant journeys at 1440×900 and 400×900 using the documented viewport capability.
 Restore temporary viewport overrides in cleanup. Capture real before/after states at each width.
 
-For XML, fetch the actual preview's `/rss.xml` and `/sitemap.xml`, save bytes and HTTP status,
+For XML, fetch the actual preview's `/rss.xml`, `/pt-br/rss.xml`, and `/sitemap.xml`, save bytes and HTTP status,
 parse them as XML, and follow their entry paths on the local origin. Do not request production URLs.
-Assert RSS items and sitemap URLs resolve to the corresponding published localized article routes.
-Visit a missing local route, verify HTTP 404 and helpful links, then click Go home.
+Assert each RSS feed contains only its language and its links resolve to published localized articles.
+Check sitemap localized HTML and markdown destinations. It also includes alternate-language entries.
+Visit a missing local route, verify HTTP 404 and helpful links, then click Go back home.
 The feature map includes secondary navigation and interaction coverage; do not report it passed unrun.
 
 ## Evidence

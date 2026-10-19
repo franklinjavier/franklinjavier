@@ -54,3 +54,7 @@ A failed link, missing assertion, unrun journey, unavailable browser, or dirty c
 an `outcome: "passed"` receipt. Save a failure report outside the success schema instead.
 Do not fabricate skipped journeys, screenshots, timings, token counts, or performance metrics.
 After cleanup verify the retained evidence and unchanged candidate commit/tree.
+
+This repository currently has no registered `uiEvidence` application policy in `.bottega/config.json`.
+This skill and adapter alone do not activate the Bottega receipt gate for this blog.
+Policy registration and coordinator attestation require a separate authorized integration.
