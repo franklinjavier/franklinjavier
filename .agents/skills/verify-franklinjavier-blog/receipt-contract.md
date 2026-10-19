@@ -46,6 +46,29 @@ use `kind: "comparison"`, its exact `source: {path, sha256}`, and two comparison
 screenshots with `width` 1440 and 400 plus their PNG `proof` artifacts.
 Do not claim visual comparison if the prototype was not rendered and inspected.
 
+## Capture native PNG bytes in IAB
+
+The ordinary IAB screenshot API can return JPEG bytes. Check the actual format before naming
+or declaring an artifact; a `.png` extension does not establish PNG encoding.
+Read the tab CDP capability documentation first. Use an explicit CSS viewport clip for PNG:
+
+```js
+const cdp = await tab.capabilities.get('cdp')
+const { cssLayoutViewport: view } = await cdp.send('Page.getLayoutMetrics')
+const capture = await cdp.send('Page.captureScreenshot', {
+  format: 'png',
+  fromSurface: true,
+  captureBeyondViewport: true,
+  clip: { x: view.pageX, y: view.pageY, width: view.clientWidth, height: view.clientHeight, scale: 1 },
+})
+```
+
+Save the returned base64 `data` as raw bytes. Decode them with the existing `sharp` dependency
+and verify PNG format and actual dimensions. Inspect pixels against the visible viewport too;
+correct dimensions alone cannot detect a cropped image on a device with a higher pixel ratio.
+Never use `fromSurface: false`: the observed backend can capture the desktop instead of the tab.
+Do not convert JPEG inspection images into receipt PNGs; capture the tab natively again.
+
 ## Refuse false completion
 
 Run the core pure validator with independently established expectations when available.
