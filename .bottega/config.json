@@ -86,6 +86,58 @@
         "accept": "text/markdown"
       }
     ],
-    "observeMinutes": 30
-  }
+    "observeMinutes": 10
+  },
+  "uiEvidence": [
+    {
+      "application": "franklinjavier-blog",
+      "paths": [
+        "src/components/Footer.astro",
+        "src/components/Navigation.astro",
+        "src/components/ThemeToggle.astro",
+        "src/i18n/ui.ts",
+        "src/i18n/utils.ts"
+      ],
+      "verifySkill": ".agents/skills/verify-franklinjavier-blog/SKILL.md",
+      "prototype": null,
+      "journeys": [
+        {
+          "id": "footer-rss",
+          "paths": [
+            "src/components/Footer.astro",
+            "src/i18n/ui.ts",
+            "src/i18n/utils.ts"
+          ],
+          "states": [
+            "default"
+          ],
+          "assertions": [
+            "footer-rss-en",
+            "footer-rss-pt",
+            "footer-feed-locales",
+            "footer-links-unchanged"
+          ]
+        },
+        {
+          "id": "header-controls",
+          "paths": [
+            "src/components/Navigation.astro",
+            "src/components/ThemeToggle.astro",
+            "src/i18n/ui.ts",
+            "src/i18n/utils.ts"
+          ],
+          "states": [
+            "default"
+          ],
+          "assertions": [
+            "header-mobile-targets",
+            "header-no-overflow",
+            "header-theme-persistence",
+            "header-locale-switch",
+            "header-desktop-preserved"
+          ]
+        }
+      ]
+    }
+  ]
 }

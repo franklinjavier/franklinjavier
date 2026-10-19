@@ -78,6 +78,7 @@ an `outcome: "passed"` receipt. Save a failure report outside the success schema
 Do not fabricate skipped journeys, screenshots, timings, token counts, or performance metrics.
 After cleanup verify the retained evidence and unchanged candidate commit/tree.
 
-This repository currently has no registered `uiEvidence` application policy in `.bottega/config.json`.
-This skill and adapter alone do not activate the Bottega receipt gate for this blog.
-Policy registration and coordinator attestation require a separate authorized integration.
+The scoped `uiEvidence` policy in `.bottega/config.json` covers footer RSS and header controls.
+Only the policy and verification source on the trusted integration ref establish gate expectations.
+A candidate policy or this adapter alone grants no approval: retain real exact-source receipts and
+independent coordinator attestations after the policy is canonically integrated.
