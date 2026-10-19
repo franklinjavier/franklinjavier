@@ -20,13 +20,16 @@ export BLOG_PROOF=$(mktemp -d /tmp/franklinjavier-proof.XXXXXX)
 git rev-parse HEAD HEAD^{tree} > "$BLOG_PROOF/source.txt"
 git status --porcelain=v1 > "$BLOG_PROOF/status.txt"
 bun run build > "$BLOG_PROOF/build.log" 2>&1
-bun run preview --host 127.0.0.1 --port 4322 > "$BLOG_PROOF/server.log" 2>&1 &
-export BLOG_PID=$!
+bun run preview --host 127.0.0.1 --port 4322 > "$BLOG_PROOF/server.log" 2>&1
+cp .astro/preview.json "$BLOG_PROOF/preview.json"
+export BLOG_PID=$(python3 -c 'import json; print(json.load(open(".astro/preview.json"))["pid"])')
 printf '%s\n' "$BLOG_PID" > "$BLOG_PROOF/server.pid"
 ```
 
 The build must exit zero before preview starts. If 4322 is occupied, select a free port and record it.
 Astro may choose another port on collision: verify the actual listener and URL before driving.
+Astro 7 detects agent execution and starts a detached preview. Read its actual PID from
+`.astro/preview.json`; the short-lived launcher PID is not the server PID.
 Use the built preview, not a dev server that can change beneath the proof.
 Readiness is a successful `curl -fsS http://127.0.0.1:4322/` plus the preview log's Local URL.
 Parallel verification is safe only with separate ports, evidence directories, and owned tabs.
@@ -44,8 +47,8 @@ git rev-parse HEAD HEAD^{tree}
 git status --porcelain=v1
 ```
 
-The listener must descend from the recorded preview process, serve this checkout's built blog,
-and match the frozen commit/tree and clean source status. Check process ancestry with `ps`.
+The listener must match the recorded detached preview PID, serve this checkout's built blog,
+and match the frozen commit/tree and clean source status. Check its exact command and checkout path with `ps`.
 Confirm the returned HTML contains `Franklin Javier`, and the build log reports successful generation.
 A stale build, foreign listener, failed build, or changed source invalidates the run.
 
