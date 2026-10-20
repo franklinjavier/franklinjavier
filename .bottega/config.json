@@ -86,7 +86,14 @@
         "accept": "text/markdown"
       }
     ],
-    "observeMinutes": 10
+    "observeMinutes": 10,
+    "vercel": {
+      "teamId": "team_7kvG6Go2K3t4V8GABJgHJI8w",
+      "projectId": "prj_ZEudqH3yhf2TBbXVFogvlAqn1FHT",
+      "repositoryId": "37436116",
+      "productionBranch": "main",
+      "rollback": true
+    }
   },
   "uiEvidence": [
     {

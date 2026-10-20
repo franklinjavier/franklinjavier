@@ -110,6 +110,18 @@ describe('edge middleware', () => {
     expect(response.headers.get('x-middleware-next')).toBe('1')
   })
 
+  test('passes /api/health through without markdown negotiation', async () => {
+    stubFetch([])
+    const response = await middleware(
+      new Request('https://franklinjavier.com/api/health', {
+        headers: { accept: 'text/markdown' },
+      }),
+    )
+    expect(response.headers.get('x-middleware-rewrite')).toBeNull()
+    expect(response.headers.get('x-middleware-next')).toBe('1')
+    expect(response.headers.get('content-type')).toBeNull()
+  })
+
   test('passes browser requests through with Vary: Accept', async () => {
     stubFetch([])
     const response = await middleware(

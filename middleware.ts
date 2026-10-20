@@ -30,6 +30,9 @@ const MARKDOWN_HEADERS = {
 export default async function middleware(request: Request) {
   const url = new URL(request.url)
 
+  // Machine endpoint (api/health.ts): never negotiate or rewrite.
+  if (url.pathname === '/api/health') return next()
+
   // Pre-rendered twins (…/index.md) are static files; serve them as is.
   if (url.pathname.endsWith('/index.md')) return next()
 
