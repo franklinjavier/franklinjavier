@@ -84,6 +84,10 @@
         "path": "/blog/which-is-the-best-os/",
         "status": 200,
         "accept": "text/markdown"
+      },
+      {
+        "path": "/api/health",
+        "status": 200
       }
     ],
     "observeMinutes": 10,
