@@ -52,6 +52,7 @@ export default {
       }
     }
     const headers = new Headers(response.headers)
+    if (path.startsWith('/_astro/') && response.ok) headers.set('Cache-Control', 'public, max-age=31536000, immutable')
     const vary =
       headers
         .get('Vary')
