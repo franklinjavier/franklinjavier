@@ -6,6 +6,11 @@
   "preview_urls": true,
   "previews": {},
   "observability": { "enabled": true },
+  // franklinjavier.com is a Workers Custom Domain on the production `blog` Worker
+  // (attached 2026-10-21). Declared here so `wrangler deploy` keeps it. Top-level
+  // routes are not inherited by env.preview. www -> apex is a zone Redirect Rule.
+  // https://developers.cloudflare.com/workers/configuration/routing/custom-domains/
+  "routes": [{ "pattern": "franklinjavier.com", "custom_domain": true }],
   "assets": {
     "directory": "./dist",
     "binding": "ASSETS",
