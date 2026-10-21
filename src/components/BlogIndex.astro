@@ -10,6 +10,7 @@ import {
   getPostUrl,
   getAlternateUrl,
 } from '../i18n/utils'
+import { viewTransitionName } from '../lib/view-transition'
 
 interface Props {
   lang: 'en' | 'pt-br'
@@ -64,10 +65,14 @@ const summary = `${countLabel} - ${description}`
               <time
                 datetime={post.data.date.toISOString()}
                 class="text-meta text-muted tabular-nums"
+                style={`view-transition-name: ${viewTransitionName('date', post.id)}`}
               >
                 {formattedDate}
               </time>
-              <h2 class="mt-0.5 font-[550] text-ink decoration-muted underline-offset-3 group-hover:underline">
+              <h2
+                class="mt-0.5 font-[550] text-ink decoration-muted underline-offset-3 group-hover:underline"
+                style={`view-transition-name: ${viewTransitionName('title', post.id)}`}
+              >
                 {post.data.title}
               </h2>
               {post.data.description && (

@@ -112,7 +112,17 @@
   }
 }
 
-/* Theme toggle uses View Transitions. html.theme-transition is never set. */
+/*
+ * Cross-document view transitions. Both documents opt in; Chrome/Edge 126+
+ * and Safari 18.2+ animate, and other browsers navigate normally.
+ * https://developer.mozilla.org/en-US/docs/Web/API/View_Transition_API/Using#basic_mpa_view_transition
+ */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition {
+    navigation: auto;
+  }
+}
+
 @keyframes page-reveal {
   from {
     clip-path: polygon(50% -71%, -50% 71%, -50% 71%, 50% -71%);
@@ -122,20 +132,74 @@
   }
 }
 
+@keyframes page-fade-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes page-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+}
+
 ::view-transition-old(root) {
+  animation: 220ms var(--ease) both page-fade-out;
+}
+
+::view-transition-new(root) {
+  animation: 220ms var(--ease) both page-fade-in;
+}
+
+/* Named pairs (post title, date) morph on the same 220ms pace. */
+::view-transition-group(*) {
+  animation-duration: 220ms;
+  animation-timing-function: var(--ease);
+}
+
+/* Header stays put. !important beats the * group duration above.
+   normal blend so the new snapshot covers the old instead of adding to it. */
+.site-header {
+  view-transition-name: site-header;
+}
+
+::view-transition-group(site-header),
+::view-transition-old(site-header),
+::view-transition-new(site-header) {
+  animation: none !important;
+}
+
+::view-transition-image-pair(site-header) {
+  mix-blend-mode: normal;
+}
+
+/* Theme toggle only. Page navigations keep the fade above. */
+html.theme-transition::view-transition-old(root) {
   animation: none;
   z-index: -1;
 }
 
-::view-transition-new(root) {
+html.theme-transition::view-transition-new(root) {
   animation: 600ms var(--ease) both page-reveal;
   z-index: 999;
 }
 
-/* BaseLayout skips the transition too; this covers any other caller. */
+/* A named snapshot would flip theme on its own instead of clipping with the page. */
+html.theme-transition body * {
+  view-transition-name: none !important;
+}
+
+/* Covers the page fade and the same-document theme reveal. */
 @media (prefers-reduced-motion: reduce) {
   ::view-transition-old(root),
-  ::view-transition-new(root) {
+  ::view-transition-new(root),
+  html.theme-transition::view-transition-old(root),
+  html.theme-transition::view-transition-new(root),
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
     animation: none;
   }
 }

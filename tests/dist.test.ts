@@ -1225,9 +1225,15 @@ describe('payload cuts', () => {
   })
 
   // guards: Hosting build selection must not leak Vercel analytics onto Cloudflare or remove it from Vercel.
+  // The only external script on a Cloudflare build is Astro's hover prefetch.
   test('only emits Vercel Analytics client JS on Vercel builds', () => {
     const html = read('index.html')
-    expect(html).not.toMatch(/_astro\/[^"]+\.js/)
+    const srcs = [...html.matchAll(/src="(\/_astro\/[^"]+\.js)"/g)].map((match) => match[1])
+    expect(srcs).toHaveLength(1)
+    const prefetch = read(srcs[0].replace(/^\//, ''))
+    expect(prefetch).toContain('prefetch')
+    expect(prefetch).not.toContain('vercel-analytics')
+    expect(prefetch).not.toContain('@vercel/analytics')
 
     const moduleScripts = [...html.matchAll(/<script type="module">(.*?)<\/script>/gs)].map(
       (match) => match[1],
@@ -1240,6 +1246,39 @@ describe('payload cuts', () => {
     } else {
       expect(moduleScripts).toHaveLength(0)
       expect(html).not.toContain('/_vercel/insights/script.js')
+      expect(html).not.toContain('vercel-analytics')
+      expect(html).not.toContain('@vercel/analytics')
+    }
+  })
+})
+
+describe('view transitions', () => {
+  test('no built page repeats a view-transition-name', () => {
+    for (const path of htmlPages()) {
+      const names = [...read(path).matchAll(/view-transition-name:\s*([^\s;"'}]+)/g)].map(
+        (match) => match[1],
+      )
+      expect(
+        names.filter((name, index) => names.indexOf(name) !== index),
+        path,
+      ).toEqual([])
+    }
+  })
+
+  test('a post title shares its view-transition-name with the blog index', () => {
+    for (const [indexPath, postPath] of [
+      ['blog/index.html', 'blog/avoid-prop-drilling-react/index.html'],
+      ['pt-br/blog/index.html', 'pt-br/blog/evitando-prop-drilling-react/index.html'],
+    ] as const) {
+      const post = read(postPath)
+      const h1 = /<h1\b[^>]*>/.exec(post)?.[0] ?? ''
+      const name = /view-transition-name:\s*([^;"\s]+)/.exec(h1)?.[1]
+      expect(name, postPath).toMatch(/^post-title-/)
+      const dateName = name!.replace('post-title-', 'post-date-')
+      expect(post).toContain(`view-transition-name: ${dateName}`)
+      const index = read(indexPath)
+      expect(index).toContain(`view-transition-name: ${name}`)
+      expect(index).toContain(`view-transition-name: ${dateName}`)
     }
   })
 })
@@ -1340,7 +1379,7 @@ describe('accessibility guards', () => {
       "startViewTransition&&!matchMedia('(prefers-reduced-motion: reduce)').matches",
     )
     expect(cssFor('index.html')).toMatch(
-      /@media \(prefers-reduced-motion:reduce\)\{::view-transition-old\(root\),::view-transition-new\(root\)\{animation:none\}/,
+      /@media \(prefers-reduced-motion:reduce\)\{::view-transition-old\(root\),::view-transition-new\(root\)(?:,[^}{]*)?\{animation:none\}/,
     )
     expect(cssFor('404.html')).toMatch(
       /@media \(prefers-reduced-motion:reduce\)\{\.glitch[^{]*\{animation:none\}/,
@@ -1446,7 +1485,11 @@ describe('related posts', () => {
       path: 'blog/old-macbook-context-server/',
       heading: 'Related posts',
       prefix: '/blog/',
-      expected: ['open-source-agent-skills', 'how-always-on-agents-work', 'lisbon-ai-2026'],
+      expected: [
+        'how-i-share-links-with-my-agents',
+        'open-source-agent-skills',
+        'how-always-on-agents-work',
+      ],
       unmatched: 'blog/git-password-cache/',
     },
     {
@@ -1454,9 +1497,9 @@ describe('related posts', () => {
       heading: 'Posts relacionados',
       prefix: '/pt-br/blog/',
       expected: [
+        'como-compartilho-links-com-meus-agentes',
         'skills-open-source-para-agentes',
         'como-funciona-um-agente-sempre-ligado',
-        'lisbon-ai-2026',
       ],
       unmatched: 'pt-br/blog/cache-de-senha-no-git/',
     },
