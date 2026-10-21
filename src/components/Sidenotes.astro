@@ -8,6 +8,20 @@
 <script>
   import { enhanceSidenotes } from '../lib/sidenotes'
 
-  const prose = document.querySelector('[data-sidenotes]')
-  if (prose) enhanceSidenotes(prose, matchMedia('(min-width: 64rem)'))
+  // The module runs once per session. after-swap is inside the router's update
+  // callback, before the snapshot, so the notes are in the transition. Abort
+  // drops the previous page's hashchange and matchMedia listeners.
+  let controller = new AbortController()
+
+  const setup = () => {
+    controller.abort()
+    controller = new AbortController()
+    const prose = document.querySelector('[data-sidenotes]')
+    if (!prose || prose.classList.contains('has-sidenotes')) return
+    enhanceSidenotes(prose, matchMedia('(min-width: 64rem)'), controller.signal)
+  }
+
+  document.addEventListener('astro:before-swap', () => controller.abort())
+  document.addEventListener('astro:after-swap', setup)
+  setup()
 </script>
