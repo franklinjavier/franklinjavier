@@ -205,7 +205,7 @@ const jsonLd = blogPostingJsonLd({
             aria-labelledby="related-posts"
             class="mt-12 border-t border-rule pt-5 text-meta text-muted"
           >
-            <h2 id="related-posts">{t('blog.relatedPosts')}</h2>
+            <h2 id="related-posts" class="text-[10px] uppercase tracking-[0.08em]">{t('blog.relatedPosts')}</h2>
             <ul class="mt-3 space-y-2">
               {relatedPosts.map((post) => (
                 <li>
