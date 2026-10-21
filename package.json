@@ -13,7 +13,10 @@
     "test:cache": "bun test tests/diagram-cache.test.ts",
     "og": "bun scripts/og-cards.ts",
     "images:widths": "bun scripts/image-widths.ts",
-    "updatedeps": "bun update --latest"
+    "updatedeps": "bun update --latest",
+    "cf:dev": "wrangler dev",
+    "cf:deploy": "wrangler deploy",
+    "cf:preview": "wrangler preview"
   },
   "author": "Franklin Javier <franklinjalves@gmail.com>",
   "license": "MIT",
@@ -35,6 +38,7 @@
     "prettier-plugin-astro": "^1.1.0",
     "prettier-plugin-tailwindcss": "^0.8.1",
     "sharp": "^0.35.4",
-    "vite": "^8.3.1"
+    "vite": "^8.3.1",
+    "wrangler": "4.151.3"
   }
 }

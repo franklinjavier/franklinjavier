@@ -2,6 +2,9 @@
   "name": "franklinjavier-blog",
   "main": "worker.ts",
   "compatibility_date": "2026-10-17",
+  "workers_dev": true,
+  "preview_urls": true,
+  "previews": {},
   "build": { "command": "bun run build" },
   "assets": {
     "directory": "./dist",
