@@ -5,7 +5,6 @@
   "workers_dev": true,
   "preview_urls": true,
   "previews": {},
-  "build": { "command": "bun run build" },
   "assets": {
     "directory": "./dist",
     "binding": "ASSETS",

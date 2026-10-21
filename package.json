@@ -14,9 +14,9 @@
     "og": "bun scripts/og-cards.ts",
     "images:widths": "bun scripts/image-widths.ts",
     "updatedeps": "bun update --latest",
-    "cf:dev": "wrangler dev",
-    "cf:deploy": "wrangler deploy",
-    "cf:preview": "wrangler preview"
+    "cf:dev": "bun run build && wrangler dev",
+    "cf:deploy": "bun run build && wrangler deploy",
+    "cf:preview": "bun run build && wrangler preview"
   },
   "author": "Franklin Javier <franklinjalves@gmail.com>",
   "license": "MIT",
