@@ -3,6 +3,12 @@ import ThemeToggle from './ThemeToggle.astro'
 import LanguageToggle from './LanguageToggle.astro'
 import { useTranslations, getLangFromUrl } from '../i18n/utils'
 
+interface Props {
+  /** Home passes this so the bar matches the wide page container. */
+  wide?: boolean
+}
+
+const { wide = false } = Astro.props
 const lang = getLangFromUrl(Astro.url)
 const t = useTranslations(lang)
 
@@ -31,8 +37,8 @@ const control =
 ---
 
 <header class="sticky top-0 z-50 border-b border-rule bg-page site-header">
-  {/* Same container as every page body (site-container, global.css). */}
-  <div class="site-container">
+  {/* site-container, or site-container-wide on the home page. */}
+  <div class={wide ? 'site-container-wide' : 'site-container'}>
     <div class="flex h-12 items-center justify-between gap-4 text-[0.8125rem] leading-none">
       <nav aria-label={t('nav.label')}>
         <ul class="flex items-center gap-x-5 sm:gap-x-6">
