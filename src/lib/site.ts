@@ -79,6 +79,18 @@ export const SIDE_PROJECTS = [
 
 export const OPEN_SOURCE = [
   {
+    key: 'xmd',
+    name: 'xmd',
+    language: 'JavaScript',
+    url: 'https://github.com/franklinjavier/xmd?utm_source=FranklinJavier&utm_medium=site',
+  },
+  {
+    key: 'uia',
+    name: 'uia',
+    language: 'TypeScript',
+    url: 'https://github.com/franklinjavier/uia?utm_source=FranklinJavier&utm_medium=site',
+  },
+  {
     key: 'storefront',
     name: 'storefront',
     language: 'JavaScript',

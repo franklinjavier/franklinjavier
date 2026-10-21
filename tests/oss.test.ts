@@ -18,6 +18,8 @@ globalThis.fetch = originalFetch
 test('offline metadata failure preserves the curated bilingual HTML and Markdown contract', () => {
   expect(stars).toEqual({})
   expect(OPEN_SOURCE.map(({ name }) => name)).toEqual([
+    'xmd',
+    'uia',
     'storefront',
     'remix-ecommerce',
     'translate',
@@ -29,6 +31,8 @@ test('offline metadata failure preserves the curated bilingual HTML and Markdown
     'stonegiantstudio/skills',
   ])
   expect(OPEN_SOURCE.map(({ language }) => language)).toEqual([
+    'JavaScript',
+    'TypeScript',
     'JavaScript',
     'TypeScript',
     'Swift',

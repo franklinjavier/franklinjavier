@@ -53,6 +53,10 @@ export const ui = {
     'blog.recentPosts': 'Posts Recentes',
     'oss.title': 'Código aberto',
     'oss.stars': 'estrelas',
+    'oss.xmd':
+      'Qualquer link em Markdown, com suporte ao X/Twitter: CLI, Cloudflare Worker e extensão para o Chrome.',
+    'oss.uia':
+      'Design system para produtos de IA: shadcn + Base UI, componentes de UI generativa e um kit de chat componível.',
     'oss.storefront':
       'Boilerplate Node.js e Redis padronizado para e-commerce, usado nas lojas da Beleza na Web e do Grupo Boticário, com mais de 1M de requisições por minuto.',
     'oss.remix-ecommerce': 'Demo de e-commerce da palestra Remix @ React Conf 2022.',
@@ -154,6 +158,10 @@ export const ui = {
     'blog.recentPosts': 'Recent Posts',
     'oss.title': 'Open source',
     'oss.stars': 'stars',
+    'oss.xmd':
+      'Any link to Markdown, with X/Twitter support: a CLI, a Cloudflare Worker and a Chrome extension.',
+    'oss.uia':
+      'A design system for AI products: shadcn + Base UI, generative-UI parts and a composable chat kit.',
     'oss.storefront':
       'Standardised Node.js and Redis boilerplate for e-commerce, powering Beleza na Web and Grupo Boticário storefronts at over 1M requests per minute.',
     'oss.remix-ecommerce': 'E-commerce demo from the Remix @ React Conf 2022 talk.',

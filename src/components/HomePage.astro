@@ -33,14 +33,15 @@ const sortedPosts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.
   lang={lang}
   alternate={getAlternateUrl(Astro.url, lang === 'en' ? 'pt-br' : 'en')}
   markdownTwin
+  wide
 >
-  <Navigation />
+  <Navigation wide />
 
-  <main class="site-container pt-20 pb-24">
+  <main class="site-container-wide pt-20 pb-24">
     <!-- Hero Section -->
     <section class="mb-20" id="about">
       <div class="grid grid-cols-1 items-center gap-10 sm:grid-cols-[minmax(0,1fr)_11rem]">
-        <div>
+        <div class="max-w-2xl">
           <h1 class="mb-4 text-[1.375rem] leading-tight font-[550] text-ink">{t('hero.title')}</h1>
           <div class="space-y-3 text-ink-2">
             <p>{t('hero.bio1')}</p>
@@ -62,95 +63,99 @@ const sortedPosts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.
       </div>
     </section>
 
-    <!-- Info Section -->
-    <section class="border-t border-rule pt-8">
-      <div class="grid grid-cols-1 gap-10 text-[0.8125rem] leading-5 sm:grid-cols-2 sm:gap-8">
-        <div>
-          <h2 class="mb-3 font-[550] text-ink">{t('stack.title')}</h2>
-          <div class="space-y-1 text-ink-2">
-            {DEV_STACK.map((item) => (
-              <p>{item}</p>
-            ))}
+    <!-- Stack and contact stay above posts until lg, then sit in column 3. -->
+    <div class="border-t border-rule pt-8 lg:grid lg:grid-cols-3 lg:items-start lg:gap-x-12">
+      <section class="min-w-0 lg:col-start-3 lg:row-start-1">
+        <div class="grid grid-cols-1 gap-10 text-[0.8125rem] leading-5 sm:grid-cols-2 sm:gap-8 lg:grid-cols-1 lg:gap-10">
+          <div>
+            <h2 class="mb-3 font-[550] text-ink">{t('stack.title')}</h2>
+            <div class="space-y-1 text-ink-2">
+              {DEV_STACK.map((item) => (
+                <p>{item}</p>
+              ))}
+            </div>
           </div>
-        </div>
 
-        <div>
-          <h2 class="mb-3 font-[550] text-ink">{t('contact.title')}</h2>
-          <div class="space-y-1">
-            <p class="text-ink-2">{t('contact.location')}</p>
-            <a
-              href="mailto:franklinjalves@gmail.com"
-              class="block w-fit text-ink-2 underline decoration-muted underline-offset-3 transition-colors duration-200 ease-smooth hover:text-ink hover:decoration-current"
-            >
-              franklinjalves@gmail.com
-            </a>
-            <a
-              href="https://www.linkedin.com/in/franklin-javier-98504321"
-              target="_blank"
-              rel="noopener"
-              class="block w-fit text-ink-2 underline decoration-muted underline-offset-3 transition-colors duration-200 ease-smooth hover:text-ink hover:decoration-current"
-            >
-              LinkedIn
-            </a>
-            <a
-              href="https://x.com/franklinjavier"
-              target="_blank"
-              rel="noopener"
-              class="block w-fit text-ink-2 underline decoration-muted underline-offset-3 transition-colors duration-200 ease-smooth hover:text-ink hover:decoration-current"
-            >
-              X
-            </a>
-            <a
-              href={getLocalizedPath('/cv/', lang)}
-              class="block w-fit text-ink-2 underline decoration-muted underline-offset-3 transition-colors duration-200 ease-smooth hover:text-ink hover:decoration-current"
-            >
-              {t('nav.cv')}
-            </a>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Blog Posts Section -->
-    <section class="mt-20" id="posts">
-      <h2 class="mb-4 font-[550] text-ink">{t('blog.recentPosts')}</h2>
-      <ul class="border-t border-rule">
-        {sortedPosts.slice(0, 6).map((post) => {
-          const formattedDate = formatDate(post.data.date, lang)
-          const postUrl = getPostUrl(post.id, lang)
-
-          return (
-            <li class="border-b border-rule">
-              <a href={postUrl} class="group block py-3">
-                <div class="flex flex-col gap-x-6 gap-y-0.5 sm:flex-row sm:items-baseline sm:justify-between">
-                  <h3
-                    class="font-[550] text-ink decoration-muted underline-offset-3 group-hover:underline"
-                    style={`view-transition-name: ${viewTransitionName('title', post.id)}`}
-                  >
-                    {post.data.title}
-                  </h3>
-                  <time
-                    datetime={post.data.date.toISOString()}
-                    class="shrink-0 text-meta text-muted tabular-nums"
-                    style={`view-transition-name: ${viewTransitionName('date', post.id)}`}
-                  >
-                    {formattedDate}
-                  </time>
-                </div>
-                {post.data.description && (
-                  <p class="mt-1 text-[0.8125rem] leading-5 text-ink-2">{post.data.description}</p>
-                )}
+          <div>
+            <h2 class="mb-3 font-[550] text-ink">{t('contact.title')}</h2>
+            <div class="space-y-1">
+              <p class="text-ink-2">{t('contact.location')}</p>
+              <a
+                href="mailto:franklinjalves@gmail.com"
+                class="block w-fit text-ink-2 underline decoration-muted underline-offset-3 transition-colors duration-200 ease-smooth hover:text-ink hover:decoration-current"
+              >
+                franklinjalves@gmail.com
               </a>
-            </li>
-          )
-        })}
-      </ul>
-    </section>
+              <a
+                href="https://www.linkedin.com/in/franklin-javier-98504321"
+                target="_blank"
+                rel="noopener"
+                class="block w-fit text-ink-2 underline decoration-muted underline-offset-3 transition-colors duration-200 ease-smooth hover:text-ink hover:decoration-current"
+              >
+                LinkedIn
+              </a>
+              <a
+                href="https://x.com/franklinjavier"
+                target="_blank"
+                rel="noopener"
+                class="block w-fit text-ink-2 underline decoration-muted underline-offset-3 transition-colors duration-200 ease-smooth hover:text-ink hover:decoration-current"
+              >
+                X
+              </a>
+              <a
+                href={getLocalizedPath('/cv/', lang)}
+                class="block w-fit text-ink-2 underline decoration-muted underline-offset-3 transition-colors duration-200 ease-smooth hover:text-ink hover:decoration-current"
+              >
+                {t('nav.cv')}
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Blog Posts Section -->
+      <section id="posts" class="mt-20 min-w-0 lg:col-span-2 lg:col-start-1 lg:row-start-1 lg:mt-0">
+        <h2 class="mb-4 font-[550] text-ink">{t('blog.recentPosts')}</h2>
+        <ul class="border-t border-rule">
+          {sortedPosts.slice(0, 6).map((post) => {
+            const formattedDate = formatDate(post.data.date, lang)
+            const postUrl = getPostUrl(post.id, lang)
+
+            return (
+              <li class="border-b border-rule">
+                <a href={postUrl} class="group block py-3">
+                  <div class="flex flex-col gap-x-6 gap-y-0.5 sm:flex-row sm:items-baseline sm:justify-between">
+                    <h3
+                      class="font-[550] text-ink decoration-muted underline-offset-3 group-hover:underline"
+                      style={`view-transition-name: ${viewTransitionName('title', post.id)}`}
+                    >
+                      {post.data.title}
+                    </h3>
+                    <time
+                      datetime={post.data.date.toISOString()}
+                      class="shrink-0 text-meta text-muted tabular-nums"
+                      style={`view-transition-name: ${viewTransitionName('date', post.id)}`}
+                    >
+                      {formattedDate}
+                    </time>
+                  </div>
+                  {post.data.description && (
+                    <p class="mt-1 text-[0.8125rem] leading-5 text-ink-2">
+                      {post.data.description}
+                    </p>
+                  )}
+                </a>
+              </li>
+            )
+          })}
+        </ul>
+      </section>
+    </div>
 
     <!-- Side Projects Section -->
     <section class="mt-20" id="projects">
       <h2 class="mb-4 font-[550] text-ink">{t('projects.title')}</h2>
-      <div class="grid grid-cols-1 gap-6 sm:grid-cols-3">
+      <div class="grid grid-cols-1 gap-6 sm:grid-cols-3 lg:grid-cols-4">
         {SIDE_PROJECTS.map((project) => (
           <article class="group">
             <a href={project.url} target="_blank" rel="noopener" class="flex gap-4 sm:block">
@@ -176,28 +181,30 @@ const sortedPosts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.
     </section>
     <section class="mt-20" id="open-source">
       <h2 class="mb-4 font-[550] text-ink">{t('oss.title')}</h2>
-      <ul class="border-t border-rule">
+      <ul class="grid grid-cols-1 gap-x-8 sm:grid-cols-2 lg:grid-cols-3">
         {orderOpenSource(stars).map((repo) => (
-          <li class="border-b border-rule py-3">
-            <h3 class="font-[550] text-ink">
-              <a
-                href={repo.url}
-                target="_blank"
-                rel="noopener"
-                class="break-words decoration-muted underline-offset-3 hover:underline"
-              >
-                {repo.name}
-              </a>
-            </h3>
-            <p class="mt-1 text-[0.8125rem] leading-5 text-muted">{t(`oss.${repo.key}`)}</p>
-            <div class="mt-1 flex gap-3 text-meta text-muted">
-              {repo.language && <span>{repo.language}</span>}
-              {stars[repo.name] !== undefined && (
-                <span aria-label={`${formatStars(stars[repo.name])} ${t('oss.stars')}`}>
-                  ★ {formatStars(stars[repo.name])}
-                </span>
-              )}
+          <li class="min-w-0 border-t border-rule py-3">
+            <div class="flex items-baseline justify-between gap-3">
+              <h3 class="min-w-0">
+                <a
+                  href={repo.url}
+                  target="_blank"
+                  rel="noopener"
+                  class="block min-w-0 font-[550] text-ink [overflow-wrap:anywhere] decoration-muted underline-offset-3 hover:underline"
+                >
+                  {repo.name}
+                </a>
+              </h3>
+              <div class="flex shrink-0 gap-3 text-meta text-muted">
+                {repo.language && <span>{repo.language}</span>}
+                {stars[repo.name] !== undefined && (
+                  <span aria-label={`${formatStars(stars[repo.name])} ${t('oss.stars')}`}>
+                    ★ {formatStars(stars[repo.name])}
+                  </span>
+                )}
+              </div>
             </div>
+            <p class="mt-1 text-[0.8125rem] leading-5 text-muted">{t(`oss.${repo.key}`)}</p>
           </li>
         ))}
       </ul>

@@ -172,9 +172,8 @@ describe('site header', () => {
     )
   })
 
-  test('uses the same container as every page body', () => {
+  test('uses the same container as every inner page body', () => {
     for (const path of [
-      'index.html',
       'blog/index.html',
       'blog/tag/react/index.html',
       'about/index.html',
@@ -183,8 +182,21 @@ describe('site header', () => {
     ]) {
       expect(header(path)).toContain('<div class="site-container">')
       expect(read(path)).toMatch(/<(main|div) class="site-container[ "]/)
+      expect(read(path)).not.toContain('site-container-wide')
       expect(read(path)).not.toContain('max-w-2xl')
       expect(read(path)).not.toContain('max-w-[34.5rem]')
+    }
+  })
+
+  test('home uses the wide container in the header, main and footer', () => {
+    for (const path of ['index.html', 'pt-br/index.html']) {
+      const html = read(path)
+      expect(header(path)).toContain('<div class="site-container-wide">')
+      expect(html).toMatch(/<main class="site-container-wide /)
+      expect(html).toMatch(/<footer[\s\S]*class="site-container-wide /)
+      expect(html).not.toMatch(/class="site-container"/)
+      expect(html).not.toMatch(/class="site-container /)
+      expect(html).toContain('max-w-2xl')
     }
   })
 })

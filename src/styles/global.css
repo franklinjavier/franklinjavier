@@ -71,12 +71,14 @@
 }
 
 /*
- * The one outer container every page and the header share, so left/right
- * edges line up: 42rem including the side padding (1.5rem, 2rem from sm),
- * a 38rem text box on wide screens. Post rails hang outside it (prose.css).
+ * The outer container pages and the header share, so left/right edges line
+ * up: 42rem including the side padding (1.5rem, 2rem from sm), a 38rem text
+ * box on wide screens. Post rails hang outside it (prose.css). Home opts
+ * into --container-wide (72rem) via site-container-wide.
  */
 :root {
   --container-max: 42rem;
+  --container-wide: 72rem;
   --gutter: 1.5rem;
 }
 
@@ -89,6 +91,13 @@
 @utility site-container {
   width: 100%;
   max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+@utility site-container-wide {
+  width: 100%;
+  max-width: var(--container-wide);
   margin-inline: auto;
   padding-inline: var(--gutter);
 }
