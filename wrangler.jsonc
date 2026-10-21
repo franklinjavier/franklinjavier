@@ -12,4 +12,15 @@
     "run_worker_first": true,
     "not_found_handling": "404-page",
   },
+  // blog-preview.imfrank.dev: a separate Worker deployed by its own Workers Builds
+  // trigger (non-main branches, `npx wrangler deploy --env preview`, build var
+  // SITE_URL=https://blog-preview.imfrank.dev). Production `blog` ignores this.
+  // https://developers.cloudflare.com/workers/ci-cd/builds/advanced-setups/#wrangler-environments
+  // https://developers.cloudflare.com/workers/wrangler/environments/
+  "env": {
+    "preview": {
+      "name": "blog-preview",
+      "vars": { "ROBOTS": "noindex" },
+    },
+  },
 }

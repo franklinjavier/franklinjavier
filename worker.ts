@@ -10,7 +10,12 @@ import {
 } from './src/lib/negotiation.js'
 import health from './api/health.js'
 
-type Env = { ASSETS: { fetch(request: Request): Promise<Response> } }
+type Env = {
+  ASSETS: { fetch(request: Request): Promise<Response> }
+  ROBOTS?: string
+  GIT_SHA?: string
+  GIT_BRANCH?: string
+}
 const headerValue = (group: number) => rules.headers[group]!.headers[0]!.value
 
 export default {
@@ -52,7 +57,8 @@ export default {
       }
     }
     const headers = new Headers(response.headers)
-    if (path.startsWith('/_astro/') && response.ok) headers.set('Cache-Control', 'public, max-age=31536000, immutable')
+    if (path.startsWith('/_astro/') && response.ok)
+      headers.set('Cache-Control', 'public, max-age=31536000, immutable')
     const vary =
       headers
         .get('Vary')
@@ -61,6 +67,14 @@ export default {
     if (!vary.some((value) => value.toLowerCase() === 'accept')) vary.push(headerValue(0))
     headers.set('Vary', vary.join(', '))
     if (markdown) headers.set('Content-Type', headerValue(1))
+    // blog-preview only (wrangler env.preview var): keep the preview out of search.
+    // https://developers.google.com/search/docs/crawling-indexing/block-indexing
+    if (env.ROBOTS) headers.set('X-Robots-Tag', env.ROBOTS)
+    // blog-preview only: the deploy command passes --var GIT_SHA/GIT_BRANCH from
+    // WORKERS_CI_COMMIT_SHA/WORKERS_CI_BRANCH, so each response names the commit it serves.
+    // https://developers.cloudflare.com/workers/ci-cd/builds/configuration/#default-variables
+    if (env.GIT_SHA) headers.set('X-Preview-Commit', env.GIT_SHA)
+    if (env.GIT_BRANCH) headers.set('X-Preview-Branch', env.GIT_BRANCH)
     if (path === '/llms.txt') headers.set('Content-Type', headerValue(2))
     if (path === '/') headers.set('Link', headerValue(3))
     else if (/^\/pt-br\/?$/.test(path)) headers.set('Link', headerValue(4))
