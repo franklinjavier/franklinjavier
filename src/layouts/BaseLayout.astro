@@ -130,6 +130,7 @@ const markdownUrl = markdownTwin ? markdownUrlFor(Astro.url.pathname) : undefine
         )
         if (!live) return
         live.setAttribute('data-astro-transition-persist', 'vercel-insights')
+        live.dataset.astroExec = ''
         event.newDocument.head.appendChild(live.cloneNode())
       })
     </script>}
