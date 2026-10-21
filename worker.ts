@@ -8,6 +8,7 @@ import {
   isPostPath,
   markdownLinkHeader,
 } from './src/lib/negotiation.js'
+import health from './api/health.js'
 
 type Env = { ASSETS: { fetch(request: Request): Promise<Response> } }
 const headerValue = (group: number) => rules.headers[group]!.headers[0]!.value
@@ -24,7 +25,9 @@ export default {
         : null
     let response: Response
     let markdown = path.endsWith('.md')
-    if (destination) {
+    if (path === '/api/health') {
+      response = await health.fetch(request)
+    } else if (destination) {
       url.pathname = destination
       response = new Response(null, { status: 308, headers: { Location: url.href } })
     } else {
