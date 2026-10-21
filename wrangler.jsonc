@@ -6,6 +6,13 @@
   "preview_urls": true,
   "previews": {},
   "observability": { "enabled": true },
+  // franklinjavier.com is a Workers Custom Domain on the production `blog` Worker
+  // (attached 2026-10-21). Declared here so `wrangler deploy` keeps it. Top-level
+  // `routes` IS inheritable, so env.preview overrides it below (otherwise a preview
+  // deploy steals franklinjavier.com). www -> apex is a zone Redirect Rule.
+  // https://developers.cloudflare.com/workers/wrangler/configuration/#inheritable-keys
+  // https://developers.cloudflare.com/workers/configuration/routing/custom-domains/
+  "routes": [{ "pattern": "franklinjavier.com", "custom_domain": true }],
   "assets": {
     "directory": "./dist",
     "binding": "ASSETS",
@@ -20,6 +27,7 @@
   "env": {
     "preview": {
       "name": "blog-preview",
+      "routes": [{ "pattern": "blog-preview.imfrank.dev", "custom_domain": true }],
       "vars": { "ROBOTS": "noindex" },
     },
   },
