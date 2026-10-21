@@ -33,6 +33,8 @@ const diagrams = { ...diagramsPlugin, sourceHash: diagramsHash.digest('hex') }
 export default defineConfig({
   site: 'https://franklinjavier.com',
   output: 'static',
+  // <link rel="prefetch"> on hover, with a fetch() fallback. Not Speculation Rules.
+  prefetch: { prefetchAll: true, defaultStrategy: 'hover' },
   build: {
     format: 'directory', // Creates /posts/title/index.html
     // Keep the article prose sheet as a real CSS asset so home / blog index /

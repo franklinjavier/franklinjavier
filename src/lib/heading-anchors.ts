@@ -68,16 +68,15 @@ async function copyText(doc: Document, text: string): Promise<boolean> {
  * without the native jump, copies the full URL and announces the result
  * through the `[data-heading-anchor-status]` live region (`data-message` on
  * success, `data-error-message` when both clipboard methods fail; the URL is
- * then still in the address bar). The region is read at click time, so one
- * document listener keeps working after the body is swapped. Resolves once
- * the click is handled.
+ * then still in the address bar). Resolves once the click is handled.
  */
 export function createHeadingAnchorHandler(doc: Document) {
   const win = doc.defaultView!
+  const status = doc.querySelector<HTMLElement>('[data-heading-anchor-status]')
   const timers = new WeakMap<HTMLElement, number>()
   let clearStatus = 0
 
-  const announce = (status: HTMLElement | null, message: string | undefined) => {
+  const announce = (message: string | undefined) => {
     if (!status || !message) return
     // Clear first so a repeated message is announced again.
     status.textContent = ''
@@ -98,14 +97,10 @@ export function createHeadingAnchorHandler(doc: Document) {
     }
     event.preventDefault()
     // Update the address bar without the native jump to the heading.
-    // Keep the router's history state: pushState(null) makes Back a no-op
-    // for ClientRouter, so the URL moves and the page does not.
-    const state = win.history.state
-    if (win.location.hash === link.hash) win.history.replaceState(state, '', link.hash)
-    else win.history.pushState(state, '', link.hash)
-    const status = doc.querySelector<HTMLElement>('[data-heading-anchor-status]')
+    if (win.location.hash === link.hash) win.history.replaceState(win.history.state, '', link.hash)
+    else win.history.pushState(null, '', link.hash)
     if (!(await copyText(doc, link.href))) {
-      announce(status, status?.dataset.errorMessage)
+      announce(status?.dataset.errorMessage)
       return
     }
     // Brief check-mark cue (prose.css); the animation is skipped for reduced motion.
@@ -115,6 +110,6 @@ export function createHeadingAnchorHandler(doc: Document) {
       link,
       win.setTimeout(() => delete link.dataset.copied, 1600),
     )
-    announce(status, status?.dataset.message)
+    announce(status?.dataset.message)
   }
 }

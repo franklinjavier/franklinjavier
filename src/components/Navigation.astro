@@ -30,18 +30,7 @@ const control =
   'inline-flex h-11 min-w-11 items-center justify-center transition-colors duration-200 ease-smooth hover:text-ink motion-reduce:transition-none sm:h-8 sm:min-w-8'
 ---
 
-{/*
-  Not transition:persist. aria-current, the language toggle href and the labels
-  are rendered for this page; persisting the node would keep the previous
-  page's state. A stable name with no animation holds the bar still while the
-  swap updates that state. The none-animation rules also live in global.css so
-  they apply when the other page (CV, 404) has no header.
-*/}
-<header
-  transition:name="site-header"
-  transition:animate="none"
-  class="sticky top-0 z-50 border-b border-rule bg-page"
->
+<header class="sticky top-0 z-50 border-b border-rule bg-page site-header">
   {/* Same container as every page body (site-container, global.css). */}
   <div class="site-container">
     <div class="flex h-12 items-center justify-between gap-4 text-[0.8125rem] leading-none">

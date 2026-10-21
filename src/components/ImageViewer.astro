@@ -23,13 +23,7 @@ const { lang, selector = '.prose img', ignore = '.photo-stack, .gallery' } = Ast
 const t = useTranslations(lang)
 ---
 
-<dialog
-  id="image-viewer"
-  class="image-viewer"
-  aria-label={t('blog.imageViewer')}
-  data-zoom-selector={selector}
-  data-zoom-ignore={ignore}
->
+<dialog id="image-viewer" class="image-viewer" aria-label={t('blog.imageViewer')}>
   <img alt="" />
   <form method="dialog">
     <button class="image-viewer-close" aria-label={t('blog.closeImage')}>
@@ -49,67 +43,38 @@ const t = useTranslations(lang)
   </form>
 </dialog>
 
-<script is:inline>
+<script is:inline define:vars={{ selector, ignore }}>
   ;(() => {
-    // Same text on every post, so the router will not re-run this. Re-bind on
-    // each swap and abort the previous document listener. Capture runs before
-    // the router's bubble listener (an image link must zoom, not navigate).
-    let controller = new AbortController()
+    const dialog = document.getElementById('image-viewer')
+    if (!dialog || !dialog.showModal) return
+    const viewerImg = dialog.querySelector('img')
 
-    const bind = () => {
-      controller.abort()
-      controller = new AbortController()
-      const { signal } = controller
-      const dialog = document.getElementById('image-viewer')
-      if (!dialog || !dialog.showModal) return
-      const viewerImg = dialog.querySelector('img')
-      if (!viewerImg) return
-      const selector = dialog.dataset.zoomSelector || '.prose img'
-      const ignore = dialog.dataset.zoomIgnore || '.photo-stack, .gallery'
-
-      const isImageUrl = (url) => /\.(avif|gif|jpe?g|png|svg|webp)(\?|#|$)/i.test(url)
-      const isZoomable = (img) => {
-        if (img.closest(ignore)) return false
-        const link = img.closest('a')
-        return !link || isImageUrl(link.href)
-      }
-
-      // Mark zoomable images so CSS can show the zoom cursor.
-      document.querySelectorAll(selector).forEach((img) => {
-        if (isZoomable(img)) img.setAttribute('data-zoomable', '')
-      })
-
-      document.addEventListener(
-        'click',
-        (event) => {
-          const target = event.target
-          if (!target || !target.closest) return
-          const thumb = target.closest(selector)
-          if (!thumb || !isZoomable(thumb)) return
-          if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey) return
-          event.preventDefault()
-          const link = thumb.closest('a')
-          viewerImg.src = link ? link.href : thumb.src
-          viewerImg.alt = thumb.alt
-          dialog.showModal()
-        },
-        { capture: true, signal },
-      )
-
-      dialog.addEventListener(
-        'click',
-        (event) => {
-          const target = event.target
-          if (target && target.closest && target.closest('.image-viewer-close')) return
-          dialog.close()
-        },
-        { signal },
-      )
+    const isImageUrl = (url) => /\.(avif|gif|jpe?g|png|svg|webp)(\?|#|$)/i.test(url)
+    const isZoomable = (img) => {
+      if (img.closest(ignore)) return false
+      const link = img.closest('a')
+      return !link || isImageUrl(link.href)
     }
 
-    document.addEventListener('astro:before-swap', () => controller.abort())
-    document.addEventListener('astro:after-swap', bind)
-    bind()
+    // Mark zoomable images so CSS can show the zoom cursor.
+    document.querySelectorAll(selector).forEach((img) => {
+      if (isZoomable(img)) img.setAttribute('data-zoomable', '')
+    })
+
+    document.addEventListener('click', (event) => {
+      const thumb = event.target.closest(selector)
+      if (!thumb || !isZoomable(thumb)) return
+      if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey) return
+      event.preventDefault()
+      const link = thumb.closest('a')
+      viewerImg.src = link ? link.href : thumb.src
+      viewerImg.alt = thumb.alt
+      dialog.showModal()
+    })
+
+    dialog.addEventListener('click', (event) => {
+      if (!event.target.closest('.image-viewer-close')) dialog.close()
+    })
   })()
 </script>
 
