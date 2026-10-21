@@ -31,7 +31,8 @@ const diagrams = { ...diagramsPlugin, sourceHash: diagramsHash.digest('hex') }
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://franklinjavier.com',
+  // SITE_URL build variable: set only by the blog-preview Workers Builds trigger (https://docs.astro.build/en/reference/configuration-reference/#site).
+  site: process.env.SITE_URL || 'https://franklinjavier.com',
   output: 'static',
   // <link rel="prefetch"> on hover, with a fetch() fallback. Not Speculation Rules.
   prefetch: { prefetchAll: true, defaultStrategy: 'hover' },

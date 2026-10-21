@@ -1,7 +1,13 @@
 import { ui } from '../i18n/ui'
 import type { Lang } from './markdown'
 
-export const SITE_URL = 'https://franklinjavier.com'
+// Production origin. A build can override it with the SITE_URL build variable
+// (the blog-preview Worker sets it to https://blog-preview.imfrank.dev) so
+// canonical, og:url, hreflang, sitemap and JSON-LD self-reference the preview
+// host instead of duplicating production. The typeof guard keeps the Worker
+// bundle (no nodejs_compat, no `process`) on the production origin.
+export const SITE_URL =
+  (typeof process !== 'undefined' && process.env.SITE_URL) || 'https://franklinjavier.com'
 export const SITE_TITLE = 'Franklin Javier'
 export const SITE_DESCRIPTION = ui.en['home.description']
 export const SITE_AUTHOR = 'Franklin Javier'
