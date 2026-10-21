@@ -1,6 +1,5 @@
 ---
 import '../styles/global.css'
-import { ClientRouter } from 'astro:transitions'
 import Analytics from '@vercel/analytics/astro'
 import Footer from '../components/Footer.astro'
 import {
@@ -72,7 +71,6 @@ const markdownUrl = markdownTwin ? markdownUrlFor(Astro.url.pathname) : undefine
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <ClientRouter />
 
     <title>{pageTitle}</title>
     <meta name="description" content={pageDescription} />
@@ -112,27 +110,12 @@ const markdownUrl = markdownTwin ? markdownUrlFor(Astro.url.pathname) : undefine
 
     <script is:inline>
       /* prettier-ignore */
-      ;(function(){var r=document.documentElement;function themeOn(){var s=localStorage.getItem('color-theme');return s==='dark'||(s===null&&matchMedia('(prefers-color-scheme: dark)').matches)}function paint(root){var on=themeOn(),doc=root.ownerDocument,m=doc.getElementById('theme-toggle-dark-icon'),u=doc.getElementById('theme-toggle-light-icon');root.classList.toggle('dark',on);if(!m||!u)return;m.classList.toggle('hidden',on);u.classList.toggle('hidden',!on)}paint(r);document.addEventListener('astro:before-swap',function(e){r.classList.remove('theme-transition');paint(e.newDocument.documentElement)});document.addEventListener('click',function(e){var el=e.target;if(el&&el.nodeType!==1)el=el.parentElement;var a=el&&el.closest&&el.closest('a');if(a&&/\.(xml|txt|md|pdf)$/i.test(a.pathname))a.setAttribute('data-astro-reload','')},true);var bound=null;function apply(on){r.classList.toggle('dark',on);localStorage.setItem('color-theme',on?'dark':'light');paint(r)}function tog(){var go=function(){apply(!r.classList.contains('dark'))};if(document.startViewTransition&&!matchMedia('(prefers-reduced-motion: reduce)').matches){r.classList.add('theme-transition');try{document.startViewTransition(go).finished.finally(function(){r.classList.remove('theme-transition')})}catch(err){r.classList.remove('theme-transition');go()}}else go()}function bind(){var t=document.getElementById('theme-toggle');if(bound&&bound!==t)bound.removeEventListener('click',tog);if(t&&bound!==t)t.addEventListener('click',tog);bound=t;paint(r)}document.addEventListener('keydown',function(e){if(e.metaKey||e.ctrlKey||e.altKey)return;var n=document.activeElement&&document.activeElement.tagName;if(n==='INPUT'||n==='TEXTAREA')return;var t=document.getElementById('theme-toggle'),l=document.getElementById('language-toggle');if(e.key==='t'&&t)tog();if(e.key==='l'&&l)l.click()});document.addEventListener('astro:page-load',bind);document.readyState==='loading'?document.addEventListener('DOMContentLoaded',bind):bind()})()
+      ;(function(){var r=document.documentElement,s=localStorage.getItem('color-theme');r.classList.toggle('dark',s==='dark'||(s===null&&matchMedia('(prefers-color-scheme: dark)').matches));function boot(){var t=document.getElementById('theme-toggle'),m=document.getElementById('theme-toggle-dark-icon'),u=document.getElementById('theme-toggle-light-icon'),l=document.getElementById('language-toggle');function sync(){if(!m||!u)return;var on=r.classList.contains('dark');m.classList.toggle('hidden',on);u.classList.toggle('hidden',!on)}function apply(on){r.classList.toggle('dark',on);localStorage.setItem('color-theme',on?'dark':'light');sync()}function tog(){var go=function(){apply(!r.classList.contains('dark'))};if(document.startViewTransition&&!matchMedia('(prefers-reduced-motion: reduce)').matches){r.classList.add('theme-transition');try{document.startViewTransition(go).finished.finally(function(){r.classList.remove('theme-transition')})}catch(err){r.classList.remove('theme-transition');go()}}else go()}sync();if(t)t.addEventListener('click',tog);document.addEventListener('keydown',function(e){if(e.metaKey||e.ctrlKey||e.altKey)return;var n=document.activeElement&&document.activeElement.tagName;if(n==='INPUT'||n==='TEXTAREA')return;if(e.key==='t'&&t)tog();if(e.key==='l'&&l)location.href=l.href})}document.readyState==='loading'?document.addEventListener('DOMContentLoaded',boot):boot()})()
     </script>
   </head>
   <body class="min-h-screen bg-page text-ink antialiased transition-colors ease-smooth">
     <slot />
     {!bare && <Footer />}
-    {/* pageview() runs from each new <vercel-analytics> (one per navigation).
-        inject() skips only while its tag is still in the head, but the router
-        drops head nodes the next document lacks, so that tag was removed and
-        fetched again. The script copies it into the incoming head first. */}
     {vercelAnalytics && <Analytics />}
-    {vercelAnalytics && <script is:inline>
-      document.addEventListener('astro:before-swap', function (event) {
-        var live = document.querySelector(
-          'script[src*="/insights/script"], script[src*="vercel-scripts.com"]',
-        )
-        if (!live) return
-        live.setAttribute('data-astro-transition-persist', 'vercel-insights')
-        live.dataset.astroExec = ''
-        event.newDocument.head.appendChild(live.cloneNode())
-      })
-    </script>}
   </body>
 </html>

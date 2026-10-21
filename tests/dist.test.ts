@@ -142,7 +142,7 @@ describe('speaking page', () => {
 
 describe('site header', () => {
   const header = (path: string) =>
-    read(path).match(/<header\b[^>]*class="sticky[^"]*"[^>]*>(.*?)<\/header>/s)?.[0] ?? ''
+    read(path).match(/<header class="sticky[^"]*"[^>]*>(.*?)<\/header>/s)?.[0] ?? ''
 
   test('labels the nav, marks the current item and localizes the switches', () => {
     const en = header('index.html')
@@ -1225,12 +1225,15 @@ describe('payload cuts', () => {
   })
 
   // guards: Hosting build selection must not leak Vercel analytics onto Cloudflare or remove it from Vercel.
-  // The view-transition router is the only external script on the home page.
+  // The only external script on a Cloudflare build is Astro's hover prefetch.
   test('only emits Vercel Analytics client JS on Vercel builds', () => {
     const html = read('index.html')
     const srcs = [...html.matchAll(/src="(\/_astro\/[^"]+\.js)"/g)].map((match) => match[1])
     expect(srcs).toHaveLength(1)
-    expect(srcs[0]).toContain('ClientRouter')
+    const prefetch = read(srcs[0].replace(/^\//, ''))
+    expect(prefetch).toContain('prefetch')
+    expect(prefetch).not.toContain('vercel-analytics')
+    expect(prefetch).not.toContain('@vercel/analytics')
 
     const moduleScripts = [...html.matchAll(/<script type="module">(.*?)<\/script>/gs)].map(
       (match) => match[1],
@@ -1243,6 +1246,39 @@ describe('payload cuts', () => {
     } else {
       expect(moduleScripts).toHaveLength(0)
       expect(html).not.toContain('/_vercel/insights/script.js')
+      expect(html).not.toContain('vercel-analytics')
+      expect(html).not.toContain('@vercel/analytics')
+    }
+  })
+})
+
+describe('view transitions', () => {
+  test('no built page repeats a view-transition-name', () => {
+    for (const path of htmlPages()) {
+      const names = [...read(path).matchAll(/view-transition-name:\s*([^\s;"'}]+)/g)].map(
+        (match) => match[1],
+      )
+      expect(
+        names.filter((name, index) => names.indexOf(name) !== index),
+        path,
+      ).toEqual([])
+    }
+  })
+
+  test('a post title shares its view-transition-name with the blog index', () => {
+    for (const [indexPath, postPath] of [
+      ['blog/index.html', 'blog/avoid-prop-drilling-react/index.html'],
+      ['pt-br/blog/index.html', 'pt-br/blog/evitando-prop-drilling-react/index.html'],
+    ] as const) {
+      const post = read(postPath)
+      const h1 = /<h1\b[^>]*>/.exec(post)?.[0] ?? ''
+      const name = /view-transition-name:\s*([^;"\s]+)/.exec(h1)?.[1]
+      expect(name, postPath).toMatch(/^post-title-/)
+      const dateName = name!.replace('post-title-', 'post-date-')
+      expect(post).toContain(`view-transition-name: ${dateName}`)
+      const index = read(indexPath)
+      expect(index).toContain(`view-transition-name: ${name}`)
+      expect(index).toContain(`view-transition-name: ${dateName}`)
     }
   })
 })
@@ -1343,7 +1379,7 @@ describe('accessibility guards', () => {
       "startViewTransition&&!matchMedia('(prefers-reduced-motion: reduce)').matches",
     )
     expect(cssFor('index.html')).toMatch(
-      /@media \(prefers-reduced-motion:reduce\)\{::view-transition-old\(root\),::view-transition-new\(root\)(?:,html\.theme-transition::view-transition-old\(root\),html\.theme-transition::view-transition-new\(root\))?\{animation:none\}/,
+      /@media \(prefers-reduced-motion:reduce\)\{::view-transition-old\(root\),::view-transition-new\(root\)(?:,[^}{]*)?\{animation:none\}/,
     )
     expect(cssFor('404.html')).toMatch(
       /@media \(prefers-reduced-motion:reduce\)\{\.glitch[^{]*\{animation:none\}/,

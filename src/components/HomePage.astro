@@ -11,6 +11,7 @@ import {
 } from '../i18n/utils'
 import { stars, formatStars, orderOpenSource } from '../lib/oss'
 import { DEV_STACK, SIDE_PROJECTS } from '../lib/site'
+import { viewTransitionName } from '../lib/view-transition'
 
 interface Props {
   lang: 'pt-br' | 'en'
@@ -122,12 +123,16 @@ const sortedPosts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.
             <li class="border-b border-rule">
               <a href={postUrl} class="group block py-3">
                 <div class="flex flex-col gap-x-6 gap-y-0.5 sm:flex-row sm:items-baseline sm:justify-between">
-                  <h3 class="font-[550] text-ink decoration-muted underline-offset-3 group-hover:underline">
+                  <h3
+                    class="font-[550] text-ink decoration-muted underline-offset-3 group-hover:underline"
+                    style={`view-transition-name: ${viewTransitionName('title', post.id)}`}
+                  >
                     {post.data.title}
                   </h3>
                   <time
                     datetime={post.data.date.toISOString()}
                     class="shrink-0 text-meta text-muted tabular-nums"
+                    style={`view-transition-name: ${viewTransitionName('date', post.id)}`}
                   >
                     {formattedDate}
                   </time>

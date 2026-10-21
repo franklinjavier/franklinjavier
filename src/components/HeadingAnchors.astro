@@ -42,8 +42,5 @@ const hasAnchors = html.includes('data-heading-anchor')
 {hasAnchors && <script>
   import { createHeadingAnchorHandler } from '../lib/heading-anchors'
 
-  // Once per session. Capture runs before the router's bubble listener, which
-  // leaves the click alone once defaultPrevented is set. The handler reads
-  // the live region from the current document, so it survives body swaps.
-  document.addEventListener('click', createHeadingAnchorHandler(document), { capture: true })
+  document.addEventListener('click', createHeadingAnchorHandler(document))
 </script>}

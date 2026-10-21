@@ -21,6 +21,7 @@ const { Content, headings } = await render(post)
 ---
 
 <PostLayout
+  id={post.id}
   headings={headings}
   tocLabels={post.data.toc}
   title={post.data.title}

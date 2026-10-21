@@ -35,11 +35,8 @@ interface Planned {
   item: HTMLElement
 }
 
-/**
- * Returns the number of sidenotes created (0 when the page is left as is).
- * `signal` aborts the window and media-query listeners (client navigations).
- */
-export function enhanceSidenotes(prose: Element, wide: Wide, signal?: AbortSignal): number {
+/** Returns the number of sidenotes created (0 when the page is left as is). */
+export function enhanceSidenotes(prose: Element, wide: Wide): number {
   const doc = prose.ownerDocument
   const refs = [...prose.querySelectorAll<HTMLAnchorElement>('sup > a[data-footnote-ref]')]
   if (!refs.length) return 0
@@ -87,20 +84,16 @@ export function enhanceSidenotes(prose: Element, wide: Wide, signal?: AbortSigna
       }
     }
     point()
-    wide.addEventListener('change', point, { signal })
+    wide.addEventListener('change', point)
 
     // The note sits beside the reference: flash and focus it instead of
     // letting the fragment jump scroll the page.
-    ref.addEventListener(
-      'click',
-      (event) => {
-        if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey) return
-        if (!wide.matches) return
-        event.preventDefault()
-        reveal(note)
-      },
-      { signal },
-    )
+    ref.addEventListener('click', (event) => {
+      if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey) return
+      if (!wide.matches) return
+      event.preventDefault()
+      reveal(note)
+    })
     return note
   })
 
@@ -120,8 +113,8 @@ export function enhanceSidenotes(prose: Element, wide: Wide, signal?: AbortSigna
     }
   }
   follow()
-  view?.addEventListener('hashchange', follow, { signal })
-  wide.addEventListener('change', follow, { signal })
+  view?.addEventListener('hashchange', follow)
+  wide.addEventListener('change', follow)
 
   prose.classList.add('has-sidenotes')
   return planned.length
