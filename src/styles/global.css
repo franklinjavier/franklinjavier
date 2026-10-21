@@ -112,7 +112,31 @@
   }
 }
 
-/* Theme toggle uses View Transitions. html.theme-transition is never set. */
+/* Page navigations. Theme toggles add html.theme-transition and override these. */
+@keyframes page-leave {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes page-enter {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+}
+
+::view-transition-old(root) {
+  animation: 200ms var(--ease) both page-leave;
+  mix-blend-mode: plus-lighter;
+}
+
+::view-transition-new(root) {
+  animation: 200ms var(--ease) both page-enter;
+  mix-blend-mode: plus-lighter;
+}
+
+/* Diagonal reveal for the theme toggle only (BaseLayout adds the class). */
 @keyframes page-reveal {
   from {
     clip-path: polygon(50% -71%, -50% 71%, -50% 71%, 50% -71%);
@@ -122,20 +146,53 @@
   }
 }
 
-::view-transition-old(root) {
+html.theme-transition::view-transition-old(root) {
   animation: none;
+  mix-blend-mode: normal;
   z-index: -1;
 }
 
-::view-transition-new(root) {
+html.theme-transition::view-transition-new(root) {
   animation: 600ms var(--ease) both page-reveal;
+  mix-blend-mode: normal;
   z-index: 999;
 }
 
-/* BaseLayout skips the transition too; this covers any other caller. */
+/*
+ * Site header (Navigation.astro, transition:name="site-header"). Kept out of
+ * the root snapshot so it does not fade or slide. Rules live here, not only in
+ * the per-page directive sheet, so a trip to the CV or 404 (no header) still
+ * holds the outgoing bar still. opacity stays 1: the new snapshot covers the
+ * old one, so the bar never blanks for a frame.
+ */
+::view-transition-group(site-header) {
+  z-index: 1;
+  animation: none;
+}
+
+::view-transition-old(site-header),
+::view-transition-new(site-header) {
+  animation: none;
+  mix-blend-mode: normal;
+  opacity: 1;
+}
+
+/* Theme reveal is a root snapshot. Drop the header's generated name while
+   html.theme-transition is set so the bar is clipped with the page.
+   Page navigations do not set the class, so the bar stays still. */
+html.theme-transition header[data-astro-transition-scope] {
+  view-transition-name: none !important;
+}
+
+/* BaseLayout skips the theme transition too; this covers any other caller. */
 @media (prefers-reduced-motion: reduce) {
   ::view-transition-old(root),
   ::view-transition-new(root) {
+    animation: none;
+  }
+
+  html.theme-transition::view-transition-old(root),
+  html.theme-transition::view-transition-new(root) {
     animation: none;
   }
 }

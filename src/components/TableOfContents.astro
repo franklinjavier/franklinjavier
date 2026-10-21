@@ -87,189 +87,223 @@ const labelId = `toc-label-${variant}`
 
 {show && variant === 'sidebar' && <script is:inline>
   ;(() => {
-    // The list ships once (inline <details>); the rail gets a copy without
-    // the tooltips, which would only repeat the link text there.
-    const source = document.querySelector('[data-toc-inline] ol')
-    const rail = document.querySelector('[data-toc-rail]')
-    if (source && rail && !rail.firstElementChild) {
-      const copy = source.cloneNode(true)
-      for (const link of copy.querySelectorAll('a[title]')) link.removeAttribute('title')
-      rail.append(copy)
-    }
+    // Same source on every post, so the router does not re-run this script.
+    // Listeners are on window/document and would stack. after-swap runs inside
+    // the update callback, before the snapshot, so the rail copy is visible
+    // during the transition. Abort drops the previous page's listeners.
+    let controller = new AbortController()
 
-    const navs = [...document.querySelectorAll('[data-toc]')]
-    const links = navs.flatMap((nav) => [...nav.querySelectorAll('a[href^="#"]')])
-    const idOf = (link) => decodeURIComponent(link.hash.slice(1))
-    const headings = [...new Set(links.map(idOf))]
-      .map((id) => document.getElementById(id))
-      .filter(Boolean)
-    if (!headings.length) return
-
-    const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)')
-    const root = document.documentElement
-    const article = document.querySelector('[data-toc-article]')
-    let activeId = null
-    let lockedId = null
-    let atBottom = false
-
-    // Slide the indicator to the active link and keep that link visible
-    // inside the TOC's own scroll box (never scrolls the page).
-    const placeIndicator = (nav, instant = false) => {
-      const indicator = nav.querySelector('[data-toc-indicator]')
-      const box = nav.querySelector('[data-toc-scroll]')
-      if (!indicator || !box) return
-      const link = nav.querySelector('a[aria-current]')
-      if (!link || !link.offsetParent) {
-        indicator.style.opacity = '0'
-        return
+    const boot = (signal) => {
+      // The list ships once (inline <details>); the rail gets a copy without
+      // the tooltips, which would only repeat the link text there.
+      const source = document.querySelector('[data-toc-inline] ol')
+      const rail = document.querySelector('[data-toc-rail]')
+      if (source && rail && !rail.firstElementChild) {
+        const copy = source.cloneNode(true)
+        for (const link of copy.querySelectorAll('a[title]')) link.removeAttribute('title')
+        rail.append(copy)
       }
-      const firstPlacement = indicator.style.opacity !== '1'
-      const jump = firstPlacement || instant
-      if (jump) indicator.style.transition = 'none'
-      indicator.style.opacity = '1'
-      indicator.style.transform = `translateY(${link.offsetTop}px)`
-      indicator.style.height = `${link.offsetHeight}px`
-      if (jump) {
-        indicator.getBoundingClientRect()
-        indicator.style.transition = ''
+
+      const navs = [...document.querySelectorAll('[data-toc]')]
+      const links = navs.flatMap((nav) => [...nav.querySelectorAll('a[href^="#"]')])
+      const idOf = (link) => decodeURIComponent(link.hash.slice(1))
+      const headings = [...new Set(links.map(idOf))]
+        .map((id) => document.getElementById(id))
+        .filter(Boolean)
+      if (!headings.length) return
+
+      const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)')
+      const root = document.documentElement
+      const article = document.querySelector('[data-toc-article]')
+      let activeId = null
+      let lockedId = null
+      let atBottom = false
+
+      // Slide the indicator to the active link and keep that link visible
+      // inside the TOC's own scroll box (never scrolls the page).
+      const placeIndicator = (nav, instant = false) => {
+        const indicator = nav.querySelector('[data-toc-indicator]')
+        const box = nav.querySelector('[data-toc-scroll]')
+        if (!indicator || !box) return
+        const link = nav.querySelector('a[aria-current]')
+        if (!link || !link.offsetParent) {
+          indicator.style.opacity = '0'
+          return
+        }
+        const firstPlacement = indicator.style.opacity !== '1'
+        const jump = firstPlacement || instant
+        if (jump) indicator.style.transition = 'none'
+        indicator.style.opacity = '1'
+        indicator.style.transform = `translateY(${link.offsetTop}px)`
+        indicator.style.height = `${link.offsetHeight}px`
+        if (jump) {
+          indicator.getBoundingClientRect()
+          indicator.style.transition = ''
+        }
+        const top = link.offsetTop
+        const bottom = top + link.offsetHeight
+        const pad = link.offsetHeight * 2
+        if (top - pad < box.scrollTop || bottom + pad > box.scrollTop + box.clientHeight) {
+          box.scrollTo({
+            top: top - box.clientHeight / 3,
+            behavior: jump || reduceMotion.matches ? 'auto' : 'smooth',
+          })
+        }
       }
-      const top = link.offsetTop
-      const bottom = top + link.offsetHeight
-      const pad = link.offsetHeight * 2
-      if (top - pad < box.scrollTop || bottom + pad > box.scrollTop + box.clientHeight) {
-        box.scrollTo({
-          top: top - box.clientHeight / 3,
-          behavior: jump || reduceMotion.matches ? 'auto' : 'smooth',
+
+      const setActive = (id) => {
+        if (id === activeId) return
+        activeId = id
+        for (const link of links) {
+          if (idOf(link) === id) link.setAttribute('aria-current', 'location')
+          else link.removeAttribute('aria-current')
+        }
+        navs.forEach(placeIndicator)
+      }
+
+      // Active = last heading above the line 30% down the viewport (none
+      // while reading the intro); once scrolled to the very bottom, the last
+      // heading wins (a page that fits the viewport never counts as bottom).
+      const update = () => {
+        if (lockedId) return
+        if (atBottom) return setActive(headings[headings.length - 1].id)
+        const line = innerHeight * 0.3
+        let current = null
+        for (const heading of headings) {
+          if (heading.getBoundingClientRect().top > line) break
+          current = heading
+        }
+        setActive(current ? current.id : null)
+      }
+
+      // Runs on load (including #hash jumps, which fire scroll), every
+      // scrolled frame and resize, so big jumps (scrollbar drag, Page Down)
+      // are caught too.
+      let ticking = false
+      const onScroll = () => {
+        if (ticking) return
+        ticking = true
+        requestAnimationFrame(() => {
+          ticking = false
+          atBottom = scrollY > 0 && innerHeight + scrollY >= root.scrollHeight - 2
+          update()
+          if (article) {
+            const rect = article.getBoundingClientRect()
+            const span = rect.height - innerHeight
+            const progress = span > 0 ? Math.min(Math.max(-rect.top / span, 0), 1) : 0
+            root.style.setProperty('--toc-progress', progress.toFixed(4))
+          }
         })
       }
-    }
+      addEventListener('scroll', onScroll, { passive: true, signal })
+      addEventListener(
+        'resize',
+        () => {
+          navs.forEach(placeIndicator)
+          onScroll()
+        },
+        { passive: true, signal },
+      )
+      // Images loading above the target move the headings without a scroll.
+      addEventListener('load', onScroll, { signal })
+      addEventListener('hashchange', onScroll, { signal })
+      if (article) {
+        const observer = new ResizeObserver(onScroll)
+        observer.observe(article)
+        signal.addEventListener('abort', () => observer.disconnect())
+      }
+      onScroll()
 
-    const setActive = (id) => {
-      if (id === activeId) return
-      activeId = id
+      // Sidebar overlay. Expanding/collapsing rewraps the rows, so the
+      // indicator follows the track's size. While compact, the nav's height is
+      // pinned to the panel's so the sticky nav keeps its size when the panel
+      // turns absolute (expanded) and doesn't jump at the end of the article.
+      // Escape collapses it via data-toc-collapsed, even with focus inside;
+      // the next hover or focus move clears it.
+      for (const panel of document.querySelectorAll('[data-toc-panel]')) {
+        const nav = panel.closest('[data-toc]')
+        const track = panel.querySelector('[data-toc-track]')
+        const observer = new ResizeObserver(() => {
+          if (getComputedStyle(panel).position === 'static') {
+            const { marginTop, marginBottom } = getComputedStyle(panel)
+            const height = panel.offsetHeight + parseFloat(marginTop) + parseFloat(marginBottom)
+            nav.style.minHeight = `${height}px`
+          }
+          placeIndicator(nav, true)
+        })
+        observer.observe(track)
+        signal.addEventListener('abort', () => observer.disconnect())
+        const reopen = () => panel.removeAttribute('data-toc-collapsed')
+        panel.addEventListener('pointerenter', reopen, { signal })
+        panel.addEventListener('focusin', reopen, { signal })
+        document.addEventListener(
+          'keydown',
+          (event) => {
+            if (event.key !== 'Escape') return
+            if (panel.matches(':hover') || panel.contains(document.activeElement)) {
+              panel.setAttribute('data-toc-collapsed', '')
+            }
+          },
+          { signal },
+        )
+      }
+
       for (const link of links) {
-        if (idOf(link) === id) link.setAttribute('aria-current', 'location')
-        else link.removeAttribute('aria-current')
+        link.addEventListener(
+          'click',
+          (event) => {
+            if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey) return
+            const target = document.getElementById(idOf(link))
+            if (!target) return
+            event.preventDefault()
+            // Collapse the mobile <details> first so the target doesn't move.
+            link.closest('details')?.removeAttribute('open')
+            const smooth = !reduceMotion.matches
+            setActive(target.id)
+            if (smooth) {
+              // Hold the indicator on the target while smooth-scrolling past
+              // the headings in between. Release on scrollend, or (no scrollend
+              // support, or nothing to scroll) once scrolling has been idle.
+              lockedId = target.id
+              let idle = 0
+              const settle = () => {
+                clearTimeout(idle)
+                idle = setTimeout(unlock, 200)
+              }
+              const unlock = () => {
+                clearTimeout(idle)
+                removeEventListener('scroll', settle)
+                removeEventListener('scrollend', unlock)
+                if (lockedId !== target.id) return
+                lockedId = null
+                update()
+              }
+              addEventListener('scroll', settle, { passive: true, signal })
+              addEventListener('scrollend', unlock, { signal })
+              settle()
+            }
+            // scroll-margin-top on headings (prose.css) clears the sticky nav.
+            target.scrollIntoView({ behavior: smooth ? 'smooth' : 'auto', block: 'start' })
+            // Keep the router's history state. pushState(null) makes Back a no-op
+            // for ClientRouter: the URL changes and the page does not.
+            history.pushState(history.state, '', link.hash)
+            target.setAttribute('tabindex', '-1')
+            target.focus({ preventScroll: true })
+          },
+          { signal },
+        )
       }
-      navs.forEach(placeIndicator)
     }
 
-    // Active = last heading above the line 30% down the viewport (none
-    // while reading the intro); once scrolled to the very bottom, the last
-    // heading wins (a page that fits the viewport never counts as bottom).
-    const update = () => {
-      if (lockedId) return
-      if (atBottom) return setActive(headings[headings.length - 1].id)
-      const line = innerHeight * 0.3
-      let current = null
-      for (const heading of headings) {
-        if (heading.getBoundingClientRect().top > line) break
-        current = heading
-      }
-      setActive(current ? current.id : null)
+    const start = () => {
+      controller.abort()
+      controller = new AbortController()
+      boot(controller.signal)
     }
 
-    // Runs on load (including #hash jumps, which fire scroll), every
-    // scrolled frame and resize, so big jumps (scrollbar drag, Page Down)
-    // are caught too.
-    let ticking = false
-    const onScroll = () => {
-      if (ticking) return
-      ticking = true
-      requestAnimationFrame(() => {
-        ticking = false
-        atBottom = scrollY > 0 && innerHeight + scrollY >= root.scrollHeight - 2
-        update()
-        if (article) {
-          const rect = article.getBoundingClientRect()
-          const span = rect.height - innerHeight
-          const progress = span > 0 ? Math.min(Math.max(-rect.top / span, 0), 1) : 0
-          root.style.setProperty('--toc-progress', progress.toFixed(4))
-        }
-      })
-    }
-    addEventListener('scroll', onScroll, { passive: true })
-    addEventListener(
-      'resize',
-      () => {
-        navs.forEach(placeIndicator)
-        onScroll()
-      },
-      { passive: true },
-    )
-    // Images loading above the target move the headings without a scroll.
-    addEventListener('load', onScroll)
-    addEventListener('hashchange', onScroll)
-    if (article) new ResizeObserver(onScroll).observe(article)
-    onScroll()
-
-    // Sidebar overlay. Expanding/collapsing rewraps the rows, so the
-    // indicator follows the track's size. While compact, the nav's height is
-    // pinned to the panel's so the sticky nav keeps its size when the panel
-    // turns absolute (expanded) and doesn't jump at the end of the article.
-    // Escape collapses it via data-toc-collapsed, even with focus inside;
-    // the next hover or focus move clears it.
-    for (const panel of document.querySelectorAll('[data-toc-panel]')) {
-      const nav = panel.closest('[data-toc]')
-      const track = panel.querySelector('[data-toc-track]')
-      new ResizeObserver(() => {
-        if (getComputedStyle(panel).position === 'static') {
-          const { marginTop, marginBottom } = getComputedStyle(panel)
-          const height = panel.offsetHeight + parseFloat(marginTop) + parseFloat(marginBottom)
-          nav.style.minHeight = `${height}px`
-        }
-        placeIndicator(nav, true)
-      }).observe(track)
-      const reopen = () => panel.removeAttribute('data-toc-collapsed')
-      panel.addEventListener('pointerenter', reopen)
-      panel.addEventListener('focusin', reopen)
-      document.addEventListener('keydown', (event) => {
-        if (event.key !== 'Escape') return
-        if (panel.matches(':hover') || panel.contains(document.activeElement)) {
-          panel.setAttribute('data-toc-collapsed', '')
-        }
-      })
-    }
-
-    for (const link of links) {
-      link.addEventListener('click', (event) => {
-        if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey) return
-        const target = document.getElementById(idOf(link))
-        if (!target) return
-        event.preventDefault()
-        // Collapse the mobile <details> first so the target doesn't move.
-        link.closest('details')?.removeAttribute('open')
-        const smooth = !reduceMotion.matches
-        setActive(target.id)
-        if (smooth) {
-          // Hold the indicator on the target while smooth-scrolling past
-          // the headings in between. Release on scrollend, or (no scrollend
-          // support, or nothing to scroll) once scrolling has been idle.
-          lockedId = target.id
-          let idle = 0
-          const settle = () => {
-            clearTimeout(idle)
-            idle = setTimeout(unlock, 200)
-          }
-          const unlock = () => {
-            clearTimeout(idle)
-            removeEventListener('scroll', settle)
-            removeEventListener('scrollend', unlock)
-            if (lockedId !== target.id) return
-            lockedId = null
-            update()
-          }
-          addEventListener('scroll', settle, { passive: true })
-          addEventListener('scrollend', unlock)
-          settle()
-        }
-        // scroll-margin-top on headings (prose.css) clears the sticky nav.
-        target.scrollIntoView({ behavior: smooth ? 'smooth' : 'auto', block: 'start' })
-        history.pushState(null, '', link.hash)
-        target.setAttribute('tabindex', '-1')
-        target.focus({ preventScroll: true })
-      })
-    }
+    document.addEventListener('astro:before-swap', () => controller.abort())
+    document.addEventListener('astro:after-swap', start)
+    start()
   })()
 </script>}
 

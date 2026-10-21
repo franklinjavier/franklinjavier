@@ -142,7 +142,7 @@ describe('speaking page', () => {
 
 describe('site header', () => {
   const header = (path: string) =>
-    read(path).match(/<header class="sticky[^"]*"[^>]*>(.*?)<\/header>/s)?.[0] ?? ''
+    read(path).match(/<header\b[^>]*class="sticky[^"]*"[^>]*>(.*?)<\/header>/s)?.[0] ?? ''
 
   test('labels the nav, marks the current item and localizes the switches', () => {
     const en = header('index.html')
@@ -1225,9 +1225,12 @@ describe('payload cuts', () => {
   })
 
   // guards: Hosting build selection must not leak Vercel analytics onto Cloudflare or remove it from Vercel.
+  // The view-transition router is the only external script on the home page.
   test('only emits Vercel Analytics client JS on Vercel builds', () => {
     const html = read('index.html')
-    expect(html).not.toMatch(/_astro\/[^"]+\.js/)
+    const srcs = [...html.matchAll(/src="(\/_astro\/[^"]+\.js)"/g)].map((match) => match[1])
+    expect(srcs).toHaveLength(1)
+    expect(srcs[0]).toContain('ClientRouter')
 
     const moduleScripts = [...html.matchAll(/<script type="module">(.*?)<\/script>/gs)].map(
       (match) => match[1],
@@ -1340,7 +1343,7 @@ describe('accessibility guards', () => {
       "startViewTransition&&!matchMedia('(prefers-reduced-motion: reduce)').matches",
     )
     expect(cssFor('index.html')).toMatch(
-      /@media \(prefers-reduced-motion:reduce\)\{::view-transition-old\(root\),::view-transition-new\(root\)\{animation:none\}/,
+      /@media \(prefers-reduced-motion:reduce\)\{::view-transition-old\(root\),::view-transition-new\(root\)(?:,html\.theme-transition::view-transition-old\(root\),html\.theme-transition::view-transition-new\(root\))?\{animation:none\}/,
     )
     expect(cssFor('404.html')).toMatch(
       /@media \(prefers-reduced-motion:reduce\)\{\.glitch[^{]*\{animation:none\}/,
