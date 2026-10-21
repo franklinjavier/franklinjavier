@@ -1485,7 +1485,11 @@ describe('related posts', () => {
       path: 'blog/old-macbook-context-server/',
       heading: 'Related posts',
       prefix: '/blog/',
-      expected: ['open-source-agent-skills', 'how-always-on-agents-work', 'lisbon-ai-2026'],
+      expected: [
+        'how-i-share-links-with-my-agents',
+        'open-source-agent-skills',
+        'how-always-on-agents-work',
+      ],
       unmatched: 'blog/git-password-cache/',
     },
     {
@@ -1493,9 +1497,9 @@ describe('related posts', () => {
       heading: 'Posts relacionados',
       prefix: '/pt-br/blog/',
       expected: [
+        'como-compartilho-links-com-meus-agentes',
         'skills-open-source-para-agentes',
         'como-funciona-um-agente-sempre-ligado',
-        'lisbon-ai-2026',
       ],
       unmatched: 'pt-br/blog/cache-de-senha-no-git/',
     },
