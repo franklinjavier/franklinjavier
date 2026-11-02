@@ -1262,6 +1262,14 @@ describe('payload cuts', () => {
       expect(html).not.toContain('@vercel/analytics')
     }
   })
+
+  test('emits the Cloudflare Web Analytics beacon only when CF_BEACON_TOKEN is set', () => {
+    const html = read('index.html')
+    const beacons = [...html.matchAll(/static\.cloudflareinsights\.com\/beacon\.min\.js/g)]
+    const token = process.env.CF_BEACON_TOKEN
+    expect(beacons).toHaveLength(token ? 1 : 0)
+    if (token) expect(html).toContain(`data-cf-beacon="{&quot;token&quot;:&quot;${token}&quot;}"`)
+  })
 })
 
 describe('view transitions', () => {
@@ -1502,7 +1510,7 @@ describe('related posts', () => {
         'open-source-agent-skills',
         'how-always-on-agents-work',
       ],
-      unmatched: 'blog/git-password-cache/',
+      unmatched: 'blog/how-to-be-good-father/',
     },
     {
       path: 'pt-br/blog/macbook-velho-virou-servidor-de-contexto/',
@@ -1513,7 +1521,7 @@ describe('related posts', () => {
         'skills-open-source-para-agentes',
         'como-funciona-um-agente-sempre-ligado',
       ],
-      unmatched: 'pt-br/blog/cache-de-senha-no-git/',
+      unmatched: 'pt-br/blog/como-ser-bom-pai/',
     },
   ]
   for (const entry of cases) {

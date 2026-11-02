@@ -3,7 +3,7 @@ title: Troquei Tailwind por StyleX. O site não ficou mais rápido.
 date: 2026-08-25
 description: Migrei um site com nota 100 no PageSpeed para StyleX, medi o resultado e descobri que o ganho real estava em outro lugar.
 author: Franklin Javier
-tags: performance, css, stylex, tailwind, frontend
+tags: performance, css, frontend
 lang: pt-br
 translationKey: stylex-personal-site
 ---

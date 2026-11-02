@@ -3,7 +3,7 @@ title: Dicas para ter disciplina nos estudos
 date: 2023-01-09
 description: Estratégias práticas para manter o foco e a disciplina durante o aprendizado
 author: Franklin Javier
-tags: lifehack, estudos
+tags: produtividade
 lang: pt-br
 translationKey: study-discipline-tips
 ---

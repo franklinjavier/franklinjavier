@@ -4,7 +4,7 @@ date: 2026-10-11
 updated: 2026-10-11
 description: How always-on agents handle queues, recovery, and context, based on Lee Robinson's Stanford CS146S lecture, followed by my own plan for a first experiment.
 author: Franklin Javier
-tags: ai, agents, architecture, llm
+tags: ai, agents, architecture
 lang: en
 translationKey: always-on-agents
 image: /images/og/always-on-agents-en.png

@@ -9,6 +9,7 @@ import {
   markdownLinkHeader,
 } from './src/lib/negotiation.js'
 import health from './api/health.js'
+import { tagRedirect } from './src/lib/tags.js'
 
 type Env = {
   ASSETS: { fetch(request: Request): Promise<Response> }
@@ -27,7 +28,7 @@ export default {
       ? rules.redirects[0]!.destination.replace(':slug', legacy[1]!)
       : path === rules.redirects[1]!.source
         ? rules.redirects[1]!.destination
-        : null
+        : tagRedirect(path)
     let response: Response
     let markdown = path.endsWith('.md')
     if (path === '/api/health') {

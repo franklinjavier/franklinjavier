@@ -3,7 +3,7 @@ title: Como ser um bom pai?
 date: 2022-12-04
 description: Nove princípios fundamentais para desenvolver uma paternidade presente e significativa
 author: Franklin Javier
-tags: familia, vida-pessoal
+tags: pessoal
 lang: pt-br
 translationKey: how-to-be-good-father
 ---

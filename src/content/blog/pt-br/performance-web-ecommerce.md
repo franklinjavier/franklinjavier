@@ -3,7 +3,7 @@ title: O que performance web realmente significa em e-commerce
 date: 2024-03-20
 description: Tiramos uma loja de 15s para 3s em 3G lento e a conversão subiu 45%. O que medir, para onde o tempo realmente vai, e por que os maiores ganhos costumam ser remoções.
 author: Franklin Javier
-tags: performance, frontend, e-commerce, core-web-vitals
+tags: performance, frontend
 lang: pt-br
 translationKey: web-performance-ecommerce
 ---

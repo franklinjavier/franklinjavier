@@ -3,7 +3,7 @@ title: Carregando o Disqus ao chegar no fim da página
 date: 2015-07-06
 description: O Disqus é um sistema poderoso de comentários utilizado por milhões de sites na internet.
 author: Franklin Javier
-tags: front-end, javascript, optimization
+tags: frontend, performance
 lang: pt-br
 translationKey: loading-disqus-at-page-end
 ---
@@ -64,4 +64,4 @@ var disqus_shortname = 'franklinjavier',
 }());
 ```
 
-Fácil não? Comente \o/
+Fácil, não? Me conta no [X](https://x.com/franklinjavier) \o/

@@ -3,7 +3,7 @@ title: How can we tell if OpenAI is giving us good answers?
 date: 2022-12-06
 description: Strategies to validate and evaluate the reliability of AI-generated responses
 author: Franklin Javier
-tags: ai, openai, critical-thinking
+tags: ai
 lang: en
 translationKey: evaluating-openai-answers
 ---

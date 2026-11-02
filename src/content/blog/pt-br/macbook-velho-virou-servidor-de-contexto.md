@@ -4,7 +4,7 @@ date: 2026-10-08
 updated: 2026-10-11
 description: "Contexto compartilhado entre agentes, máquinas e projetos: meu MacBook de 2017 guarda sessões e resumos, com conferência no repositório antes de retomar."
 author: Franklin Javier
-tags: ia, agentes, self-hosting, tooling, produtividade
+tags: ia, agentes, tooling, produtividade
 lang: pt-br
 translationKey: old-macbook-context-server
 image: /images/og/old-macbook-context-server-pt-br.png

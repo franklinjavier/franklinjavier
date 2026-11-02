@@ -3,7 +3,7 @@ title: Carregando webfonts apenas nos breakpoints de tablet e desktop
 date: 2015-07-04
 description: Técnica simples para otimizar seu site/projeto. Venha descobrir!
 author: Franklin Javier
-tags: front-end, css, optimization
+tags: frontend, css, performance
 lang: pt-br
 translationKey: loading-webfonts-desktop-only
 ---
@@ -47,5 +47,5 @@ assim que sair do breakpoint de mobile.
 
 Pronto. Redimensione seu brower até ver a diferença.
 
-Simples não? Comente \o/
+Simples, não? Me conta no [X](https://x.com/franklinjavier) \o/
 

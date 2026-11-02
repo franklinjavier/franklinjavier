@@ -3,7 +3,7 @@ title: 29 formas de se manter criativo
 date: 2015-08-27
 description: Atitudes bem simples, que podemos adotar em nosso dia a dia e que fazem a diferença.
 author: Franklin Javier
-tags: lifehack
+tags: produtividade
 lang: pt-br
 translationKey: 29-ways-to-stay-creative
 ---

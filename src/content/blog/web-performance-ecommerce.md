@@ -3,7 +3,7 @@ title: What web performance actually means in e-commerce
 date: 2024-03-20
 description: We took a storefront from 15s to 3s on throttled 3G and conversion went up 45%. What to measure, where the time really goes, and why the biggest wins are usually deletions.
 author: Franklin Javier
-tags: performance, frontend, e-commerce, core-web-vitals
+tags: performance, frontend
 lang: en
 translationKey: web-performance-ecommerce
 ---

@@ -3,7 +3,7 @@ title: Loading webfonts only on tablet and desktop breakpoints
 date: 2015-07-04
 description: Simple technique to optimize your site/project. Come discover!
 author: Franklin Javier
-tags: front-end, css, optimization
+tags: frontend, css, performance
 lang: en
 translationKey: loading-webfonts-desktop-only
 ---
@@ -47,4 +47,4 @@ as soon as it leaves the mobile breakpoint.
 
 Done. Resize your browser to see the difference.
 
-Simple, right? Comment \o/
+Simple, right? Tell me on [X](https://x.com/franklinjavier) \o/

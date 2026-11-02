@@ -2,7 +2,7 @@
 title: Entrevista de Arquitetura Frontend
 date: 2023-02-26
 description: Perguntas e respostas comuns em entrevistas sobre arquitetura frontend, performance, segurança e habilidades interpessoais
-tags: entrevista, arquitetura, frontend, performance, segurança
+tags: arquitetura, frontend, performance, segurança
 lang: pt-br
 translationKey: frontend-architecture-interview
 ---

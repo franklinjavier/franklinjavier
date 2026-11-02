@@ -4,7 +4,7 @@ date: 2026-10-08
 updated: 2026-10-11
 description: "Shared context across coding agents, machines, and projects: my 2017 MacBook stores session history and summaries, with repository checks before resuming work."
 author: Franklin Javier
-tags: ai, agents, self-hosting, tooling, productivity
+tags: ai, agents, tooling, productivity
 lang: en
 translationKey: old-macbook-context-server
 image: /images/og/old-macbook-context-server-en.png

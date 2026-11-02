@@ -3,7 +3,7 @@ title: How to Be a Proactive Person?
 date: 2022-12-07
 description: Seven practical recommendations to develop a proactive and assertive attitude
 author: Franklin Javier
-tags: lifehack, personal-development
+tags: productivity
 lang: en
 translationKey: how-to-be-proactive
 ---

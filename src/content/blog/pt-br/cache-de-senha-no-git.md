@@ -3,7 +3,7 @@ title: Cache de senha no Git
 date: 2015-08-05
 description: Um jeito simples de fazer o Git memorizar sua senha
 author: Franklin Javier
-tags: git
+tags: tooling
 lang: pt-br
 translationKey: git-password-cache
 ---

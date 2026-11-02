@@ -1,7 +1,9 @@
 # Hosting
 
-Vercel remains the live host. This checkout also supports Cloudflare Workers
-with prebuilt static assets; it does not configure an account, token, route or DNS.
+Cloudflare Workers is the live host. Since 2026-10-21, franklinjavier.com has been a
+Workers Custom Domain on the production `blog` Worker (see `wrangler.jsonc`).
+`blog-preview.imfrank.dev` is a separate `blog-preview` Worker that Workers Builds
+deploys from the latest pushed non-main branch.
 
 `bun run build` checks and builds Astro into `dist/`. `wrangler.jsonc` points to
 that directory and runs `worker.ts` before the ASSETS binding. Missing HTML uses
@@ -10,16 +12,28 @@ The handler reuses the Vercel negotiation helpers, including `.md` aliases and
 HTML alternate links. It reads a twin once through ASSETS instead of issuing
 the separate network HEAD probe used by Vercel middleware.
 
-`vercel.json` remains the hosting contract. Its redirects and headers also live
-in `public/_redirects` and `public/_headers`, copied into `dist/` by Astro.
-The Worker applies those rules to its own responses as well; keep all three
-representations synchronized when changing hosting rules.
+The Vercel setup (`vercel.json`, `middleware.ts`) still builds and is tested, but
+it no longer serves production. `vercel.json` is the source for the shared
+redirects and headers. They are also in `public/_redirects` and `public/_headers`,
+which Astro copies into `dist/`, and the Worker applies the same rules to its
+own responses. Keep all three in sync when changing hosting rules.
 
-Analytics is selected at build time: `VERCEL=1 bun run build` includes Vercel
-Analytics; builds without `VERCEL=1` omit it. Keep the Vercel dependencies while
-both hosts are supported. Cloudflare Web Analytics is a later owner choice.
+Retired tag pages (`/blog/tag/<old>/`, `/pt-br/blog/tag/<old>/`) are redirected
+by the Worker only, from `TAG_ALIASES` in `src/lib/tags.ts`. Vercel does not
+have these redirects.
 
-The owner must supply Cloudflare access, review deployment tooling and explicitly
-approve deployment and the DNS move before switching production. This change
-performs none of those actions. Follow the [Cloudflare migration guide](https://developers.cloudflare.com/workers/static-assets/migration-guides/vercel-to-workers/)
-when preparing that separate step.
+## Analytics
+
+Analytics is selected at build time:
+
+- `CF_BEACON_TOKEN=<token>` adds the Cloudflare Web Analytics beacon. Set it as
+  a build variable on the production `blog` Worker only (Workers & Pages → blog →
+  Settings → Build → Variables), so preview and local builds send nothing. Get the
+  token under Analytics & Logs → Web Analytics → Add a site → franklinjavier.com →
+  "Manage site" → JS snippet. The token is public: it ends up in the HTML anyway.
+  Don't also enable the dashboard's automatic injection, or page views are counted twice.
+- `VERCEL=1` adds Vercel Analytics. Only Vercel builds set it.
+
+When the analytics provider changes, update the privacy pages
+(`src/content/pages/privacy.md` and its pt-br version) and the privacy line in
+`src/pages/llms.txt.ts`.

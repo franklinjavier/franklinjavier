@@ -3,7 +3,7 @@ title: Tips for Having Study Discipline
 date: 2023-01-09
 description: Practical strategies to maintain focus and discipline during learning
 author: Franklin Javier
-tags: lifehack, learning
+tags: productivity
 lang: en
 translationKey: study-discipline-tips
 ---

@@ -3,7 +3,7 @@ title: 29 Ways to Stay Creative
 date: 2015-08-27
 description: Very simple attitudes that we can adopt in our daily lives and that make a difference.
 author: Franklin Javier
-tags: lifehack
+tags: productivity
 lang: en
 translationKey: 29-ways-to-stay-creative
 ---

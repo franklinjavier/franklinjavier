@@ -3,7 +3,7 @@ title: Como saber se o OpenAI está nos dando boas respostas?
 date: 2022-12-06
 description: Estratégias para validar e avaliar a confiabilidade de respostas geradas por IA
 author: Franklin Javier
-tags: ia, openai, pensamento-critico
+tags: ia
 lang: pt-br
 translationKey: evaluating-openai-answers
 ---

@@ -3,7 +3,7 @@ title: Loading Disqus when reaching the end of the page
 date: 2015-07-06
 description: Disqus is a powerful comment system used by millions of sites on the internet.
 author: Franklin Javier
-tags: front-end, javascript, optimization
+tags: frontend, performance
 lang: en
 translationKey: loading-disqus-at-page-end
 ---
@@ -64,4 +64,4 @@ var disqus_shortname = 'franklinjavier',
 }());
 ```
 
-Easy, right? Comment \o/
+Easy, right? Tell me on [X](https://x.com/franklinjavier) \o/

@@ -2,7 +2,7 @@
 title: Frontend Architecture Interview
 date: 2023-02-26
 description: Common interview questions and answers about frontend architecture, performance, security, and interpersonal skills
-tags: interview, architecture, frontend, performance, security
+tags: architecture, frontend, performance, security
 lang: en
 translationKey: frontend-architecture-interview
 ---
