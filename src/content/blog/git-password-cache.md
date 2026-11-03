@@ -3,7 +3,7 @@ title: Git Password Cache
 date: 2015-08-05
 description: A simple way to make Git remember your password
 author: Franklin Javier
-tags: git
+tags: tooling
 lang: en
 translationKey: git-password-cache
 ---

@@ -4,7 +4,7 @@ date: 2026-09-25
 updated: 2026-09-28
 description: 'Minhas notas das 32 palestras do Lisbon AI 2026, com as demos, os números e as perguntas do público.'
 author: Franklin Javier
-tags: ia, agentes, evals, segurança, conferência
+tags: ia, agentes, segurança
 lang: pt-br
 translationKey: lisbon-ai-2026
 image: /images/blog/lisbon-ai-2026/og.jpg

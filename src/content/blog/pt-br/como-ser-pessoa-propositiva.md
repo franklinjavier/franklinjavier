@@ -3,7 +3,7 @@ title: Como ser uma pessoa propositiva?
 date: 2022-12-07
 description: Sete recomendações práticas para desenvolver uma atitude proativa e assertiva
 author: Franklin Javier
-tags: lifehack, desenvolvimento-pessoal
+tags: produtividade
 lang: pt-br
 translationKey: how-to-be-proactive
 ---

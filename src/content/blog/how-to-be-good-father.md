@@ -3,7 +3,7 @@ title: How to Be a Good Father?
 date: 2022-12-04
 description: Nine fundamental principles to develop present and meaningful fatherhood
 author: Franklin Javier
-tags: family, personal-life
+tags: personal
 lang: en
 translationKey: how-to-be-good-father
 ---

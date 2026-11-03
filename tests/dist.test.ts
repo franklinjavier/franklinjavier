@@ -166,6 +166,19 @@ describe('site header', () => {
     expect(pt).toContain('aria-label="Alternar modo escuro"')
   })
 
+  // guards: the switch on blog pages used to fall back to the home page.
+  test('language switch keeps the reader in the blog', () => {
+    const href = (path: string) => /id="language-toggle" href="([^"]*)"/.exec(read(path))?.[1]
+    expect(href('blog/index.html')).toBe('/pt-br/blog/')
+    expect(href('pt-br/blog/index.html')).toBe('/blog/')
+    expect(href('blog/tag/ai/index.html')).toBe('/pt-br/blog/tag/ia/')
+    expect(href('pt-br/blog/tag/segurança/index.html')).toBe('/blog/tag/security/')
+    expect(href('blog/tag/frontend/index.html')).toBe('/pt-br/blog/tag/frontend/')
+    expect(href('blog/the-great-suspender/index.html')).toBe('/pt-br/blog/the-great-suspender/')
+    expect(href('pt-br/blog/como-ser-bom-pai/index.html')).toBe('/blog/how-to-be-good-father/')
+    expect(href('about/index.html')).toBe('/pt-br/about/')
+  })
+
   test('marks Blog as the current section on posts', () => {
     expect(header('blog/how-to-be-proactive/index.html')).toMatch(
       /<a href="\/blog\/" aria-current="true"/,
@@ -231,7 +244,7 @@ describe('blog post pages', () => {
   })
 
   test('render no table of contents when the post has no headings', () => {
-    const html = read('blog/the-great-suspender/index.html')
+    const html = read('blog/loading-webfonts-desktop-only/index.html')
     expect(html).not.toContain('data-toc')
     expect(html).not.toContain('<aside')
     expect(html).not.toContain('lg:grid-cols-')
@@ -1262,6 +1275,14 @@ describe('payload cuts', () => {
       expect(html).not.toContain('@vercel/analytics')
     }
   })
+
+  test('emits the Cloudflare Web Analytics beacon only when CF_BEACON_TOKEN is set', () => {
+    const html = read('index.html')
+    const beacons = [...html.matchAll(/static\.cloudflareinsights\.com\/beacon\.min\.js/g)]
+    const token = process.env.CF_BEACON_TOKEN
+    expect(beacons).toHaveLength(token ? 1 : 0)
+    if (token) expect(html).toContain(`data-cf-beacon="{&quot;token&quot;:&quot;${token}&quot;}"`)
+  })
 })
 
 describe('view transitions', () => {
@@ -1502,7 +1523,7 @@ describe('related posts', () => {
         'open-source-agent-skills',
         'how-always-on-agents-work',
       ],
-      unmatched: 'blog/git-password-cache/',
+      unmatched: 'blog/how-to-be-good-father/',
     },
     {
       path: 'pt-br/blog/macbook-velho-virou-servidor-de-contexto/',
@@ -1513,7 +1534,7 @@ describe('related posts', () => {
         'skills-open-source-para-agentes',
         'como-funciona-um-agente-sempre-ligado',
       ],
-      unmatched: 'pt-br/blog/cache-de-senha-no-git/',
+      unmatched: 'pt-br/blog/como-ser-bom-pai/',
     },
   ]
   for (const entry of cases) {

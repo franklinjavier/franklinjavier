@@ -57,7 +57,7 @@ export function getPostUrl(slug: string, lang: string): string {
 
 /**
  * URL of the published translation of the post at `url`, or null when there is none.
- * Unlike getTranslatedPost, it never falls back to the home page and skips drafts.
+ * Skips drafts; callers choose the fallback when there is no translation.
  */
 export async function getPostTranslationUrl(url: URL, lang: keyof typeof ui) {
   const targetLang: keyof typeof ui = lang === 'pt-br' ? 'en' : 'pt-br'
@@ -77,35 +77,4 @@ export async function getPostTranslationUrl(url: URL, lang: keyof typeof ui) {
 
   const blogPrefix = targetLang === 'en' ? '/blog/' : '/pt-br/blog/'
   return { url: `${blogPrefix}${translated.id.replace('pt-br/', '')}/`, lang: targetLang }
-}
-
-export async function getTranslatedPost(
-  currentSlug: string,
-  _currentLang: string,
-  targetLang: string,
-) {
-  const allPosts = await getCollection('blog')
-
-  // Find current post
-  const currentPost = allPosts.find((post) => post.id === currentSlug)
-
-  if (!currentPost || !currentPost.data.translationKey) {
-    // If no translationKey, return to home in target language
-    return targetLang === defaultLang ? '/' : `/${targetLang}/`
-  }
-
-  // Find post with same translationKey in target language
-  const translatedPost = allPosts.find(
-    (post) =>
-      post.data.translationKey === currentPost.data.translationKey && post.data.lang === targetLang,
-  )
-
-  if (translatedPost) {
-    const slug = translatedPost.id.replace('pt-br/', '')
-    const blogPrefix = targetLang === 'en' ? '/blog/' : '/pt-br/blog/'
-    return `${blogPrefix}${slug}/`
-  }
-
-  // If translation not found, go to home
-  return targetLang === defaultLang ? '/' : `/${targetLang}/`
 }

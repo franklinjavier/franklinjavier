@@ -4,7 +4,7 @@ date: 2026-09-25
 updated: 2026-09-28
 description: 'My notes from all 32 talks at Lisbon AI 2026, with the demos, the numbers and the audience questions.'
 author: Franklin Javier
-tags: ai, agents, evals, security, conference
+tags: ai, agents, security
 lang: en
 translationKey: lisbon-ai-2026
 image: /images/blog/lisbon-ai-2026/og.jpg
