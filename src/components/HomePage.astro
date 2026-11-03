@@ -38,11 +38,12 @@ const sortedPosts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.
   <Navigation wide />
 
   <main class="site-container-wide pt-20 pb-24">
-    <!-- From lg: hero and posts share columns 1-2 (photo on top), stack and
-         contact fill column 3 from the top. Below lg the order is unchanged. -->
-    <div class="lg:grid lg:grid-cols-3 lg:items-start lg:gap-x-12">
+    <!-- From lg: the hero (photo on top) fills the left, stack and contact sit
+         side by side on its right, and posts run full width below. Below lg
+         the order is unchanged. -->
+    <div class="lg:grid lg:grid-cols-[minmax(0,1fr)_auto] lg:items-start lg:gap-x-16">
       <!-- Hero Section -->
-      <section class="mb-20 lg:col-span-2 lg:mb-12" id="about">
+      <section class="mb-20 lg:mb-12" id="about">
         <div class="grid grid-cols-1 items-center gap-10 sm:grid-cols-[minmax(0,1fr)_11rem] lg:grid-cols-1 lg:items-start lg:gap-8">
           <div class="max-w-2xl">
             <h1 class="mb-4 text-[1.375rem] leading-tight font-[550] text-ink">
@@ -69,8 +70,8 @@ const sortedPosts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.
       </section>
 
       <!-- Stack and contact stay above posts until lg, then sit in column 3. -->
-      <section class="min-w-0 border-t border-rule pt-8 lg:col-start-3 lg:row-span-2 lg:row-start-1 lg:border-0 lg:pt-0 lg:text-right">
-        <div class="grid grid-cols-1 gap-10 text-[0.8125rem] leading-5 sm:grid-cols-2 sm:gap-8 lg:grid-cols-1 lg:gap-10">
+      <section class="min-w-0 border-t border-rule pt-8 lg:col-start-2 lg:row-start-1 lg:border-0 lg:pt-0 lg:text-right">
+        <div class="grid grid-cols-1 gap-10 text-[0.8125rem] leading-5 sm:grid-cols-2 sm:gap-8 lg:gap-x-12">
           <div>
             <h2 class="mb-3 font-[550] text-ink">{t('stack.title')}</h2>
             <div class="space-y-1 text-ink-2">
