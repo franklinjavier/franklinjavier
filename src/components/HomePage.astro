@@ -69,7 +69,7 @@ const sortedPosts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.
       </section>
 
       <!-- Stack and contact stay above posts until lg, then sit in column 3. -->
-      <section class="min-w-0 border-t border-rule pt-8 lg:col-start-3 lg:row-span-2 lg:row-start-1 lg:border-0 lg:pt-0">
+      <section class="min-w-0 border-t border-rule pt-8 lg:col-start-3 lg:row-span-2 lg:row-start-1 lg:border-0 lg:pt-0 lg:text-right">
         <div class="grid grid-cols-1 gap-10 text-[0.8125rem] leading-5 sm:grid-cols-2 sm:gap-8 lg:grid-cols-1 lg:gap-10">
           <div>
             <h2 class="mb-3 font-[550] text-ink">{t('stack.title')}</h2>
@@ -86,7 +86,7 @@ const sortedPosts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.
               <p class="text-ink-2">{t('contact.location')}</p>
               <a
                 href="mailto:franklinjalves@gmail.com"
-                class="block w-fit text-ink-2 underline decoration-muted underline-offset-3 transition-colors duration-200 ease-smooth hover:text-ink hover:decoration-current"
+                class="block w-fit text-ink-2 lg:ml-auto underline decoration-muted underline-offset-3 transition-colors duration-200 ease-smooth hover:text-ink hover:decoration-current"
               >
                 franklinjalves@gmail.com
               </a>
@@ -94,7 +94,7 @@ const sortedPosts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.
                 href="https://www.linkedin.com/in/franklin-javier-98504321"
                 target="_blank"
                 rel="noopener"
-                class="block w-fit text-ink-2 underline decoration-muted underline-offset-3 transition-colors duration-200 ease-smooth hover:text-ink hover:decoration-current"
+                class="block w-fit text-ink-2 lg:ml-auto underline decoration-muted underline-offset-3 transition-colors duration-200 ease-smooth hover:text-ink hover:decoration-current"
               >
                 LinkedIn
               </a>
@@ -102,13 +102,13 @@ const sortedPosts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.
                 href="https://x.com/franklinjavier"
                 target="_blank"
                 rel="noopener"
-                class="block w-fit text-ink-2 underline decoration-muted underline-offset-3 transition-colors duration-200 ease-smooth hover:text-ink hover:decoration-current"
+                class="block w-fit text-ink-2 lg:ml-auto underline decoration-muted underline-offset-3 transition-colors duration-200 ease-smooth hover:text-ink hover:decoration-current"
               >
                 X
               </a>
               <a
                 href={getLocalizedPath('/cv/', lang)}
-                class="block w-fit text-ink-2 underline decoration-muted underline-offset-3 transition-colors duration-200 ease-smooth hover:text-ink hover:decoration-current"
+                class="block w-fit text-ink-2 lg:ml-auto underline decoration-muted underline-offset-3 transition-colors duration-200 ease-smooth hover:text-ink hover:decoration-current"
               >
                 {t('nav.cv')}
               </a>
