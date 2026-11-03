@@ -3,7 +3,7 @@ import { expect, test } from 'bun:test'
 import { readdirSync } from 'node:fs'
 import { join } from 'node:path'
 import worker from '../worker'
-import { TAGS, TAG_ALIASES, tagRedirect } from '../src/lib/tags'
+import { TAGS, TAG_ALIASES, tagRedirect, translateTag } from '../src/lib/tags'
 import type { Lang } from '../src/lib/markdown'
 
 const base = 'src/content/blog'
@@ -69,4 +69,13 @@ test('Worker answers retired tag pages with a 308 and no asset lookup', async ()
     'https://franklinjavier.com/pt-br/blog/tag/pessoal/?ref=x',
   )
   expect(calls.length).toBe(0)
+})
+
+// guards: translateTag pairs tags by position, so both lists must stay aligned.
+test('tag lists are index-aligned across languages', () => {
+  expect(TAGS['pt-br'].length).toBe(TAGS.en.length)
+  expect(translateTag('ai', 'en', 'pt-br')).toBe('ia')
+  expect(translateTag('segurança', 'pt-br', 'en')).toBe('security')
+  expect(translateTag('frontend', 'en', 'pt-br')).toBe('frontend')
+  expect(translateTag('lifehack', 'en', 'pt-br')).toBeNull()
 })

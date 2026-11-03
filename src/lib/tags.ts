@@ -109,3 +109,12 @@ export function tagRedirect(path: string): string | null {
   const aliases = TAG_ALIASES[match[1] ? 'pt-br' : 'en']
   return Object.hasOwn(aliases, tag) ? `${match[1] ?? ''}/blog/tag/${aliases[tag]}/` : null
 }
+
+/**
+ * The same tag in the other language. TAGS lists are index-aligned (ai ↔ ia),
+ * which tests/tags.test.ts guards. Null for a tag the source language lacks.
+ */
+export function translateTag(tag: string, from: Lang, to: Lang): string | null {
+  const index = TAGS[from].indexOf(tag)
+  return index === -1 ? null : (TAGS[to][index] ?? null)
+}

@@ -1,5 +1,13 @@
 ---
-import { getLangFromUrl, getAlternateUrl, getTranslatedPost, useTranslations } from '../i18n/utils'
+import {
+  getLangFromUrl,
+  getAlternateUrl,
+  getPostTranslationUrl,
+  getTagUrl,
+  getLocalizedPath,
+  useTranslations,
+} from '../i18n/utils'
+import { translateTag } from '../lib/tags'
 
 interface Props {
   class?: string
@@ -11,24 +19,20 @@ const targetLang = lang === 'pt-br' ? 'en' : 'pt-br'
 // Label and code are in the target language, like the link's lang attribute.
 const target = useTranslations(targetLang)
 
-// Detect if we're on a blog post page
-const isBlogPost = Astro.url.pathname.includes('/blog/')
+// Blog posts and tag pages have different slugs per language, so they map
+// through the content and the tag allowlist; with no counterpart the link
+// lands on the other language's blog index, never the home page.
+const blogPath = Astro.url.pathname.replace(/^\/pt-br/, '')
+const tagMatch = /^\/blog\/tag\/([^/]+)\/?$/.exec(blogPath)
+const postMatch = /^\/blog\/(?!tag\/)[^/]+\/?$/.test(blogPath)
+const targetBlog = getLocalizedPath('/blog/', targetLang)
 
-let alternateUrl = ''
-
-if (isBlogPost) {
-  // Extract post slug
-  const pathParts = Astro.url.pathname.split('/').filter(Boolean)
-  const blogIndex = pathParts.indexOf('blog')
-  const slug = pathParts.slice(blogIndex + 1).join('/')
-
-  // Remove trailing slash
-  const cleanSlug = slug.replace(/\/$/, '')
-
-  // Build full slug considering the language
-  const fullSlug = lang === 'pt-br' ? `pt-br/${cleanSlug}` : cleanSlug
-
-  alternateUrl = await getTranslatedPost(fullSlug, lang, targetLang)
+let alternateUrl: string
+if (tagMatch) {
+  const tag = translateTag(decodeURIComponent(tagMatch[1]!), lang, targetLang)
+  alternateUrl = tag ? getTagUrl(tag, targetLang) : targetBlog
+} else if (postMatch) {
+  alternateUrl = (await getPostTranslationUrl(Astro.url, lang))?.url ?? targetBlog
 } else {
   alternateUrl = getAlternateUrl(Astro.url, targetLang)
 }

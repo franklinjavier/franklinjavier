@@ -9,7 +9,11 @@ lang: en
 translationKey: the-great-suspender
 ---
 
-> **Update, November 2026:** don't install The Great Suspender. In 2020 the original developer handed the extension over to an unknown owner, and in February 2021 Google pulled it from the Chrome Web Store and disabled it in users' browsers as malware. Chrome now does the same job on its own: Memory Saver, under Settings → Performance, discards inactive tabs. The post below is how I wrote it in 2015.
+<aside class="callout" role="note" aria-label="Warning">
+
+**Update, November 2026:** don't install The Great Suspender. In 2020 the original developer handed the extension over to an unknown owner, and in February 2021 Google pulled it from the Chrome Web Store and disabled it in users' browsers as malware. Chrome now does the same job on its own: Memory Saver, under Settings → Performance, discards inactive tabs. The post below is how I wrote it in 2015.
+
+</aside>
 
 Many people have been complaining about Google Chrome's memory consumption.
 Depending on usage, the software can consume up to 1GB. The situation gets even worse when using many extensions.

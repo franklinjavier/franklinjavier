@@ -9,7 +9,11 @@ lang: pt-br
 translationKey: the-great-suspender
 ---
 
-> **Atualização, novembro de 2026:** não instale o The Great Suspender. Em 2020 o desenvolvedor original passou a extensão para um dono desconhecido, e em fevereiro de 2021 o Google tirou ela da Chrome Web Store e desativou nos navegadores por ser malware. Hoje o próprio Chrome faz isso: a Economia de memória, em Configurações → Desempenho, descarta as abas inativas. O texto abaixo está como escrevi em 2015.
+<aside class="callout" role="note" aria-label="Aviso">
+
+**Atualização, novembro de 2026:** não instale o The Great Suspender. Em 2020 o desenvolvedor original passou a extensão para um dono desconhecido, e em fevereiro de 2021 o Google tirou ela da Chrome Web Store e desativou nos navegadores por ser malware. Hoje o próprio Chrome faz isso: a Economia de memória, em Configurações → Desempenho, descarta as abas inativas. O texto abaixo está como escrevi em 2015.
+
+</aside>
 
 Muitas pessoas vem reclamando do Google Chrome pelo seu consumo de memória. 
 Dependendo do uso, o software chega a consumir 1GB. A situação fica ainda pior quando se usa muitas extensões.

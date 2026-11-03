@@ -38,34 +38,38 @@ const sortedPosts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.
   <Navigation wide />
 
   <main class="site-container-wide pt-20 pb-24">
-    <!-- Hero Section -->
-    <section class="mb-20" id="about">
-      <div class="grid grid-cols-1 items-center gap-10 sm:grid-cols-[minmax(0,1fr)_11rem]">
-        <div class="max-w-2xl">
-          <h1 class="mb-4 text-[1.375rem] leading-tight font-[550] text-ink">{t('hero.title')}</h1>
-          <div class="space-y-3 text-ink-2">
-            <p>{t('hero.bio1')}</p>
+    <!-- From lg: hero and posts share columns 1-2 (photo on top), stack and
+         contact fill column 3 from the top. Below lg the order is unchanged. -->
+    <div class="lg:grid lg:grid-cols-3 lg:items-start lg:gap-x-12">
+      <!-- Hero Section -->
+      <section class="mb-20 lg:col-span-2 lg:mb-12" id="about">
+        <div class="grid grid-cols-1 items-center gap-10 sm:grid-cols-[minmax(0,1fr)_11rem] lg:grid-cols-1 lg:items-start lg:gap-8">
+          <div class="max-w-2xl">
+            <h1 class="mb-4 text-[1.375rem] leading-tight font-[550] text-ink">
+              {t('hero.title')}
+            </h1>
+            <div class="space-y-3 text-ink-2">
+              <p>{t('hero.bio1')}</p>
+            </div>
+          </div>
+
+          <!-- Photo -->
+          <div class="relative mx-auto w-full max-w-44 lg:order-first lg:mx-0 lg:max-w-32">
+            <div class="hero-photo">
+              <img
+                src="/img/frank.jpeg"
+                alt="Franklin Javier"
+                class="h-auto w-full rounded-2xl shadow-[0_0_0_1px_rgb(0_0_0_/_0.04)]"
+                width="600"
+                height="600"
+              />
+            </div>
           </div>
         </div>
+      </section>
 
-        <!-- Photo -->
-        <div class="relative mx-auto w-full max-w-44">
-          <div class="hero-photo">
-            <img
-              src="/img/frank.jpeg"
-              alt="Franklin Javier"
-              class="h-auto w-full rounded-2xl shadow-[0_0_0_1px_rgb(0_0_0_/_0.04)]"
-              width="600"
-              height="600"
-            />
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Stack and contact stay above posts until lg, then sit in column 3. -->
-    <div class="border-t border-rule pt-8 lg:grid lg:grid-cols-3 lg:items-start lg:gap-x-12">
-      <section class="min-w-0 lg:col-start-3 lg:row-start-1">
+      <!-- Stack and contact stay above posts until lg, then sit in column 3. -->
+      <section class="min-w-0 border-t border-rule pt-8 lg:col-start-3 lg:row-span-2 lg:row-start-1 lg:border-0 lg:pt-0">
         <div class="grid grid-cols-1 gap-10 text-[0.8125rem] leading-5 sm:grid-cols-2 sm:gap-8 lg:grid-cols-1 lg:gap-10">
           <div>
             <h2 class="mb-3 font-[550] text-ink">{t('stack.title')}</h2>
@@ -114,7 +118,10 @@ const sortedPosts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.
       </section>
 
       <!-- Blog Posts Section -->
-      <section id="posts" class="mt-20 min-w-0 lg:col-span-2 lg:col-start-1 lg:row-start-1 lg:mt-0">
+      <section
+        id="posts"
+        class="mt-20 min-w-0 lg:col-span-2 lg:col-start-1 lg:row-start-2 lg:mt-0 lg:border-t lg:border-rule lg:pt-8"
+      >
         <h2 class="mb-4 font-[550] text-ink">{t('blog.recentPosts')}</h2>
         <ul class="border-t border-rule">
           {sortedPosts.slice(0, 6).map((post) => {
