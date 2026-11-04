@@ -163,9 +163,15 @@ function staticHeaders(text: string, path: string) {
   const headers = new Headers()
   for (const block of text.trim().split(/\n\s*\n/)) {
     const [pattern, ...entries] = block.split('\n')
-    expect(['/*', '/*.md', '/llms.txt', '/', '/pt-br', '/pt-br/']).toContain(pattern!)
-    if (!(pattern === '/*' || (pattern === '/*.md' ? path.endsWith('.md') : path === pattern)))
-      continue
+    expect(['/*', '/*.md', '/_astro/*', '/llms.txt', '/', '/pt-br', '/pt-br/']).toContain(pattern!)
+    const matches =
+      pattern === '/*' ||
+      (pattern === '/*.md'
+        ? path.endsWith('.md')
+        : pattern === '/_astro/*'
+          ? path.startsWith('/_astro/')
+          : path === pattern)
+    if (!matches) continue
     for (const entry of entries) {
       const match = /^  ([\w-]+): (.+)$/.exec(entry)!
       expect(match).not.toBeNull()
@@ -185,6 +191,7 @@ test('all static header groups match Vercel and Worker responses', async () => {
     '/index.md',
     '/blog/example/index.md',
     '/asset.js',
+    '/_astro/page.js',
   ]) {
     const expected = new Headers()
     for (const rule of rules.headers) {

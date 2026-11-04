@@ -1,6 +1,9 @@
 /*
   Vary: Accept
 
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
+
 /*.md
   Content-Type: text/markdown; charset=utf-8
 
