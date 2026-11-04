@@ -1276,8 +1276,12 @@ describe('payload cuts', () => {
     }
   })
 
-  test('never emits the Cloudflare Web Analytics beacon', () => {
-    expect(read('index.html')).not.toContain('cloudflareinsights')
+  test('emits the Cloudflare Web Analytics beacon only when CF_BEACON_TOKEN is set', () => {
+    const html = read('index.html')
+    const beacons = [...html.matchAll(/static\.cloudflareinsights\.com\/beacon\.min\.js/g)]
+    const token = process.env.CF_BEACON_TOKEN
+    expect(beacons).toHaveLength(token ? 1 : 0)
+    if (token) expect(html).toContain(`data-cf-beacon="{&quot;token&quot;:&quot;${token}&quot;}"`)
   })
 })
 

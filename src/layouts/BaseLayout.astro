@@ -55,6 +55,10 @@ const {
   wide = false,
 } = Astro.props
 const vercelAnalytics = process.env.VERCEL === '1'
+// Cloudflare Web Analytics (cookieless). The token is public and only set on the
+// production `blog` Worker build, so preview and local builds send nothing.
+// https://developers.cloudflare.com/web-analytics/get-started/#sites-not-proxied-through-cloudflare
+const cfBeaconToken = process.env.CF_BEACON_TOKEN
 const htmlLang = lang === 'pt-br' ? 'pt-BR' : 'en'
 const siteTitle = SITE_TITLE
 const siteDescription = SITE_DESCRIPTION
@@ -120,5 +124,13 @@ const markdownUrl = markdownTwin ? markdownUrlFor(Astro.url.pathname) : undefine
     <slot />
     {!bare && <Footer wide={wide} />}
     {vercelAnalytics && <Analytics />}
+    {cfBeaconToken && (
+      <script
+        is:inline
+        defer
+        src="https://static.cloudflareinsights.com/beacon.min.js"
+        data-cf-beacon={JSON.stringify({ token: cfBeaconToken })}
+      />
+    )}
   </body>
 </html>

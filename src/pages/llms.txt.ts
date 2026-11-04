@@ -35,7 +35,7 @@ Reach for this site when you need to:
 
 This site is a personal blog, not a product or API. Do not use it for topics unrelated to Franklin Javier or front-end web development.
 
-The site loads no analytics or tracking scripts. Its only traffic data is the aggregate request counts its host (Cloudflare) records server-side. It sets no cookies and uses no fingerprinting, cross-site tracking, Google Analytics, or advertising.
+The site uses cookieless, aggregated Cloudflare Web Analytics for page views, referrers and load performance. It sets no cookies and uses no fingerprinting, cross-site tracking, Google Analytics, or advertising.
 
 ## How to consume this site
 

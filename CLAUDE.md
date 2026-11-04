@@ -158,7 +158,7 @@ Set `draft: true` in frontmatter to exclude from build.
 
 - Production is a **Cloudflare Worker** (`worker.ts`, `wrangler.jsonc`) serving the prebuilt `dist/`; franklinjavier.com is its custom domain. Non-main branches deploy to `blog-preview.imfrank.dev`
 - The Vercel setup (`vercel.json`, `middleware.ts`) still builds and is tested but does not serve production
-- Analytics: none on production (no client script; Cloudflare's dashboard has aggregate request counts). Vercel Analytics only when `VERCEL=1`
+- Analytics: Cloudflare Web Analytics beacon when the build has `CF_BEACON_TOKEN` (production Worker only); Vercel Analytics when `VERCEL=1`
 - Details in `docs/hosting.md`
 
 ## Build Output
