@@ -16,7 +16,12 @@
   "assets": {
     "directory": "./dist",
     "binding": "ASSETS",
-    "run_worker_first": true,
+    // Only page routes need the Worker (Markdown negotiation, redirects, Link
+    // headers). Hashed bundles and images go straight to the asset CDN, like
+    // the Vercel middleware matcher, which also skips paths with a dot.
+    // Their headers come from public/_headers.
+    // https://developers.cloudflare.com/workers/static-assets/binding/#run_worker_first
+    "run_worker_first": ["/*", "!/_astro/*", "!/img/*", "!/images/*", "!/favicon.svg"],
     "not_found_handling": "404-page",
   },
   // blog-preview.imfrank.dev: a separate Worker deployed by its own Workers Builds
