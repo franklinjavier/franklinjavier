@@ -24,16 +24,16 @@ have these redirects.
 
 ## Analytics
 
-Analytics is selected at build time:
+Production loads no analytics script. The Cloudflare Web Analytics beacon was
+removed on 2026-11-04: it was the only third-party request on the page and cost
+first paint time. Aggregate request counts are still in the Cloudflare dashboard
+(Workers & Pages → blog → Metrics), measured server-side.
 
-- `CF_BEACON_TOKEN=<token>` adds the Cloudflare Web Analytics beacon. Set it as
-  a build variable on the production `blog` Worker only (Workers & Pages → blog →
-  Settings → Build → Variables), so preview and local builds send nothing. Get the
-  token under Analytics & Logs → Web Analytics → Add a site → franklinjavier.com →
-  "Manage site" → JS snippet. The token is public: it ends up in the HTML anyway.
-  Don't also enable the dashboard's automatic injection, or page views are counted twice.
-- `VERCEL=1` adds Vercel Analytics. Only Vercel builds set it.
+Keep Web Analytics' automatic injection off for franklinjavier.com (Analytics &
+Logs → Web Analytics), or Cloudflare adds the beacon back on its own.
 
-When the analytics provider changes, update the privacy pages
+`VERCEL=1` adds Vercel Analytics. Only Vercel builds set it.
+
+When the analytics setup changes, update the privacy pages
 (`src/content/pages/privacy.md` and its pt-br version) and the privacy line in
 `src/pages/llms.txt.ts`.

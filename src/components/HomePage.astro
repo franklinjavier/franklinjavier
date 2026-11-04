@@ -58,7 +58,10 @@ const sortedPosts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.
           <div class="relative mx-auto w-full max-w-44 lg:order-first lg:mx-0 lg:max-w-32">
             <div class="hero-photo">
               <img
-                src="/img/frank.jpeg"
+                src="/img/frank-352.webp"
+                srcset="/img/frank-176.webp 176w, /img/frank-352.webp 352w"
+                sizes="(min-width: 1024px) 128px, 176px"
+                fetchpriority="high"
                 alt="Franklin Javier"
                 class="h-auto w-full rounded-2xl shadow-[0_0_0_1px_rgb(0_0_0_/_0.04)]"
                 width="600"
@@ -169,6 +172,8 @@ const sortedPosts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.
             <a href={project.url} target="_blank" rel="noopener" class="flex gap-4 sm:block">
               <img
                 src={project.image}
+                srcset={`${project.image.replace('.webp', '-400.webp')} 400w, ${project.image} 800w`}
+                sizes="(min-width: 1024px) 270px, (min-width: 640px) 33vw, 128px"
                 alt=""
                 width="800"
                 height="420"

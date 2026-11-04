@@ -1,15 +1,15 @@
 ---
 title: Política de Privacidade
-description: Como franklinjavier.com trata dados - analytics agregado da Cloudflare, sem cookies, sem anúncios e sem rastreamento entre sites.
+description: Como franklinjavier.com trata dados - sem scripts de analytics, sem cookies, sem anúncios e sem rastreamento entre sites.
 lang: pt-br
-updated: 2026-11-02
+updated: 2026-11-04
 ---
 
 Este site, franklinjavier.com, é o site pessoal e blog de Franklin Javier. É um site estático e intencionalmente sem graça do ponto de vista de privacidade: ele existe para publicar artigos, com apenas estatísticas agregadas de tráfego.
 
 ## O que este site coleta
 
-- **Analytics agregado da Cloudflare, sem cookies.** Este site mede visualizações de páginas, sites de origem e tempo de carregamento de forma agregada, sem cookies, fingerprinting nem rastreamento entre sites. A Cloudflare não usa esses dados para identificar visitantes. Não roda Google Analytics nem scripts de publicidade.
+- **Nenhum script de analytics.** As páginas não carregam JavaScript de analytics, rastreamento ou publicidade. Os únicos números de tráfego que eu vejo são as contagens agregadas de requisições que a Cloudflare, como hospedagem, mostra no painel dela. Eles vêm do lado do servidor, sem cookies, fingerprinting nem rastreamento entre sites.
 - **Nenhum cookie.** O site não define cookies. Sua preferência de tema (modo claro ou escuro) é armazenada no `localStorage` do seu navegador e nunca sai do seu dispositivo.
 - **Nenhuma conta ou formulário.** Não há nada para se cadastrar, então nenhuma informação pessoal é solicitada ou armazenada por este site.
 

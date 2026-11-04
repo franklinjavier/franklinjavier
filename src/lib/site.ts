@@ -49,7 +49,8 @@ export const KNOWS_ABOUT = [
 // Side projects, rendered on the homepage and in its markdown twin.
 // Descriptions live in the translations under `projects.<key>`. Thumbs are
 // each site's og:image (Robot Loupe has none, so it is a homepage screenshot),
-// resized to 800x420 webp in public/images/projects/.
+// resized to 800x420 webp in public/images/projects/, plus a 400px-wide
+// `<key>-400.webp` for the srcset.
 export const SIDE_PROJECTS = [
   {
     key: 'wallofai',
