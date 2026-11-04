@@ -971,6 +971,20 @@ describe('hreflang', () => {
     })
   })
 
+  // guards: Lighthouse fails a page on any head hreflang with a relative or non-page href (the RSS link had one).
+  test('every hreflang in the head is an absolute page URL', () => {
+    for (const path of htmlPages()) {
+      const head = read(path).split('</head>')[0]!
+      for (const [, href] of head.matchAll(/<link[^>]*hreflang="[^"]+"[^>]*href="([^"]+)"/g)) {
+        expect({ path, href, ok: href.startsWith('https://franklinjavier.com/') }).toEqual({
+          path,
+          href,
+          ok: true,
+        })
+      }
+    }
+  })
+
   test('pages without a translation emit none', () => {
     expect(hreflangs(read('404.html'))).toEqual({})
     expect(hreflangs(read('blog/tag/react/index.html'))).toEqual({})
@@ -1506,7 +1520,8 @@ describe('localized RSS feeds', () => {
       const lang = doc.documentElement.lang
       const feeds = doc.head.querySelectorAll('link[rel="alternate"][type="application/rss+xml"]')
       expect(feeds).toHaveLength(1)
-      expect(feeds[0].getAttribute('hreflang')).toBe(lang)
+      // No hreflang: it marks page translations, and Lighthouse rejects it on a feed link.
+      expect(feeds[0].hasAttribute('hreflang')).toBe(false)
       expect(feeds[0].getAttribute('href')).toBe(lang === 'pt-BR' ? '/pt-br/rss.xml' : '/rss.xml')
     }
   })
