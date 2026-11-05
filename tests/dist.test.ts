@@ -63,17 +63,18 @@ beforeAll(() => {
 describe('homepage metadata', () => {
   const html = () => read('index.html')
 
-  // guards: Layout metadata drift makes non-post pages share the oversized author photo.
+  // guards: Layout metadata drift makes non-post pages lose the 1200x630 site card.
   test('has canonical URL, og:image and og:type', async () => {
     expect(html()).toContain('<link rel="canonical" href="https://franklinjavier.com/">')
     expect(html()).toContain('property="og:type" content="website"')
     expect(html()).toContain(
-      'property="og:image" content="https://franklinjavier.com/img/frank-social.webp"',
+      'property="og:image" content="https://franklinjavier.com/images/og/site.png"',
     )
-    expect(html()).toContain('property="og:image:width" content="300"')
-    expect(html()).toContain('property="og:image:height" content="300"')
-    const { width, height } = await sharp(join(DIST, 'img/frank-social.webp')).metadata()
-    expect([width, height]).toEqual([300, 300])
+    expect(html()).toContain('property="og:image:width" content="1200"')
+    expect(html()).toContain('property="og:image:height" content="630"')
+    const { width, height, format } = await sharp(join(DIST, 'images/og/site.png')).metadata()
+    expect([width, height, format]).toEqual([1200, 630, 'png'])
+    expect(statSync(join(DIST, 'images/og/site.png')).size).toBeLessThan(100 * 1024)
     expect(html()).toContain('<html lang="en"')
   })
 
@@ -105,9 +106,9 @@ describe('homepage metadata', () => {
     expect(person?.sameAs).toContain('https://dev.to/franklinjavier')
   })
 
-  // guards: Layout/card drift expands fallback portraits on social shares.
-  test('attributes small X cards to the author', () => {
-    expect(html()).toContain('name="twitter:card" content="summary"')
+  // guards: Layout/card drift shrinks the site card or drops the author on X shares.
+  test('attributes large X cards to the author', () => {
+    expect(html()).toContain('name="twitter:card" content="summary_large_image"')
     expect(html()).toContain('name="twitter:creator" content="@franklinjavier"')
   })
 })
