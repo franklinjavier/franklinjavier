@@ -21,7 +21,7 @@ interface Props {
   jsonLd?: Record<string, unknown>
   /** Skip the site footer (standalone pages like the CV). */
   bare?: boolean
-  /** Social preview image (og:image, twitter:image); defaults to the site photo. */
+  /** Social preview image (og:image, twitter:image); defaults to the site card. */
   image?: string
   /**
    * The page has a markdown twin (built by src/pages/[...path]/index.md.ts),
@@ -92,11 +92,11 @@ const markdownUrl = markdownTwin ? markdownUrlFor(Astro.url.pathname) : undefine
     <meta property="og:description" content={pageDescription} />
     <meta property="og:url" content={canonicalUrl} />
     <meta property="og:image" content={ogImage} />
-    {!image && <meta property="og:image:width" content="300" />}
-    {!image && <meta property="og:image:height" content="300" />}
+    {!image && <meta property="og:image:width" content="1200" />}
+    {!image && <meta property="og:image:height" content="630" />}
     <meta property="og:site_name" content={siteTitle} />
     <meta property="og:locale" content={ogLocale} />
-    <meta name="twitter:card" content={image ? 'summary_large_image' : 'summary'} />
+    <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content={SITE_X_HANDLE} />
     <meta name="twitter:creator" content={SITE_X_HANDLE} />
     <meta name="twitter:title" content={pageTitle} />
